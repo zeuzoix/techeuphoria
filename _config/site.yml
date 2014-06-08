@@ -2,3 +2,12 @@ name: Project Name
 title: Baked with Awestruct
 org: Organization
 base_url: ''
+profiles:
+  production:
+    base_url: http://zeuzoix.github.io/techeuphoria
+    deploy:
+      host: github_pages
+      # use gh-branch for repositories other than <username>.github.io
+      branch: gh-pages
+      # use master branch for <username>.github.io repository
+      #branch: master
