@@ -21,11 +21,11 @@ profiles:
     deploy:
       dummy:
   production:
-    base_url: http://zeuzoix.github.io/techeuphoria
+    base_url: http://zeuzoix.github.io/techeuphoria/
     ctx-path: /techeuphoria
     asciidoctor:
       :attributes:
-        base_url: http://zeuzoix.github.io/techeuphoria
+        base_url: http://zeuzoix.github.io/techeuphoria/
         ctx_path: /techeuphoria
         # imagesdir must be absolute to work around Atom feed bug
         imagesdir: http://zeuzoix.github.io/techeuphoria/images
