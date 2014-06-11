@@ -6,15 +6,6 @@ base_url: ''
 interpolate: false
 haml:
   :ugly: true
-profiles:
-  production:
-    base_url: http://zeuzoix.github.io/techeuphoria
-    deploy:
-      host: github_pages
-      # use gh-branch for repositories other than <username>.github.io
-      branch: gh-pages
-      # use master branch for <username>.github.io repository
-      #branch: master
 asciidoctor:
   :safe: safe
   :attributes:
@@ -25,3 +16,19 @@ asciidoctor:
     idseparator: '-'
     sectanchors: ''
     icons: font
+profiles:
+  development:
+    deploy:
+      dummy:
+  production:
+    base_url: http://zeuzoix.github.io/techeuphoria
+    ctx-path: /techeuphoria
+    asciidoctor:
+      :attributes:
+        base_url: http://zeuzoix.github.io/techeuphoria
+        ctx_path: /techeuphoria
+        # imagesdir must be absolute to work around Atom feed bug
+        imagesdir: http://zeuzoix.github.io/techeuphoria/images
+    deploy:
+      host: github_pages
+      branch: gh-pages
