@@ -3,8 +3,13 @@ layout: base
 ---
 .row
   .large-12.columns
-    %h1 You're awestruct! 
-    %hr
+    %h1 Welcome to #{Asciidoctor.render site.name, :doctype => :inline}!
+
+.row
+  .large-12.columns.posts
+    - page.posts.each do |post|
+      =partial 'post.html.haml', :post => post, :listing => true
+    =partial 'pagination.html.haml', :paginator => page.posts
 
 .row
   .large-12.columns

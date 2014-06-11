@@ -1,0 +1,6 @@
+= Docs Workshop
+Conrad Gomes
+2014-06-11
+:awestruct-tags: [conference, oscon]
+
+My first post based on the beautiful work from http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html[docs-workshop-oscon]

@@ -1,0 +1,25 @@
+- author_url = page.post.author_url || site.author_url
+- post_url = "#{site.ctx_path}#{page.post.url}"
+%article.post
+  %header.post-head
+    %h1.title
+      %a{:href=>post_url}=page.post.title
+    %h4
+      %em by
+      %a.author{:href=>author_url}
+        %img(src="#{author_url}.png" width=24 height=24)
+        =page.post.author || site.author
+      on
+      %time.pubdate{:datetime=>page.post.date.strftime('%FT%T%:z')}
+        =page.post.date.strftime '%B %e, %Y'
+  .post-body
+    =page.post.content
+  %footer.post-footer
+    - if page.post.tags
+      .tags<
+        %i.label.icon-tags
+        -#=page.post.tag_links
+        - page.post.tags.each_with_index do |tag, idx|
+          - unless idx.zero?
+            =', '
+          %a{:href=>"#{site.ctx_path}#{tag.primary_page.url}"}=tag

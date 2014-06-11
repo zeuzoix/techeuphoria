@@ -1,7 +1,11 @@
-name: Project Name
-title: Baked with Awestruct
-org: Organization
+name: TechEuphoria
+title: A Technical Odyssey
+org: conrad.s.j.gomes@gmail.com
+author: Conrad Gomes
 base_url: ''
+interpolate: false
+haml:
+  :ugly: true
 profiles:
   production:
     base_url: http://zeuzoix.github.io/techeuphoria
@@ -11,3 +15,13 @@ profiles:
       branch: gh-pages
       # use master branch for <username>.github.io repository
       #branch: master
+asciidoctor:
+  :safe: safe
+  :attributes:
+    sitename: TechEuphoria
+    base_url: ''
+    ctx_path: ''
+    idprefix: ''
+    idseparator: '-'
+    sectanchors: ''
+    icons: font
