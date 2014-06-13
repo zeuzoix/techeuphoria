@@ -2,33 +2,30 @@ name: TechEuphoria
 title: A Technical Odyssey
 org: conrad.s.j.gomes@gmail.com
 author: Conrad Gomes
-base_url: ''
-interpolate: false
+base_url: http://zeuzoix.github.io/techeuphoria/
+#interpolate: false
 haml:
   :ugly: true
 asciidoctor:
-  :safe: safe
+  :eruby: erubis
   :attributes:
-    sitename: TechEuphoria
-    base_url: ''
-    ctx_path: ''
     idprefix: ''
     idseparator: '-'
+    icons: 'font'
     sectanchors: ''
-    icons: font
+    linkattrs: ''
 profiles:
   development:
-    deploy:
-      dummy:
+    deploy: nil
+  staging:
+    deploy: nil
   production:
     base_url: http://zeuzoix.github.io/techeuphoria/
-    ctx-path: /techeuphoria
-  #  asciidoctor:
-  #    :attributes:
-  #      base_url: http://zeuzoix.github.io/techeuphoria/
-  #      ctx_path: /techeuphoria
-        # imagesdir must be absolute to work around Atom feed bug
-  #      imagesdir: http://zeuzoix.github.io/techeuphoria/images
+#   ctx-path: /techeuphoria
+#   asciidoctor:
+#     :attributes:
+#     base_url: http://zeuzoix.github.io/techeuphoria/
+#     ctx_path: /techeuphoria
     deploy:
       host: github_pages
       branch: gh-pages
