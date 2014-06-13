@@ -21,7 +21,7 @@ profiles:
     deploy: nil
   production:
     base_url: http://zeuzoix.github.io/techeuphoria/
-#   ctx-path: /techeuphoria
+    ctx_path: /techeuphoria
 #   asciidoctor:
 #     :attributes:
 #     base_url: http://zeuzoix.github.io/techeuphoria/
