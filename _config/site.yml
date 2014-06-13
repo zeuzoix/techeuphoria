@@ -2,7 +2,7 @@ name: TechEuphoria
 title: A Technical Odyssey
 org: conrad.s.j.gomes@gmail.com
 author: Conrad Gomes
-base_url: http://zeuzoix.github.io/techeuphoria/
+#base_url: http://zeuzoix.github.io/techeuphoria/
 #interpolate: false
 haml:
   :ugly: true
