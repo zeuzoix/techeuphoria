@@ -18,6 +18,8 @@ asciidoctor:
     sitename: TechEuphoria
     base_url: ''
     ctx_path: ''
+    source-highlighter: coderay
+    coderay-css: style
 
    
 profiles:

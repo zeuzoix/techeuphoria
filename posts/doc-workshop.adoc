@@ -10,3 +10,9 @@ Conrad Gomes
 
 My first post based on the beautiful work from http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html[docs-workshop-oscon]
 
+[source,ruby]
+----
+require 'asciidoctor'
+
+puts Asciidoctor.render('Write__Adapt__', :doctype => :inline)
+----
