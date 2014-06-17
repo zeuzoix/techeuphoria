@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-06-17T11:04:13-04:00</updated>
+<updated>2014-06-17T11:16:37-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop.html</id>
 <title>Docs Workshop</title>
-<updated>2014-06-17T11:04:13-04:00</updated>
+<updated>2014-06-17T11:16:37-04:00</updated>
 <published>2014-06-11T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop.html" rel="alternate" type="text/html" />
 <author>
@@ -25,6 +25,13 @@ Excerpt of Post.
 
 
 My first post based on the beautiful work from docs-workshop-oscon
+
+
+
+require 'asciidoctor'
+
+puts Asciidoctor.render('Write__Adapt__', :doctype =&gt; :inline)
+
 ...
 </summary>
 <content type="html">
@@ -34,12 +41,19 @@ My first post based on the beautiful work from docs-workshop-oscon
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;My first post based on the beautiful work from &lt;a href=&quot;http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html&quot;&gt;docs-workshop-oscon&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;ruby language-ruby&quot;&gt;require &lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;'&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;asciidoctor&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;'&lt;/span&gt;&lt;/span&gt;
+
+puts &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Asciidoctor&lt;/span&gt;.render(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;'&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Write__Adapt__&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span style=&quot;color:#A60&quot;&gt;:doctype&lt;/span&gt; =&amp;gt; &lt;span style=&quot;color:#A60&quot;&gt;:inline&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop-redefined.html</id>
 <title>Docs Workshop Redefined</title>
-<updated>2014-06-16T13:50:41-04:00</updated>
+<updated>2014-06-17T11:10:04-04:00</updated>
 <published>2014-06-11T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop-redefined.html" rel="alternate" type="text/html" />
 <author>
