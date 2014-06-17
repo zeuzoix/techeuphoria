@@ -13,6 +13,6 @@ My first post based on the beautiful work from http://mojavelinux.github.io/deck
 [source,ruby]
 ----
 require 'asciidoctor'
-hjh
+
 puts Asciidoctor.render('Write__Adapt__', :doctype => :inline)
 ----
