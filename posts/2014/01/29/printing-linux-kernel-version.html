@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="right">
+<li class="divider">
+<li>
+<a href="/techeuphoria/about.html">About</a>
+</li>
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</li>
+</ul>
+</section>
+</nav>
+<div class="row" id="content">
+<div class="large-9 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html">Printing the Linux kernel version</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author">
+<img height="24" src=".png" width="24">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-01-29T00:00:00+00:00">
+January 29, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
+in the first log and the version of the kernel is compiled with is shown
+in the second log in the version_init function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code class="c language-c"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+</pre></td>
+  <td class="code"><pre><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/utsname.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;generated/utsrelease.h&gt;</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init version_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#0a8;font-weight:bold">int</span> i = <span style="color:#00D">0</span>;
+
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module running of version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, utsname()-&gt;release);
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, UTS_RELEASE);
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit version_exit(<span style="color:#088;font-weight:bold">void</span>)
+{
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Over and out!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);
+MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">zeuzoix</span><span style="color:#710">&quot;</span></span>);
+MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel Module Version Example Module</span><span style="color:#710">&quot;</span></span>);</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+, <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
+</footer>
+<hr>
+</article>
+
+
+</div>
+<div class="large-3 columns">
+<h4>Collaborate!</h4>
+<ul class="button-group">
+<li>
+<a class="small button" href="https://github.com/zeuzoix/techeuphoria/edit/develop/posts/2014-01-29-printing-linux-kernel-version.adoc">
+Edit
+</a>
+</li>
+<li>
+<a class="small secondary button" href="https://github.com/zeuzoix/techeuphoria/raw/develop/posts/2014-01-29-printing-linux-kernel-version.adoc">
+Raw
+</a>
+</li>
+<li>
+<a class="small secondary button" href="https://github.com/zeuzoix/techeuphoria/commits/develop/posts/2014-01-29-printing-linux-kernel-version.adoc">
+Log
+</a>
+</li>
+</ul>
+<h4>Topics</h4>
+<ul class="square">
+<li>
+<a href="/techeuphoria/posts/tag/conference/">conference</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/neverbefore/">neverbefore</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/oscon/">oscon</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+</li>
+</ul>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct.
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>

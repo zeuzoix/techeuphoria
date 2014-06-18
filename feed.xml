@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-06-17T11:20:52-04:00</updated>
+<updated>2014-06-17T12:11:16-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop.html</id>
 <title>Docs Workshop</title>
-<updated>2014-06-17T11:20:52-04:00</updated>
+<updated>2014-06-17T12:11:16-04:00</updated>
 <published>2014-06-11T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop.html" rel="alternate" type="text/html" />
 <author>
@@ -53,7 +53,7 @@ puts &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Asciidoctor&lt;/s
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop-redefined.html</id>
 <title>Docs Workshop Redefined</title>
-<updated>2014-06-17T11:20:52-04:00</updated>
+<updated>2014-06-17T12:11:16-04:00</updated>
 <published>2014-06-11T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/11/doc-workshop-redefined.html" rel="alternate" type="text/html" />
 <author>
@@ -70,6 +70,133 @@ My second post based on the beautiful work from docs-workshop-oscon
 <content type="html">
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;My second post based on the beautiful work from &lt;a href=&quot;http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html&quot;&gt;docs-workshop-oscon&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html</id>
+<title>Printing the Linux kernel version</title>
+<updated>2014-06-17T23:30:28-04:00</updated>
+<published>2014-01-29T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="kernel"></category>
+<category term="programming"></category>
+<summary>
+
+The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
+in the first log and the version of the kernel is compiled with is shown
+in the second log in the version_init function:
+
+
+
+
+  1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+
+  #include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/utsname.h&gt;
+#include &lt;generated/utsrelease.h&gt;
+
+static int __init version_init(void)
+{
+        int i = 0;
+
+        pr_alert(&quot;Kernel module running of version %s\n&quot;, utsname()-&gt;release);
+        pr_alert(&quot;Kernel module...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
+in the first log and the version of the kernel is compiled with is shown
+in the second log in the version_init function:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;table class=&quot;CodeRay&quot;&gt;&lt;tr&gt;
+  &lt;td class=&quot;line-numbers&quot;&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+24
+25
+26&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/init.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/module.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/kernel.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/utsname.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;generated/utsrelease.h&amp;gt;&lt;/span&gt;
+
+&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; __init version_init(&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt;)
+{
+        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+
+        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel module running of version %s&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;, utsname()-&amp;gt;release);
+        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel module compiled with version %s&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;, UTS_RELEASE);
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+}
+
+&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt; __exit version_exit(&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt;)
+{
+        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Over and out!&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;GPL&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
+MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;zeuzoix&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
+MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 </content>
 </entry>
