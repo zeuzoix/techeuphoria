@@ -1,0 +1,40 @@
+= Printing the Linux kernel version
+Conrad Gomes
+2014-01-29
+:awestruct-tags: [linux, kernel, programming]
+:excerpt: The kernel version that a kernel module is built with can differ from the kernel version it is running on.
+:awestruct-excerpt: {excerpt}
+
+{excerpt} The version of the kernel that the module is running on is shown 
+in the first log and the version of the kernel is compiled with is shown 
+in the second log in the version_init function:
+
+[source,c,numbered]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/utsname.h>
+#include <generated/utsrelease.h>
+ 
+static int __init version_init(void)
+{
+        int i = 0;
+ 
+        pr_alert("Kernel module running of version %s\n", utsname()->release);
+        pr_alert("Kernel module compiled with version %s\n", UTS_RELEASE);
+        return 0;
+}
+ 
+static void __exit version_exit(void)
+{
+        pr_alert("Over and out!\n");
+}
+ 
+module_init(version_init);
+module_exit(version_exit);
+ 
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("zeuzoix");
+MODULE_DESCRIPTION("Kernel Module Version Example Module");
+----
