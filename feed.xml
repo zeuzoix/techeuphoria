@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-06-17T23:47:49-04:00</updated>
+<updated>2014-06-19T11:19:54-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-06-17T23:47:49-04:00</updated>
+<updated>2014-06-19T11:19:54-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html" rel="alternate" type="text/html" />
 <author>
@@ -77,6 +77,83 @@ MODULE_LICENSE(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;
 MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;zeuzoix&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
 MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches.html</id>
+<title>Caches</title>
+<updated>2014-06-19T11:43:28-04:00</updated>
+<published>2014-01-15T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches.html" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="processors"></category>
+<category term="programming"></category>
+<category term="cache"></category>
+<category term="arm"></category>
+<category term="cortex"></category>
+<summary>
+
+Let&#8217;s talk about the cache and its requirement in a computing system. The word
+cache is derived from the french word cacher which means to hide.
+
+
+In a nutshell it&#8217;s a memory subsystem which improves the speed of execution of
+a thread by providing faster access to instructions and data based on their
+temporal and spacial characteristics in the program.
+
+
+With memory there&#8217;s typically a trade off between space and time. If speed is
+required then the storage capacity of the memory reduces particularly because
+the cost of the memory goes up with speed.
+
+
+So system designers often incorporate a cache in between the processor and main
+memory which...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s talk about the cache and its requirement in a computing system. The word
+cache is derived from the french word cacher which means to &lt;em&gt;hide&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In a nutshell it&amp;#8217;s a memory subsystem which improves the speed of execution of
+a thread by providing faster access to instructions and data based on their
+temporal and spacial characteristics in the program.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With memory there&amp;#8217;s typically a trade off between space and time. If speed is
+required then the storage capacity of the memory reduces particularly because
+the cost of the memory goes up with speed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So system designers often incorporate a cache in between the processor and main
+memory which can significantly improve the speed at which memory access occurs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The cache can be of different levels typically most processors these days have
+an inbuilt cache termed as L1 which is the smallest memory device in the
+hierarchy of memory in the system. Some processors like ARM Cortex&amp;#8217;s A series
+have an in built L2 cache also.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are several popular designs for caches. The following videos give a very
+nice description of the different types of caches:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/bTj0vFs8ndI&quot;&gt;Direct Mapped Cache&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/YAz0qJf05ko&quot;&gt;Associative Cache&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/ReKzEGLlGfk&quot;&gt;Set Associative Cache&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
 </content>
 </entry>
