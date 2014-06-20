@@ -2,7 +2,7 @@
 Conrad Gomes
 2014-01-15
 :awestruct-tags: [processors, programming, cache, arm, cortex]
-:excerpt: An overview of the cache and it's purpose in computing
+:excerpt: A brief overview of the cache and it's purpose in computing
 :awestruct-excerpt: {excerpt}
 :direct-mapped-cache-yt: http://youtu.be/bTj0vFs8ndI
 :associative-cache-yt: http://youtu.be/YAz0qJf05ko
