@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="right">
+<li class="divider">
+<li>
+<a href="/techeuphoria/about.html">About</a>
+</li>
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</li>
+</ul>
+</section>
+</nav>
+<div class="row" id="content">
+<div class="large-9 columns">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://asciidoctor.org">Asciidoctor</a> is a pure Ruby processor for converting
+<a href="http://asciidoc.org">AsciiDoc</a> source files and strings into HTML 5, DocBook 4.5
+and other formats. It&#8217;s <a href="http://rubygems.org/gems/asciidoctor">published
+as a RubyGem</a> and is available under the MIT open source license.</p>
+</div>
+<div class="paragraph">
+<p>Asciidoctor uses a set of built-in ERB templates to render the document
+to HTML 5 or DocBook 4.5. We&#8217;ve matched the rendered output as close as
+possible to the default output of the native Python processor. You can
+override this behavior by providing <a href="https://github.com/rtomayko/tilt">Tilt</a>-compatible templates.
+See the <a href="#usage">Usage</a> section for more details.</p>
+</div>
+<div class="paragraph">
+<p>Asciidoctor currently works (read as <em>tested</em>) with Ruby 1.8.7, Ruby
+1.9.3, Ruby 2.0.0, JRuby 1.7.5 and Rubinius 2.0 (on Linux, Mac and
+Windows). We expect it will work with other versions of Ruby as well and
+would welcome help in testing it out.</p>
+</div>
+<div class="paragraph">
+<p>The initial code from which Asciidoctor emerged was written by
+<a href="http://github.com/nickh">Nick Hengeveld</a> to process the git man pages for
+the <a href="https://github.com/github/gitscm-next">Git project site</a>. Refer to commit history of
+<a href="https://github.com/github/gitscm-next/commits/master/lib/asciidoc.rb">asciidoc.rb</a> to view the initial contributions and
+contributors.</p>
+</div>
+<div class="paragraph">
+<p>The source code can now be found in the <a href="https://github.com/asciidoctor/asciidoctor">Asciidoctor source
+repository</a> on GitHub.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installation"><a class="anchor" href="#installation"></a>Installation</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+We&#8217;re working hard to make Asciidoctor a drop-in replacement for
+AsciiDoc. We&#8217;re very close, with over 700 tests that ensure
+compatibility. The march is on towards full compliance and beyond.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To install the gem:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>gem install asciidoctor</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or if you prefer bundler, add the asciidoctor gem to your Gemfile,</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>source 'https://rubygems.org'
+gem 'asciidoctor'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then install it using bundler:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>bundle install</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re running Fedora, you can install the gem using yum:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sudo yum install rubygem-asciidoctor</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The benefit of installing the gem via yum is that yum will also install
+Ruby if it&#8217;s not already on your machine.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Asciidoctor has both a command line interface (CLI) and an API. The CLI
+is a drop-in replacement for the <code>asciidoc.py</code> command from the Python
+implementation. The API is intended for integration with other software
+projects and is suitable for server-side applications, such as Rails,
+Sinatra and GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="command-line-interface-cli"><a class="anchor" href="#command-line-interface-cli"></a>Command line interface (CLI)</h3>
+<div class="paragraph">
+<p>After installing the <code>asciidoctor</code> gem, the <code>asciidoctor</code> commandline
+interface should be available on your PATH. To invoke it, simply execute:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>asciidoctor &lt;asciidoc_file&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will use the built-in defaults for options and create a new file in
+the same directory as the input file, with the same base name, but with
+the .html extension.</p>
+</div>
+<div class="paragraph">
+<p>There are many other options available and full help is provided via:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>asciidoctor --help</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or in the <a href="http://asciidoctor.org/man/asciidoctor">man page</a>.</p>
+</div>
+<div class="paragraph">
+<p>There is also an <code>asciidoctor-safe</code> command, which turns on safe mode by
+default, preventing access to files outside the parent directory of the
+source file. This mode is very similar to the safe mode of
+<code>asciidoc.py</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ruby-api"><a class="anchor" href="#ruby-api"></a>Ruby API</h3>
+<div class="paragraph">
+<p>To use Asciidoctor in your application, you first need to require the
+gem:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>require 'asciidoctor'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With that in place, you can start processing AsciiDoc documents.</p>
+</div>
+<div class="paragraph">
+<div class="title">Loading a document</div>
+<p>To parse a file into an <code>Asciidoctor::Document</code> object:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>doc = Asciidoctor.load_file('your_file.asciidoc')</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can get information about the document:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>puts doc.doctitle
+puts doc.attributes</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More than likely, you want to just render the document.</p>
+</div>
+<div class="paragraph">
+<div class="title">Rendering files</div>
+<p>To render a file containing AsciiDoc markup to HTML 5:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Asciidoctor.render_file('your_file.asciidoc', :in_place =&gt; true)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command will output to the file <code>your_file.html</code> in the same
+directory. You can render the file to DocBook 4.5 by setting the
+<code>backend</code> attribute to <em>docbook</em>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Asciidoctor.render_file('your_file.asciidoc', :in_place =&gt; true,
+  :attributes =&gt; {'backend' =&gt; 'docbook'})</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command will output to the file <code>your_file.xml</code> in the same
+directory. (If you&#8217;re on Linux, you can view the file using yelp).</p>
+</div>
+<div class="paragraph">
+<div class="title">Rendering strings</div>
+<p>To render an AsciiDoc-formatted string:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>puts Asciidoctor.render('*This* is it.')</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When rendering a string, the header and footer are excluded by default
+to make Asciidoctor consistent with other lightweight markup engines
+like Markdown. If you want the header and footer, just enable it using
+the <code>:header_footer</code> option:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>puts Asciidoctor.render('*This* is it.', :header_footer =&gt; true)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you&#8217;ll get a full HTML 5 file. As before, you can also produce
+DocBook 4.5:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>puts Asciidoctor.render('*This* is it.', :header_footer =&gt; true,
+  :attributes =&gt; {'backend' =&gt; 'docbook'})</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t like the output you see, you can change it. Any of it!</p>
+</div>
+<div class="paragraph">
+<div class="title">Custom templates</div>
+<p>Asciidoctor allows you to override the <a href="https://github.com/asciidoctor/asciidoctor/blob/master/lib/asciidoctor/backends">built-in templates</a>
+used to render almost any individual AsciiDoc element. If you provide a
+directory of <a href="https://github.com/rtomayko/tilt">Tilt</a>-compatible templates, named in such a way that
+Asciidoctor can figure out which template goes with which element,
+Asciidoctor will use the templates in this directory instead of its
+built-in templates for any elements for which it finds a matching
+template. It will fallback to its default templates for everything else.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>puts Asciidoctor.render('*This* is it.', :header_footer =&gt; true,
+  :template_dir =&gt; 'templates')</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Document and Section templates should begin with <code>document.</code> and
+<code>section.</code>, respectively. The file extension is used by Tilt to
+determine which view framework it will use to render the
+template. For instance, if you want to write the template in ERB, you&#8217;d
+name these two templates <code>document.html.erb</code> and <code>section.html.erb</code>. To
+use Haml, you&#8217;d name them <code>document.html.haml</code> and <code>section.html.haml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Templates for block elements, like a Paragraph or Sidebar, would begin
+with <code>block_&lt;style&gt;.</code>. For instance, to override the default Paragraph
+template with an ERB template, put a file named
+<code>block_paragraph.html.erb</code> in the template directory you pass to the
+<code>Document</code> constructor using the <code>:template_dir</code> option.</p>
+</div>
+<div class="paragraph">
+<p>For more usage examples, see the (massive) test suite.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contributing"><a class="anchor" href="#contributing"></a>Contributing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the spirit of <a href="http://www.gnu.org/philosophy/free-sw.html">free software</a>, <em>everyone</em> is encouraged to
+help improve this project.</p>
+</div>
+<div class="paragraph">
+<p>Here are some ways <strong>you</strong> can contribute:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>by using alpha, beta, and prerelease versions</p>
+</li>
+<li>
+<p>by reporting bugs</p>
+</li>
+<li>
+<p>by suggesting new features</p>
+</li>
+<li>
+<p>by writing or editing documentation</p>
+</li>
+<li>
+<p>by writing specifications</p>
+</li>
+<li>
+<p>by writing code&#8201;&#8212;&#8201;<em>No patch is too small.</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p>fix typos</p>
+</li>
+<li>
+<p>add comments</p>
+</li>
+<li>
+<p>clean up inconsistent whitespace</p>
+</li>
+<li>
+<p>write tests!</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>by refactoring code</p>
+</li>
+<li>
+<p>by fixing <a href="https://github.com/asciidoctor/asciidoctor/issues">issues</a></p>
+</li>
+<li>
+<p>by reviewing patches</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="submitting-an-issue"><a class="anchor" href="#submitting-an-issue"></a>Submitting an Issue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We use the <a href="https://github.com/asciidoctor/asciidoctor/issues">GitHub issue tracker</a> associated with this project
+to track bugs and features. Before submitting a bug report or feature
+request, check to make sure it hasn&#8217;t already been submitted. When
+submitting a bug report, please include a <a href="https://gist.github.com">Gist</a> that includes any
+details that may help reproduce the bug, including your gem version,
+Ruby version, and operating system.</p>
+</div>
+<div class="paragraph">
+<p>Most importantly, since Asciidoctor is a text processor, reproducing
+most bugs requires that we have some snippet of text on which
+Asciidoctor exhibits the bad behavior.</p>
+</div>
+<div class="paragraph">
+<p>An ideal bug report would include a pull request with failing specs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="submitting-a-pull-request"><a class="anchor" href="#submitting-a-pull-request"></a>Submitting a Pull Request</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://help.github.com/articles/fork-a-repo">Fork the repository</a>.</p>
+</li>
+<li>
+<p><a href="http://learn.github.com/p/branching.html">Create a topic branch</a>.</p>
+</li>
+<li>
+<p>Add tests for your unimplemented feature or bug fix.</p>
+</li>
+<li>
+<p>Run <code>bundle exec rake</code>.
+If your tests pass, return to step 3.</p>
+</li>
+<li>
+<p>Implement your feature or bug fix.</p>
+</li>
+<li>
+<p>Run <code>bundle exec rake</code>.
+If your tests fail, return to step 5.</p>
+</li>
+<li>
+<p>Add documentation for your feature or bug fix.</p>
+</li>
+<li>
+<p>If your changes are not 100% documented, go back to step 7.</p>
+</li>
+<li>
+<p>Add, commit, and push your changes.</p>
+</li>
+<li>
+<p><a href="https://help.github.com/articles/using-pull-requests">Submit a pull request</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="supported-ruby-versions"><a class="anchor" href="#supported-ruby-versions"></a>Supported Ruby Versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This library aims to support the following Ruby implementations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ruby 1.8.7</p>
+</li>
+<li>
+<p>Ruby 1.9.3</p>
+</li>
+<li>
+<p>Ruby 2.0.0</p>
+</li>
+<li>
+<p>JRuby 1.7.5</p>
+</li>
+<li>
+<p>Rubinius 2.0</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If something doesn&#8217;t work on one of these interpreters, it should be
+considered a bug.</p>
+</div>
+<div class="paragraph">
+<p>If you would like this library to support another Ruby version, you may
+volunteer to be a maintainer. Being a maintainer entails making sure all
+tests run and pass on that implementation. When something breaks on your
+implementation, you will be personally responsible for providing patches
+in a timely fashion. If critical issues for a particular implementation
+exist at the time of a major release, support for that Ruby version may
+be dropped.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resources"><a class="anchor" href="#resources"></a>Resources</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Project home page</dt>
+<dd>
+<p><a href="http://asciidoctor.org">http://asciidoctor.org</a></p>
+</dd>
+<dt class="hdlist1">Source repository</dt>
+<dd>
+<p><a href="https://github.com/asciidoctor/asciidoctor">https://github.com/asciidoctor/asciidoctor</a></p>
+</dd>
+<dt class="hdlist1">Issue tracker</dt>
+<dd>
+<p><a href="https://github.com/asciidoctor/asciidoctor/issues">https://github.com/asciidoctor/asciidoctor/issues</a></p>
+</dd>
+<dt class="hdlist1">Mailinglist / forum</dt>
+<dd>
+<p><a href="http://discuss.asciidoctor.org">http://discuss.asciidoctor.org</a></p>
+</dd>
+<dt class="hdlist1">GitHub organization</dt>
+<dd>
+<p><a href="https://github.com/asciidoctor">https://github.com/asciidoctor</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authors"><a class="anchor" href="#authors"></a>Authors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Asciidoctor</strong> was written by <a href="https://github.com/mojavelinux">Dan Allen</a>,
+<a href="https://github.com/erebor">Ryan Waldron</a>,
+<a href="https://github.com/lightguard">Jason Porter</a>, <a href="https://github.com/nickh">Nick
+Hengeveld</a> and <a href="https://github.com/asciidoctor/asciidoctor/graphs/contributors">other contributors</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>AsciiDoc</strong> was written by Stuart Rackham and has received contributions
+from many other individuals.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="copyright"><a class="anchor" href="#copyright"></a>Copyright</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Copyright &#169; 2012-2013 Dan Allen and Ryan Waldron. Free use of this
+software is granted under the terms of the MIT License.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://github.com/asciidoctor/asciidoctor/blob/master/LICENSE">LICENSE</a> file for details.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="large-3 columns">
+<h4>Collaborate!</h4>
+<ul class="button-group">
+<li>
+<a class="small button" href="https://github.com/zeuzoix/techeuphoria/edit/develop/asciidoc_index.adoc">
+Edit
+</a>
+</li>
+<li>
+<a class="small secondary button" href="https://github.com/zeuzoix/techeuphoria/raw/develop/asciidoc_index.adoc">
+Raw
+</a>
+</li>
+<li>
+<a class="small secondary button" href="https://github.com/zeuzoix/techeuphoria/commits/develop/asciidoc_index.adoc">
+Log
+</a>
+</li>
+</ul>
+<h4>Topics</h4>
+<ul class="square">
+<li>
+<a href="/techeuphoria/posts/tag/arm/">arm</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/c/">c</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cache/">cache</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cortex/">cortex</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/processors/">processors</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+</li>
+</ul>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct.
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>
