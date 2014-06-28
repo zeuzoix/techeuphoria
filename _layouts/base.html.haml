@@ -22,7 +22,7 @@
             =Asciidoctor.render(site.name, :doctype => :inline)
       %li.toggle-topbar.menu-icon
         %a{:href=>'#'}<
-          %span
+          %span 
     %section.top-bar-section
       %ul.right
         %li.divider
@@ -33,6 +33,10 @@
         -#%li.divider
         -#  %li
         -#    %a{:href=>"#{site.base_url}/blog"} Blog
+  .row
+    .large-12.columns
+      %h1 #{Asciidoctor.render site.name, :doctype => :inline}
+      %hr
   #content.row
     .large-9.columns
       =content

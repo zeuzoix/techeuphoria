@@ -1,6 +1,6 @@
 = About {sitename}
 Conrad Gomes
-:awestruct-layout: foundation_blog
+:awestruct-layout: base
 
 {sitename} was founded by {author} during a conference workshop.
 It's quickly becoming much bigger than this humble beginning.
