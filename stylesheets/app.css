@@ -3000,3 +3000,10 @@ body > footer {
   background: #222222;
   padding: 1.25em;
   color: #dddddd; }
+
+/* line 24, /media/sf_UbnuxShared_Next/techeuphoria/stylesheets/app.scss */
+body > footer-area {
+  background: #222222;
+  padding: 1.25em;
+  color: #dddddd;
+  padding: 20px 0 0 0; }
