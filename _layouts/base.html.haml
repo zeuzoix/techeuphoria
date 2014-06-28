@@ -40,19 +40,6 @@
     .large-9.columns
       =content
     .large-3.columns
-      - if page.source_path.end_with? '.adoc'
-        - rel_path = page.relative_source_path
-        %h4 Collaborate!
-        %ul.button-group
-          %li
-            %a.small.button(href="#{site.edit_base_url}#{rel_path}")
-              Edit
-          %li
-            %a.small.secondary.button(href="#{site.raw_base_url}#{rel_path}")
-              Raw
-          %li
-            %a.small.secondary.button(href="#{site.log_base_url}#{rel_path}")
-              Log
       %h4 Topics
       %ul.square
         - site.posts_tags.each do |tag|
