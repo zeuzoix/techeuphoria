@@ -14,26 +14,24 @@
   %script(src="#{site.base_url}/javascripts/vendor/custom.modernizr.js")
   %link{:rel=>'author', :type=>'text/plain', :href=>"#{site.base_url}/humans.txt"}
 %body.antialiased
-  %nav.top-bar
-    %ul.title-area
-      %li.name
-        %h1
-          %a(href="#{site.ctx_path}/")
-            =Asciidoctor.render(site.name, :doctype => :inline)
-      %li.toggle-topbar.menu-icon
-        %a{:href=>'#'}<
-          %span 
-    %section.top-bar-section
-      %ul.left
-        %li.divider
-          %li
-            %a{:href=>"#{site.ctx_path}/about.html"} About
-        %li.divider
-          %li
-            %a{:href=>"#{site.base_url}/"} Home
-        -#%li.divider
-        -#  %li
-        -#    %a{:href=>"#{site.base_url}/blog"} Blog
+  .fixed-width.sticky
+    %nav.top-bar
+      %ul.title-area
+        %li.name
+          %h1
+            %a(href="#{site.ctx_path}/")
+              =Asciidoctor.render(site.name, :doctype => :inline)
+        %li.toggle-topbar.menu-icon
+          %a{:href=>'#'}<
+            %span 
+      %section.top-bar-section
+        %ul.left
+          %li.divider
+            %li
+              %a{:href=>"#{site.ctx_path}/about.html"} /about
+          %li.divider
+            %li
+              %a{:href=>"#{site.base_url}/blog.html"} /blog
   .row
     .large-12.columns
       %h1 #{Asciidoctor.render site.name, :doctype => :inline}
