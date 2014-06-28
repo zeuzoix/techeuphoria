@@ -28,10 +28,10 @@
         %ul.left
           %li.divider
             %li
-              %a{:href=>"#{site.ctx_path}/about.html"} /about
+              %a{:href=>"#{site.ctx_path}/about/index.html"} /about
           %li.divider
             %li
-              %a{:href=>"#{site.base_url}/blog.html"} /blog
+              %a{:href=>"#{site.base_url}/blog/index.html"} /blog
   .row
     .large-12.columns
       %h1 #{Asciidoctor.render site.name, :doctype => :inline}
@@ -51,7 +51,7 @@
       %p(style='margin-bottom: .75em')
         &copy; #{site.org} #{Date.today.year}
         %br
-        Built on Foundation. Baked by Awestruct.
+        Built on Foundation. Baked by Awestruct. Composed with Asciidoc
     .large-6.columns
       %ul.inline-list.right
         %li
