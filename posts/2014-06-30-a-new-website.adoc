@@ -1,0 +1,85 @@
+= A New Beginning
+Conrad Gomes
+2014-06-30
+:awestruct-tags: [github pages, asciidoctor, asciidoc, awestruct, blog, website, www]
+:excerpt: A new website to document all that is technical. Thanks to Github Pages and Awestruct I now blog and publish like a hacker.
+:awestruct-excerpt: {excerpt}
+:github-pages-website: https://pages.github.com
+:techeuphoria-blogspot: http://techeuphoria.blogspot.in
+:asciidoc-website: http://asciidoc.org
+:awestruct-website: http://awestruct.org
+:wordpress: http://wordpress.com
+:vim-website: http://www.vim.org
+:virtualbox-website: https://www.virtualbox.org
+:ubuntu-website: http://www.ubuntu.com
+:asciidoctor-website: http://asciidoctor.org
+:techeuphoria-wordpress-repos: https://github.com/zeuzoix/techeuphoria_wordpress
+:techeuphoria-wordpress-bitbucket-repos: https://bitbucket.org/zeuzoix/techeuphoria_wordpress
+:responsive-web-design-wiki: http://en.wikipedia.org/wiki/Responsive_web_design
+:oscon2013-docworkshop: http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html
+:install-and-manage-wordpress-with-git: http://davidwinter.me/articles/2012/04/09/install-and-manage-wordpress-with-git/
+:how-to-deploy-wordpress-themes-with-git: http://culttt.com/2013/04/08/how-to-deploy-wordpress-themes-with-git
+:wordpress-deployments-with-git: http://mattbanks.me/wordpress-deployments-with-git
+:managing-and-deploying-wordpress-with-git: http://blog.g-design.net/post/60019471157/managing-and-deploying-wordpress-with-git
+:mojavelinux-website: http://www.mojavelinux.com
+
+== Epoch
+{sitename} was developed during the second quarter of 2014 with the 
+help of a wonderful {oscon2013-docworkshop}[slide deck] from an open source
+advocate Dan Allen({mojavelinux-website}[mojavelinux]).
+
+== Objectives
+I had an overall understanding of what I wanted achieve. It is to build a lean
+and clean website, have the ability to be agile and publish with ease and at will. 
+My objectives took form over the course of my search for a solution as I
+became familiar with the different concepts and paradigms of web design and 
+development. My objectives can now be summarized as follows: 
+
+. Use a decentrallized tool with which {sitename} can be built locally before 
+publishing it to the world wide web.
+
+. The tools chosen should have a mechanism with which the presentation of the
+website could be separated from the content. 
+
+. Use responsive website design({responsive-web-design-wiki}[RWD]) to 
+allow users with devices of different displays to consume the content.
+
+== A Journey of Errors
+
+My objectives were more or less clear. I needed a way to work on my website, 
+whenever and wherever I wanted to. I knew Git was a good way to achieve 
+it but I did not know about {github-pages-website}[Github Pages] and started 
+off with the first choice that came to mind and that was {wordpress}[Wordpress].
+
+So begain my pursuit to build {sitename} with the objectives given. I initially 
+figured a way to deploy and manage this website with the help of the following 
+links:
+
+. {install-and-manage-wordpress-with-git}[Install and manage Wordpress with Git]
+. {how-to-deploy-wordpress-themes-with-git}[How to deploy WordPress themes with Git]
+. {wordpress-deployments-with-git}[Managing WordPress Deployments With Git] 
+. {managing-and-deploying-wordpress-with-git}[Managing and deploying WordPress with Git]
+
+After days of playing around and understanding the details of Wordpress I 
+realized that it was still difficult to publish and the fact of dumping the 
+SQL database to a file to sync different copies of the website was a hack 
+rather than a solution. Despite getting the solution working I abandoned 
+it completely on the 30th of May. My exploits are stored in the logs of 
+the following repositories:
+
+. {techeuphoria-wordpress-repos}[GitHub repository]
+. {techeuphoria-wordpress-bitbucket-repos}[Bitbucket repository]
+
+== Tools
+The following represents the tools that I use to compile and publish this website:
+
+. {sitename} content is written in {asciidoc-website}[AsciiDoc].
+. It is transformed by {awestruct-website}[Awestruct] and 
+{asciidoctor-website}[Asciidoctor] into a static website.
+. It uses {github-pages-website}[Github Pages] as its publishing engine.
+. I use {vim-website}[Vim] as my text editor to edit everything.
+. My development machine is an {ubuntu-website}[Ubuntu] guest on an
+{virtualbox-website}[Oracle Virtual Box]
+
+Happy Bloggin!
+
