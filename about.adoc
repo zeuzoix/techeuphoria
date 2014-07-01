@@ -1,9 +1,45 @@
 = About {sitename}
 Conrad Gomes
 :awestruct-layout: base
+:author_url: site.author_url
+:techeuphoria-website: http://techeuphoria.blogspot.in
 
-{sitename} was founded by {author} during a conference workshop.
-It's quickly becoming much bigger than this humble beginning.
+== About
+{sitename} was founded by an open source enthusiast and embedded developer,
+ {author}. The website has many purposes, however the primary 
+purpose is to build an engaging technical journal of experiments and 
+explorations of the technical kind. The author chooses open hardware and 
+open source software in order to promote the spirit of those who yearn to build 
+technology that can be made better by the contributions of those who use it. 
+Technology serves a higher purpose and that is, to ensure the progress and 
+continuance of the human species. This website stands to serve that purpose 
+and to hope that advancements in technology will eventually benefit the 
+lives of those who inhabit this blue planet.
 
-This page is written in http://asciidoc.org[AsciiDoc].
-It's transformed by http://awestruct.org[Awestruct] and http://asciidoctor.org[Asciidoctor] into a webpage for this static website.
+== Quests
+The power of open source software is evident with the success of GNU/Linux
+and now with the movement of open hardware coming into being we're seeing
+larger adoption of the open source paradigm in hardware design. Communities 
+of hackers secretly labouring at their desks building their very on boards.
+The DIY movement is here to stay. Innovation is ripe and the possibilities
+endless. {sitename} celebrates this movement and the best way to do so is
+by contributing to it in the form of quests. These are technical journals
+with a focus on achieving a set target. Hopefully the challenges faced and 
+surmounted when documented in the quests will help those who read it.
+
+== Blogging
+The blog is a heart beat to the website. It captures a wide variety of topics 
+and is meant to serve as a random series of posts. The posts might be useful 
+tips, rants on technology, engineering processes, instructions and recipes on
+how to do something that the author has found useful. It will also serve
+as a news feed about important changes on the website. The author initially
+maintained a simple blog at {techeuphoria-website}[Techeuphoria]. It was in 
+working with the blog that the idea of creating an independent website 
+originated. And so all the posts have since being imported to {sitename}.
+
+== Conclusion
+In the end {sitename} is what you make of it. It represents a quest in itself
+to {author}. The very existence of this site is proof that it is a brave new
+world and if you really want to do something you can do it yourself. There is 
+only one skill needed to survive in the new world and that is, to hack anything
+and everything.
