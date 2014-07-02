@@ -5,15 +5,185 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-06-26T04:22:59-04:00</updated>
+<updated>2014-06-30T14:23:10-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html</id>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
+<title>A New Beginning</title>
+<updated>2014-06-30T14:23:10-04:00</updated>
+<published>2014-06-30T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="github pages"></category>
+<category term="asciidoctor"></category>
+<category term="asciidoc"></category>
+<category term="awestruct"></category>
+<category term="blog"></category>
+<category term="website"></category>
+<category term="www"></category>
+<summary>
+
+Epoch
+
+
+TechEuphoria was developed during the second quarter of 2014 with the
+help of a wonderful slide deck from an open source
+advocate Dan Allen(mojavelinux).
+
+
+
+
+Objectives
+
+
+I had an overall understanding of what I wanted achieve. It is to build a lean
+and clean website, have the ability to be agile and publish with ease and at will.
+My objectives took form over the course of my search for a solution as I
+became familiar with the different concepts and paradigms of web design and
+development. My objectives can now be summarized as follows:
+
+
+
+
+Use a decentrallized tool with which TechEuphoria can be built locally before
+publishing it to the world...
+</summary>
+<content type="html">
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;epoch&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#epoch&quot;&gt;&lt;/a&gt;Epoch&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;TechEuphoria was developed during the second quarter of 2014 with the
+help of a wonderful &lt;a href=&quot;http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html&quot;&gt;slide deck&lt;/a&gt; from an open source
+advocate Dan Allen(&lt;a href=&quot;http://www.mojavelinux.com&quot;&gt;mojavelinux&lt;/a&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;objectives&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#objectives&quot;&gt;&lt;/a&gt;Objectives&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I had an overall understanding of what I wanted achieve. It is to build a lean
+and clean website, have the ability to be agile and publish with ease and at will.
+My objectives took form over the course of my search for a solution as I
+became familiar with the different concepts and paradigms of web design and
+development. My objectives can now be summarized as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Use a decentrallized tool with which TechEuphoria can be built locally before
+publishing it to the world wide web.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The tools chosen should have a mechanism with which the presentation of the
+website could be separated from the content.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use responsive website design(&lt;a href=&quot;http://en.wikipedia.org/wiki/Responsive_web_design&quot;&gt;RWD&lt;/a&gt;) to
+allow users with devices of different displays to consume the content.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;a-journey-of-errors&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#a-journey-of-errors&quot;&gt;&lt;/a&gt;A Journey of Errors&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My objectives were more or less clear. I needed a way to work on my website,
+whenever and wherever I wanted to. I knew Git was a good way to achieve
+it but I did not know about &lt;a href=&quot;https://pages.github.com&quot;&gt;Github Pages&lt;/a&gt; and started
+off with the first choice that came to mind and that was &lt;a href=&quot;http://wordpress.com&quot;&gt;Wordpress&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So begain my pursuit to build TechEuphoria with the objectives given. I initially
+figured a way to deploy and manage this website with the help of the following
+links:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://davidwinter.me/articles/2012/04/09/install-and-manage-wordpress-with-git/&quot;&gt;Install and manage Wordpress with Git&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://culttt.com/2013/04/08/how-to-deploy-wordpress-themes-with-git&quot;&gt;How to deploy WordPress themes with Git&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://mattbanks.me/wordpress-deployments-with-git&quot;&gt;Managing WordPress Deployments With Git&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://blog.g-design.net/post/60019471157/managing-and-deploying-wordpress-with-git&quot;&gt;Managing and deploying WordPress with Git&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After days of playing around and understanding the details of Wordpress I
+realized that it was still difficult to publish and the fact of dumping the
+SQL database to a file to sync different copies of the website was a hack
+rather than a solution. Despite getting the solution working I abandoned
+it completely on the 30th of May. My exploits are stored in the logs of
+the following repositories:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/zeuzoix/techeuphoria_wordpress&quot;&gt;GitHub repository&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://bitbucket.org/zeuzoix/techeuphoria_wordpress&quot;&gt;Bitbucket repository&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;tools&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#tools&quot;&gt;&lt;/a&gt;Tools&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The following represents the tools that I use to compile and publish this website:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;TechEuphoria content is written in &lt;a href=&quot;http://asciidoc.org&quot;&gt;AsciiDoc&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is transformed by &lt;a href=&quot;http://awestruct.org&quot;&gt;Awestruct&lt;/a&gt; and
+&lt;a href=&quot;http://asciidoctor.org&quot;&gt;Asciidoctor&lt;/a&gt; into a static website.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It uses &lt;a href=&quot;https://pages.github.com&quot;&gt;Github Pages&lt;/a&gt; as its publishing engine.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;I use &lt;a href=&quot;http://www.vim.org&quot;&gt;Vim&lt;/a&gt; as my text editor to edit everything.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;My development machine is an &lt;a href=&quot;http://www.ubuntu.com&quot;&gt;Ubuntu&lt;/a&gt; guest on an
+&lt;a href=&quot;https://www.virtualbox.org&quot;&gt;Oracle Virtual Box&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Happy Bloggin!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-06-26T04:22:59-04:00</updated>
+<updated>2014-06-28T05:30:29-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version.html" rel="alternate" type="text/html" />
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
 <name>Conrad Gomes</name>
 </author>
@@ -81,11 +251,11 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 </content>
 </entry>
 <entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches.html</id>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-06-26T04:22:59-04:00</updated>
+<updated>2014-06-28T05:30:29-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches.html" rel="alternate" type="text/html" />
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
 <name>Conrad Gomes</name>
 </author>
@@ -158,11 +328,11 @@ nice description of the different types of caches:&lt;/p&gt;
 </content>
 </entry>
 <entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists.html</id>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-06-26T04:22:59-04:00</updated>
+<updated>2014-06-28T05:30:29-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists.html" rel="alternate" type="text/html" />
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
 <name>Conrad Gomes</name>
 </author>

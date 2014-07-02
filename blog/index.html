@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width sticky">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/about/index.html">/about</a>
+</li>
+</li>
+<li class="divider">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/blog/index.html">/blog</a>
+</li>
+</li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1>TechEuphoria</h1>
+<hr>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-9 columns">
+<div class="row">
+<div class="large-12 columns posts">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/06/30/a-new-website/">A New Beginning</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-06-30T00:00:00+00:00">
+June 30, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="sect1">
+<h2 id="epoch"><a class="anchor" href="#epoch"></a>Epoch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TechEuphoria was developed during the second quarter of 2014 with the
+help of a wonderful <a href="http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html">slide deck</a> from an open source
+advocate Dan Allen(<a href="http://www.mojavelinux.com">mojavelinux</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="objectives"><a class="anchor" href="#objectives"></a>Objectives</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I had an overall understanding of what I wanted achieve. It is to build a lean
+and clean website, have the ability to be agile and publish with ease and at will.
+My objectives took form over the course of my search for a solution as I
+became familiar with the different concepts and paradigms of web design and
+development. My objectives can now be summarized as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use a decentrallized tool with which TechEuphoria can be built locally before
+publishing it to the world wide web.</p>
+</li>
+<li>
+<p>The tools chosen should have a mechanism with which the presentation of the
+website could be separated from the content.</p>
+</li>
+<li>
+<p>Use responsive website design(<a href="http://en.wikipedia.org/wiki/Responsive_web_design">RWD</a>) to
+allow users with devices of different displays to consume the content.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a-journey-of-errors"><a class="anchor" href="#a-journey-of-errors"></a>A Journey of Errors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>My objectives were more or less clear. I needed a way to work on my website,
+whenever and wherever I wanted to. I knew Git was a good way to achieve
+it but I did not know about <a href="https://pages.github.com">Github Pages</a> and started
+off with the first choice that came to mind and that was <a href="http://wordpress.com">Wordpress</a>.</p>
+</div>
+<div class="paragraph">
+<p>So begain my pursuit to build TechEuphoria with the objectives given. I initially
+figured a way to deploy and manage this website with the help of the following
+links:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://davidwinter.me/articles/2012/04/09/install-and-manage-wordpress-with-git/">Install and manage Wordpress with Git</a></p>
+</li>
+<li>
+<p><a href="http://culttt.com/2013/04/08/how-to-deploy-wordpress-themes-with-git">How to deploy WordPress themes with Git</a></p>
+</li>
+<li>
+<p><a href="http://mattbanks.me/wordpress-deployments-with-git">Managing WordPress Deployments With Git</a></p>
+</li>
+<li>
+<p><a href="http://blog.g-design.net/post/60019471157/managing-and-deploying-wordpress-with-git">Managing and deploying WordPress with Git</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After days of playing around and understanding the details of Wordpress I
+realized that it was still difficult to publish and the fact of dumping the
+SQL database to a file to sync different copies of the website was a hack
+rather than a solution. Despite getting the solution working I abandoned
+it completely on the 30th of May. My exploits are stored in the logs of
+the following repositories:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://github.com/zeuzoix/techeuphoria_wordpress">GitHub repository</a></p>
+</li>
+<li>
+<p><a href="https://bitbucket.org/zeuzoix/techeuphoria_wordpress">Bitbucket repository</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tools"><a class="anchor" href="#tools"></a>Tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following represents the tools that I use to compile and publish this website:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>TechEuphoria content is written in <a href="http://asciidoc.org">AsciiDoc</a>.</p>
+</li>
+<li>
+<p>It is transformed by <a href="http://awestruct.org">Awestruct</a> and
+<a href="http://asciidoctor.org">Asciidoctor</a> into a static website.</p>
+</li>
+<li>
+<p>It uses <a href="https://pages.github.com">Github Pages</a> as its publishing engine.</p>
+</li>
+<li>
+<p>I use <a href="http://www.vim.org">Vim</a> as my text editor to edit everything.</p>
+</li>
+<li>
+<p>My development machine is an <a href="http://www.ubuntu.com">Ubuntu</a> guest on an
+<a href="https://www.virtualbox.org">Oracle Virtual Box</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Happy Bloggin!</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/github pages/">github pages</a>
+, <a href="/techeuphoria/posts/tag/asciidoctor/">asciidoctor</a>
+, <a href="/techeuphoria/posts/tag/asciidoc/">asciidoc</a>
+, <a href="/techeuphoria/posts/tag/awestruct/">awestruct</a>
+, <a href="/techeuphoria/posts/tag/blog/">blog</a>
+, <a href="/techeuphoria/posts/tag/website/">website</a>
+, <a href="/techeuphoria/posts/tag/www/">www</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/">Printing the Linux kernel version</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-01-29T00:00:00+00:00">
+January 29, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
+in the first log and the version of the kernel is compiled with is shown
+in the second log in the version_init function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code class="c language-c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/utsname.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;generated/utsrelease.h&gt;</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init version_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#0a8;font-weight:bold">int</span> i = <span style="color:#00D">0</span>;
+
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module running of version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, utsname()-&gt;release);
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, UTS_RELEASE);
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit version_exit(<span style="color:#088;font-weight:bold">void</span>)
+{
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Over and out!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);
+MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">zeuzoix</span><span style="color:#710">&quot;</span></span>);
+MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel Module Version Example Module</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+, <a href="/techeuphoria/posts/tag/programming/">programming</a>
+, <a href="/techeuphoria/posts/tag/c/">c</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/01/15/caches/">Caches</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-01-15T00:00:00+00:00">
+January 15, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>Let&#8217;s talk about the cache and its requirement in a computing system. The word
+cache is derived from the french word cacher which means to <em>hide</em>.</p>
+</div>
+<div class="paragraph">
+<p>In a nutshell it&#8217;s a memory subsystem which improves the speed of execution of
+a thread by providing faster access to instructions and data based on their
+temporal and spacial characteristics in the program.</p>
+</div>
+<div class="paragraph">
+<p>With memory there&#8217;s typically a trade off between space and time. If speed is
+required then the storage capacity of the memory reduces particularly because
+the cost of the memory goes up with speed.</p>
+</div>
+<div class="paragraph">
+<p>So system designers often incorporate a cache in between the processor and main
+memory which can significantly improve the speed at which memory access occurs.</p>
+</div>
+<div class="paragraph">
+<p>The cache can be of different levels typically most processors these days have
+an inbuilt cache termed as L1 which is the smallest memory device in the
+hierarchy of memory in the system. Some processors like ARM Cortex&#8217;s A series
+have an in built L2 cache also.</p>
+</div>
+<div class="paragraph">
+<p>There are several popular designs for caches. The following videos give a very
+nice description of the different types of caches:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://youtu.be/bTj0vFs8ndI">Direct Mapped Cache</a></p>
+</li>
+<li>
+<p><a href="http://youtu.be/YAz0qJf05ko">Associative Cache</a></p>
+</li>
+<li>
+<p><a href="http://youtu.be/ReKzEGLlGfk">Set Associative Cache</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/processors/">processors</a>
+, <a href="/techeuphoria/posts/tag/programming/">programming</a>
+, <a href="/techeuphoria/posts/tag/cache/">cache</a>
+, <a href="/techeuphoria/posts/tag/arm/">arm</a>
+, <a href="/techeuphoria/posts/tag/cortex/">cortex</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2013/12/06/linux-linked-lists/">Linux Linked Lists</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-12-06T00:00:00+00:00">
+December  6, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>The linux kernel has a very peculiar implementation of the linked lists data
+structure. The linked list is actually a circular linked list. The following
+article is useful in understanding more about the design:<br>
+<a href="http://kernelnewbies.org/FAQ/LinkedLists">http://kernelnewbies.org/FAQ/LinkedLists</a></p>
+</div>
+<div class="paragraph">
+<p>What&#8217;s interesting is that the entire implementation is conveniently located
+in one header file. This shows that the open source movement when done right
+gives you the best solution possible over time:<br>
+<a href="http://lxr.free-electrons.com/source/include/linux/list.h">http://lxr.free-electrons.com/source/include/linux/list.h</a></p>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+, <a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/c/">c</a></div>
+</footer>
+<hr>
+</article>
+
+<div class="pagination-centered">
+<ul class="pagination">
+<li class="arrow unavailable">
+<a href="#">
+<i class="icon-step-backward"></i>
+</a>
+</li>
+<li>1 of 1</li>
+<li class="arrow unavailable">
+<a href="#">
+<i class="icon-step-forward"></i>
+</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="large-3 columns">
+<h4>Topics</h4>
+<ul class="square">
+<li>
+<a href="/techeuphoria/posts/tag/arm/">arm</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/asciidoc/">asciidoc</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/asciidoctor/">asciidoctor</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/awestruct/">awestruct</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/blog/">blog</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/c/">c</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cache/">cache</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cortex/">cortex</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/github pages/">github pages</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/processors/">processors</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/website/">website</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/www/">www</a>
+</li>
+</ul>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>
