@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-06-30T14:23:10-04:00</updated>
+<updated>2014-07-02T11:45:30-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-06-30T14:23:10-04:00</updated>
+<updated>2014-07-02T11:45:30-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -172,7 +172,7 @@ the following repositories:&lt;/p&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Happy Bloggin!&lt;/p&gt;
+&lt;p&gt;Happy Blogging!&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-06-28T05:30:29-04:00</updated>
+<updated>2014-07-02T11:44:31-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -253,7 +253,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-06-28T05:30:29-04:00</updated>
+<updated>2014-07-02T12:21:28-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -315,13 +315,13 @@ nice description of the different types of caches:&lt;/p&gt;
 &lt;div class=&quot;olist arabic&quot;&gt;
 &lt;ol class=&quot;arabic&quot;&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/bTj0vFs8ndI&quot;&gt;Direct Mapped Cache&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/bTj0vFs8ndI&quot; target=&quot;_blank&quot;&gt;Direct Mapped Cache&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/YAz0qJf05ko&quot;&gt;Associative Cache&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/YAz0qJf05ko&quot; target=&quot;_blank&quot;&gt;Associative Cache&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/ReKzEGLlGfk&quot;&gt;Set Associative Cache&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://youtu.be/ReKzEGLlGfk&quot; target=&quot;_blank&quot;&gt;Set Associative Cache&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
@@ -330,7 +330,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-06-28T05:30:29-04:00</updated>
+<updated>2014-07-02T12:14:45-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -358,13 +358,209 @@ http://lxr.free-electrons.com/source/include/linux/list.h
 &lt;p&gt;The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
 article is useful in understanding more about the design:&lt;br&gt;
-&lt;a href=&quot;http://kernelnewbies.org/FAQ/LinkedLists&quot;&gt;http://kernelnewbies.org/FAQ/LinkedLists&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;http://kernelnewbies.org/FAQ/LinkedLists&quot; target=&quot;_blank&quot;&gt;http://kernelnewbies.org/FAQ/LinkedLists&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;What&amp;#8217;s interesting is that the entire implementation is conveniently located
 in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:&lt;br&gt;
-&lt;a href=&quot;http://lxr.free-electrons.com/source/include/linux/list.h&quot;&gt;http://lxr.free-electrons.com/source/include/linux/list.h&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;http://lxr.free-electrons.com/source/include/linux/list.h&quot; target=&quot;_blank&quot;&gt;http://lxr.free-electrons.com/source/include/linux/list.h&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/</id>
+<title>Facebook Fatigue</title>
+<updated>2014-07-02T12:13:02-04:00</updated>
+<published>2011-06-16T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="design"></category>
+<summary>
+
+So here&#8217;s the deal Facebook&#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
+ Microsoft sitting up and paying attention.
+
+
+But I&#8217;ve got a theory that Facebook&#8217;s banking too much on the social connection.
+Facebook&#8217;s a shiny new red toy engine. It&#8217;s what everyone wants and needs to
+have. But over time the red paints going to wear out and we&#8217;re going to go
+after shinier toys.
+
+
+Facebook is cool because it&#8217;s purely web based. Awesome, but to a user Facebook
+offers a platform for information sharing. This information is...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So here&amp;#8217;s the deal Facebook&amp;#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
+ Microsoft sitting up and paying attention.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But I&amp;#8217;ve got a theory that Facebook&amp;#8217;s banking too much on the social connection.
+Facebook&amp;#8217;s a shiny new red toy engine. It&amp;#8217;s what everyone wants and needs to
+have. But over time the red paints going to wear out and we&amp;#8217;re going to go
+after shinier toys.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Facebook is cool because it&amp;#8217;s purely web based. Awesome, but to a user Facebook
+offers a platform for information sharing. This information is not random,
+it&amp;#8217;s personal information. It can be a video you like, a picture you love
+or just a status that makes you laugh.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But here&amp;#8217;s where I draw the line. Facebook&amp;#8217;s not doing enough to keep me
+dazzled. It&amp;#8217;s chat doesn&amp;#8217;t work as well as the Gmail Gtalk plugin. It&amp;#8217;s
+difficult to marshal content so as to control who views it. It&amp;#8217;s getting
+old and becoming advertising real estate which I&amp;#8217;m not interested in.
+Maybe it is useful to advertisers but from personal speak I&amp;#8217;m not looking
+at the ads. I just connect see if there&amp;#8217;s anything interesting happening
+in my social network and log off.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Facebook launched a new e-mail service with some yap yap difference. Well
+guess what I don&amp;#8217;t want to use the e-mail service.  Now Google&amp;#8217;s done well
+in attracting the masses away from leaders such as MSN Hotmail and Yahoo
+mail by offering unlimited e-mail storage. So you&amp;#8217;ve got you&amp;#8217;re personal
+e-mail with all your contacts located int one place and you&amp;#8217;ve got your
+social connections located in another. Interesting. You&amp;#8217;d like to keep
+the two apart because if you&amp;#8217;re using Facebook for business you wouldn&amp;#8217;t
+want associates et al dropping in on your social life. It&amp;#8217;s the tendency
+to separate business and pleasure for fear of not being taken seriously.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;People live different lives. Not many people can safely say they&amp;#8217;re the same
+person to everyone. You&amp;#8217;re most likely a serious person at work and a loose
+fun loving beer drinking friend at parties. There&amp;#8217;s a reason why you&amp;#8217;re not
+the same person. It&amp;#8217;s because you live in different social circles. Within
+each circle you&amp;#8217;re a different person.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Facebook&amp;#8217;s got along way to go before it can match up to my take on what the
+next big thing is going to be. In this Google&amp;#8217;s trying to claw its way up
+the social curve. But Google&amp;#8217;s got more and continuously strives to put a
+fresh coat of paint on the red toy train. Google&amp;#8217;s got millions of Gmail
+users who use Android phones and growing. This is where lies the value.
+You don&amp;#8217;t talk to strangers. That contact list of yours is your social
+network at least the important one.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For now Facebook&amp;#8217;s got to prove it&amp;#8217;s improving and drawing more users to
+consider it seriously. I truly hope &lt;a href=&quot;http://en.wikipedia.org/wiki/Mark_Zuckerberg&quot; target=&quot;_blank&quot;&gt;Mark&amp;#8217;s&lt;/a&gt; got an ace up his sleeve until
+then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/</id>
+<title>Beautiful Products</title>
+<updated>2014-07-02T11:37:04-04:00</updated>
+<published>2011-06-04T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="design"></category>
+<summary>
+
+There&#8217;s something about a beautiful product. From the moment you play with it you&#8217;re hooked.You want it, you need it and you won&#8217;t rest until its yours.
+
+
+Every product available today is an idea. The idea starts off as a thought
+process with potential. While there are many ideas that can be turned into
+products only a few actually create excitement.
+
+
+Beautiful products must enhance the value of life. If a product does not
+amplify its purpose and evoke euphoria it&#8217;s just an unnecessary object
+occupying space and time.
+
+
+Simplicity, aesthetics &amp; functionality maybe some of the qualities that
+get associated with a beautiful product however these can...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There&amp;#8217;s something about a beautiful product. From the moment you play with it you&amp;#8217;re hooked.You want it, you need it and you won&amp;#8217;t rest until its yours.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Every product available today is an idea. The idea starts off as a thought
+process with potential. While there are many ideas that can be turned into
+products only a few actually create excitement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Beautiful products must enhance the value of life. If a product does not
+amplify its purpose and evoke euphoria it&amp;#8217;s just an unnecessary object
+occupying space and time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Simplicity, aesthetics &amp;amp; functionality maybe some of the qualities that
+get associated with a beautiful product however these can be achieved
+only through proper design and execution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Design is the manifestation of an idea. It takes good design to push
+the idea from conception to existence. For an idea to be accepted well
+it has to be communicated well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To the user a new feature adds value to the product.A well designed feature
+adds weight to the acceptance of the idea and can even revolutionize the
+perception of a class of products. Apple revolutionized the touch experience
+and introduced its users to an experience that set the benchmark for all
+smartphones.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The concept of touch was a feature that several phone manufacturers
+introduced. It was only through good design that the idea moved from a
+blueprint idea to a differentiating idea.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Consumers buy products and the one aspect all consumers seek is value for
+money. Products don&amp;#8217;t build themselves they are developed by teams of
+managers and engineers. It takes proper execution to conduct an orchestra
+and produce a beautiful symphony. Likewise it also takes impeccable execution
+to produce a beautiful product.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Core to execution lies effective processes and communication. While quality
+is not a differentiation lack of quality will definitely downplay the expected
+results. So product manufacturers should constantly look back and ask
+themselves, &quot;Is it enough?&quot;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If a product is delivered is it enough? If a product fails to generate awe and
+interest is it enough? Could better execution set the product apart from others
+in its class. Execution encompasses everything from conception to realization
+of the product. Beautiful products do not happen by accident they grow out of
+beautiful execution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the end products will come and go but the beautiful ones will live on
+forever at least in our memories, in case studies and museums.&lt;/p&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/</id>
+<title>Hello World</title>
+<updated>2014-07-02T11:40:15-04:00</updated>
+<published>2011-06-03T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="blog"></category>
+<summary>
+
+Presenting my thoughts on technology with a bias towards embedded systems.
+...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Presenting my thoughts on technology with a bias towards embedded systems.&lt;/p&gt;
 &lt;/div&gt;
 </content>
 </entry>
