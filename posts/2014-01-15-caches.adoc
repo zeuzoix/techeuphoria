@@ -8,11 +8,11 @@ Conrad Gomes
 :associative-cache-yt: http://youtu.be/YAz0qJf05ko
 :set-associative-cache-yt: http://youtu.be/ReKzEGLlGfk
 
-Let's talk about the cache and its requirement in a computing system. The word 
+Let's talk about the cache and its requirement in a computing system. The word
 cache is derived from the french word cacher which means to _hide_.
 
 In a nutshell it's a memory subsystem which improves the speed of execution of
-a thread by providing faster access to instructions and data based on their 
+a thread by providing faster access to instructions and data based on their
 temporal and spacial characteristics in the program.
  
 With memory there's typically a trade off between space and time. If speed is
@@ -23,13 +23,13 @@ So system designers often incorporate a cache in between the processor and main
 memory which can significantly improve the speed at which memory access occurs.
 
 The cache can be of different levels typically most processors these days have
-an inbuilt cache termed as L1 which is the smallest memory device in the 
-hierarchy of memory in the system. Some processors like ARM Cortex's A series 
+an inbuilt cache termed as L1 which is the smallest memory device in the
+hierarchy of memory in the system. Some processors like ARM Cortex's A series
 have an in built L2 cache also.
 
 There are several popular designs for caches. The following videos give a very
 nice description of the different types of caches:
 
-. {direct-mapped-cache-yt}[Direct Mapped Cache]
-. {associative-cache-yt}[Associative Cache]
-. {set-associative-cache-yt}[Set Associative Cache]
+. {direct-mapped-cache-yt}[Direct Mapped Cache^]
+. {associative-cache-yt}[Associative Cache^]
+. {set-associative-cache-yt}[Set Associative Cache^]

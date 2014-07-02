@@ -5,8 +5,8 @@ Conrad Gomes
 :excerpt: The kernel version that a kernel module is built with can differ from the kernel version it is running on.
 :awestruct-excerpt: {excerpt}
 
-{excerpt} The version of the kernel that the module is running on is shown 
-in the first log and the version of the kernel is compiled with is shown 
+{excerpt} The version of the kernel that the module is running on is shown
+in the first log and the version of the kernel is compiled with is shown
 in the second log in the version_init function:
 
 [source,c]

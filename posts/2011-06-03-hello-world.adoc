@@ -1,0 +1,8 @@
+= Hello World
+Conrad Gomes
+2011-06-03-11-35
+:awestruct-tags: [blog]
+:excerpt: Presenting my thoughts on technology with a bias towards embedded systems.
+:awestruct-excerpt: {excerpt}
+
+{excerpt}

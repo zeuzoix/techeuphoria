@@ -7,13 +7,13 @@ Conrad Gomes
 :kernelnewbies-linkedlists: http://kernelnewbies.org/FAQ/LinkedLists
 :linux-linked-list-code: http://lxr.free-electrons.com/source/include/linux/list.h
 
-The linux kernel has a very peculiar implementation of the linked lists data 
+The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
 article is useful in understanding more about the design: +
-{kernelnewbies-linkedlists}
+{kernelnewbies-linkedlists}[{kernelnewbies-linkedlists}^]
 
-What's interesting is that the entire implementation is conveniently located 
+What's interesting is that the entire implementation is conveniently located
 in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time: +
-{linux-linked-list-code}
+{linux-linked-list-code}[{linux-linked-list-code}^]
 
