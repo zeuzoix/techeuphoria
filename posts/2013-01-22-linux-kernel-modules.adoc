@@ -1,0 +1,25 @@
+= Linux Kernel Modules
+Conrad Gomes
+2013-01-22
+:awestruct-tags: [design, kernel, linux, programming]
+:excerpt: A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.
+:awestruct-excerpt: {excerpt}
+:lkmpg-link: http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html
+
+{excerpt}
+
+The traditional approach employed by operating system designers was to add the
+code to the source code of the OS and build the OS as a single binary that can
+be booted by the boot-loader.
+
+The kernel module can be inserted and removed at any time during the execution
+of the kernel giving Linux Kernel developers the flexibility to test their
+modules before making them a part of the mainline Kernel source code.
+
+The process of building a stand-alone kernel module or integrating the kernel
+module with the source code of the Linux Kernel is simplified through the
+makefile of the kernel module. The source code of the kernel module remains
+the same irrespective of how it is built.
+
+Information on kernel module programming can be obtained from: +
+{lkmpg-link}[{lkmpg-link}^]
