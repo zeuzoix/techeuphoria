@@ -8,9 +8,7 @@ endif::[]
 :excerpt: This post highlights the comparison of the required functionalities of an OS with that of Linux.
 :awestruct-excerpt: {excerpt}
 
-{excerpt}
-
-An operating system is a software program which provides 5 management functions:
+{excerpt}An operating system is a software program which provides 5 management functions:
 
 . CPU
 . Memory
