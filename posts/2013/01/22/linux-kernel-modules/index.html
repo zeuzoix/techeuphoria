@@ -52,7 +52,7 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
-<a href="/techeuphoria/posts/2014/01/15/caches/">Caches</a>
+<a href="/techeuphoria/posts/2013/01/22/linux-kernel-modules/">Linux Kernel Modules</a>
 </h1>
 <h4>
 <em>by</em>
@@ -60,8 +60,8 @@ TechEuphoria
 Conrad Gomes
 </a>
 on
-<time class="pubdate" datetime="2014-01-15T00:00:00+00:00">
-January 15, 2014
+<time class="pubdate" datetime="2013-01-22T00:00:00+00:00">
+January 22, 2013
 </time>
 </h4>
 </header>
@@ -69,56 +69,37 @@ January 15, 2014
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let&#8217;s talk about the cache and its requirement in a computing system. The word
-cache is derived from the french word cacher which means to <em>hide</em>.</p>
+<p>A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.</p>
 </div>
 <div class="paragraph">
-<p>In a nutshell it&#8217;s a memory subsystem which improves the speed of execution of
-a thread by providing faster access to instructions and data based on their
-temporal and spacial characteristics in the program.</p>
+<p>The traditional approach employed by operating system designers was to add the
+code to the source code of the OS and build the OS as a single binary that can
+be booted by the boot-loader.</p>
 </div>
 <div class="paragraph">
-<p>With memory there&#8217;s typically a trade off between space and time. If speed is
-required then the storage capacity of the memory reduces particularly because
-the cost of the memory goes up with speed.</p>
+<p>The kernel module can be inserted and removed at any time during the execution
+of the kernel giving Linux Kernel developers the flexibility to test their
+modules before making them a part of the mainline Kernel source code.</p>
 </div>
 <div class="paragraph">
-<p>So system designers often incorporate a cache in between the processor and main
-memory which can significantly improve the speed at which memory access occurs.</p>
+<p>The process of building a stand-alone kernel module or integrating the kernel
+module with the source code of the Linux Kernel is simplified through the
+makefile of the kernel module. The source code of the kernel module remains
+the same irrespective of how it is built.</p>
 </div>
 <div class="paragraph">
-<p>The cache can be of different levels typically most processors these days have
-an inbuilt cache termed as L1 which is the smallest memory device in the
-hierarchy of memory in the system. Some processors like ARM Cortex&#8217;s A series
-have an in built L2 cache also.</p>
-</div>
-<div class="paragraph">
-<p>There are several popular designs for caches. The following videos give a very
-nice description of the different types of caches:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><a href="http://youtu.be/bTj0vFs8ndI" target="_blank">Direct Mapped Cache</a></p>
-</li>
-<li>
-<p><a href="http://youtu.be/YAz0qJf05ko" target="_blank">Associative Cache</a></p>
-</li>
-<li>
-<p><a href="http://youtu.be/ReKzEGLlGfk" target="_blank">Set Associative Cache</a></p>
-</li>
-</ol>
+<p>Information on kernel module programming can be obtained from:<br>
+<a href="http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html" target="_blank">http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html</a></p>
 </div>
 </div>
 </div>
 </div>
 <footer class="post-footer">
 <div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/processors/">processors</a>
-, <a href="/techeuphoria/posts/tag/programming/">programming</a>
-, <a href="/techeuphoria/posts/tag/cache/">cache</a>
-, <a href="/techeuphoria/posts/tag/arm/">arm</a>
-, <a href="/techeuphoria/posts/tag/cortex/">cortex</a></div>
+<a href="/techeuphoria/posts/tag/design/">design</a>
+, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+, <a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
 </footer>
 <hr>
 </article>

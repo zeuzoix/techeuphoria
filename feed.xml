@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-07-02T11:45:30-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-07-02T11:45:30-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-07-02T11:44:31-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -192,6 +192,8 @@ the following repositories:&lt;/p&gt;
 <category term="programming"></category>
 <category term="c"></category>
 <summary>
+
+
 
 The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
 in the first log and the version of the kernel is compiled with is shown
@@ -213,6 +215,8 @@ static int __init version_init(void)
         pr_alert(&quot;Kernel module compiled with version %s\n&quot;,...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
 in the first log and the version of the kernel is compiled with is shown
@@ -248,12 +252,14 @@ MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&
 MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-07-02T12:21:28-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -265,6 +271,8 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <category term="arm"></category>
 <category term="cortex"></category>
 <summary>
+
+
 
 Let&#8217;s talk about the cache and its requirement in a computing system. The word
 cache is derived from the french word cacher which means to hide.
@@ -284,6 +292,8 @@ So system designers often incorporate a cache in between the processor and main
 memory which...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Let&amp;#8217;s talk about the cache and its requirement in a computing system. The word
 cache is derived from the french word cacher which means to &lt;em&gt;hide&lt;/em&gt;.&lt;/p&gt;
@@ -325,12 +335,14 @@ nice description of the different types of caches:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-07-02T12:14:45-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -340,6 +352,8 @@ nice description of the different types of caches:&lt;/p&gt;
 <category term="linux"></category>
 <category term="c"></category>
 <summary>
+
+
 
 The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
@@ -351,9 +365,13 @@ What&#8217;s interesting is that the entire implementation is conveniently locat
 in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:
 http://lxr.free-electrons.com/source/include/linux/list.h
+
+
 ...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
@@ -366,12 +384,284 @@ in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:&lt;br&gt;
 &lt;a href=&quot;http://lxr.free-electrons.com/source/include/linux/list.h&quot; target=&quot;_blank&quot;&gt;http://lxr.free-electrons.com/source/include/linux/list.h&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
+<title>Linux Kernel Modules</title>
+<updated>2014-07-02T14:46:10-04:00</updated>
+<published>2013-01-22T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="design"></category>
+<category term="kernel"></category>
+<category term="linux"></category>
+<category term="programming"></category>
+<summary>
+
+
+
+A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.
+
+
+The traditional approach employed by operating system designers was to add the
+code to the source code of the OS and build the OS as a single binary that can
+be booted by the boot-loader.
+
+
+The kernel module can be inserted and removed at any time during the execution
+of the kernel giving Linux Kernel developers the flexibility to test their
+modules before making them a part of the mainline Kernel source code.
+
+
+The process of building a stand-alone...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The traditional approach employed by operating system designers was to add the
+code to the source code of the OS and build the OS as a single binary that can
+be booted by the boot-loader.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The kernel module can be inserted and removed at any time during the execution
+of the kernel giving Linux Kernel developers the flexibility to test their
+modules before making them a part of the mainline Kernel source code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The process of building a stand-alone kernel module or integrating the kernel
+module with the source code of the Linux Kernel is simplified through the
+makefile of the kernel module. The source code of the kernel module remains
+the same irrespective of how it is built.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Information on kernel module programming can be obtained from:&lt;br&gt;
+&lt;a href=&quot;http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html&quot; target=&quot;_blank&quot;&gt;http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
+<title>An Operating System Called Linux</title>
+<updated>2014-07-13T11:18:18-04:00</updated>
+<published>2013-01-19T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="design"></category>
+<category term="kernel"></category>
+<category term="linux"></category>
+<summary>
+
+
+
+This post highlights the comparison of the required functionalities of an OS with that of Linux.
+
+
+An operating system is a software program which provides 5 management functions:
+
+
+
+
+CPU
+
+
+Memory
+
+
+Networking
+
+
+Storage
+
+
+Device Input/Output
+
+
+
+
+Linux if one were to draw a block diagram can be represented as:
+
+
+
+
+
+
+
+In this diagram the core operating system is the Linux Kernel. The management
+functions which map to the generic definition of an operating system are:
+
+
+
+
+Process management
+
+
+Memory management
+
+
+Network
+
+
+File Systems
+
+
+Device Drivers
+
+
+
+
+Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
+space and are not part of the Linux Kernel memory space. An application
+interfaces with the Linux Kernel through the system call interface.
+
+
+...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This post highlights the comparison of the required functionalities of an OS with that of Linux.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;An operating system is a software program which provides 5 management functions:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;CPU&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Memory&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Networking&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Storage&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Device Input/Output&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Linux if one were to draw a block diagram can be represented as:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/linux-kernel-architecture-diagram.png&quot; alt=&quot;linux kernel architecture diagram&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this diagram the core operating system is the Linux Kernel. The management
+functions which map to the generic definition of an operating system are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Process management&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Memory management&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Network&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;File Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Device Drivers&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
+space and are not part of the Linux Kernel memory space. An application
+interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
+<title>iFanaticism</title>
+<updated>2014-07-02T14:31:58-04:00</updated>
+<published>2011-10-16T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="design"></category>
+<summary>
+
+
+
+It&#8217;s amazing, I&#8217;m going through the news paper and I read about people in Tokyo who&#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.
+
+
+What was it about Steve Jobs that moves people not in his own country but in
+countries other than his own? What was it about him that caused millions to
+pour out their hearts on twitter and facebook when they heard of his death.
+Steve Jobs has been catapulted to the status of a rock-star. No other
+entrepreneur has ever had the admiration and adoration of millions of
+people. It&#8217;s pure fanaticism!
+
+
+His products...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s amazing, I&amp;#8217;m going through the news paper and I read about people in Tokyo who&amp;#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;What was it about Steve Jobs that moves people not in his own country but in
+countries other than his own? What was it about him that caused millions to
+pour out their hearts on twitter and facebook when they heard of his death.
+Steve Jobs has been catapulted to the status of a rock-star. No other
+entrepreneur has ever had the admiration and adoration of millions of
+people. It&amp;#8217;s pure fanaticism!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;His products have been sought after by many fans. People literally stand in
+queues to pick up Apple&amp;#8217;s products. They want the real deal. People don&amp;#8217;t buy
+cheaper imitations from China. They find value for money in those gadgets.
+Enough to convert them into evangelists for Apple.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Steve Jobs now shares his place with those that inspired and evoked euphoria
+in the millions. People like Curt Cobain, Elvis Presley and Michael Jackson.
+He redefined product conceptualization. But there&amp;#8217;s a question that comes to
+my mind. Steve&amp;#8217;s best was at the end of his life. Was it his awareness of his
+condition that pushed him to create the best products of Apple?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Whatever it was one thing&amp;#8217;s for sure, he&amp;#8217;s made a dent in the universe.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/</id>
 <title>Facebook Fatigue</title>
-<updated>2014-07-02T12:13:02-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2011-06-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/" rel="alternate" type="text/html" />
 <author>
@@ -379,6 +669,8 @@ gives you the best solution possible over time:&lt;br&gt;
 </author>
 <category term="design"></category>
 <summary>
+
+
 
 So here&#8217;s the deal Facebook&#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
  Microsoft sitting up and paying attention.
@@ -394,6 +686,8 @@ Facebook is cool because it&#8217;s purely web based. Awesome, but to a user Fac
 offers a platform for information sharing. This information is...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;So here&amp;#8217;s the deal Facebook&amp;#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
  Microsoft sitting up and paying attention.&lt;/p&gt;
@@ -451,12 +745,14 @@ network at least the important one.&lt;/p&gt;
 consider it seriously. I truly hope &lt;a href=&quot;http://en.wikipedia.org/wiki/Mark_Zuckerberg&quot; target=&quot;_blank&quot;&gt;Mark&amp;#8217;s&lt;/a&gt; got an ace up his sleeve until
 then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/</id>
 <title>Beautiful Products</title>
-<updated>2014-07-02T11:37:04-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2011-06-04T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/" rel="alternate" type="text/html" />
 <author>
@@ -464,6 +760,8 @@ then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
 </author>
 <category term="design"></category>
 <summary>
+
+
 
 There&#8217;s something about a beautiful product. From the moment you play with it you&#8217;re hooked.You want it, you need it and you won&#8217;t rest until its yours.
 
@@ -482,6 +780,8 @@ Simplicity, aesthetics &amp; functionality maybe some of the qualities that
 get associated with a beautiful product however these can...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;There&amp;#8217;s something about a beautiful product. From the moment you play with it you&amp;#8217;re hooked.You want it, you need it and you won&amp;#8217;t rest until its yours.&lt;/p&gt;
 &lt;/div&gt;
@@ -541,12 +841,14 @@ beautiful execution.&lt;/p&gt;
 &lt;p&gt;In the end products will come and go but the beautiful ones will live on
 forever at least in our memories, in case studies and museums.&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/</id>
 <title>Hello World</title>
-<updated>2014-07-02T11:40:15-04:00</updated>
+<updated>2014-07-02T13:16:42-04:00</updated>
 <published>2011-06-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/" rel="alternate" type="text/html" />
 <author>
@@ -555,12 +857,20 @@ forever at least in our memories, in case studies and museums.&lt;/p&gt;
 <category term="blog"></category>
 <summary>
 
+
+
 Presenting my thoughts on technology with a bias towards embedded systems.
+
+
 ...
 </summary>
 <content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Presenting my thoughts on technology with a bias towards embedded systems.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 </content>
 </entry>
