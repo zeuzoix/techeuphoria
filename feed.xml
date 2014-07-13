@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -391,7 +391,7 @@ gives you the best solution possible over time:&lt;br&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
 <title>Linux Kernel Modules</title>
-<updated>2014-07-02T14:46:10-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2013-01-22T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
 <author>
@@ -453,7 +453,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
 <title>An Operating System Called Linux</title>
-<updated>2014-07-13T11:18:18-04:00</updated>
+<updated>2014-07-13T14:04:12-04:00</updated>
 <published>2013-01-19T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
 <author>
@@ -466,10 +466,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 
 
 
-This post highlights the comparison of the required functionalities of an OS with that of Linux.
-
-
-An operating system is a software program which provides 5 management functions:
+This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:
 
 
 
@@ -533,10 +530,7 @@ interfaces with the Linux Kernel through the system call interface.
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This post highlights the comparison of the required functionalities of an OS with that of Linux.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;An operating system is a software program which provides 5 management functions:&lt;/p&gt;
+&lt;p&gt;This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;olist arabic&quot;&gt;
 &lt;ol class=&quot;arabic&quot;&gt;
@@ -600,7 +594,7 @@ interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
 <title>iFanaticism</title>
-<updated>2014-07-02T14:31:58-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2011-10-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
 <author>
@@ -661,7 +655,7 @@ condition that pushed him to create the best products of Apple?&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/</id>
 <title>Facebook Fatigue</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2011-06-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/" rel="alternate" type="text/html" />
 <author>
@@ -752,7 +746,7 @@ then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/</id>
 <title>Beautiful Products</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2011-06-04T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/" rel="alternate" type="text/html" />
 <author>
@@ -848,7 +842,7 @@ forever at least in our memories, in case studies and museums.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/</id>
 <title>Hello World</title>
-<updated>2014-07-02T13:16:42-04:00</updated>
+<updated>2014-07-13T11:25:17-04:00</updated>
 <published>2011-06-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/03/hello-world/" rel="alternate" type="text/html" />
 <author>
