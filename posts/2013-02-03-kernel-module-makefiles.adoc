@@ -23,7 +23,7 @@ clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean <2>
 ----
 <1> modules is the target to build the kernel module
-<1> clean is the target to clean the kernel module
+<2> clean is the target to clean the kernel module
 
 NOTE: The above makefile will fail if used directly please replace the spaces
 at lines 4 and 7 with TABS or please download the following from here
