@@ -1,0 +1,64 @@
+= Kernel Module Makefiles
+Conrad Gomes
+2013-02-03
+:awestruct-tags: [kernel, linux, programming]
+:excerpt: You've got your kernel module code ready and you want to build it. 
+:awestruct-excerpt: {excerpt}
+:icons: font
+:lkmpg-link: http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html
+:makefile1-gdocs-link: https://docs.google.com/file/d/0B2qMThwa-F02dlBiaTl1dktTUWc/edit?usp=sharing
+:compiling-kernel-modules-link: http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html
+
+{excerpt} The following is a simple kernel module makefile which will help you
+do this:
+
+[source,makefile,numbered]
+----
+obj-m += hello-1.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules <1>
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean <2>
+----
+<1> modules is the target to build the kernel module
+<1> clean is the target to clean the kernel module
+
+NOTE: The above makefile will fail if used directly please replace the spaces
+at lines 4 and 7 with TABS or please download the following from here
+{makefile1-gdocs-link}[makefile1^].
+
+In this explanation there are two makefiles which I will be referring to. 
+The first is the one shown above and the second is the main kernel makefile
+which is located in the kernel source directory.
+
+When you compile the kernel the make process assembles a list of kernel
+drirvers and modules that are to be compiled as loadable kernel modules
+defined by obj-m.
+
+In our example above we indicate that we want to create a kernel module out
+of the hello-1.o object file which is eventually built from our hello-1.c
+source code.
+
+There are two targets for the makefile i.e. all and clean. They invoke the
+_'modules'_ and _'clean'_ targets of the main kernel makefile.
+
+Let's understand the option switches.
+
+The _-C_ option switches the make command to the kernel source directory. 
+Basically this is the directory of the source code used to build the kernel 
+image with the main kernel makefile. Here _$(shell uname -r)_ is a convenient
+way of specifying the name of the live kernel being run when the make 
+command is executed. 
+
+The _M_ option tells the main kernel makefile to go to the present working
+directory and read the makefile present there. This is a way of telling
+the main kernel makefile to read the the makefile shown above. This enables
+the main kernel makefile to add the _hello-1.o_ object to its list of modules
+to be built.
+
+Here _$(PWD)_ is a convenient way of specifying the present working directory.
+
+More information is available at: +
+{compiling-kernel-modules-link}[{compiling-kernel-modules-link}^]
