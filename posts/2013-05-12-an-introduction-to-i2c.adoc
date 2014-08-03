@@ -1,0 +1,38 @@
+= An Introduction To I2C
+Conrad Gomes
+2013-05-12
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-tags: [electronics, protocols, i2c, twi, bus]
+:excerpt: I2C is a serial data bus used to interface low speed peripherals developed by Phillips.
+:awestruct-excerpt: {excerpt}
+:i2c-wiki-link: http://en.wikipedia.org/wiki/I2C
+:esaacademy-link: http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html 
+
+{excerpt} Data sheets of other semi-conductor companies refer to their I2C
+like interface as the Two Wire Interface.
+
+I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
+interface. SCL is the clock interface and is used to synchronize the data
+communication on the SDA line.The device initiating and terminating the
+transmission is called the master. The master controls the SCL clock signal. 
+
+There is only one master active during data communication on the bus however
+it does not mean the bus has to have only one master. The I2C protocol can
+support multiple masters and multiple slaves. In fact multiple masters can
+co-exist if they support an arbitration mechanism.
+
+Typically when a master initiates a transfer it will also sense the line in
+order to detect if another master is transmitting at the same time. The
+arbitration mechanism will force one master to hold back on the transmission.
+The master can wait and try again once the line is free or immediately switch
+to slave mode if the application requires the device to act in both master
+and slave modes
+
+More information at : +
+
+. {i2c-wiki-link}[{i2c-wiki-link}^]
+. {esaacademy-link}[{esaacademy-link}^]
+
+image::I2C.svg[width="640", height="480", align="center"]
