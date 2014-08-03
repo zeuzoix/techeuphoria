@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -389,9 +389,89 @@ gives you the best solution possible over time:&lt;br&gt;
 </content>
 </entry>
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
+<title>An Introduction To I2C</title>
+<updated>2014-08-03T10:05:39-04:00</updated>
+<published>2013-05-12T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="protocols"></category>
+<category term="i2c"></category>
+<category term="twi"></category>
+<category term="bus"></category>
+<summary>
+
+
+
+I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
+like interface as the Two Wire Interface.
+
+
+I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
+interface. SCL is the clock interface and is used to synchronize the data
+communication on the SDA line.The device initiating and terminating the
+transmission is called the master. The master controls the SCL clock signal.
+
+
+There is only one master active during data communication on the bus however
+it does not mean the bus has to have...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
+like interface as the Two Wire Interface.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
+interface. SCL is the clock interface and is used to synchronize the data
+communication on the SDA line.The device initiating and terminating the
+transmission is called the master. The master controls the SCL clock signal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There is only one master active during data communication on the bus however
+it does not mean the bus has to have only one master. The I2C protocol can
+support multiple masters and multiple slaves. In fact multiple masters can
+co-exist if they support an arbitration mechanism.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Typically when a master initiates a transfer it will also sense the line in
+order to detect if another master is transmitting at the same time. The
+arbitration mechanism will force one master to hold back on the transmission.
+The master can wait and try again once the line is free or immediately switch
+to slave mode if the application requires the device to act in both master
+and slave modes&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;More information at :&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/I2C&quot; target=&quot;_blank&quot;&gt;http://en.wikipedia.org/wiki/I2C&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html&quot; target=&quot;_blank&quot;&gt;http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/I2C.svg&quot; alt=&quot;I2C&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
 <title>Kernel Module Makefiles</title>
-<updated>2014-07-14T05:02:41-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2013-02-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
 <author>
@@ -557,7 +637,7 @@ to be built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
 <title>Linux Kernel Modules</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2013-01-22T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
 <author>
@@ -619,7 +699,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
 <title>An Operating System Called Linux</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-08-01T04:19:33-04:00</updated>
 <published>2013-01-19T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
 <author>
@@ -760,7 +840,7 @@ interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
 <title>iFanaticism</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2011-10-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
 <author>
@@ -821,7 +901,7 @@ condition that pushed him to create the best products of Apple?&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/</id>
 <title>Facebook Fatigue</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
+<updated>2014-07-14T05:05:43-04:00</updated>
 <published>2011-06-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/" rel="alternate" type="text/html" />
 <author>
@@ -904,102 +984,6 @@ network at least the important one.&lt;/p&gt;
 &lt;p&gt;For now Facebook&amp;#8217;s got to prove it&amp;#8217;s improving and drawing more users to
 consider it seriously. I truly hope &lt;a href=&quot;http://en.wikipedia.org/wiki/Mark_Zuckerberg&quot; target=&quot;_blank&quot;&gt;Mark&amp;#8217;s&lt;/a&gt; got an ace up his sleeve until
 then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/</id>
-<title>Beautiful Products</title>
-<updated>2014-07-14T05:01:26-04:00</updated>
-<published>2011-06-04T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/04/beautiful-products/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="design"></category>
-<summary>
-
-
-
-There&#8217;s something about a beautiful product. From the moment you play with it you&#8217;re hooked.You want it, you need it and you won&#8217;t rest until its yours.
-
-
-Every product available today is an idea. The idea starts off as a thought
-process with potential. While there are many ideas that can be turned into
-products only a few actually create excitement.
-
-
-Beautiful products must enhance the value of life. If a product does not
-amplify its purpose and evoke euphoria it&#8217;s just an unnecessary object
-occupying space and time.
-
-
-Simplicity, aesthetics &amp; functionality maybe some of the qualities that
-get associated with a beautiful product however these can...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;There&amp;#8217;s something about a beautiful product. From the moment you play with it you&amp;#8217;re hooked.You want it, you need it and you won&amp;#8217;t rest until its yours.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Every product available today is an idea. The idea starts off as a thought
-process with potential. While there are many ideas that can be turned into
-products only a few actually create excitement.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Beautiful products must enhance the value of life. If a product does not
-amplify its purpose and evoke euphoria it&amp;#8217;s just an unnecessary object
-occupying space and time.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Simplicity, aesthetics &amp;amp; functionality maybe some of the qualities that
-get associated with a beautiful product however these can be achieved
-only through proper design and execution.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Design is the manifestation of an idea. It takes good design to push
-the idea from conception to existence. For an idea to be accepted well
-it has to be communicated well.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;To the user a new feature adds value to the product.A well designed feature
-adds weight to the acceptance of the idea and can even revolutionize the
-perception of a class of products. Apple revolutionized the touch experience
-and introduced its users to an experience that set the benchmark for all
-smartphones.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The concept of touch was a feature that several phone manufacturers
-introduced. It was only through good design that the idea moved from a
-blueprint idea to a differentiating idea.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Consumers buy products and the one aspect all consumers seek is value for
-money. Products don&amp;#8217;t build themselves they are developed by teams of
-managers and engineers. It takes proper execution to conduct an orchestra
-and produce a beautiful symphony. Likewise it also takes impeccable execution
-to produce a beautiful product.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Core to execution lies effective processes and communication. While quality
-is not a differentiation lack of quality will definitely downplay the expected
-results. So product manufacturers should constantly look back and ask
-themselves, &quot;Is it enough?&quot;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If a product is delivered is it enough? If a product fails to generate awe and
-interest is it enough? Could better execution set the product apart from others
-in its class. Execution encompasses everything from conception to realization
-of the product. Beautiful products do not happen by accident they grow out of
-beautiful execution.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the end products will come and go but the beautiful ones will live on
-forever at least in our memories, in case studies and museums.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

@@ -389,6 +389,81 @@ gives you the best solution possible over time:<br>
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/">An Introduction To I2C</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-05-12T00:00:00+00:00">
+May 12, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
+like interface as the Two Wire Interface.</p>
+</div>
+<div class="paragraph">
+<p>I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
+interface. SCL is the clock interface and is used to synchronize the data
+communication on the SDA line.The device initiating and terminating the
+transmission is called the master. The master controls the SCL clock signal.</p>
+</div>
+<div class="paragraph">
+<p>There is only one master active during data communication on the bus however
+it does not mean the bus has to have only one master. The I2C protocol can
+support multiple masters and multiple slaves. In fact multiple masters can
+co-exist if they support an arbitration mechanism.</p>
+</div>
+<div class="paragraph">
+<p>Typically when a master initiates a transfer it will also sense the line in
+order to detect if another master is transmitting at the same time. The
+arbitration mechanism will force one master to hold back on the transmission.
+The master can wait and try again once the line is free or immediately switch
+to slave mode if the application requires the device to act in both master
+and slave modes</p>
+</div>
+<div class="paragraph">
+<p>More information at :<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://en.wikipedia.org/wiki/I2C" target="_blank">http://en.wikipedia.org/wiki/I2C</a></p>
+</li>
+<li>
+<p><a href="http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html" target="_blank">http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html</a></p>
+</li>
+</ol>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/I2C.svg" alt="I2C" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+, <a href="/techeuphoria/posts/tag/twi/">twi</a>
+, <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/02/03/kernel-module-makefiles/">Kernel Module Makefiles</a>
 </h1>
 <h4>
@@ -797,94 +872,6 @@ then I&#8217;m going to view his company as the Joker in the pack.</p>
 <hr>
 </article>
 
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2011/06/04/beautiful-products/">Beautiful Products</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2011-06-04T00:00:00+00:00">
-June  4, 2011
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>There&#8217;s something about a beautiful product. From the moment you play with it you&#8217;re hooked.You want it, you need it and you won&#8217;t rest until its yours.</p>
-</div>
-<div class="paragraph">
-<p>Every product available today is an idea. The idea starts off as a thought
-process with potential. While there are many ideas that can be turned into
-products only a few actually create excitement.</p>
-</div>
-<div class="paragraph">
-<p>Beautiful products must enhance the value of life. If a product does not
-amplify its purpose and evoke euphoria it&#8217;s just an unnecessary object
-occupying space and time.</p>
-</div>
-<div class="paragraph">
-<p>Simplicity, aesthetics &amp; functionality maybe some of the qualities that
-get associated with a beautiful product however these can be achieved
-only through proper design and execution.</p>
-</div>
-<div class="paragraph">
-<p>Design is the manifestation of an idea. It takes good design to push
-the idea from conception to existence. For an idea to be accepted well
-it has to be communicated well.</p>
-</div>
-<div class="paragraph">
-<p>To the user a new feature adds value to the product.A well designed feature
-adds weight to the acceptance of the idea and can even revolutionize the
-perception of a class of products. Apple revolutionized the touch experience
-and introduced its users to an experience that set the benchmark for all
-smartphones.</p>
-</div>
-<div class="paragraph">
-<p>The concept of touch was a feature that several phone manufacturers
-introduced. It was only through good design that the idea moved from a
-blueprint idea to a differentiating idea.</p>
-</div>
-<div class="paragraph">
-<p>Consumers buy products and the one aspect all consumers seek is value for
-money. Products don&#8217;t build themselves they are developed by teams of
-managers and engineers. It takes proper execution to conduct an orchestra
-and produce a beautiful symphony. Likewise it also takes impeccable execution
-to produce a beautiful product.</p>
-</div>
-<div class="paragraph">
-<p>Core to execution lies effective processes and communication. While quality
-is not a differentiation lack of quality will definitely downplay the expected
-results. So product manufacturers should constantly look back and ask
-themselves, "Is it enough?"</p>
-</div>
-<div class="paragraph">
-<p>If a product is delivered is it enough? If a product fails to generate awe and
-interest is it enough? Could better execution set the product apart from others
-in its class. Execution encompasses everything from conception to realization
-of the product. Beautiful products do not happen by accident they grow out of
-beautiful execution.</p>
-</div>
-<div class="paragraph">
-<p>In the end products will come and go but the beautiful ones will live on
-forever at least in our memories, in case studies and museums.</p>
-</div>
-</div>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a></div>
-</footer>
-<hr>
-</article>
-
 <div class="pagination-centered">
 <ul class="pagination">
 <li class="arrow unavailable">
@@ -924,6 +911,9 @@ forever at least in our memories, in case studies and museums.</p>
 <a href="/techeuphoria/posts/tag/blog/">blog</a>
 </li>
 <li>
+<a href="/techeuphoria/posts/tag/bus/">bus</a>
+</li>
+<li>
 <a href="/techeuphoria/posts/tag/c/">c</a>
 </li>
 <li>
@@ -936,7 +926,13 @@ forever at least in our memories, in case studies and museums.</p>
 <a href="/techeuphoria/posts/tag/design/">design</a>
 </li>
 <li>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+</li>
+<li>
 <a href="/techeuphoria/posts/tag/github pages/">github pages</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/i2c/">i2c</a>
 </li>
 <li>
 <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
@@ -949,6 +945,12 @@ forever at least in our memories, in case studies and museums.</p>
 </li>
 <li>
 <a href="/techeuphoria/posts/tag/programming/">programming</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/twi/">twi</a>
 </li>
 <li>
 <a href="/techeuphoria/posts/tag/website/">website</a>
