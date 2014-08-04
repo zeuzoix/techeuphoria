@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -389,9 +389,102 @@ gives you the best solution possible over time:&lt;br&gt;
 </content>
 </entry>
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/</id>
+<title>Atmega Development Boards and Arduino</title>
+<updated>2014-08-03T12:02:15-04:00</updated>
+<published>2013-05-14T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="productization"></category>
+<summary>
+
+
+
+I&#8217;ve been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
+I&#8217;ve been going through various sources trying to figure out what the Electronic
+DIY community uses to develop LED cubes,
+RC controlled cars, etc.
+
+
+One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
+This micro-controller is also used in the popular Arduino platfrom.
+
+
+The popularity of the ATmega AVR is due to the availability of free and
+inexpensive development tools accelerated by the high number of development
+boards available.
+
+
+The  ATmega AVR was the first micro-controller to have an...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ve been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
+I&amp;#8217;ve been going through various sources trying to figure out what the Electronic
+DIY community uses to develop &lt;a href=&quot;http://youtu.be/WZfNS-pbFYQ&quot;&gt;LED cubes&lt;sup&gt;&lt;/sup&gt;&lt;/a&gt;,
+&lt;a href=&quot;http://youtu.be/WZfNS-pbFYQ&quot;&gt;RC controlled cars&lt;/a&gt;, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
+This micro-controller is also used in the popular Arduino platfrom.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The popularity of the ATmega AVR is due to the availability of free and
+inexpensive development tools accelerated by the high number of development
+boards available.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The  ATmega AVR was the first micro-controller to have an on board flash for
+program storage. Compared to the other micro-controllers at the time which
+offered one time programmable ROM, EPROM and EEPROM options. The flash offers
+reduced cost of development as the frequency with which applications can
+be deployed and tested easily increases.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Arduino platform is an open source hardware and software project meant
+for hobbyists, designers and artists. The hardware uses a ATmega AVR and
+the software consists of an easy to use JAVA like programming IDE based
+on Wiring.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ve got my hands on an AVR development board called the Device Driver Kit.
+The kit can be used to learn about Linux device drivers or can be used as a
+ATmega AVR development board for your electronics project.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/lddk_connected.jpg&quot; alt=&quot;lddk connected&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The board has a USB interface through which you can program the ATmega
+and develop your own applications. This makes it easy to do rapid prototyping
+with just a PC and the board. I&amp;#8217;ll be posting some of my side projects which
+will use the board.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It shouldn&amp;#8217;t be too difficult to whip up a ATmega AVR development board or
+a Arduino board with the resources available online. However as a starting
+point it would be good to familiarize yourself with the AVR before you
+jump into building your own board.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Details of the DDK board are available at:&lt;br&gt;
+&lt;a href=&quot;http://esrijan.com/index.php?pagefile=lddk&quot;&gt;http://esrijan.com/index.php?pagefile=lddk&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
 <title>An Introduction To I2C</title>
-<updated>2014-08-03T10:05:39-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2013-05-12T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
 <author>
@@ -471,7 +564,7 @@ and slave modes&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
 <title>Kernel Module Makefiles</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2013-02-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
 <author>
@@ -637,7 +730,7 @@ to be built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
 <title>Linux Kernel Modules</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2013-01-22T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
 <author>
@@ -699,7 +792,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
 <title>An Operating System Called Linux</title>
-<updated>2014-08-01T04:19:33-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2013-01-19T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
 <author>
@@ -840,7 +933,7 @@ interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
 <title>iFanaticism</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
+<updated>2014-08-03T11:24:32-04:00</updated>
 <published>2011-10-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
 <author>
@@ -893,97 +986,6 @@ condition that pushed him to create the best products of Apple?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Whatever it was one thing&amp;#8217;s for sure, he&amp;#8217;s made a dent in the universe.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/</id>
-<title>Facebook Fatigue</title>
-<updated>2014-07-14T05:05:43-04:00</updated>
-<published>2011-06-16T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/06/16/facebook-fatigue/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="design"></category>
-<summary>
-
-
-
-So here&#8217;s the deal Facebook&#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
- Microsoft sitting up and paying attention.
-
-
-But I&#8217;ve got a theory that Facebook&#8217;s banking too much on the social connection.
-Facebook&#8217;s a shiny new red toy engine. It&#8217;s what everyone wants and needs to
-have. But over time the red paints going to wear out and we&#8217;re going to go
-after shinier toys.
-
-
-Facebook is cool because it&#8217;s purely web based. Awesome, but to a user Facebook
-offers a platform for information sharing. This information is...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;So here&amp;#8217;s the deal Facebook&amp;#8217;s this awesome site where over 500 million users can interact with their friends and associates. Its popularity has been unchallenged leaving companies like Google and
- Microsoft sitting up and paying attention.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;But I&amp;#8217;ve got a theory that Facebook&amp;#8217;s banking too much on the social connection.
-Facebook&amp;#8217;s a shiny new red toy engine. It&amp;#8217;s what everyone wants and needs to
-have. But over time the red paints going to wear out and we&amp;#8217;re going to go
-after shinier toys.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Facebook is cool because it&amp;#8217;s purely web based. Awesome, but to a user Facebook
-offers a platform for information sharing. This information is not random,
-it&amp;#8217;s personal information. It can be a video you like, a picture you love
-or just a status that makes you laugh.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;But here&amp;#8217;s where I draw the line. Facebook&amp;#8217;s not doing enough to keep me
-dazzled. It&amp;#8217;s chat doesn&amp;#8217;t work as well as the Gmail Gtalk plugin. It&amp;#8217;s
-difficult to marshal content so as to control who views it. It&amp;#8217;s getting
-old and becoming advertising real estate which I&amp;#8217;m not interested in.
-Maybe it is useful to advertisers but from personal speak I&amp;#8217;m not looking
-at the ads. I just connect see if there&amp;#8217;s anything interesting happening
-in my social network and log off.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Facebook launched a new e-mail service with some yap yap difference. Well
-guess what I don&amp;#8217;t want to use the e-mail service.  Now Google&amp;#8217;s done well
-in attracting the masses away from leaders such as MSN Hotmail and Yahoo
-mail by offering unlimited e-mail storage. So you&amp;#8217;ve got you&amp;#8217;re personal
-e-mail with all your contacts located int one place and you&amp;#8217;ve got your
-social connections located in another. Interesting. You&amp;#8217;d like to keep
-the two apart because if you&amp;#8217;re using Facebook for business you wouldn&amp;#8217;t
-want associates et al dropping in on your social life. It&amp;#8217;s the tendency
-to separate business and pleasure for fear of not being taken seriously.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;People live different lives. Not many people can safely say they&amp;#8217;re the same
-person to everyone. You&amp;#8217;re most likely a serious person at work and a loose
-fun loving beer drinking friend at parties. There&amp;#8217;s a reason why you&amp;#8217;re not
-the same person. It&amp;#8217;s because you live in different social circles. Within
-each circle you&amp;#8217;re a different person.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Facebook&amp;#8217;s got along way to go before it can match up to my take on what the
-next big thing is going to be. In this Google&amp;#8217;s trying to claw its way up
-the social curve. But Google&amp;#8217;s got more and continuously strives to put a
-fresh coat of paint on the red toy train. Google&amp;#8217;s got millions of Gmail
-users who use Android phones and growing. This is where lies the value.
-You don&amp;#8217;t talk to strangers. That contact list of yours is your social
-network at least the important one.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;For now Facebook&amp;#8217;s got to prove it&amp;#8217;s improving and drawing more users to
-consider it seriously. I truly hope &lt;a href=&quot;http://en.wikipedia.org/wiki/Mark_Zuckerberg&quot; target=&quot;_blank&quot;&gt;Mark&amp;#8217;s&lt;/a&gt; got an ace up his sleeve until
-then I&amp;#8217;m going to view his company as the Joker in the pack.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

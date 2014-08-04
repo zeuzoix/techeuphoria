@@ -52,7 +52,7 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
-<a href="/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/">Printing the Linux kernel version</a>
+<a href="/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/">Atmega Development Boards and Arduino</a>
 </h1>
 <h4>
 <em>by</em>
@@ -60,8 +60,8 @@ TechEuphoria
 Conrad Gomes
 </a>
 on
-<time class="pubdate" datetime="2014-01-29T00:00:00+00:00">
-January 29, 2014
+<time class="pubdate" datetime="2013-05-14T00:00:00+00:00">
+May 14, 2013
 </time>
 </h4>
 </header>
@@ -69,49 +69,66 @@ January 29, 2014
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
-in the first log and the version of the kernel is compiled with is shown
-in the second log in the version_init function:</p>
+<p>I&#8217;ve been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
+I&#8217;ve been going through various sources trying to figure out what the Electronic
+DIY community uses to develop <a href="http://youtu.be/WZfNS-pbFYQ">LED cubes<sup></a>,
+<a href="http://youtu.be/WZfNS-pbFYQ">RC controlled cars</sup></a>, etc.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
+This micro-controller is also used in the popular Arduino platfrom.</p>
+</div>
+<div class="paragraph">
+<p>The popularity of the ATmega AVR is due to the availability of free and
+inexpensive development tools accelerated by the high number of development
+boards available.</p>
+</div>
+<div class="paragraph">
+<p>The  ATmega AVR was the first micro-controller to have an on board flash for
+program storage. Compared to the other micro-controllers at the time which
+offered one time programmable ROM, EPROM and EEPROM options. The flash offers
+reduced cost of development as the frequency with which applications can
+be deployed and tested easily increases.</p>
+</div>
+<div class="paragraph">
+<p>The Arduino platform is an open source hardware and software project meant
+for hobbyists, designers and artists. The hardware uses a ATmega AVR and
+the software consists of an easy to use JAVA like programming IDE based
+on Wiring.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve got my hands on an AVR development board called the Device Driver Kit.
+The kit can be used to learn about Linux device drivers or can be used as a
+ATmega AVR development board for your electronics project.</p>
+</div>
+<div class="imageblock" style="text-align: center">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
-<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
-<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
-<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/utsname.h&gt;</span>
-<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;generated/utsrelease.h&gt;</span>
-
-<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init version_init(<span style="color:#088;font-weight:bold">void</span>)
-{
-        <span style="color:#0a8;font-weight:bold">int</span> i = <span style="color:#00D">0</span>;
-
-        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module running of version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, utsname()-&gt;release);
-        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel module compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, UTS_RELEASE);
-        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
-}
-
-<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit version_exit(<span style="color:#088;font-weight:bold">void</span>)
-{
-        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Over and out!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
-}
-
-module_init(version_init);
-module_exit(version_exit);
-
-MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);
-MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">zeuzoix</span><span style="color:#710">&quot;</span></span>);
-MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel Module Version Example Module</span><span style="color:#710">&quot;</span></span>);</code></pre>
+<img src="http://zeuzoix.github.io/techeuphoria/images/lddk_connected.jpg" alt="lddk connected" width="640" height="480">
 </div>
+</div>
+<div class="paragraph">
+<p>The board has a USB interface through which you can program the ATmega
+and develop your own applications. This makes it easy to do rapid prototyping
+with just a PC and the board. I&#8217;ll be posting some of my side projects which
+will use the board.</p>
+</div>
+<div class="paragraph">
+<p>It shouldn&#8217;t be too difficult to whip up a ATmega AVR development board or
+a Arduino board with the resources available online. However as a starting
+point it would be good to familiarize yourself with the AVR before you
+jump into building your own board.</p>
+</div>
+<div class="paragraph">
+<p>Details of the DDK board are available at:<br>
+<a href="http://esrijan.com/index.php?pagefile=lddk">http://esrijan.com/index.php?pagefile=lddk</a></p>
 </div>
 </div>
 </div>
 </div>
 <footer class="post-footer">
 <div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/programming/">programming</a>
-, <a href="/techeuphoria/posts/tag/c/">c</a></div>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/productization/">productization</a></div>
 </footer>
 <hr>
 </article>
