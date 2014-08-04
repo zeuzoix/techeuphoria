@@ -1,0 +1,53 @@
+= Atmega Development Boards and Arduino
+Conrad Gomes
+2013-05-14
+:awestruct-tags: [electronics, productization]
+:yt-led-cube: http://youtu.be/WZfNS-pbFYQ
+:yt-rc-controlled-cars: http://youtu.be/WZfNS-pbFYQ
+:arduino-website: http://www.arduino.cc/
+:esrijan-ddk-board-website: http://esrijan.com/index.php?pagefile=lddk
+:excerpt:  I've been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
+:awestruct-excerpt: {excerpt}
+
+{excerpt}
+I've been going through various sources trying to figure out what the Electronic 
+DIY community uses to develop {yt-led-cube}[LED cubes^], 
+{yt-rc-controlled-cars}[RC controlled cars^], etc.
+
+One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
+This micro-controller is also used in the popular Arduino platfrom.
+
+The popularity of the ATmega AVR is due to the availability of free and
+inexpensive development tools accelerated by the high number of development
+boards available.
+
+The  ATmega AVR was the first micro-controller to have an on board flash for
+program storage. Compared to the other micro-controllers at the time which
+offered one time programmable ROM, EPROM and EEPROM options. The flash offers
+reduced cost of development as the frequency with which applications can
+be deployed and tested easily increases.
+
+The Arduino platform is an open source hardware and software project meant
+for hobbyists, designers and artists. The hardware uses a ATmega AVR and
+the software consists of an easy to use JAVA like programming IDE based
+on Wiring.
+
+I've got my hands on an AVR development board called the Device Driver Kit.
+The kit can be used to learn about Linux device drivers or can be used as a
+ATmega AVR development board for your electronics project.
+
+image::lddk_connected.jpg[width="640", height="480", align="center"]
+
+The board has a USB interface through which you can program the ATmega 
+and develop your own applications. This makes it easy to do rapid prototyping
+with just a PC and the board. I'll be posting some of my side projects which 
+will use the board.
+
+It shouldn't be too difficult to whip up a ATmega AVR development board or
+a Arduino board with the resources available online. However as a starting
+point it would be good to familiarize yourself with the AVR before you 
+jump into building your own board.
+
+Details of the DDK board are available at: +
+{esrijan-ddk-board-website}[{esrijan-ddk-board-website}]
+
