@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -391,7 +391,7 @@ gives you the best solution possible over time:&lt;br&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/</id>
 <title>Atmega Development Boards and Arduino</title>
-<updated>2014-08-03T12:02:15-04:00</updated>
+<updated>2014-08-09T04:27:49-04:00</updated>
 <published>2013-05-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/" rel="alternate" type="text/html" />
 <author>
@@ -456,9 +456,13 @@ on Wiring.&lt;/p&gt;
 The kit can be used to learn about Linux device drivers or can be used as a
 ATmega AVR development board for your electronics project.&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
 &lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/lddk_connected.jpg&quot; alt=&quot;lddk connected&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -484,7 +488,7 @@ jump into building your own board.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
 <title>An Introduction To I2C</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-09T04:28:56-04:00</updated>
 <published>2013-05-12T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
 <author>
@@ -552,9 +556,13 @@ and slave modes&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
 &lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/I2C.svg&quot; alt=&quot;I2C&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -564,7 +572,7 @@ and slave modes&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
 <title>Kernel Module Makefiles</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2013-02-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
 <author>
@@ -730,7 +738,7 @@ to be built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
 <title>Linux Kernel Modules</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2013-01-22T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
 <author>
@@ -792,7 +800,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
 <title>An Operating System Called Linux</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-09T04:30:50-04:00</updated>
 <published>2013-01-19T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
 <author>
@@ -828,6 +836,10 @@ Device Input/Output
 
 
 Linux if one were to draw a block diagram can be represented as:
+
+
+
+
 
 
 
@@ -893,9 +905,13 @@ interfaces with the Linux Kernel through the system call interface.
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Linux if one were to draw a block diagram can be represented as:&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/linux-kernel-architecture-diagram.png&quot; alt=&quot;linux kernel architecture diagram&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -933,7 +949,7 @@ interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
 <title>iFanaticism</title>
-<updated>2014-08-03T11:24:32-04:00</updated>
+<updated>2014-08-05T02:25:33-04:00</updated>
 <published>2011-10-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
 <author>
