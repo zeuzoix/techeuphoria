@@ -35,4 +35,6 @@ More information at : +
 . {i2c-wiki-link}[{i2c-wiki-link}^]
 . {esaacademy-link}[{esaacademy-link}^]
 
+====
 image::I2C.svg[width="640", height="480", align="center"]
+====

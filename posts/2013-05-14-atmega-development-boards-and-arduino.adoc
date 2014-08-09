@@ -36,7 +36,9 @@ I've got my hands on an AVR development board called the Device Driver Kit.
 The kit can be used to learn about Linux device drivers or can be used as a
 ATmega AVR development board for your electronics project.
 
+====
 image::lddk_connected.jpg[width="640", height="480", align="center"]
+====
 
 The board has a USB interface through which you can program the ATmega 
 and develop your own applications. This makes it easy to do rapid prototyping
