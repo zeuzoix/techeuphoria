@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -389,9 +389,109 @@ gives you the best solution possible over time:&lt;br&gt;
 </content>
 </entry>
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
+<title>Real Time Clock with DS1307 - Introduction</title>
+<updated>2014-08-13T04:40:45-04:00</updated>
+<published>2013-05-18T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="productization"></category>
+<category term="i2c"></category>
+<summary>
+
+
+
+You&#8217;re developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.
+
+
+A real-time clock(RTC) for your system can be made available using chips like
+the DS1307. This has the ability to be
+programmed and keep track of the time in seconds, minutes, hours and date in
+binary coded decimal(BCD) format with compensation for leap years till 2100.
+
+
+The DS1307 on inspection has 8 pins. The following describes the kind of
+circuit connections required for this chip.
+
+
+
+
+
+
+
+
+
+
+
+Starting at the top left we see pins X1 and X2 connected to a crystal.
+The crystal provides...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You&amp;#8217;re developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A real-time clock(RTC) for your system can be made available using chips like
+the &lt;a href=&quot;http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html&quot; target=&quot;_blank&quot;&gt;DS1307&lt;/a&gt;. This has the ability to be
+programmed and keep track of the time in seconds, minutes, hours and date in
+binary coded decimal(BCD) format with compensation for leap years till 2100.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The DS1307 on inspection has 8 pins. The following describes the kind of
+circuit connections required for this chip.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/Circuit_Diagram_DS1307.gif&quot; alt=&quot;Circuit Diagram DS1307&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Starting at the top left we see pins X1 and X2 connected to a crystal.
+The crystal provides the clock to the chip and is critical in accurately
+maintaining the time once programmed. Connections for X1 and X2 is a standard
+32.768kHz quartz crystal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The VCC and GND provide the power supply to the chip which is a 5V power
+supply.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;SQW/OUT has dual functionality. It can be used to generate a square wave of
+1Hz, 4kHz, 8kHz and 32kHz or it can simply output either a high or low
+signal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;VBAT is the connection for an external battery. The chip has an automatic
+power fail detect and switch circuitry which will switch to the battery
+in the event of the main power supply failing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;SDA and SCL are the I2C lines which is used by the CPU/Micro-controller to
+read and write the time and date registers.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the next part we look at the register map of the DS1307.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;[Next: Real Time Clock with DS1307 Register Map Description^]&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/</id>
 <title>Atmega Development Boards and Arduino</title>
-<updated>2014-08-09T04:27:49-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-05-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/" rel="alternate" type="text/html" />
 <author>
@@ -488,7 +588,7 @@ jump into building your own board.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
 <title>An Introduction To I2C</title>
-<updated>2014-08-09T04:28:56-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-05-12T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
 <author>
@@ -572,7 +672,7 @@ and slave modes&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
 <title>Kernel Module Makefiles</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-02-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
 <author>
@@ -738,7 +838,7 @@ to be built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
 <title>Linux Kernel Modules</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-01-22T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
 <author>
@@ -800,7 +900,7 @@ the same irrespective of how it is built.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
 <title>An Operating System Called Linux</title>
-<updated>2014-08-09T04:30:50-04:00</updated>
+<updated>2014-08-09T04:36:02-04:00</updated>
 <published>2013-01-19T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
 <author>
@@ -941,67 +1041,6 @@ functions which map to the generic definition of an operating system are:&lt;/p&
 &lt;p&gt;Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
 space and are not part of the Linux Kernel memory space. An application
 interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/</id>
-<title>iFanaticism</title>
-<updated>2014-08-05T02:25:33-04:00</updated>
-<published>2011-10-16T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2011/10/16/ifanaticism/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="design"></category>
-<summary>
-
-
-
-It&#8217;s amazing, I&#8217;m going through the news paper and I read about people in Tokyo who&#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.
-
-
-What was it about Steve Jobs that moves people not in his own country but in
-countries other than his own? What was it about him that caused millions to
-pour out their hearts on twitter and facebook when they heard of his death.
-Steve Jobs has been catapulted to the status of a rock-star. No other
-entrepreneur has ever had the admiration and adoration of millions of
-people. It&#8217;s pure fanaticism!
-
-
-His products...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;It&amp;#8217;s amazing, I&amp;#8217;m going through the news paper and I read about people in Tokyo who&amp;#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;What was it about Steve Jobs that moves people not in his own country but in
-countries other than his own? What was it about him that caused millions to
-pour out their hearts on twitter and facebook when they heard of his death.
-Steve Jobs has been catapulted to the status of a rock-star. No other
-entrepreneur has ever had the admiration and adoration of millions of
-people. It&amp;#8217;s pure fanaticism!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;His products have been sought after by many fans. People literally stand in
-queues to pick up Apple&amp;#8217;s products. They want the real deal. People don&amp;#8217;t buy
-cheaper imitations from China. They find value for money in those gadgets.
-Enough to convert them into evangelists for Apple.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Steve Jobs now shares his place with those that inspired and evoked euphoria
-in the millions. People like Curt Cobain, Elvis Presley and Michael Jackson.
-He redefined product conceptualization. But there&amp;#8217;s a question that comes to
-my mind. Steve&amp;#8217;s best was at the end of his life. Was it his awareness of his
-condition that pushed him to create the best products of Apple?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Whatever it was one thing&amp;#8217;s for sure, he&amp;#8217;s made a dent in the universe.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

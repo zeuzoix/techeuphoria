@@ -389,6 +389,89 @@ gives you the best solution possible over time:<br>
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/">Real Time Clock with DS1307 - Introduction</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-05-18T00:00:00+00:00">
+May 18, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>You&#8217;re developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.</p>
+</div>
+<div class="paragraph">
+<p>A real-time clock(RTC) for your system can be made available using chips like
+the <a href="http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html" target="_blank">DS1307</a>. This has the ability to be
+programmed and keep track of the time in seconds, minutes, hours and date in
+binary coded decimal(BCD) format with compensation for leap years till 2100.</p>
+</div>
+<div class="paragraph">
+<p>The DS1307 on inspection has 8 pins. The following describes the kind of
+circuit connections required for this chip.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/Circuit_Diagram_DS1307.gif" alt="Circuit Diagram DS1307" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting at the top left we see pins X1 and X2 connected to a crystal.
+The crystal provides the clock to the chip and is critical in accurately
+maintaining the time once programmed. Connections for X1 and X2 is a standard
+32.768kHz quartz crystal.</p>
+</div>
+<div class="paragraph">
+<p>The VCC and GND provide the power supply to the chip which is a 5V power
+supply.</p>
+</div>
+<div class="paragraph">
+<p>SQW/OUT has dual functionality. It can be used to generate a square wave of
+1Hz, 4kHz, 8kHz and 32kHz or it can simply output either a high or low
+signal.</p>
+</div>
+<div class="paragraph">
+<p>VBAT is the connection for an external battery. The chip has an automatic
+power fail detect and switch circuitry which will switch to the battery
+in the event of the main power supply failing.</p>
+</div>
+<div class="paragraph">
+<p>SDA and SCL are the I2C lines which is used by the CPU/Micro-controller to
+read and write the time and date registers.</p>
+</div>
+<div class="paragraph">
+<p>In the next part we look at the register map of the DS1307.</p>
+</div>
+<div class="paragraph">
+<p>[Next: Real Time Clock with DS1307 Register Map Description^]</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/productization/">productization</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/">Atmega Development Boards and Arduino</a>
 </h1>
 <h4>
@@ -822,62 +905,6 @@ interfaces with the Linux Kernel through the system call interface.</p>
 <a href="/techeuphoria/posts/tag/design/">design</a>
 , <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
 , <a href="/techeuphoria/posts/tag/linux/">linux</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2011/10/16/ifanaticism/">iFanaticism</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2011-10-16T00:00:00+00:00">
-October 16, 2011
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>It&#8217;s amazing, I&#8217;m going through the news paper and I read about people in Tokyo who&#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.</p>
-</div>
-<div class="paragraph">
-<p>What was it about Steve Jobs that moves people not in his own country but in
-countries other than his own? What was it about him that caused millions to
-pour out their hearts on twitter and facebook when they heard of his death.
-Steve Jobs has been catapulted to the status of a rock-star. No other
-entrepreneur has ever had the admiration and adoration of millions of
-people. It&#8217;s pure fanaticism!</p>
-</div>
-<div class="paragraph">
-<p>His products have been sought after by many fans. People literally stand in
-queues to pick up Apple&#8217;s products. They want the real deal. People don&#8217;t buy
-cheaper imitations from China. They find value for money in those gadgets.
-Enough to convert them into evangelists for Apple.</p>
-</div>
-<div class="paragraph">
-<p>Steve Jobs now shares his place with those that inspired and evoked euphoria
-in the millions. People like Curt Cobain, Elvis Presley and Michael Jackson.
-He redefined product conceptualization. But there&#8217;s a question that comes to
-my mind. Steve&#8217;s best was at the end of his life. Was it his awareness of his
-condition that pushed him to create the best products of Apple?</p>
-</div>
-<div class="paragraph">
-<p>Whatever it was one thing&#8217;s for sure, he&#8217;s made a dent in the universe.</p>
-</div>
-</div>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a></div>
 </footer>
 <hr>
 </article>
