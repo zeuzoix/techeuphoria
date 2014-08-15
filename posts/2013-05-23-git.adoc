@@ -1,0 +1,29 @@
+= GIT
+Conrad Gomes
+2013-05-23
+:revdata: 2013-05-23 20:52:00 +0530
+:awestruct-tags: [git]
+:setup-link: https://help.github.com/articles/set-up-git
+:design-basics-link: http://git-scm.com/book/en/Getting-Started-Git-Basics
+:test-run-link: http://try.github.io/levels/1/challenges/1 
+:excerpt: I've been a SVN user for quite some time. However it's good to understand why GIT has risen in popularity.
+:awestruct-excerpt: {excerpt}
+
+{excerpt}
+
+GIT was developed by the same team that developed Linux. Key differences as
+compared to other version control systems
+
+. Distributed: Everyone gets access to the repository on their system unlike
+other version control systems which have a central repository on a server.
+The main advantage being that even if network access is not available you
+can still interact with the version control system.
+
+. Snapshots: A version of a file is the snapshot of the file at that point
+in time. It is not the sum of all differences. Basically the smallest unit
+of change is a file.
+
+URLs that I found useful: +
+Setup: {setup-link} +
+Design Basics: {design-basics-link} +
+Test Run: {test-run-link} +
