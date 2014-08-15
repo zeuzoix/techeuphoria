@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-15T12:28:21-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-15T12:28:21-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -39,7 +39,7 @@ advocate Dan Allen(mojavelinux).
 Objectives
 
 
-I had an overall understanding of what I wanted achieve. It is to build a lean
+I had an overall understanding of what I wanted to achieve. It is to build a lean
 and clean website, have the ability to be agile and publish with ease and at will.
 My objectives took form over the course of my search for a solution as I
 became familiar with the different concepts and paradigms of web design and
@@ -49,7 +49,7 @@ development. My objectives can now be summarized as follows:
 
 
 Use a decentrallized tool with which TechEuphoria can be built locally before
-publishing it to the world...
+publishing it to the...
 </summary>
 <content type="html">
 &lt;div class=&quot;sect1&quot;&gt;
@@ -68,7 +68,7 @@ advocate Dan Allen(&lt;a href=&quot;http://www.mojavelinux.com&quot;&gt;mojaveli
 &lt;a class=&quot;anchor&quot; href=&quot;#objectives&quot;&gt;&lt;/a&gt;Objectives&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I had an overall understanding of what I wanted achieve. It is to build a lean
+&lt;p&gt;I had an overall understanding of what I wanted to achieve. It is to build a lean
 and clean website, have the ability to be agile and publish with ease and at will.
 My objectives took form over the course of my search for a solution as I
 became familiar with the different concepts and paradigms of web design and
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -389,11 +389,198 @@ gives you the best solution possible over time:&lt;br&gt;
 </content>
 </entry>
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/</id>
+<title>GIT</title>
+<updated>2014-08-15T12:24:19-04:00</updated>
+<published>2013-05-23T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="git"></category>
+<summary>
+
+
+
+I&#8217;ve been a SVN user for quite some time. However it&#8217;s good to understand why GIT has risen in popularity.
+
+
+GIT was developed by the same team that developed Linux. Key differences as
+compared to other version control systems
+
+
+
+
+Distributed: Everyone gets access to the repository on their system unlike
+other version control systems which have a central repository on a server.
+The main advantage being that even if network access is not available you
+can still interact with the version control system.
+
+
+Snapshots: A version of a file is the snapshot of the file at that point
+in time. It is not the sum of all differences....
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ve been a SVN user for quite some time. However it&amp;#8217;s good to understand why GIT has risen in popularity.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;GIT was developed by the same team that developed Linux. Key differences as
+compared to other version control systems&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Distributed: Everyone gets access to the repository on their system unlike
+other version control systems which have a central repository on a server.
+The main advantage being that even if network access is not available you
+can still interact with the version control system.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Snapshots: A version of a file is the snapshot of the file at that point
+in time. It is not the sum of all differences. Basically the smallest unit
+of change is a file.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;URLs that I found useful:&lt;br&gt;
+Setup: &lt;a href=&quot;https://help.github.com/articles/set-up-git&quot;&gt;https://help.github.com/articles/set-up-git&lt;/a&gt;&lt;br&gt;
+Design Basics: &lt;a href=&quot;http://git-scm.com/book/en/Getting-Started-Git-Basics&quot;&gt;http://git-scm.com/book/en/Getting-Started-Git-Basics&lt;/a&gt;&lt;br&gt;
+Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot;&gt;http://try.github.io/levels/1/challenges/1&lt;/a&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
-<title>Real Time Clock with DS1307 - Introduction</title>
-<updated>2014-08-13T04:40:45-04:00</updated>
-<published>2013-05-18T00:00:00+00:00</published>
+<title>Real Time Clock with DS1307 - Register Map Description</title>
+<updated>2014-08-14T14:39:14-04:00</updated>
+<published>2013-05-18T08:18:00+05:30</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="productization"></category>
+<category term="i2c"></category>
+<summary>
+
+
+
+In the [first part^] we went through a brief introduction of the
+DS1307 chip.
+We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
+I2C we should be able to address the registers of this chip and write and read
+data based on our application description.
+
+
+The internal registers which affect the behaviour of the RTC chip are as follows:
+
+
+
+
+
+
+
+
+
+
+
+The first 7 registers are used to read and write the time and date.
+Registers 00h and 01h have more or less the same byte definition and
+this is mainly because there are 60 seconds and 60 minutes.
+
+
+An important difference is bit...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the [first part^] we went through a brief introduction of the
+DS1307 chip.&lt;br&gt;
+We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
+I2C we should be able to address the registers of this chip and write and read
+data based on our application description.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The internal registers which affect the behaviour of the RTC chip are as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/DS1307_RegisterMap.png&quot; alt=&quot;DS1307 RegisterMap&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first 7 registers are used to read and write the time and date.
+Registers 00h and 01h have more or less the same byte definition and
+this is mainly because there are 60 seconds and 60 minutes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;An important difference is bit 7 of register 00h which is the clock halt bit.
+By default this bit is set to 1 on power up of the device which disables the
+oscillator and RTC functionality of the DS1307.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All values are in binary coded decimal. The range of seconds and minutes goes
+from 00 to 59. Therefore for the minutes and seconds we have bits 0 to 3
+representing the lower digit i.e. 0 to 9 and bits 4 to 6 representing the
+higher digit.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The representation of hours can be in the form of either 12 or 24 hour notation.
+Bit 6 indicates the notation used. When high the 12 hour notation is used and
+bit 5 indicates AM/PM with high being PM. In this case the range of values goes
+from 01 to 12. Therefore we have bits 0 to 3 representing the lower digits i.e.
+0 to 9 and bit 4 representing the higher digit i.e. 0 or 1.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the 24 hour notation the range of values goes from 00 to 23. Therefore the
+lower digit representation remains the same i.e. 0 to 9 represented by bits 0
+to 3 but bits 4 and 5 are used to represent the higher digit i.e. 0 to 2.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Essentially the number of bits reserved for each digit is defined by the
+range of the value. For instance there are only 7 possible days and so we
+have 3 bits representing the day of the week in register 03h. And if we look
+at the date register 04h we see the range of values goes from 01 to 31
+therefore the lower digit of the date can have a maximum value of 9 so four
+bits are reserved whereas the upper digit can have a maximum value of 3
+therefore 2 bits are reserved.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Registers 05h and 06h follow the same pattern. Register 07h controls the
+behaviour of the square wave out signal. Bit 4 controls the functionality
+i.e. whether the pin produces a square wave or a fixed ouput. By default
+the value is 0 causing the pin to output a fixed value governed by the
+bit 7. If bit 4 is set to 1 the pin produces a square wave whose frequency
+is controlled by bits 0 and 1. The number of possible combinations is 4
+with 2 bits and therefore the possibilities are 1Hz, 4.096kHz, 8.192kHz
+and 32.768kHz.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
+For further information please go through the data sheet at:
+&lt;a href=&quot;http://datasheets.maximintegrated.com/en/ds/DS1307.pdf&quot; target=&quot;_blank&quot;&gt;ds1307-maximintegrated-pdf&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-introduction/</id>
+<title>Real Time Clock with DS1307 - Introduction</title>
+<updated>2014-08-15T12:22:49-04:00</updated>
+<published>2013-05-18T08:08:00+05:30</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-introduction/" rel="alternate" type="text/html" />
 <author>
 <name>Conrad Gomes</name>
 </author>
@@ -491,7 +678,7 @@ read and write the time and date registers.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/</id>
 <title>Atmega Development Boards and Arduino</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2013-05-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/" rel="alternate" type="text/html" />
 <author>
@@ -588,7 +775,7 @@ jump into building your own board.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
 <title>An Introduction To I2C</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2013-05-12T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
 <author>
@@ -672,7 +859,7 @@ and slave modes&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
 <title>Kernel Module Makefiles</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
+<updated>2014-08-13T04:48:07-04:00</updated>
 <published>2013-02-03T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
 <author>
@@ -830,217 +1017,6 @@ to be built.&lt;/p&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;More information is available at:&lt;br&gt;
 &lt;a href=&quot;http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html&quot; target=&quot;_blank&quot;&gt;http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/</id>
-<title>Linux Kernel Modules</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
-<published>2013-01-22T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/22/linux-kernel-modules/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="design"></category>
-<category term="kernel"></category>
-<category term="linux"></category>
-<category term="programming"></category>
-<summary>
-
-
-
-A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.
-
-
-The traditional approach employed by operating system designers was to add the
-code to the source code of the OS and build the OS as a single binary that can
-be booted by the boot-loader.
-
-
-The kernel module can be inserted and removed at any time during the execution
-of the kernel giving Linux Kernel developers the flexibility to test their
-modules before making them a part of the mainline Kernel source code.
-
-
-The process of building a stand-alone...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The traditional approach employed by operating system designers was to add the
-code to the source code of the OS and build the OS as a single binary that can
-be booted by the boot-loader.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The kernel module can be inserted and removed at any time during the execution
-of the kernel giving Linux Kernel developers the flexibility to test their
-modules before making them a part of the mainline Kernel source code.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The process of building a stand-alone kernel module or integrating the kernel
-module with the source code of the Linux Kernel is simplified through the
-makefile of the kernel module. The source code of the kernel module remains
-the same irrespective of how it is built.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Information on kernel module programming can be obtained from:&lt;br&gt;
-&lt;a href=&quot;http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html&quot; target=&quot;_blank&quot;&gt;http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/</id>
-<title>An Operating System Called Linux</title>
-<updated>2014-08-09T04:36:02-04:00</updated>
-<published>2013-01-19T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="design"></category>
-<category term="kernel"></category>
-<category term="linux"></category>
-<summary>
-
-
-
-This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:
-
-
-
-
-CPU
-
-
-Memory
-
-
-Networking
-
-
-Storage
-
-
-Device Input/Output
-
-
-
-
-Linux if one were to draw a block diagram can be represented as:
-
-
-
-
-
-
-
-
-
-
-
-In this diagram the core operating system is the Linux Kernel. The management
-functions which map to the generic definition of an operating system are:
-
-
-
-
-Process management
-
-
-Memory management
-
-
-Network
-
-
-File Systems
-
-
-Device Drivers
-
-
-
-
-Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
-space and are not part of the Linux Kernel memory space. An application
-interfaces with the Linux Kernel through the system call interface.
-
-
-...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;CPU&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Memory&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Networking&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Storage&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Device Input/Output&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Linux if one were to draw a block diagram can be represented as:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/linux-kernel-architecture-diagram.png&quot; alt=&quot;linux kernel architecture diagram&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In this diagram the core operating system is the Linux Kernel. The management
-functions which map to the generic definition of an operating system are:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;Process management&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Memory management&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Network&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;File Systems&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Device Drivers&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
-space and are not part of the Linux Kernel memory space. An application
-interfaces with the Linux Kernel through the system call interface.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

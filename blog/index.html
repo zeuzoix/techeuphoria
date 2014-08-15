@@ -82,7 +82,7 @@ advocate Dan Allen(<a href="http://www.mojavelinux.com">mojavelinux</a>).</p>
 <h2 id="objectives"><a class="anchor" href="#objectives"></a>Objectives</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>I had an overall understanding of what I wanted achieve. It is to build a lean
+<p>I had an overall understanding of what I wanted to achieve. It is to build a lean
 and clean website, have the ability to be agile and publish with ease and at will.
 My objectives took form over the course of my search for a solution as I
 became familiar with the different concepts and paradigms of web design and
@@ -389,7 +389,7 @@ gives you the best solution possible over time:<br>
 <article class="post">
 <header class="post-head">
 <h1 class="title">
-<a href="/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/">Real Time Clock with DS1307 - Introduction</a>
+<a href="/techeuphoria/posts/2013/05/23/git/">GIT</a>
 </h1>
 <h4>
 <em>by</em>
@@ -397,7 +397,166 @@ gives you the best solution possible over time:<br>
 Conrad Gomes
 </a>
 on
-<time class="pubdate" datetime="2013-05-18T00:00:00+00:00">
+<time class="pubdate" datetime="2013-05-23T00:00:00+00:00">
+May 23, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;ve been a SVN user for quite some time. However it&#8217;s good to understand why GIT has risen in popularity.</p>
+</div>
+<div class="paragraph">
+<p>GIT was developed by the same team that developed Linux. Key differences as
+compared to other version control systems</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Distributed: Everyone gets access to the repository on their system unlike
+other version control systems which have a central repository on a server.
+The main advantage being that even if network access is not available you
+can still interact with the version control system.</p>
+</li>
+<li>
+<p>Snapshots: A version of a file is the snapshot of the file at that point
+in time. It is not the sum of all differences. Basically the smallest unit
+of change is a file.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>URLs that I found useful:<br>
+Setup: <a href="https://help.github.com/articles/set-up-git">https://help.github.com/articles/set-up-git</a><br>
+Design Basics: <a href="http://git-scm.com/book/en/Getting-Started-Git-Basics">http://git-scm.com/book/en/Getting-Started-Git-Basics</a><br>
+Test Run: <a href="http://try.github.io/levels/1/challenges/1">http://try.github.io/levels/1/challenges/1</a><br></p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/git/">git</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/">Real Time Clock with DS1307 - Register Map Description</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-05-18T08:18:00+05:30">
+May 18, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the [first part^] we went through a brief introduction of the
+DS1307 chip.<br>
+We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
+I2C we should be able to address the registers of this chip and write and read
+data based on our application description.</p>
+</div>
+<div class="paragraph">
+<p>The internal registers which affect the behaviour of the RTC chip are as follows:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/DS1307_RegisterMap.png" alt="DS1307 RegisterMap" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The first 7 registers are used to read and write the time and date.
+Registers 00h and 01h have more or less the same byte definition and
+this is mainly because there are 60 seconds and 60 minutes.</p>
+</div>
+<div class="paragraph">
+<p>An important difference is bit 7 of register 00h which is the clock halt bit.
+By default this bit is set to 1 on power up of the device which disables the
+oscillator and RTC functionality of the DS1307.</p>
+</div>
+<div class="paragraph">
+<p>All values are in binary coded decimal. The range of seconds and minutes goes
+from 00 to 59. Therefore for the minutes and seconds we have bits 0 to 3
+representing the lower digit i.e. 0 to 9 and bits 4 to 6 representing the
+higher digit.</p>
+</div>
+<div class="paragraph">
+<p>The representation of hours can be in the form of either 12 or 24 hour notation.
+Bit 6 indicates the notation used. When high the 12 hour notation is used and
+bit 5 indicates AM/PM with high being PM. In this case the range of values goes
+from 01 to 12. Therefore we have bits 0 to 3 representing the lower digits i.e.
+0 to 9 and bit 4 representing the higher digit i.e. 0 or 1.</p>
+</div>
+<div class="paragraph">
+<p>In the 24 hour notation the range of values goes from 00 to 23. Therefore the
+lower digit representation remains the same i.e. 0 to 9 represented by bits 0
+to 3 but bits 4 and 5 are used to represent the higher digit i.e. 0 to 2.</p>
+</div>
+<div class="paragraph">
+<p>Essentially the number of bits reserved for each digit is defined by the
+range of the value. For instance there are only 7 possible days and so we
+have 3 bits representing the day of the week in register 03h. And if we look
+at the date register 04h we see the range of values goes from 01 to 31
+therefore the lower digit of the date can have a maximum value of 9 so four
+bits are reserved whereas the upper digit can have a maximum value of 3
+therefore 2 bits are reserved.</p>
+</div>
+<div class="paragraph">
+<p>Registers 05h and 06h follow the same pattern. Register 07h controls the
+behaviour of the square wave out signal. Bit 4 controls the functionality
+i.e. whether the pin produces a square wave or a fixed ouput. By default
+the value is 0 causing the pin to output a fixed value governed by the
+bit 7. If bit 4 is set to 1 the pin produces a square wave whose frequency
+is controlled by bits 0 and 1. The number of possible combinations is 4
+with 2 bits and therefore the possibilities are 1Hz, 4.096kHz, 8.192kHz
+and 32.768kHz.</p>
+</div>
+<div class="paragraph">
+<p>Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
+For further information please go through the data sheet at:
+<a href="http://datasheets.maximintegrated.com/en/ds/DS1307.pdf" target="_blank">ds1307-maximintegrated-pdf</a></p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/productization/">productization</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-introduction/">Real Time Clock with DS1307 - Introduction</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-05-18T08:08:00+05:30">
 May 18, 2013
 </time>
 </h4>
@@ -761,154 +920,6 @@ to be built.</p>
 <hr>
 </article>
 
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/01/22/linux-kernel-modules/">Linux Kernel Modules</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-01-22T00:00:00+00:00">
-January 22, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.</p>
-</div>
-<div class="paragraph">
-<p>The traditional approach employed by operating system designers was to add the
-code to the source code of the OS and build the OS as a single binary that can
-be booted by the boot-loader.</p>
-</div>
-<div class="paragraph">
-<p>The kernel module can be inserted and removed at any time during the execution
-of the kernel giving Linux Kernel developers the flexibility to test their
-modules before making them a part of the mainline Kernel source code.</p>
-</div>
-<div class="paragraph">
-<p>The process of building a stand-alone kernel module or integrating the kernel
-module with the source code of the Linux Kernel is simplified through the
-makefile of the kernel module. The source code of the kernel module remains
-the same irrespective of how it is built.</p>
-</div>
-<div class="paragraph">
-<p>Information on kernel module programming can be obtained from:<br>
-<a href="http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html" target="_blank">http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html</a></p>
-</div>
-</div>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a>
-, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/">An Operating System Called Linux</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-01-19T00:00:00+00:00">
-January 19, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CPU</p>
-</li>
-<li>
-<p>Memory</p>
-</li>
-<li>
-<p>Networking</p>
-</li>
-<li>
-<p>Storage</p>
-</li>
-<li>
-<p>Device Input/Output</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Linux if one were to draw a block diagram can be represented as:</p>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="imageblock">
-<div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/linux-kernel-architecture-diagram.png" alt="linux kernel architecture diagram">
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>In this diagram the core operating system is the Linux Kernel. The management
-functions which map to the generic definition of an operating system are:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Process management</p>
-</li>
-<li>
-<p>Memory management</p>
-</li>
-<li>
-<p>Network</p>
-</li>
-<li>
-<p>File Systems</p>
-</li>
-<li>
-<p>Device Drivers</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
-space and are not part of the Linux Kernel memory space. An application
-interfaces with the Linux Kernel through the system call interface.</p>
-</div>
-</div>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a>
-, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a></div>
-</footer>
-<hr>
-</article>
-
 <div class="pagination-centered">
 <ul class="pagination">
 <li class="arrow unavailable">
@@ -964,6 +975,9 @@ interfaces with the Linux Kernel through the system call interface.</p>
 </li>
 <li>
 <a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/git/">git</a>
 </li>
 <li>
 <a href="/techeuphoria/posts/tag/github pages/">github pages</a>
