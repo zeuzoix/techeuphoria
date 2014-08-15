@@ -29,7 +29,7 @@ help of a wonderful {oscon2013-docworkshop}[slide deck] from an open source
 advocate Dan Allen({mojavelinux-website}[mojavelinux]).
 
 == Objectives
-I had an overall understanding of what I wanted achieve. It is to build a lean
+I had an overall understanding of what I wanted to achieve. It is to build a lean
 and clean website, have the ability to be agile and publish with ease and at will.
 My objectives took form over the course of my search for a solution as I
 became familiar with the different concepts and paradigms of web design and
