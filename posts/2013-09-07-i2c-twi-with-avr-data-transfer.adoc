@@ -1,0 +1,56 @@
+= I2C/TWI with AVR Data Transfer
+Conrad Gomes
+2013-09-07
+:awestruct-tags: [electronics, productization, i2c]
+:next-part:
+:prev-part:
+:twi-h-link: https://github.com/zeuzoix/sardine/blob/master/twi.h
+:excerpt: We now take a look at the TWI/I2C API responsible for data transfer. The header file {twi-h-link}[twi.h] has the prototype. We'll take a look at the arguments and their description now
+:awestruct-excerpt: {excerpt}
+
+{excerpt}:
+   
+[source,c]
+----
+TWI_RET_E twi_send_recv_buffer(
+                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                           TWI_MODE_E e_mode);
+----
+
+The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:
+   
+[source,c]
+----
+typedef struct _TWI_SEND_RECV_BUFFER_PARAMS_X
+{
+   uint8_t uc_dev_addr;
+   uint8_t uc_dev_id;
+   uint8_t *puc_reg_addr;
+   uint32_t ui_reg_addr_sz;
+   uint8_t *puc_data;
+   uint32_t ui_data_sz;
+     
+}TWI_SEND_RECV_BUFFER_PARAMS_X;
+----
+
+Where
+
+. *uc_dev_addr* is the higher nibble of the I2C slave device address
+. *uc_dev_id* is the lower nibble of the I2C slave device address. It is used where the slave address can be configured
+. *puc_reg_addr* is the pointer to the buffer holding the register address of the slave device.
+. *ui_reg_addr_sz* is the size of the buffer with the register address.
+. *puc_data* is the pointer to the data buffer
+. *ui_data_sz* is the size of the data buffer.
+
+The second argument is an enumeration which indicates if a send or receive operation is to be done
+   
+[source,c]
+----
+typedef enum _TWI_STATE_MODE_E
+{
+   eTWI_MODE_READ = 0,
+   eTWI_MODE_WRITE,
+   eTWI_MODE_INVALID
+ 
+}TWI_MODE_E;
+----
