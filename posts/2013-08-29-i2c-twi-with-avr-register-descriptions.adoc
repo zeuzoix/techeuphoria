@@ -4,7 +4,7 @@ Conrad Gomes
 ifndef::awestruct[]
 :imagesdir: ../images
 endif::[]
-:i2c-with-avr-register-initialization-link:
+:i2c-with-avr-register-initialization-link: http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/
 :awestruct-tags: [electronics, protocols, i2c, twi, bus]
 :excerpt: So you want to program the TWI/I2C interface of the AVR. Well you'll need to read up about the registers used to control this interface.
 :awestruct-excerpt: {excerpt}
@@ -96,9 +96,6 @@ image::TWI_TWAR.png[width="640", height="480", align="center"]
 sent. A general call is an address to all the slaves connected on the bus. The 
 Slave address for a general call is usually all 0s.
 
-In the next section I2C/TWI with AVR Register Intialization we'll go through
-the initialization code for the TWI/I2C interface and the values assigned to
-these registers.
-
-{i2c-with-avr-register-initialization-link}[I2C/TWI with AVR Register Initialization].
-
+In the {i2c-with-avr-register-initialization-link}[next] section I2C/TWI with AVR 
+Register Intialization we'll go through the initialization code for the TWI/I2C 
+interface and the values assigned to these registers.

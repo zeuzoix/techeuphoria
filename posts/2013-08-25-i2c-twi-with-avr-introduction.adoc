@@ -7,7 +7,7 @@ endif::[]
 :awestruct-tags: [electronics, protocols, i2c, twi, bus]
 :excerpt: In this post we'll take a look at implementing an I2C/TWI library which can be used with Atmel's AVR micro-controller. 
 :awestruct-excerpt: {excerpt}
-:i2c-with-avr-register-descriptions-link:
+:i2c-with-avr-register-descriptions-link: http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/
 :github-source-link: https://github.com/zeuzoix/sardine
 
 {excerpt}

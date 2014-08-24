@@ -4,7 +4,7 @@ Conrad Gomes
 :revdate: 2013-05-18 08:08:00 +0530
 :awestruct-tags: [electronics, productization, i2c]
 :ds1307-maximintegrated-link: http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html 
-:next-part:
+:next-part: http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/
 :excerpt: You're developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.
 :awestruct-excerpt: {excerpt}
 

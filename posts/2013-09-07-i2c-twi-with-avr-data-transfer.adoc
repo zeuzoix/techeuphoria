@@ -8,7 +8,9 @@ Conrad Gomes
 :excerpt: We now take a look at the TWI/I2C API responsible for data transfer. The header file {twi-h-link}[twi.h] has the prototype. We'll take a look at the arguments and their description now
 :awestruct-excerpt: {excerpt}
 
-{excerpt}:
+We now take a look at the TWI/I2C API responsible for data transfer. The header file
+{twi-h-link}[twi.h] has the prototype. We'll take a look at the arguments and 
+their description now:
    
 [source,c]
 ----
