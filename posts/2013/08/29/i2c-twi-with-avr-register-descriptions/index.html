@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width sticky">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/about/index.html">/about</a>
+</li>
+</li>
+<li class="divider">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/blog/index.html">/blog</a>
+</li>
+</li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1>TechEuphoria</h1>
+<hr>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-9 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/">I2C/TWI with AVR Register Descriptions</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-08-29T00:00:00+00:00">
+August 29, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>So you want to program the TWI/I2C interface of the AVR. Well you&#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
+there is a bunch of registers which are used to control the pins themselves.
+Let&#8217;s take a look at them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-bit-rate-register-twbr"><a class="anchor" href="#twi-bit-rate-register-twbr"></a>TWI Bit Rate Register (TWBR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register controls the SCL clock frequency which can either be 100Hz or
+400Hz.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWBR.png" alt="TWI TWBR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The equation to set the correct SCL clock frequency is:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: left">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/svg.latex.svg" alt="svg.latex">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>CPUclockfreq</strong> is the CPU clock frequency(16MHz in my case).</p>
+</li>
+<li>
+<p><strong>SCLfreq</strong> is the desired SCL clock frequency(100Hz in my case).</p>
+</li>
+<li>
+<p><strong>TWBR</strong> is the value we store in the register.</p>
+</li>
+<li>
+<p><strong>TWPS</strong> is the prescaler bits in the TWI status register TWSR which can take
+values from 0 to 3(0 in my case).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-control-register-twcr"><a class="anchor" href="#twi-control-register-twcr"></a>TWI Control Register (TWCR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is used to control the operation of the TWI/I2C interface. Start
+or stop a transaction and acknowledge the receipt of a data packet.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWCR.png" alt="TWI TWCR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bit 7 - TWINT:</strong> Set when the TWI has finished it&#8217;s task. Also used to initiate
+a transaction. This flag is normally cleared by writing a 1 to it. All other
+operations to the TWDR and TWAR must be done before this is cleared.</p>
+</li>
+<li>
+<p><strong>Bit 6 - TWEA:</strong> Controls generation of the acknowledge bit.</p>
+</li>
+<li>
+<p><strong>Bit 5 - TWSTA:</strong> Controls generation of a start bit.</p>
+</li>
+<li>
+<p><strong>Bit 4 - TWSTO:</strong> Controls generation of a stop bit.</p>
+</li>
+<li>
+<p><strong>Bit 3 - TWWC:</strong> This is a read only bit. It is set if you write TWDR when TWINT
+is low. It is reset if you write TWDR when TWINT is high.</p>
+</li>
+<li>
+<p><strong>Bit 2 - TWEN:</strong> This bit enables the TWI/I2C interface</p>
+</li>
+<li>
+<p><strong>Bit 0 - TWIE:</strong> This bit in conjunction with the I-bit in SREG enables the
+interrupt mode</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-status-register-twsr"><a class="anchor" href="#twi-status-register-twsr"></a>TWI Status Register (TWSR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After every operation of the TWI interface this register is read to understand the
+status of the bus.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWSR.png" alt="TWI TWSR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:3 - TWS7:TWS3:</strong> Status of the last TWI/I2C transaction</p>
+</li>
+<li>
+<p><strong>Bits 1:0 - TWPS1:TWPS0:</strong> These are the pre-scaler bits used to modify the SCL frequency.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-data-register-twdr"><a class="anchor" href="#twi-data-register-twdr"></a>TWI Data Register (TWDR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is used to stores the bytes to be transmitted or the bytes received
+on the TWI bus.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWDR.png" alt="TWI TWDR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:0 - TWD7:TWD0:</strong> Data byte to be written to the TWI bus or read from the TWI bus.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-address-register-twar"><a class="anchor" href="#twi-address-register-twar"></a>TWI Address Register (TWAR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is loaded with the 7 bit Slave address to which it must respond
+to when programmed as a slave or when working in a multiple master mode. In
+the multiple master mode the device will compete to be a master and if it senses
+that it has lost the arbitration of the line it will have to turn into a slave
+and listen for a possible message from another master device.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWAR.png" alt="TWI TWAR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:1 - TWA6: TWA0:</strong> 7 bit slave address of the TWI interface.</p>
+</li>
+<li>
+<p><strong>Bit 0 - TWGCE:</strong> Indicates if the device will acknowledge a general call when
+sent. A general call is an address to all the slaves connected on the bus. The
+Slave address for a general call is usually all 0s.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In the next section I2C/TWI with AVR Register Intialization we&#8217;ll go through
+the initialization code for the TWI/I2C interface and the values assigned to
+these registers.</p>
+</div>
+<div class="paragraph">
+<p>[I2C/TWI with AVR Register Initialization].</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+, <a href="/techeuphoria/posts/tag/twi/">twi</a>
+, <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
+</footer>
+<hr>
+</article>
+
+
+</div>
+<div class="large-3 columns">
+<h4>Topics</h4>
+<ul class="square">
+<li>
+<a href="/techeuphoria/posts/tag/arm/">arm</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/asciidoc/">asciidoc</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/asciidoctor/">asciidoctor</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/awestruct/">awestruct</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/blog/">blog</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/bus/">bus</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/c/">c</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cache/">cache</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/cortex/">cortex</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/design/">design</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/git/">git</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/github pages/">github pages</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/processors/">processors</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/productization/">productization</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/twi/">twi</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/website/">website</a>
+</li>
+<li>
+<a href="/techeuphoria/posts/tag/www/">www</a>
+</li>
+</ul>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>

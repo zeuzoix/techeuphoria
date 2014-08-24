@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -389,9 +389,706 @@ gives you the best solution possible over time:&lt;br&gt;
 </content>
 </entry>
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/</id>
+<title>I2C/TWI with AVR Data Transfer</title>
+<updated>2014-08-24T14:50:30-04:00</updated>
+<published>2013-09-07T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="productization"></category>
+<category term="i2c"></category>
+<summary>
+
+
+
+We now take a look at the TWI/I2C API responsible for data transfer. The header file twi.h has the prototype. We&#8217;ll take a look at the arguments and their description now:
+
+
+
+TWI_RET_E twi_send_recv_buffer(
+                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                           TWI_MODE_E e_mode);
+
+
+
+The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:
+
+
+
+typedef struct _TWI_SEND_RECV_BUFFER_PARAMS_X
+{
+...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We now take a look at the TWI/I2C API responsible for data transfer. The header file &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.h&quot;&gt;twi.h&lt;/a&gt; has the prototype. We&amp;#8217;ll take a look at the arguments and their description now:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;TWI_RET_E twi_send_recv_buffer(
+                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                           TWI_MODE_E e_mode);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_SEND_RECV_BUFFER_PARAMS_X
+{
+   uint8_t uc_dev_addr;
+   uint8_t uc_dev_id;
+   uint8_t *puc_reg_addr;
+   uint32_t ui_reg_addr_sz;
+   uint8_t *puc_data;
+   uint32_t ui_data_sz;
+
+}TWI_SEND_RECV_BUFFER_PARAMS_X;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Where&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;uc_dev_addr&lt;/strong&gt; is the higher nibble of the I2C slave device address&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;uc_dev_id&lt;/strong&gt; is the lower nibble of the I2C slave device address. It is used where the slave address can be configured&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;puc_reg_addr&lt;/strong&gt; is the pointer to the buffer holding the register address of the slave device.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ui_reg_addr_sz&lt;/strong&gt; is the size of the buffer with the register address.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;puc_data&lt;/strong&gt; is the pointer to the data buffer&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ui_data_sz&lt;/strong&gt; is the size of the data buffer.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The second argument is an enumeration which indicates if a send or receive operation is to be done&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_STATE_MODE_E
+{
+   eTWI_MODE_READ = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
+   eTWI_MODE_WRITE,
+   eTWI_MODE_INVALID
+
+}TWI_MODE_E;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/</id>
+<title>I2C/TWI with AVR Register Initialization</title>
+<updated>2014-08-24T11:33:55-04:00</updated>
+<published>2013-08-31T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="protocols"></category>
+<category term="i2c"></category>
+<category term="twi"></category>
+<category term="bus"></category>
+<summary>
+
+
+
+We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&#8217;ll go through the twi_init API and the initialization of the TWI interface.
+
+
+The initialization code in the testbench.c initializes the
+TWI/I2C library as follows:
+
+
+
+x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+x_twi_init_params.pfn_debug = testbench_debug;
+e_twi_ret = twi_init(&amp;x_twi_init_params);
+if(eTWI_SUCCESS != e_twi_ret)
+{
+   i_ret = -1;
+   goto LBL_INIT_IO_RET;
+}
+
+
+
+The API twi_init takes a structure variable x_twi_init_params of the type
+shown below.  The definition is in twi.h:
+
+
+
+typedef struct _TWI_INIT_PARAMS_X
+{
+   TWI_INIT_MODE_E e_mode;
+   TWI_DEBUG_PFN pfn_debug;
+
+}TWI_INIT_PARAMS_X;
+
+
+
+The TWI interface can be initialized based on several modes each of which
+is given...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&amp;#8217;ll go through the twi_init API and the initialization of the TWI interface.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The initialization code in the &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/testbench.c&quot;&gt;testbench.c&lt;/a&gt; initializes the
+TWI/I2C library as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+x_twi_init_params.pfn_debug = testbench_debug;
+e_twi_ret = twi_init(&amp;amp;x_twi_init_params);
+&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(eTWI_SUCCESS != e_twi_ret)
+{
+   i_ret = -&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;;
+   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; LBL_INIT_IO_RET;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The API &lt;em&gt;twi_init&lt;/em&gt; takes a structure variable x_twi_init_params of the type
+shown below.  The definition is in &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.h&quot;&gt;twi.h&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_PARAMS_X
+{
+   TWI_INIT_MODE_E e_mode;
+   TWI_DEBUG_PFN pfn_debug;
+
+}TWI_INIT_PARAMS_X;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The TWI interface can be initialized based on several modes each of which
+is given an identifier which signifies the CPU clock frequency, SCL clock
+speed and the pre-scaler value. For instance in the enumeration definition
+below &lt;em&gt;eTWI_INIT_MODE_16_0000M_100K_1&lt;/em&gt; is the mode for a 16.0000MHz
+micro-controller, with the desired SCL clock frequency set at 100KHz and
+the pre-scaler set to 1.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_INIT_MODE_E
+{
+   eTWI_INIT_MODE_16_0000M_100K_1 = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
+   eTWI_INIT_MODE_16_0000M_400K_1,
+   eTWI_INIT_MODE_16_0000M_100K_4,
+   eTWI_INIT_MODE_16_0000M_400K_4,
+   eTWI_INIT_MODE_INVALID
+
+}TWI_INIT_MODE_E;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Internally if we take a look at the twi_init function defined in
+&lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.c&quot;&gt;twi.c&lt;/a&gt; we see a look up table is employed to initialize the
+5 registers TWBR, TWCR, TWSR, TWDR, TWAR. The look up table has the
+following structure for each row:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_REG_X
+{
+   TWI_INIT_MODE_E e_mode;
+   uint8_t uc_twbr;
+   uint8_t uc_twcr;
+   uint8_t uc_twsr;
+   uint8_t uc_twdr;
+   uint8_t uc_twar;
+
+}TWI_INIT_REG_X;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The lookup table is a global array gxa_init_reg and is defined as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; TWI_INIT_REG_X gxa_init_reg[] =
+{
+   {
+      eTWI_INIT_MODE_16_0000M_100K_1,
+      &lt;span style=&quot;color:#02b&quot;&gt;0x48&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b01001000&lt;/span&gt;
+      &lt;span style=&quot;color:#02b&quot;&gt;0x80&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b10000000&lt;/span&gt;
+      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
+      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
+      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;                                &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
+   }
+};&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The code in twi_init cycles through the array gxa_init_reg until it finds
+the correct mode and then initializes the 5 registers with the values associated
+with the mode.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;for&lt;/span&gt;(uc_i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt; ; uc_i &amp;lt; uc_size_arr ; uc_i++)
+{
+   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(px_init_params-&amp;gt;e_mode == gxa_init_reg[uc_i].e_mode)
+   {
+      px_init_reg = &amp;amp;gxa_init_reg[uc_i];
+      &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;break&lt;/span&gt;;
+   }
+}
+
+&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(&lt;span style=&quot;color:#069&quot;&gt;NULL&lt;/span&gt; == px_init_reg)
+{
+   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(&lt;span style=&quot;color:#069&quot;&gt;NULL&lt;/span&gt; != px_init_params-&amp;gt;pfn_debug)
+   {
+      px_init_params-&amp;gt;pfn_debug(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Can't find correct mode&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
+   }
+
+   e_ret = eTWI_FAILURE;
+   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; LBL_TWI_INIT_RET;
+}
+
+TWBR = px_init_reg-&amp;gt;uc_twbr;
+TWCR = px_init_reg-&amp;gt;uc_twcr;
+TWSR = px_init_reg-&amp;gt;uc_twsr;
+TWDR = px_init_reg-&amp;gt;uc_twdr;
+TWAR = px_init_reg-&amp;gt;uc_twar;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the next section we&amp;#8217;ll check out transmit and receive functionality on
+the TWI/I2C bus with I2C/TWI with AVR Data Transfer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/</id>
+<title>I2C/TWI with AVR Register Descriptions</title>
+<updated>2014-08-24T10:11:43-04:00</updated>
+<published>2013-08-29T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="protocols"></category>
+<category term="i2c"></category>
+<category term="twi"></category>
+<category term="bus"></category>
+<summary>
+
+
+
+So you want to program the TWI/I2C interface of the AVR. Well you&#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
+there is a bunch of registers which are used to control the pins themselves.
+Let&#8217;s take a look at them.
+
+
+
+
+TWI Bit Rate Register (TWBR)
+
+
+This register controls the SCL clock frequency which can either be 100Hz or
+400Hz.
+
+
+
+
+
+
+
+
+
+
+
+The equation to set the correct SCL clock frequency is:
+
+
+
+
+
+
+
+
+
+
+
+
+
+CPUclockfreq is the CPU clock frequency(16MHz in my case).
+
+
+SCLfreq is the desired SCL clock frequency(100Hz in my case).
+
+
+TWBR is the...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So you want to program the TWI/I2C interface of the AVR. Well you&amp;#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
+there is a bunch of registers which are used to control the pins themselves.
+Let&amp;#8217;s take a look at them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;twi-bit-rate-register-twbr&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#twi-bit-rate-register-twbr&quot;&gt;&lt;/a&gt;TWI Bit Rate Register (TWBR)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This register controls the SCL clock frequency which can either be 100Hz or
+400Hz.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWBR.png&quot; alt=&quot;TWI TWBR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The equation to set the correct SCL clock frequency is:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: left&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/svg.latex.svg&quot; alt=&quot;svg.latex&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;CPUclockfreq&lt;/strong&gt; is the CPU clock frequency(16MHz in my case).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;SCLfreq&lt;/strong&gt; is the desired SCL clock frequency(100Hz in my case).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;TWBR&lt;/strong&gt; is the value we store in the register.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;TWPS&lt;/strong&gt; is the prescaler bits in the TWI status register TWSR which can take
+values from 0 to 3(0 in my case).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;twi-control-register-twcr&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#twi-control-register-twcr&quot;&gt;&lt;/a&gt;TWI Control Register (TWCR)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This register is used to control the operation of the TWI/I2C interface. Start
+or stop a transaction and acknowledge the receipt of a data packet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWCR.png&quot; alt=&quot;TWI TWCR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 7 - TWINT:&lt;/strong&gt; Set when the TWI has finished it&amp;#8217;s task. Also used to initiate
+a transaction. This flag is normally cleared by writing a 1 to it. All other
+operations to the TWDR and TWAR must be done before this is cleared.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 6 - TWEA:&lt;/strong&gt; Controls generation of the acknowledge bit.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 5 - TWSTA:&lt;/strong&gt; Controls generation of a start bit.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 4 - TWSTO:&lt;/strong&gt; Controls generation of a stop bit.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 3 - TWWC:&lt;/strong&gt; This is a read only bit. It is set if you write TWDR when TWINT
+is low. It is reset if you write TWDR when TWINT is high.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 2 - TWEN:&lt;/strong&gt; This bit enables the TWI/I2C interface&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 0 - TWIE:&lt;/strong&gt; This bit in conjunction with the I-bit in SREG enables the
+interrupt mode&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;twi-status-register-twsr&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#twi-status-register-twsr&quot;&gt;&lt;/a&gt;TWI Status Register (TWSR)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After every operation of the TWI interface this register is read to understand the
+status of the bus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWSR.png&quot; alt=&quot;TWI TWSR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bits 7:3 - TWS7:TWS3:&lt;/strong&gt; Status of the last TWI/I2C transaction&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bits 1:0 - TWPS1:TWPS0:&lt;/strong&gt; These are the pre-scaler bits used to modify the SCL frequency.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;twi-data-register-twdr&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#twi-data-register-twdr&quot;&gt;&lt;/a&gt;TWI Data Register (TWDR)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This register is used to stores the bytes to be transmitted or the bytes received
+on the TWI bus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWDR.png&quot; alt=&quot;TWI TWDR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bits 7:0 - TWD7:TWD0:&lt;/strong&gt; Data byte to be written to the TWI bus or read from the TWI bus.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;twi-address-register-twar&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#twi-address-register-twar&quot;&gt;&lt;/a&gt;TWI Address Register (TWAR)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This register is loaded with the 7 bit Slave address to which it must respond
+to when programmed as a slave or when working in a multiple master mode. In
+the multiple master mode the device will compete to be a master and if it senses
+that it has lost the arbitration of the line it will have to turn into a slave
+and listen for a possible message from another master device.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWAR.png&quot; alt=&quot;TWI TWAR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bits 7:1 - TWA6: TWA0:&lt;/strong&gt; 7 bit slave address of the TWI interface.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bit 0 - TWGCE:&lt;/strong&gt; Indicates if the device will acknowledge a general call when
+sent. A general call is an address to all the slaves connected on the bus. The
+Slave address for a general call is usually all 0s.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the next section I2C/TWI with AVR Register Intialization we&amp;#8217;ll go through
+the initialization code for the TWI/I2C interface and the values assigned to
+these registers.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;[I2C/TWI with AVR Register Initialization].&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/</id>
+<title>I2C/TWI with AVR Introduction</title>
+<updated>2014-08-24T11:33:13-04:00</updated>
+<published>2013-08-25T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="electronics"></category>
+<category term="protocols"></category>
+<category term="i2c"></category>
+<category term="twi"></category>
+<category term="bus"></category>
+<summary>
+
+
+
+In this post we&#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&#8217;s AVR micro-controller.
+
+
+The code has been uploaded to GitHub at https://github.com/zeuzoix/sardine and will be
+referenced here. The TWI library consists of the following files:
+
+
+
+
+twi.h
+
+
+twi.c
+
+
+twi_states.h
+
+
+twi_states.c
+
+
+twi_debug.h
+
+
+
+
+There are two API which the application can use to interface with the I2C/TWI
+interface. The prototypes are in twi.h
+
+
+
+   uint32_t ui_data_sz;
+
+}TWI_SEND_RECV_BUFFER_PARAMS_X;
+
+
+TWI_RET_E twi_init(TWI_INIT_PARAMS_X *px_init_params);
+TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                               TWI_MODE_E e_mode);
+
+#endif
+
+
+
+The first API...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this post we&amp;#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&amp;#8217;s AVR micro-controller.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The code has been uploaded to GitHub at &lt;a href=&quot;https://github.com/zeuzoix/sardine&quot;&gt;https://github.com/zeuzoix/sardine&lt;/a&gt; and will be
+referenced here. The TWI library consists of the following files:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;twi.h&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;twi.c&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;twi_states.h&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;twi_states.c&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;twi_debug.h&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are two API which the application can use to interface with the I2C/TWI
+interface. The prototypes are in twi.h&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;   uint32_t ui_data_sz;
+
+}TWI_SEND_RECV_BUFFER_PARAMS_X;
+
+
+TWI_RET_E twi_init(TWI_INIT_PARAMS_X *px_init_params);
+TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                               TWI_MODE_E e_mode);
+
+&lt;span style=&quot;color:#579&quot;&gt;#endif&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first API &lt;em&gt;twi_init&lt;/em&gt; is used to initialize the TWI interface in master
+mode by assigning a set of register values to the TWI registers in the AVR Atmel
+micro-controller.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The second API &lt;em&gt;twi_send_recv_buffer&lt;/em&gt; is used in both transmit and receive mode
+to send and receive data over the TWI SDA data line.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We&amp;#8217;ll take a look at the registers used in the programming of the TWI interface
+in the next section i.e.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;[I2C/TWI with AVR Register Descriptions].&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/</id>
 <title>GIT</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:45-04:00</updated>
 <published>2013-05-23T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/" rel="alternate" type="text/html" />
 <author>
@@ -458,7 +1155,7 @@ Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot;&gt;h
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
 <title>Real Time Clock with DS1307 - Register Map Description</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
+<updated>2014-08-15T15:03:44-04:00</updated>
 <published>2013-05-18T08:18:00+05:30</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
 <author>
@@ -570,453 +1267,6 @@ and 32.768kHz.&lt;/p&gt;
 &lt;p&gt;Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
 For further information please go through the data sheet at:
 &lt;a href=&quot;http://datasheets.maximintegrated.com/en/ds/DS1307.pdf&quot; target=&quot;_blank&quot;&gt;ds1307-maximintegrated-pdf&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-introduction/</id>
-<title>Real Time Clock with DS1307 - Introduction</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
-<published>2013-05-18T08:08:00+05:30</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-introduction/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="productization"></category>
-<category term="i2c"></category>
-<summary>
-
-
-
-You&#8217;re developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.
-
-
-A real-time clock(RTC) for your system can be made available using chips like
-the DS1307. This has the ability to be
-programmed and keep track of the time in seconds, minutes, hours and date in
-binary coded decimal(BCD) format with compensation for leap years till 2100.
-
-
-The DS1307 on inspection has 8 pins. The following describes the kind of
-circuit connections required for this chip.
-
-
-
-
-
-
-
-
-
-
-
-Starting at the top left we see pins X1 and X2 connected to a crystal.
-The crystal provides...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You&amp;#8217;re developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;A real-time clock(RTC) for your system can be made available using chips like
-the &lt;a href=&quot;http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html&quot; target=&quot;_blank&quot;&gt;DS1307&lt;/a&gt;. This has the ability to be
-programmed and keep track of the time in seconds, minutes, hours and date in
-binary coded decimal(BCD) format with compensation for leap years till 2100.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The DS1307 on inspection has 8 pins. The following describes the kind of
-circuit connections required for this chip.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/Circuit_Diagram_DS1307.gif&quot; alt=&quot;Circuit Diagram DS1307&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Starting at the top left we see pins X1 and X2 connected to a crystal.
-The crystal provides the clock to the chip and is critical in accurately
-maintaining the time once programmed. Connections for X1 and X2 is a standard
-32.768kHz quartz crystal.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The VCC and GND provide the power supply to the chip which is a 5V power
-supply.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;SQW/OUT has dual functionality. It can be used to generate a square wave of
-1Hz, 4kHz, 8kHz and 32kHz or it can simply output either a high or low
-signal.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;VBAT is the connection for an external battery. The chip has an automatic
-power fail detect and switch circuitry which will switch to the battery
-in the event of the main power supply failing.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;SDA and SCL are the I2C lines which is used by the CPU/Micro-controller to
-read and write the time and date registers.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the next part we look at the register map of the DS1307.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;[Next: Real Time Clock with DS1307 Register Map Description^]&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/</id>
-<title>Atmega Development Boards and Arduino</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
-<published>2013-05-14T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/14/atmega-development-boards-and-arduino/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="productization"></category>
-<summary>
-
-
-
-I&#8217;ve been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
-I&#8217;ve been going through various sources trying to figure out what the Electronic
-DIY community uses to develop LED cubes,
-RC controlled cars, etc.
-
-
-One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
-This micro-controller is also used in the popular Arduino platfrom.
-
-
-The popularity of the ATmega AVR is due to the availability of free and
-inexpensive development tools accelerated by the high number of development
-boards available.
-
-
-The  ATmega AVR was the first micro-controller to have an...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I&amp;#8217;ve been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
-I&amp;#8217;ve been going through various sources trying to figure out what the Electronic
-DIY community uses to develop &lt;a href=&quot;http://youtu.be/WZfNS-pbFYQ&quot;&gt;LED cubes&lt;sup&gt;&lt;/sup&gt;&lt;/a&gt;,
-&lt;a href=&quot;http://youtu.be/WZfNS-pbFYQ&quot;&gt;RC controlled cars&lt;/a&gt;, etc.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;One of the popular micro-controllers in use today is the ATmega AVR from Atmel.
-This micro-controller is also used in the popular Arduino platfrom.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The popularity of the ATmega AVR is due to the availability of free and
-inexpensive development tools accelerated by the high number of development
-boards available.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The  ATmega AVR was the first micro-controller to have an on board flash for
-program storage. Compared to the other micro-controllers at the time which
-offered one time programmable ROM, EPROM and EEPROM options. The flash offers
-reduced cost of development as the frequency with which applications can
-be deployed and tested easily increases.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The Arduino platform is an open source hardware and software project meant
-for hobbyists, designers and artists. The hardware uses a ATmega AVR and
-the software consists of an easy to use JAVA like programming IDE based
-on Wiring.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I&amp;#8217;ve got my hands on an AVR development board called the Device Driver Kit.
-The kit can be used to learn about Linux device drivers or can be used as a
-ATmega AVR development board for your electronics project.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/lddk_connected.jpg&quot; alt=&quot;lddk connected&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The board has a USB interface through which you can program the ATmega
-and develop your own applications. This makes it easy to do rapid prototyping
-with just a PC and the board. I&amp;#8217;ll be posting some of my side projects which
-will use the board.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;It shouldn&amp;#8217;t be too difficult to whip up a ATmega AVR development board or
-a Arduino board with the resources available online. However as a starting
-point it would be good to familiarize yourself with the AVR before you
-jump into building your own board.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Details of the DDK board are available at:&lt;br&gt;
-&lt;a href=&quot;http://esrijan.com/index.php?pagefile=lddk&quot;&gt;http://esrijan.com/index.php?pagefile=lddk&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/</id>
-<title>An Introduction To I2C</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
-<published>2013-05-12T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="protocols"></category>
-<category term="i2c"></category>
-<category term="twi"></category>
-<category term="bus"></category>
-<summary>
-
-
-
-I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
-like interface as the Two Wire Interface.
-
-
-I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
-interface. SCL is the clock interface and is used to synchronize the data
-communication on the SDA line.The device initiating and terminating the
-transmission is called the master. The master controls the SCL clock signal.
-
-
-There is only one master active during data communication on the bus however
-it does not mean the bus has to have...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
-like interface as the Two Wire Interface.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
-interface. SCL is the clock interface and is used to synchronize the data
-communication on the SDA line.The device initiating and terminating the
-transmission is called the master. The master controls the SCL clock signal.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;There is only one master active during data communication on the bus however
-it does not mean the bus has to have only one master. The I2C protocol can
-support multiple masters and multiple slaves. In fact multiple masters can
-co-exist if they support an arbitration mechanism.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Typically when a master initiates a transfer it will also sense the line in
-order to detect if another master is transmitting at the same time. The
-arbitration mechanism will force one master to hold back on the transmission.
-The master can wait and try again once the line is free or immediately switch
-to slave mode if the application requires the device to act in both master
-and slave modes&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;More information at :&lt;br&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/I2C&quot; target=&quot;_blank&quot;&gt;http://en.wikipedia.org/wiki/I2C&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html&quot; target=&quot;_blank&quot;&gt;http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/I2C.svg&quot; alt=&quot;I2C&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/</id>
-<title>Kernel Module Makefiles</title>
-<updated>2014-08-15T15:01:55-04:00</updated>
-<published>2013-02-03T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/02/03/kernel-module-makefiles/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="kernel"></category>
-<category term="linux"></category>
-<category term="programming"></category>
-<summary>
-
-
-
-You&#8217;ve got your kernel module code ready and you want to build it. The following is a simple kernel module makefile which will help you
-do this:
-
-
-
-
-  1
-2
-3
-4
-5
-6
-7
-
-  obj-m += hello-1.o
-
-all:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules (1)
-
-clean:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean (2)
-
-
-
-
-
-
-1
-modules is the target to build the kernel module
-
-
-2
-clean is the target to clean the kernel module
-
-
-
-
-
-
-
-
-
-
-The above makefile will fail if used directly please replace the spaces
-at lines 4 and 7 with TABS or please download the following...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You&amp;#8217;ve got your kernel module code ready and you want to build it. The following is a simple kernel module makefile which will help you
-do this:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;makefile language-makefile&quot;&gt;&lt;table class=&quot;CodeRay&quot;&gt;&lt;tr&gt;
-  &lt;td class=&quot;line-numbers&quot;&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class=&quot;code&quot;&gt;&lt;pre&gt;obj-m += hello-1.o
-
-all:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
-
-clean:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;colist arabic&quot;&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;td&gt;
-&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
-&lt;/td&gt;
-&lt;td&gt;modules is the target to build the kernel module&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;
-&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
-&lt;/td&gt;
-&lt;td&gt;clean is the target to clean the kernel module&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;div class=&quot;admonitionblock note&quot;&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;td class=&quot;icon&quot;&gt;
-&lt;i class=&quot;icon-note&quot; title=&quot;Note&quot;&gt;&lt;/i&gt;
-&lt;/td&gt;
-&lt;td class=&quot;content&quot;&gt;
-The above makefile will fail if used directly please replace the spaces
-at lines 4 and 7 with TABS or please download the following from here
-&lt;a href=&quot;https://docs.google.com/file/d/0B2qMThwa-F02dlBiaTl1dktTUWc/edit?usp=sharing&quot; target=&quot;_blank&quot;&gt;makefile1&lt;/a&gt;.
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In this explanation there are two makefiles which I will be referring to.
-The first is the one shown above and the second is the main kernel makefile
-which is located in the kernel source directory.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;When you compile the kernel the make process assembles a list of kernel
-drirvers and modules that are to be compiled as loadable kernel modules
-defined by obj-m.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In our example above we indicate that we want to create a kernel module out
-of the hello-1.o object file which is eventually built from our hello-1.c
-source code.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;There are two targets for the makefile i.e. all and clean. They invoke the
-&lt;em&gt;'modules'&lt;/em&gt; and &lt;em&gt;'clean'&lt;/em&gt; targets of the main kernel makefile.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Let&amp;#8217;s understand the option switches.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The &lt;em&gt;-C&lt;/em&gt; option switches the make command to the kernel source directory.
-Basically this is the directory of the source code used to build the kernel
-image with the main kernel makefile. Here &lt;em&gt;$(shell uname -r)&lt;/em&gt; is a convenient
-way of specifying the name of the live kernel being run when the make
-command is executed.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The &lt;em&gt;M&lt;/em&gt; option tells the main kernel makefile to go to the present working
-directory and read the makefile present there. This is a way of telling
-the main kernel makefile to read the the makefile shown above. This enables
-the main kernel makefile to add the &lt;em&gt;hello-1.o&lt;/em&gt; object to its list of modules
-to be built.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Here &lt;em&gt;$(PWD)&lt;/em&gt; is a convenient way of specifying the present working directory.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;More information is available at:&lt;br&gt;
-&lt;a href=&quot;http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html&quot; target=&quot;_blank&quot;&gt;http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
