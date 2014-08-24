@@ -1,0 +1,136 @@
+= I2C/TWI with AVR Register Initialization
+Conrad Gomes
+2013-08-31
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-tags: [electronics, protocols, i2c, twi, bus]
+:excerpt: We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we'll go through the twi_init API and the initialization of the TWI interface.
+:awestruct-excerpt: {excerpt}
+:i2c-with-avr-data-transfer-link:
+:testbench-c-link: https://github.com/zeuzoix/sardine/blob/master/testbench.c
+:twi-h-link: https://github.com/zeuzoix/sardine/blob/master/twi.h
+:twi-c-link: https://github.com/zeuzoix/sardine/blob/master/twi.c
+:github-source-link: https://github.com/zeuzoix/sardine
+
+{excerpt}
+
+The initialization code in the {testbench-c-link}[testbench.c] initializes the
+TWI/I2C library as follows:
+   
+[source,c]
+----
+x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+x_twi_init_params.pfn_debug = testbench_debug;
+e_twi_ret = twi_init(&x_twi_init_params);
+if(eTWI_SUCCESS != e_twi_ret)
+{
+   i_ret = -1;
+   goto LBL_INIT_IO_RET;
+}
+----
+
+The API _twi_init_ takes a structure variable x_twi_init_params of the type
+shown below.  The definition is in {twi-h-link}[twi.h]:
+   
+[source,c]
+----
+typedef struct _TWI_INIT_PARAMS_X
+{
+   TWI_INIT_MODE_E e_mode;
+   TWI_DEBUG_PFN pfn_debug;
+  
+}TWI_INIT_PARAMS_X;
+----
+
+The TWI interface can be initialized based on several modes each of which 
+is given an identifier which signifies the CPU clock frequency, SCL clock 
+speed and the pre-scaler value. For instance in the enumeration definition
+below _eTWI_INIT_MODE_16_0000M_100K_1_ is the mode for a 16.0000MHz 
+micro-controller, with the desired SCL clock frequency set at 100KHz and
+the pre-scaler set to 1.
+   
+[source,c]
+----
+typedef enum _TWI_INIT_MODE_E
+{
+   eTWI_INIT_MODE_16_0000M_100K_1 = 0,
+   eTWI_INIT_MODE_16_0000M_400K_1,
+   eTWI_INIT_MODE_16_0000M_100K_4,
+   eTWI_INIT_MODE_16_0000M_400K_4,
+   eTWI_INIT_MODE_INVALID
+  
+}TWI_INIT_MODE_E;
+----
+
+Internally if we take a look at the twi_init function defined in
+{twi-c-link}[twi.c] we see a look up table is employed to initialize the
+5 registers TWBR, TWCR, TWSR, TWDR, TWAR. The look up table has the
+following structure for each row:
+   
+[source,c]
+----
+typedef struct _TWI_INIT_REG_X
+{
+   TWI_INIT_MODE_E e_mode;
+   uint8_t uc_twbr;
+   uint8_t uc_twcr;
+   uint8_t uc_twsr;
+   uint8_t uc_twdr;
+   uint8_t uc_twar;
+     
+}TWI_INIT_REG_X;
+----
+
+The lookup table is a global array gxa_init_reg and is defined as follows:
+   
+[source,c]
+----
+static TWI_INIT_REG_X gxa_init_reg[] =
+{
+   {
+      eTWI_INIT_MODE_16_0000M_100K_1,
+      0x48,                               //0b01001000
+      0x80,                               //0b10000000
+      0x00,                               //0b00000000
+      0x00,                               //0b00000000
+      0x00                                //0b00000000
+   }
+};
+----
+
+The code in twi_init cycles through the array gxa_init_reg until it finds
+the correct mode and then initializes the 5 registers with the values associated
+with the mode.
+   
+[source,c]
+----
+for(uc_i = 0 ; uc_i < uc_size_arr ; uc_i++)
+{
+   if(px_init_params->e_mode == gxa_init_reg[uc_i].e_mode)
+   {
+      px_init_reg = &gxa_init_reg[uc_i];
+      break;
+   }
+}
+  
+if(NULL == px_init_reg)
+{
+   if(NULL != px_init_params->pfn_debug)
+   {
+      px_init_params->pfn_debug("Can't find correct mode");
+   }
+     
+   e_ret = eTWI_FAILURE;
+   goto LBL_TWI_INIT_RET;
+}
+  
+TWBR = px_init_reg->uc_twbr;
+TWCR = px_init_reg->uc_twcr;
+TWSR = px_init_reg->uc_twsr;
+TWDR = px_init_reg->uc_twdr;
+TWAR = px_init_reg->uc_twar;
+----
+
+In the next section we'll check out transmit and receive functionality on
+the TWI/I2C bus with I2C/TWI with AVR Data Transfer. 
