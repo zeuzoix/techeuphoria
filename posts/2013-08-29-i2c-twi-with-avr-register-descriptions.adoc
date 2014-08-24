@@ -1,0 +1,104 @@
+= I2C/TWI with AVR Register Descriptions
+Conrad Gomes
+2013-08-29
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:i2c-with-avr-register-initialization-link:
+:awestruct-tags: [electronics, protocols, i2c, twi, bus]
+:excerpt: So you want to program the TWI/I2C interface of the AVR. Well you'll need to read up about the registers used to control this interface.
+:awestruct-excerpt: {excerpt}
+
+{excerpt} Though the microcontroller uses two pins SDA and SDC to drive the bus
+there is a bunch of registers which are used to control the pins themselves. 
+Let's take a look at them.
+
+== TWI Bit Rate Register (TWBR)
+
+This register controls the SCL clock frequency which can either be 100Hz or
+400Hz.
+
+====
+image::TWI_TWBR.png[width="640", height="480", align="center"]
+====
+
+The equation to set the correct SCL clock frequency is:
+
+====
+image::svg.latex.svg[align="left"]
+====
+
+
+. *CPUclockfreq* is the CPU clock frequency(16MHz in my case).
+. *SCLfreq* is the desired SCL clock frequency(100Hz in my case).
+. *TWBR* is the value we store in the register.
+. *TWPS* is the prescaler bits in the TWI status register TWSR which can take
+values from 0 to 3(0 in my case).
+
+== TWI Control Register (TWCR)
+
+This register is used to control the operation of the TWI/I2C interface. Start
+or stop a transaction and acknowledge the receipt of a data packet.
+
+====
+image::TWI_TWCR.png[width="640", height="480", align="center"]
+====
+
+. *Bit 7 - TWINT:* Set when the TWI has finished it's task. Also used to initiate
+a transaction. This flag is normally cleared by writing a 1 to it. All other
+operations to the TWDR and TWAR must be done before this is cleared.
+. *Bit 6 - TWEA:* Controls generation of the acknowledge bit.
+. *Bit 5 - TWSTA:* Controls generation of a start bit.
+. *Bit 4 - TWSTO:* Controls generation of a stop bit.
+. *Bit 3 - TWWC:* This is a read only bit. It is set if you write TWDR when TWINT
+is low. It is reset if you write TWDR when TWINT is high.
+. *Bit 2 - TWEN:* This bit enables the TWI/I2C interface
+. *Bit 0 - TWIE:* This bit in conjunction with the I-bit in SREG enables the 
+interrupt mode  
+
+== TWI Status Register (TWSR)
+
+After every operation of the TWI interface this register is read to understand the
+status of the bus.
+
+====
+image::TWI_TWSR.png[width="640", height="480", align="center"]
+====
+
+. *Bits 7:3 - TWS7:TWS3:* Status of the last TWI/I2C transaction
+. *Bits 1:0 - TWPS1:TWPS0:* These are the pre-scaler bits used to modify the SCL frequency.
+
+== TWI Data Register (TWDR)  
+
+This register is used to stores the bytes to be transmitted or the bytes received
+on the TWI bus.
+
+====
+image::TWI_TWDR.png[width="640", height="480", align="center"]
+====
+
+. *Bits 7:0 - TWD7:TWD0:* Data byte to be written to the TWI bus or read from the TWI bus. 
+
+== TWI Address Register (TWAR)   
+
+This register is loaded with the 7 bit Slave address to which it must respond
+to when programmed as a slave or when working in a multiple master mode. In
+the multiple master mode the device will compete to be a master and if it senses
+that it has lost the arbitration of the line it will have to turn into a slave
+and listen for a possible message from another master device.
+
+====
+image::TWI_TWAR.png[width="640", height="480", align="center"]
+====
+
+. *Bits 7:1 - TWA6: TWA0:* 7 bit slave address of the TWI interface.
+. *Bit 0 - TWGCE:* Indicates if the device will acknowledge a general call when 
+sent. A general call is an address to all the slaves connected on the bus. The 
+Slave address for a general call is usually all 0s.
+
+In the next section I2C/TWI with AVR Register Intialization we'll go through
+the initialization code for the TWI/I2C interface and the values assigned to
+these registers.
+
+{i2c-with-avr-register-initialization-link}[I2C/TWI with AVR Register Initialization].
+
