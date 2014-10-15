@@ -32,19 +32,54 @@
           %li.divider
             %li
               %a{:href=>"#{site.base_url}/blog/index.html"} /blog
+          %li.divider
+            %li
+              %a{:href=>"#{site.base_url}/embedded/index.html"} /embedded
+          %li.divider
+            %li
+              %a{:href=>"#{site.base_url}/web/index.html"} /web
+          %li.divider
+            %li
+              %a{:href=>"#{site.base_url}/programming/index.html"} /programming
   .row
-    .large-12.columns
-      %h1 #{Asciidoctor.render site.name, :doctype => :inline}
-      %hr
+    - if page.url == '/about/'
+      .large-12.columns
+        %h1 #{Asciidoctor.render site.name, :doctype => :inline}
+        %hr
+    - elsif page.url == '/blog/'
+      .large-12.columns
+        %h1 #{page.title}
+    - elsif page.url == '/'
+      .large-12.columns
+        %h1 #{page.title}
+    - else
+      .large-12.columns
+        %h1 #{page.title}
+        %hr
+
   #content.row
-    .large-9.columns
-      =content
-    .large-3.columns
-      %h4 Topics
-      %ul.square
-        - site.posts_tags.each do |tag|
-          %li
-            %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
+    -if page.url == '/blog/'
+      .large-9.columns
+        =content
+      .large-3.columns
+        %h4 Topics
+        %ul.square
+          - site.posts_tags.each do |tag|
+            %li
+              %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
+    -elsif page.url == '/'
+      .large-9.columns
+        =content
+      .large-3.columns
+        %h4 Topics
+        %ul.square
+          - site.posts_tags.each do |tag|
+            %li
+              %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
+    -else
+      .large-12.columns
+        =content
+    
   %footer.row(style='max-width: 100%')
     %hr
     .large-6.columns

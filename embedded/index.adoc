@@ -1,0 +1,13 @@
+= Embedded Systems
+:description: Index page listing hacks and explorations of different embedded systems
+:keywords: beagleboard, BeagleBone Black, TI, Linux, uBoot
+:page-layout: base
+:page-description: {description}
+:page-keywords: {keywords}
+:rainbow-themes: pass:quotes[[red]##t##[green]##h##[purple]##e##[fuchsia]##m##[blue]##e##[teal]##s##]
+
+This section of {sitename} is dedicated to embedded systems. 
+
+== Beagle Board
+
+* link:beagleboneblacktux/[Exploring embedded linux with the BeagleBone Black board]

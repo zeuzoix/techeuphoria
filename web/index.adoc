@@ -1,0 +1,11 @@
+= World Wide Web
+:description: Index page listing hacks and explorations of technology that powers the world wide web
+:keywords: firefox, chromium, javascript, 
+:page-layout: base
+:page-description: {description}
+:page-keywords: {keywords}
+:rainbow-themes: pass:quotes[[red]##t##[green]##h##[purple]##e##[fuchsia]##m##[blue]##e##[teal]##s##]
+
+This section of {sitename} documents the technology that powers the world wide web.
+
+== ToDo
