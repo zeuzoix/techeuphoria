@@ -1,4 +1,4 @@
-= Programming
+= Code 
 :description: Index page listing my excercises with different programming languages
 :keywords: c, c++, javascript,
 :page-layout: base
@@ -6,16 +6,18 @@
 :page-keywords: {keywords}
 :rainbow-themes: pass:quotes[[red]##t##[green]##h##[purple]##e##[fuchsia]##m##[blue]##e##[teal]##s##]
 
-This section of {sitename} explores different programming languages 
+This section of {sitename} explores different programming languages and scripts.
+All 
 
 == C
 
-* link:beagleboneblacktux/[Exploring embedded linux with the BeagleBone Black board]
-
-== C++
+* link:knrexcercises/[Working out with Kernighan and Ritchie]
+* link:lcthw/[Learning C the hard way]
 
 == HTML
 
+* link:w3chtmlcert/[Getting certified in HTML]
+
 == JS
 
-== Bash
+* link:w3cjscert/[Getting certified in JS]

@@ -1,0 +1,121 @@
+// rvm use 2.1@runtime
+// asciidoctor -D /tmp/ -a data-uri -a stem user-manual.adoc
+= HTML Certification through W3C
+Conrad Gomes <conrad.s.j.gomes@gmail.com>
+:description: This is a journal of my study of HTML through W3Schools
+:keywords: www, html
+:doctype: book
+:compat-mode:
+//:page-layout!:
+:page-layout: base
+:toc: left
+:toclevels: 2
+:sectanchors:
+:sectlinks:
+:sectnums:
+:linkattrs:
+:icons: font
+:source-highlighter: coderay
+:source-language: asciidoc
+:experimental:
+:stem:
+:idprefix:
+:idseparator: -
+:ast: &ast;
+:dagger: pass:normal[^&dagger;^]
+:y: icon:check[role="green"]
+:n: icon:times[role="red"]
+:c: icon:file-text-o[role="blue"]
+:table-caption!:
+:example-caption!:
+:figure-caption!:
+:imagesdir: images
+:includedir: _includes
+:underscore: _
+// Refs
+:uri-w3schools: http://www.w3schools.com
+:uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
+
+:compat-mode!:
+
+toc::[]
+
+
+[NOTE]
+.This document is under active development!
+====
+If you find errors or omissions in this document, please don't hesitate to {uri-conrad-mail}[send me a mail].
+====
+
+= Introduction
+
+== What is HTML?
+
+* *HTML* stands for *H*yper *T*ext *M*ark *U*p language.
+* Markup language is a way of presenting a document 
+
+ 
+= Editors
+
+= Basic
+
+= Elements
+
+= Attributes
+
+= Headings
+
+= Paragraphs
+
+= Formatting
+
+= Styles
+
+= Quotations
+
+= Computercode
+
+= Comments
+
+= CSS
+
+= Links
+
+= Images
+
+= Tables
+
+= Lists
+
+= Blocks
+
+= Classes
+
+= Layout
+
+= Responsive
+
+= Forms
+
+= Iframes
+
+= Color Names
+
+= Color Values
+
+= Color Shades
+
+= JavaScript
+
+= Head
+
+= Entities
+
+= Symbols
+
+= Charset
+
+= URL Encode
+
+= XHTML
+
