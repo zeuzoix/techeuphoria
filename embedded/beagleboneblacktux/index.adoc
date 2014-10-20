@@ -54,7 +54,12 @@ published work here uses an Ubuntu distribution as the work station.
 
 [partintro]
 --
-NOTE: Section Pending
+Free Electrons is an engineering company consisting of embedded linux experts
+who support companies using Embedded Linux. They additionally conduct training
+workshops for companies on different topics such as Linux kernel and device driver 
+development, Android system development, Yocto Project and OpenEmbedded development,
+etc. This manual uses the Free Electrons training material which they publish online
+to explore Embedded Linux with the BeagleBone Black board from TI.
 --
 
 == About BeagleBoard
@@ -69,4 +74,3 @@ NOTE: Section Pending
 --
 NOTE: Section Pending
 --
-
