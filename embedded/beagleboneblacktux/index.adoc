@@ -66,8 +66,6 @@ to explore Embedded Linux with the BeagleBone Black board from TI.
 
 == BeagleBoard References
 
-== 
-
 = Workstation Setup
 
 [partintro]
