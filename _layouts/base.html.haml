@@ -74,19 +74,19 @@
       .large-9.columns
         =content
       .large-3.columns
-        %h4 Topics
-        %ul.square
+        %h2 Tags
+        %ul
           - site.posts_tags.each do |tag|
-            %li
+            %li.label.icon-tags
               %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
     -elsif page.url == '/'
       .large-9.columns
         =content
       .large-3.columns
-        %h4 Topics
-        %ul.square
+        %h2 Tags
+        %ul
           - site.posts_tags.each do |tag|
-            %li
+            %li.label.icon-tags
               %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
     -else
       .large-12.columns
