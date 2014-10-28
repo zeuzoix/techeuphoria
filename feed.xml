@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -259,7 +259,7 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -342,7 +342,7 @@ nice description of the different types of caches:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -391,7 +391,7 @@ gives you the best solution possible over time:&lt;br&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/</id>
 <title>I2C/TWI with AVR Data Transfer</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-09-07T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/" rel="alternate" type="text/html" />
 <author>
@@ -502,7 +502,7 @@ their description now:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/</id>
 <title>I2C/TWI with AVR Register Initialization</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-08-31T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/" rel="alternate" type="text/html" />
 <author>
@@ -693,7 +693,7 @@ and receive functionality on the TWI/I2C bus with I2C/TWI with AVR Data Transfer
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/</id>
 <title>I2C/TWI with AVR Register Descriptions</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-08-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/" rel="alternate" type="text/html" />
 <author>
@@ -958,7 +958,7 @@ interface and the values assigned to these registers.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/</id>
 <title>I2C/TWI with AVR Introduction</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-08-25T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/" rel="alternate" type="text/html" />
 <author>
@@ -1089,7 +1089,7 @@ in the next section i.e.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/</id>
 <title>GIT</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-05-23T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/" rel="alternate" type="text/html" />
 <author>
@@ -1156,7 +1156,7 @@ Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot;&gt;h
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
 <title>Real Time Clock with DS1307 - Register Map Description</title>
-<updated>2014-10-27T23:06:53+05:30</updated>
+<updated>2014-10-27T23:09:04+05:30</updated>
 <published>2013-05-18T08:18:00+05:30</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
 <author>
