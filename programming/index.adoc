@@ -7,7 +7,6 @@
 :rainbow-themes: pass:quotes[[red]##t##[green]##h##[purple]##e##[fuchsia]##m##[blue]##e##[teal]##s##]
 
 This section of {sitename} explores different programming languages and scripts.
-All 
 
 == C
 
