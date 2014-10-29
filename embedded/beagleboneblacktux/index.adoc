@@ -87,3 +87,5 @@ The sources of the training material and references are mentioned as well
 as details about how to procure the hardware.
 --
 
+== Hardware
+== Software
