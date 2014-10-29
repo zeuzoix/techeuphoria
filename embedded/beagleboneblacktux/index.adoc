@@ -55,6 +55,13 @@ published work here uses an Ubuntu distribution as the work station.
 
 [partintro]
 --
+This journal was started in order to document my exploration of embedded linux
+using a popular low-cost platform i.e. the BeagleBone Black. The end objective 
+is to becove well versed with embedded linux development on an ARM based embedded
+device. 
+--
+
+== About Free Electrons
 {uri-free-electrons}[Free Electrons^] is an engineering company consisting of
 embedded linux experts who support companies using Embedded Linux. They 
 additionally conduct training workshops for companies on different topics 
@@ -62,7 +69,6 @@ such as Linux kernel and device driver development, Android system development,
 Yocto Project and OpenEmbedded development, etc. This manual uses the Free 
 Electrons training material which they publish online to explore Embedded Linux
 with the BeagleBone Black board from TI.
---
 
 == About BeagleBoard
 
