@@ -78,9 +78,12 @@ from TI with the aim of providing a powerful platform to design embedded solutio
 The BeagleBone Black is their fourth board till date which offers a lot of 
 possibilities in a small credit card size form factor.
 
-= Workstation Setup
+= Training and Workbench Setup
 
 [partintro]
 --
-NOTE: Section Pending
+This section covers the setup software and hardware used in this journal.
+The sources of the training material and references are mentioned as well
+as details about how to procure the hardware.
 --
+
