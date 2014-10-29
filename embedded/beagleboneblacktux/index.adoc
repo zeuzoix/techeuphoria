@@ -35,6 +35,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 // Refs
 :uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
 :uri-free-electrons: http://free-electrons.com/
+:uri-beagleboard: http://beagleboard.org/
 
 :compat-mode!:
 
@@ -71,8 +72,11 @@ Electrons training material which they publish online to explore Embedded Linux
 with the BeagleBone Black board from TI.
 
 == About BeagleBoard
-
-== BeagleBoard References
+{uri-beagleboard}[BeagleBoard.org Foundation^] is a non-profit corporation which
+promotes open source software and open hardware. It was started by enthusiasts
+from TI with the aim of providing a powerful platform to design embedded solutions.
+The BeagleBone Black is their fourth board till date which offers a lot of 
+possibilities in a small credit card size form factor.
 
 = Workstation Setup
 
