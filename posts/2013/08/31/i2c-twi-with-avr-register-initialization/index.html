@@ -82,8 +82,6 @@ August 31, 2013
 </h4>
 </header>
 <div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph">
 <p>We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&#8217;ll go through the twi_init API and the initialization of the TWI interface.</p>
 </div>
@@ -93,7 +91,7 @@ TWI/I2C library as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c">x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+<pre class="CodeRay highlight"><code data-lang="c">x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
 x_twi_init_params.pfn_debug = testbench_debug;
 e_twi_ret = twi_init(&amp;x_twi_init_params);
 <span style="color:#080;font-weight:bold">if</span>(eTWI_SUCCESS != e_twi_ret)
@@ -109,7 +107,7 @@ shown below.  The definition is in <a href="https://github.com/zeuzoix/sardine/b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_PARAMS_X
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_PARAMS_X
 {
    TWI_INIT_MODE_E e_mode;
    TWI_DEBUG_PFN pfn_debug;
@@ -127,7 +125,7 @@ the pre-scaler set to 1.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_INIT_MODE_E
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_INIT_MODE_E
 {
    eTWI_INIT_MODE_16_0000M_100K_1 = <span style="color:#00D">0</span>,
    eTWI_INIT_MODE_16_0000M_400K_1,
@@ -146,7 +144,7 @@ following structure for each row:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_REG_X
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_REG_X
 {
    TWI_INIT_MODE_E e_mode;
    uint8_t uc_twbr;
@@ -163,7 +161,7 @@ following structure for each row:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#088;font-weight:bold">static</span> TWI_INIT_REG_X gxa_init_reg[] =
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#088;font-weight:bold">static</span> TWI_INIT_REG_X gxa_init_reg[] =
 {
    {
       eTWI_INIT_MODE_16_0000M_100K_1,
@@ -183,7 +181,7 @@ with the mode.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">for</span>(uc_i = <span style="color:#00D">0</span> ; uc_i &lt; uc_size_arr ; uc_i++)
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">for</span>(uc_i = <span style="color:#00D">0</span> ; uc_i &lt; uc_size_arr ; uc_i++)
 {
    <span style="color:#080;font-weight:bold">if</span>(px_init_params-&gt;e_mode == gxa_init_reg[uc_i].e_mode)
    {
@@ -213,8 +211,6 @@ TWAR = px_init_reg-&gt;uc_twar;</code></pre>
 <div class="paragraph">
 <p>In the <a href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/">next</a> section we&#8217;ll check out transmit
 and receive functionality on the TWI/I2C bus with I2C/TWI with AVR Data Transfer.</p>
-</div>
-</div>
 </div>
 </div>
 <footer class="post-footer">

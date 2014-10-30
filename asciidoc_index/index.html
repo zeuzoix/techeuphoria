@@ -81,7 +81,7 @@ override this behavior by providing <a href="https://github.com/rtomayko/tilt">T
 See the <a href="#usage">Usage</a> section for more details.</p>
 </div>
 <div class="paragraph">
-<p>Asciidoctor currently works (read as <em>tested</em>) with Ruby 1.8.7, Ruby
+<p>Asciidoctor currently works (read as 'tested') with Ruby 1.8.7, Ruby
 1.9.3, Ruby 2.0.0, JRuby 1.7.5 and Rubinius 2.0 (on Linux, Mac and
 Windows). We expect it will work with other versions of Ruby as well and
 would welcome help in testing it out.</p>
@@ -106,7 +106,7 @@ repository</a> on GitHub.</p>
 <table>
 <tr>
 <td class="icon">
-<i class="icon-note" title="Note"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 We&#8217;re working hard to make Asciidoctor a drop-in replacement for
@@ -160,7 +160,7 @@ Ruby if it&#8217;s not already on your machine.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Asciidoctor has both a command line interface (CLI) and an API. The CLI
-is a drop-in replacement for the <code>asciidoc.py</code> command from the Python
+is a drop-in replacement for the asciidoc.py command from the Python
 implementation. The API is intended for integration with other software
 projects and is suitable for server-side applications, such as Rails,
 Sinatra and GitHub.</p>
@@ -168,7 +168,7 @@ Sinatra and GitHub.</p>
 <div class="sect2">
 <h3 id="command-line-interface-cli"><a class="anchor" href="#command-line-interface-cli"></a>Command line interface (CLI)</h3>
 <div class="paragraph">
-<p>After installing the <code>asciidoctor</code> gem, the <code>asciidoctor</code> commandline
+<p>After installing the asciidoctor gem, the asciidoctor commandline
 interface should be available on your PATH. To invoke it, simply execute:</p>
 </div>
 <div class="literalblock">
@@ -193,10 +193,10 @@ the .html extension.</p>
 <p>or in the <a href="http://asciidoctor.org/man/asciidoctor">man page</a>.</p>
 </div>
 <div class="paragraph">
-<p>There is also an <code>asciidoctor-safe</code> command, which turns on safe mode by
+<p>There is also an asciidoctor-safe command, which turns on safe mode by
 default, preventing access to files outside the parent directory of the
 source file. This mode is very similar to the safe mode of
-<code>asciidoc.py</code>.</p>
+asciidoc.py.</p>
 </div>
 </div>
 <div class="sect2">
@@ -215,7 +215,7 @@ gem:</p>
 </div>
 <div class="paragraph">
 <div class="title">Loading a document</div>
-<p>To parse a file into an <code>Asciidoctor::Document</code> object:</p>
+<p>To parse a file into an Asciidoctor::Document object:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -244,9 +244,9 @@ puts doc.attributes</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The command will output to the file <code>your_file.html</code> in the same
+<p>The command will output to the file your_file.html in the same
 directory. You can render the file to DocBook 4.5 by setting the
-<code>backend</code> attribute to <em>docbook</em>:</p>
+backend attribute to 'docbook':</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -255,7 +255,7 @@ directory. You can render the file to DocBook 4.5 by setting the
 </div>
 </div>
 <div class="paragraph">
-<p>The command will output to the file <code>your_file.xml</code> in the same
+<p>The command will output to the file your_file.xml in the same
 directory. (If you&#8217;re on Linux, you can view the file using yelp).</p>
 </div>
 <div class="paragraph">
@@ -271,7 +271,7 @@ directory. (If you&#8217;re on Linux, you can view the file using yelp).</p>
 <p>When rendering a string, the header and footer are excluded by default
 to make Asciidoctor consistent with other lightweight markup engines
 like Markdown. If you want the header and footer, just enable it using
-the <code>:header_footer</code> option:</p>
+the :header_footer option:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -308,19 +308,19 @@ template. It will fallback to its default templates for everything else.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The Document and Section templates should begin with <code>document.</code> and
-<code>section.</code>, respectively. The file extension is used by Tilt to
+<p>The Document and Section templates should begin with document. and
+section., respectively. The file extension is used by Tilt to
 determine which view framework it will use to render the
 template. For instance, if you want to write the template in ERB, you&#8217;d
-name these two templates <code>document.html.erb</code> and <code>section.html.erb</code>. To
-use Haml, you&#8217;d name them <code>document.html.haml</code> and <code>section.html.haml</code>.</p>
+name these two templates document.html.erb and section.html.erb. To
+use Haml, you&#8217;d name them document.html.haml and section.html.haml.</p>
 </div>
 <div class="paragraph">
 <p>Templates for block elements, like a Paragraph or Sidebar, would begin
-with <code>block_&lt;style&gt;.</code>. For instance, to override the default Paragraph
+with block_&lt;style&gt;.. For instance, to override the default Paragraph
 template with an ERB template, put a file named
-<code>block_paragraph.html.erb</code> in the template directory you pass to the
-<code>Document</code> constructor using the <code>:template_dir</code> option.</p>
+block_paragraph.html.erb in the template directory you pass to the
+Document constructor using the :template_dir option.</p>
 </div>
 <div class="paragraph">
 <p>For more usage examples, see the (massive) test suite.</p>
@@ -332,7 +332,7 @@ template with an ERB template, put a file named
 <h2 id="contributing"><a class="anchor" href="#contributing"></a>Contributing</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the spirit of <a href="http://www.gnu.org/philosophy/free-sw.html">free software</a>, <em>everyone</em> is encouraged to
+<p>In the spirit of <a href="http://www.gnu.org/philosophy/free-sw.html">free software</a>, 'everyone' is encouraged to
 help improve this project.</p>
 </div>
 <div class="paragraph">
@@ -356,7 +356,7 @@ help improve this project.</p>
 <p>by writing specifications</p>
 </li>
 <li>
-<p>by writing code&#8201;&#8212;&#8201;<em>No patch is too small.</em></p>
+<p>by writing code&#8201;&#8212;&#8201;'No patch is too small.'</p>
 <div class="ulist">
 <ul>
 <li>
@@ -423,14 +423,14 @@ Asciidoctor exhibits the bad behavior.</p>
 <p>Add tests for your unimplemented feature or bug fix.</p>
 </li>
 <li>
-<p>Run <code>bundle exec rake</code>.
+<p>Run bundle exec rake.
 If your tests pass, return to step 3.</p>
 </li>
 <li>
 <p>Implement your feature or bug fix.</p>
 </li>
 <li>
-<p>Run <code>bundle exec rake</code>.
+<p>Run bundle exec rake.
 If your tests fail, return to step 5.</p>
 </li>
 <li>
@@ -496,23 +496,23 @@ be dropped.</p>
 <dl>
 <dt class="hdlist1">Project home page</dt>
 <dd>
-<p><a href="http://asciidoctor.org">http://asciidoctor.org</a></p>
+<p><a href="http://asciidoctor.org" class="bare">http://asciidoctor.org</a></p>
 </dd>
 <dt class="hdlist1">Source repository</dt>
 <dd>
-<p><a href="https://github.com/asciidoctor/asciidoctor">https://github.com/asciidoctor/asciidoctor</a></p>
+<p><a href="https://github.com/asciidoctor/asciidoctor" class="bare">https://github.com/asciidoctor/asciidoctor</a></p>
 </dd>
 <dt class="hdlist1">Issue tracker</dt>
 <dd>
-<p><a href="https://github.com/asciidoctor/asciidoctor/issues">https://github.com/asciidoctor/asciidoctor/issues</a></p>
+<p><a href="https://github.com/asciidoctor/asciidoctor/issues" class="bare">https://github.com/asciidoctor/asciidoctor/issues</a></p>
 </dd>
 <dt class="hdlist1">Mailinglist / forum</dt>
 <dd>
-<p><a href="http://discuss.asciidoctor.org">http://discuss.asciidoctor.org</a></p>
+<p><a href="http://discuss.asciidoctor.org" class="bare">http://discuss.asciidoctor.org</a></p>
 </dd>
 <dt class="hdlist1">GitHub organization</dt>
 <dd>
-<p><a href="https://github.com/asciidoctor">https://github.com/asciidoctor</a></p>
+<p><a href="https://github.com/asciidoctor" class="bare">https://github.com/asciidoctor</a></p>
 </dd>
 </dl>
 </div>

@@ -82,8 +82,6 @@ September  7, 2013
 </h4>
 </header>
 <div class="post-body">
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph">
 <p>We now take a look at the TWI/I2C API responsible for data transfer. The header file
 <a href="https://github.com/zeuzoix/sardine/blob/master/twi.h">twi.h</a> has the prototype. We&#8217;ll take a look at the arguments and
@@ -91,7 +89,7 @@ their description now:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c">TWI_RET_E twi_send_recv_buffer(
+<pre class="CodeRay highlight"><code data-lang="c">TWI_RET_E twi_send_recv_buffer(
                            TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
                            TWI_MODE_E e_mode);</code></pre>
 </div>
@@ -101,7 +99,7 @@ their description now:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_SEND_RECV_BUFFER_PARAMS_X
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_SEND_RECV_BUFFER_PARAMS_X
 {
    uint8_t uc_dev_addr;
    uint8_t uc_dev_id;
@@ -143,15 +141,13 @@ their description now:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay"><code class="c language-c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_STATE_MODE_E
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_STATE_MODE_E
 {
    eTWI_MODE_READ = <span style="color:#00D">0</span>,
    eTWI_MODE_WRITE,
    eTWI_MODE_INVALID
 
 }TWI_MODE_E;</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>

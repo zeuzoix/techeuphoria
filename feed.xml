@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2014-06-30T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
 <author>
@@ -181,7 +181,7 @@ the following repositories:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
 <title>Printing the Linux kernel version</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2014-01-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
 <author>
@@ -192,8 +192,6 @@ the following repositories:&lt;/p&gt;
 <category term="programming"></category>
 <category term="c"></category>
 <summary>
-
-
 
 The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
 in the first log and the version of the kernel is compiled with is shown
@@ -215,8 +213,6 @@ static int __init version_init(void)
         pr_alert(&quot;Kernel module compiled with version %s\n&quot;,...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
 in the first log and the version of the kernel is compiled with is shown
@@ -224,7 +220,7 @@ in the second log in the version_init function:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/init.h&amp;gt;&lt;/span&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/init.h&amp;gt;&lt;/span&gt;
 &lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/module.h&amp;gt;&lt;/span&gt;
 &lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/kernel.h&amp;gt;&lt;/span&gt;
 &lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/utsname.h&amp;gt;&lt;/span&gt;
@@ -252,14 +248,12 @@ MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&
 MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
 <title>Caches</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2014-01-15T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
 <author>
@@ -271,8 +265,6 @@ MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&q
 <category term="arm"></category>
 <category term="cortex"></category>
 <summary>
-
-
 
 Let&#8217;s talk about the cache and its requirement in a computing system. The word
 cache is derived from the french word cacher which means to hide.
@@ -292,8 +284,6 @@ So system designers often incorporate a cache in between the processor and main
 memory which...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Let&amp;#8217;s talk about the cache and its requirement in a computing system. The word
 cache is derived from the french word cacher which means to &lt;em&gt;hide&lt;/em&gt;.&lt;/p&gt;
@@ -335,14 +325,12 @@ nice description of the different types of caches:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/</id>
 <title>Linux Linked Lists</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2013-12-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/12/06/linux-linked-lists/" rel="alternate" type="text/html" />
 <author>
@@ -352,8 +340,6 @@ nice description of the different types of caches:&lt;/p&gt;
 <category term="linux"></category>
 <category term="c"></category>
 <summary>
-
-
 
 The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
@@ -365,13 +351,9 @@ What&#8217;s interesting is that the entire implementation is conveniently locat
 in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:
 http://lxr.free-electrons.com/source/include/linux/list.h
-
-
 ...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The linux kernel has a very peculiar implementation of the linked lists data
 structure. The linked list is actually a circular linked list. The following
@@ -384,14 +366,12 @@ in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:&lt;br&gt;
 &lt;a href=&quot;http://lxr.free-electrons.com/source/include/linux/list.h&quot; target=&quot;_blank&quot;&gt;http://lxr.free-electrons.com/source/include/linux/list.h&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/</id>
 <title>I2C/TWI with AVR Data Transfer</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2013-09-07T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/" rel="alternate" type="text/html" />
 <author>
@@ -401,8 +381,6 @@ gives you the best solution possible over time:&lt;br&gt;
 <category term="productization"></category>
 <category term="i2c"></category>
 <summary>
-
-
 
 We now take a look at the TWI/I2C API responsible for data transfer. The header file
 twi.h has the prototype. We&#8217;ll take a look at the arguments and
@@ -425,8 +403,6 @@ typedef struct _TWI_SEND_RECV_BUFFER_PARAMS_X
   ...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;We now take a look at the TWI/I2C API responsible for data transfer. The header file
 &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.h&quot;&gt;twi.h&lt;/a&gt; has the prototype. We&amp;#8217;ll take a look at the arguments and
@@ -434,7 +410,7 @@ their description now:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;TWI_RET_E twi_send_recv_buffer(
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;TWI_RET_E twi_send_recv_buffer(
                            TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
                            TWI_MODE_E e_mode);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
@@ -444,7 +420,7 @@ their description now:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_SEND_RECV_BUFFER_PARAMS_X
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_SEND_RECV_BUFFER_PARAMS_X
 {
    uint8_t uc_dev_addr;
    uint8_t uc_dev_id;
@@ -486,7 +462,7 @@ their description now:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_STATE_MODE_E
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_STATE_MODE_E
 {
    eTWI_MODE_READ = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
    eTWI_MODE_WRITE,
@@ -495,14 +471,12 @@ their description now:&lt;/p&gt;
 }TWI_MODE_E;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/</id>
 <title>I2C/TWI with AVR Register Initialization</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2013-08-31T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/" rel="alternate" type="text/html" />
 <author>
@@ -514,8 +488,6 @@ their description now:&lt;/p&gt;
 <category term="twi"></category>
 <category term="bus"></category>
 <summary>
-
-
 
 We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&#8217;ll go through the twi_init API and the initialization of the TWI interface.
 
@@ -554,8 +526,6 @@ The TWI interface can be initialized based on several modes each of which
 is given...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&amp;#8217;ll go through the twi_init API and the initialization of the TWI interface.&lt;/p&gt;
 &lt;/div&gt;
@@ -565,7 +535,7 @@ TWI/I2C library as follows:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
 x_twi_init_params.pfn_debug = testbench_debug;
 e_twi_ret = twi_init(&amp;amp;x_twi_init_params);
 &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(eTWI_SUCCESS != e_twi_ret)
@@ -581,7 +551,7 @@ shown below.  The definition is in &lt;a href=&quot;https://github.com/zeuzoix/s
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_PARAMS_X
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_PARAMS_X
 {
    TWI_INIT_MODE_E e_mode;
    TWI_DEBUG_PFN pfn_debug;
@@ -599,7 +569,7 @@ the pre-scaler set to 1.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_INIT_MODE_E
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_INIT_MODE_E
 {
    eTWI_INIT_MODE_16_0000M_100K_1 = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
    eTWI_INIT_MODE_16_0000M_400K_1,
@@ -618,7 +588,7 @@ following structure for each row:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_REG_X
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_REG_X
 {
    TWI_INIT_MODE_E e_mode;
    uint8_t uc_twbr;
@@ -635,7 +605,7 @@ following structure for each row:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; TWI_INIT_REG_X gxa_init_reg[] =
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; TWI_INIT_REG_X gxa_init_reg[] =
 {
    {
       eTWI_INIT_MODE_16_0000M_100K_1,
@@ -655,7 +625,7 @@ with the mode.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;for&lt;/span&gt;(uc_i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt; ; uc_i &amp;lt; uc_size_arr ; uc_i++)
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;for&lt;/span&gt;(uc_i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt; ; uc_i &amp;lt; uc_size_arr ; uc_i++)
 {
    &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(px_init_params-&amp;gt;e_mode == gxa_init_reg[uc_i].e_mode)
    {
@@ -686,14 +656,12 @@ TWAR = px_init_reg-&amp;gt;uc_twar;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;In the &lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/&quot;&gt;next&lt;/a&gt; section we&amp;#8217;ll check out transmit
 and receive functionality on the TWI/I2C bus with I2C/TWI with AVR Data Transfer.&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/</id>
 <title>I2C/TWI with AVR Register Descriptions</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-30T21:23:42+05:30</updated>
 <published>2013-08-29T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/" rel="alternate" type="text/html" />
 <author>
@@ -958,7 +926,7 @@ interface and the values assigned to these registers.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/</id>
 <title>I2C/TWI with AVR Introduction</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T22:43:59+05:30</updated>
 <published>2013-08-25T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/" rel="alternate" type="text/html" />
 <author>
@@ -970,8 +938,6 @@ interface and the values assigned to these registers.&lt;/p&gt;
 <category term="twi"></category>
 <category term="bus"></category>
 <summary>
-
-
 
 In this post we&#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&#8217;s AVR micro-controller.
 
@@ -1020,13 +986,11 @@ TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_par
 The first API...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;In this post we&amp;#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&amp;#8217;s AVR micro-controller.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The code has been uploaded to GitHub at &lt;a href=&quot;https://github.com/zeuzoix/sardine&quot;&gt;https://github.com/zeuzoix/sardine&lt;/a&gt; and will be
+&lt;p&gt;The code has been uploaded to GitHub at &lt;a href=&quot;https://github.com/zeuzoix/sardine&quot; class=&quot;bare&quot;&gt;https://github.com/zeuzoix/sardine&lt;/a&gt; and will be
 referenced here. The TWI library consists of the following files:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;olist arabic&quot;&gt;
@@ -1054,7 +1018,7 @@ interface. The prototypes are in twi.h&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay&quot;&gt;&lt;code class=&quot;c language-c&quot;&gt;   uint32_t ui_data_sz;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;   uint32_t ui_data_sz;
 
 }TWI_SEND_RECV_BUFFER_PARAMS_X;
 
@@ -1082,14 +1046,12 @@ in the next section i.e.&lt;/p&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/&quot;&gt;I2C/TWI with AVR Register Descriptions&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/</id>
 <title>GIT</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2013-05-23T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/" rel="alternate" type="text/html" />
 <author>
@@ -1097,8 +1059,6 @@ in the next section i.e.&lt;/p&gt;
 </author>
 <category term="git"></category>
 <summary>
-
-
 
 I&#8217;ve been a SVN user for quite some time. However it&#8217;s good to understand why GIT has risen in popularity.
 
@@ -1119,8 +1079,6 @@ Snapshots: A version of a file is the snapshot of the file at that point
 in time. It is not the sum of all differences....
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I&amp;#8217;ve been a SVN user for quite some time. However it&amp;#8217;s good to understand why GIT has risen in popularity.&lt;/p&gt;
 &lt;/div&gt;
@@ -1145,18 +1103,16 @@ of change is a file.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;URLs that I found useful:&lt;br&gt;
-Setup: &lt;a href=&quot;https://help.github.com/articles/set-up-git&quot;&gt;https://help.github.com/articles/set-up-git&lt;/a&gt;&lt;br&gt;
-Design Basics: &lt;a href=&quot;http://git-scm.com/book/en/Getting-Started-Git-Basics&quot;&gt;http://git-scm.com/book/en/Getting-Started-Git-Basics&lt;/a&gt;&lt;br&gt;
-Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot;&gt;http://try.github.io/levels/1/challenges/1&lt;/a&gt;&lt;br&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+Setup: &lt;a href=&quot;https://help.github.com/articles/set-up-git&quot; class=&quot;bare&quot;&gt;https://help.github.com/articles/set-up-git&lt;/a&gt;&lt;br&gt;
+Design Basics: &lt;a href=&quot;http://git-scm.com/book/en/Getting-Started-Git-Basics&quot; class=&quot;bare&quot;&gt;http://git-scm.com/book/en/Getting-Started-Git-Basics&lt;/a&gt;&lt;br&gt;
+Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot; class=&quot;bare&quot;&gt;http://try.github.io/levels/1/challenges/1&lt;/a&gt;&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 </content>
 </entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
 <title>Real Time Clock with DS1307 - Register Map Description</title>
-<updated>2014-10-28T23:32:07+05:30</updated>
+<updated>2014-10-29T10:42:50+05:30</updated>
 <published>2013-05-18T08:18:00+05:30</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
 <author>
@@ -1166,8 +1122,6 @@ Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot;&gt;h
 <category term="productization"></category>
 <category term="i2c"></category>
 <summary>
-
-
 
 In the [first part^] we went through a brief introduction of the
 DS1307 chip.
@@ -1196,8 +1150,6 @@ this is mainly because there are 60 seconds and 60 minutes.
 An important difference is bit...
 </summary>
 <content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;In the [first part^] we went through a brief introduction of the
 DS1307 chip.&lt;br&gt;
@@ -1268,8 +1220,6 @@ and 32.768kHz.&lt;/p&gt;
 &lt;p&gt;Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
 For further information please go through the data sheet at:
 &lt;a href=&quot;http://datasheets.maximintegrated.com/en/ds/DS1307.pdf&quot; target=&quot;_blank&quot;&gt;ds1307-maximintegrated-pdf&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 </content>
 </entry>
