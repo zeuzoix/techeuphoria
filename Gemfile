@@ -24,10 +24,12 @@
 
 source 'https://rubygems.org'                             # This tells Bundler where to look for gems
 
-gem 'awestruct', '~> 0.5.3'                               # Goes without saying
+#gem 'awestruct', '~> 0.5.3'                               # Goes without saying
+gem 'awestruct', '0.5.5'
 gem 'webrick', '~> 1.3.1'                                 # The rack webserver to use in dev mode
 gem 'rake', '>= 0.9.2'                                    # Needed for the Rakefile to work
-gem 'asciidoctor', '0.1.4'                                # If using AsciiDoc syntax, need 0.1.1 for Header support
+gem 'asciidoctor', '1.5.0'
+#gem 'asciidoctor', '0.1.4'                                # If using AsciiDoc syntax, need 0.1.1 for Header support
 #gem 'asciidoctor', '>= 0.1.4.pre'                         # If using AsciiDoc syntax, need 0.1.1 for Header support
 gem 'coffee-script', '>= 2.2.0'                           # If using coffee-script or to remove the warning
 gem 'rb-inotify', '>= 0.9.0', :require => false           # to remove warning about pulling, Linux
