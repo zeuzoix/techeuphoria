@@ -24,7 +24,7 @@ asciidoctor:
     ctx_path: ''
     source-highlighter: coderay
     coderay-css: style
-
+    #imagesdir: .@
    
 profiles:
   development:
