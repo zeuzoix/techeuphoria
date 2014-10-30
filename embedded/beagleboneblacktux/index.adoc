@@ -36,6 +36,8 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
 :uri-free-electrons: http://free-electrons.com/
 :uri-beagleboard: http://beagleboard.org/
+:uri-raspberry-pi: http://www.raspberrypi.org/
+:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
 
@@ -88,4 +90,24 @@ as details about how to procure the hardware.
 --
 
 == Hardware
+
+=== BeagleBone Black
+
+The BeagleBone Black is the newest member in the BeagleBoard family. The board 
+is designed to be a low sized small form factor board. The size of the board
+is comparable to the size of a credit card and it offers expansion headers to 
+add headers called as capes similar to the {uri-raspberry-pi}[Raspberry Pi^].
+
+====
+image::BeagleBoneBlackREV_A5A.jpg[width="640", height="480", align="center"]
+====
+
+The table below highlights the key onboard components of the board along with
+the connectors available on the board. The diagram of the table below is taken
+from the {link-beagleboneblack-srm-pdf}[BeagleBone Black System Reference Manual^].
+
+====
+image::BeagleBoneBlackFeatures.jpg[width="640", height="480", align="center"]
+====
+
 == Software
