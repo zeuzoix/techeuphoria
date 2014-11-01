@@ -27,41 +27,14 @@
       %section.top-bar-section
         %ul.left
           %li.divider
-            /
-              %li
-                %a{:href=>"#{site.ctx_path}/about/index.html"} /about
-          %li.divider
             %li
-              %a{:href=>"#{site.base_url}/blog/index.html"} /blog
+              %a{:href=>"#{site.ctx_path}/quests/index.html"} /quests
           %li.divider
-            %li
-              %a{:href=>"#{site.base_url}/embedded/index.html"} /embedded
-          %li.divider
-            %li
-              %a{:href=>"#{site.base_url}/web/index.html"} /web
-          %li.divider
-            %li
-              %a{:href=>"#{site.base_url}/programming/index.html"} /programming
   .row
-    - if page.url == '/about/'
-      .large-12.columns
-        %h1 #{Asciidoctor.render site.name, :doctype => :inline}
-        %hr
-    - elsif page.url == '/blog/'
+    - if page.url == '/'
       .large-12.columns
         %h1 #{page.title}
-    - elsif page.url == '/'
-      .large-12.columns
-        %h1 #{page.title}
-    - elsif page.url == '/embedded/'
-      .large-12.columns
-        %h1 #{page.title}
-        %hr
-    - elsif page.url == '/web/'
-      .large-12.columns
-        %h1 #{page.title}
-        %hr
-    - elsif page.url == '/programming/'
+    - elsif page.url == '/quests/'
       .large-12.columns
         %h1 #{page.title}
         %hr
@@ -70,16 +43,7 @@
         %h1 
 
   #content.row
-    -if page.url == '/blog/'
-      .large-9.columns
-        =content
-      .large-3.columns
-        %h2 Tags
-        %ul
-          - site.posts_tags.each do |tag|
-            %li.label.icon-tags
-              %a(href="#{site.ctx_path}#{tag.primary_page.url}")=tag
-    -elsif page.url == '/'
+    -if page.url == '/'
       .large-9.columns
         =content
       .large-3.columns
