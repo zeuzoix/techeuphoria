@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<div id="preamble">
+<div class="sectionbody">
+<!-- toc disabled -->
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This document is under active development!</div>
+<div class="paragraph">
+<p>If you find errors or omissions in this document, please don&#8217;t hesitate to <a href="mailto:conrad.s.j.gomes@gmail.com">send me a mail</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This manual assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.</p>
+</div>
+</div>
+</div>
+<h1 id="introduction" class="sect0"><a class="anchor" href="#introduction"></a>Introduction</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This journal was started in order to document my exploration of embedded linux
+using a popular low-cost platform i.e. the BeagleBone Black. The end objective
+is to becove well versed with embedded linux development on an ARM based embedded
+device.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>1. About Free Electrons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
+embedded linux experts who support companies using Embedded Linux. They
+additionally conduct training workshops for companies on different topics
+such as Linux kernel and device driver development, Android system development,
+Yocto Project and OpenEmbedded development, etc. This manual uses the Free
+Electrons training material which they publish online to explore Embedded Linux
+with the BeagleBone Black board from TI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-beagleboard"><a class="anchor" href="#about-beagleboard"></a>2. About BeagleBoard</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://beagleboard.org/" target="_blank">BeagleBoard.org Foundation</a> is a non-profit corporation which
+promotes open source software and open hardware. It was started by enthusiasts
+from TI with the aim of providing a powerful platform to design embedded solutions.
+The BeagleBone Black is their fourth board till date which offers a lot of
+possibilities in a small credit card size form factor.</p>
+</div>
+</div>
+</div>
+<h1 id="training-and-workbench-setup" class="sect0"><a class="anchor" href="#training-and-workbench-setup"></a>Training and Workbench Setup</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This section covers the setup software and hardware used in this journal.
+The sources of the training material and references are mentioned as well
+as details about how to procure the hardware.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hardware"><a class="anchor" href="#hardware"></a>3. Hardware</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>3.1. BeagleBone Black</h3>
+<div class="paragraph">
+<p>The BeagleBone Black is the newest member in the BeagleBoard family. The board
+is designed to be a low sized small form factor board. The size of the board
+is comparable to the size of a credit card and it offers expansion headers to
+add headers called as capes similar to the <a href="http://www.raspberrypi.org/" target="_blank">Raspberry Pi</a>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The table below highlights the key onboard components of the board along with
+the connectors available on the board. The diagram of the table below is taken
+from the <a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Reference Manual</a>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="software"><a class="anchor" href="#software"></a>4. Software</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>
