@@ -8,8 +8,10 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :compat-mode:
 //:page-layout!:
 :page-layout: base
-:toc: left
+//:toc: left
+:toc: macro
 :toclevels: 2
+:toc-title: Table of Contents
 :sectanchors:
 :sectlinks:
 :sectnums:
