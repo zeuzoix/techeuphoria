@@ -37,6 +37,9 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-free-electrons: http://free-electrons.com/
 :uri-beagleboard: http://beagleboard.org/
 :uri-raspberry-pi: http://www.raspberrypi.org/
+:uri-ubuntu: http://www.ubuntu.com/
+:uri-oracle-virtualbox: https://www.virtualbox.org/
+:uri-vmware: http://www.vmware.com
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -50,7 +53,7 @@ toc::[]
 If you find errors or omissions in this document, please don't hesitate to {uri-conrad-mail}[send me a mail].
 ====
 
-This manual assumes you are comfortable with a linux environment as most of the
+This journal assumes you are comfortable with a linux environment as most of the
 published work here uses an Ubuntu distribution as the work station.
 
 
@@ -69,7 +72,7 @@ device.
 embedded linux experts who support companies using Embedded Linux. They 
 additionally conduct training workshops for companies on different topics 
 such as Linux kernel and device driver development, Android system development, 
-Yocto Project and OpenEmbedded development, etc. This manual uses the Free 
+Yocto Project and OpenEmbedded development, etc. This journal uses the Free 
 Electrons training material which they publish online to explore Embedded Linux
 with the BeagleBone Black board from TI.
 
@@ -111,3 +114,31 @@ image::BeagleBoneBlackFeatures.jpg[width="640", height="480", align="center"]
 ====
 
 == Software
+
+=== Ubuntu
+
+To work with an embedded system you need a work station on which you can
+perform the various tasks that are required in the development life cycle.
+These tasks include:
+
+. Editing your build scripts and source code
+. Cross-compiling your source code for the embedded target
+. Transferring or accessing the cross-compiled application and libraries
+to or from the embedded target 
+. Collecting debug information from the target
+. Communicating with the target remotely using its interfaces like
+serial, USB, network, etc..
+
+In this document we use the popular Debian based Linux operating system,
+{uri-ubuntu}[Ubuntu] as our work station for all the tasks listed above.
+Ubuntu can be easily downloaded and installed on any PC or laptop. 
+
+[IMPORTANT]
+.Do not use a virtual machine runnning Ubuntu as your workstation 
+====
+This document uses Ubuntu 14.04 running on a HP laptop. Use of a similar
+environment through a virtual machine runnning on {uri-vmware}[VMWare^] or
+{uri-oracle-virtualbox}[Oracle VirtualBox^] is
+not recommended.
+====
+
