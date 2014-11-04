@@ -36,6 +36,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :underscore: _
 // Refs
 :uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
+:uri-linux-foundation: http://www.linuxfoundation.org/
 :uri-free-electrons: http://free-electrons.com/
 :uri-beagleboard: http://beagleboard.org/
 :uri-raspberry-pi: http://www.raspberrypi.org/
@@ -65,7 +66,7 @@ published work here uses an Ubuntu distribution as the work station.
 --
 This journal was started in order to document my exploration of embedded linux
 using a popular low-cost platform i.e. the BeagleBone Black. The end objective 
-is to becove well versed with embedded linux development on an ARM based embedded
+is to become well versed with embedded linux development on an ARM based embedded
 device. 
 --
 
