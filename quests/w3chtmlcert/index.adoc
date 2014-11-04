@@ -51,13 +51,48 @@ If you find errors or omissions in this document, please don't hesitate to {uri-
 
 == What is HTML?
 
-* *HTML* stands for *H*yper *T*ext *M*ark *U*p language.
-* Markup language is a way of presenting a document 
-
+* *HTML* stands for **H**yper **T**ext **M**ark **U**p language.
+* Markup language is a way of presenting a document with meta information
+which is separate from the information of the document.
+* The meta information is represented as TAGs in the HTML document
  
-= Editors
+== Creating a simple HTML page
 
-= Basic
+A simple HTML page can be created using a text editor like Vim or Emacs on
+Linux. Similarly Notepad can be used to create a simple HTML document. To 
+manage the complexity of larger projects and websites professional editors
+such as Adobe Dreamweaver, Kompozer, etc  
+
+On opening your favourite editor type out the following to create a simple
+HTML page:
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>A Simple HTML Page</h1>
+
+<p>Gee whizz this is easy!</p>
+
+</body>
+</html>
+----
+
+Once the above is typed in save the file with a suitable name and remember
+the location of the file saved. If you are using Firefox you should go to
+"File" in the menu bar and select the "Open File" option. Browse your file
+system for the file you have just saved and open it. The following shows 
+the simple HTML page rendered by Firefox and Chrome respectively.
+
+====
+image::simple-html-page-chrome-print-screen.png[width="640", height="480", align="center"]
+====
+
+====
+image::simple-html-page-firefox-print-screen.png[width="640", height="480", align="center"]
+====
 
 = Elements
 
