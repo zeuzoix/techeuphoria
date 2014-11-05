@@ -1,0 +1,111 @@
+// rvm use 2.1@runtime
+// asciidoctor -D /tmp/ -a data-uri -a stem user-manual.adoc
+= Exploring OpenWRT through PRPL
+Conrad Gomes <conrad.s.j.gomes@gmail.com>
+:description: This is a journal of my experience with OpenWRT through the PRPL foundation
+:keywords: PRPL, OpenWrt
+:doctype: book
+:compat-mode:
+//:page-layout!:
+:page-layout: base
+//:toc: left
+:toc: macro
+:toclevels: 2
+:toc-title: Table of Contents
+:sectanchors:
+:sectlinks:
+:sectnums:
+:linkattrs:
+:icons: font
+:source-highlighter: coderay
+:source-language: asciidoc
+:experimental:
+:stem:
+:idprefix:
+:idseparator: -
+:ast: &ast;
+:dagger: pass:normal[^&dagger;^]
+:y: icon:check[role="green"]
+:n: icon:times[role="red"]
+:c: icon:file-text-o[role="blue"]
+:table-caption!:
+:example-caption!:
+:figure-caption!:
+:imagesdir: images
+:includedir: _includes
+:underscore: _
+// Refs
+
+:compat-mode!:
+
+toc::[]
+
+[NOTE]
+.This document is under active development!
+====
+If you find errors or omissions in this document, please don't hesitate to {uri-conrad-mail}[send me a mail].
+====
+
+This journal assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.
+
+= Introduction
+
+[partintro]
+--
+This journal was started in order to document my exploration of OpenWrt through
+the prpl foundation.
+--
+
+== About prpl
+== About OpenWrt
+
+= Building OpenWrt
+
+== Dependencies
+
+The following is a list of packages that have to be installed in the system.
+Each package has a brief description taken with the help of _apt-cache_:
+
+. *build-essential* : Informational list of build-essential packages. If you
+do not plan to build Debian packages, you don't need this package.  Starting
+with dpkg (>= 1.14.18) this package is required for building Debian packages.
+This package contains an informational list of packages which are considered
+essential for building Debian packages.  This package also depends on the
+packages on that list, to make it easy to have the build-essential packages
+installed.
+. *subversion* : Apache Subversion, also known as svn, is a centralised version
+control system.  Version control systems allow many individuals (who may be
+distributed geographically) to collaborate on a set of files (source code, 
+websites, etc).  Subversion began with a CVS paradigm and supports all the major
+features of CVS, but has evolved to support many features that CVS users often
+wish they had.
+. *libncurses5-dev* : The ncurses library routines are a terminal-independent
+method of updating character screens with reasonable optimization.This package
+contains the header files, static libraries and symbolic links that developers
+using ncurses will need.
+. *zlib1g-dev* : Zlib compression library for development. zlib is a library
+implementing the deflate compression method found in gzip and PKZIP. This
+package includes the development support files.
+. *gawk* : GNU awk, a pattern scanning and processing language `awk', a program
+that you can use to select particular records in a file and perform operations
+upon them.
+. *gcc-multilib* : GNU C compiler (multilib files). This is the GNU C compiler,
+a fairly portable optimizing compiler for C.
+. *flex* : A fast lexical analyzer generator. Flex is a tool for generating
+scanners: programs which recognized lexical patterns in text.
+. *git-core* : A fast, scalable, distributed revision control system. Git is
+popular version control system designed to handle very large projects with
+speed and efficiency; it is used for many high profile open source projects,
+most notably the Linux kernel.
+. *gettext* : GNU Internationalization utilities. Interesting for authors or
+maintainers of other packages or programs which they want to see
+internationalized.
+. *qemu-system-mips* : QEMU full system emulation binaries (mips) QEMU is a
+fast processor emulator: currently the package supports MIPS emulation. By
+using dynamic translation it achieves reasonable speed while being easy to
+port on new host CPUs.
+
+
+$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips
+
