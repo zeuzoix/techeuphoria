@@ -87,11 +87,15 @@ system for the file you have just saved and open it. The following shows
 the simple HTML page rendered by Firefox and Chrome respectively.
 
 ====
-image::simple-html-page-chrome-print-screen.png[width="640", height="480", align="center"]
+[[img-simple-html-page-chrome-print-screen]]
+.Simple HTML Page on Chrome
+image::simple-html-page-chrome-print-screen.png[width="640", height="480", align="center", link=images/simple-html-page-chrome-print-screen.png]
 ====
 
 ====
-image::simple-html-page-firefox-print-screen.png[width="640", height="480", align="center"]
+[[img-simple-html-page-firefox-print-screen]]
+.Simple HTML Page on Firefox
+image::simple-html-page-firefox-print-screen.png[width="640", height="480", align="center", link=images/simple-html-page-firefox-print-screen.png]
 ====
 
 = Elements
