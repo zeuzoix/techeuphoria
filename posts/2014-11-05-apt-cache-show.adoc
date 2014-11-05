@@ -1,0 +1,76 @@
+= Getting information about packages using APT
+Conrad Gomes
+2014-11-05-17-09
+:awestruct-tags: [linux, packages, apt]
+:excerpt: Understanding information about packages before using apt-get
+:awestruct-excerpt: {excerpt}
+
+{excerpt}
+
+The APT( Advanced Packaging Tool) handles software packages on a debian system.
+Typically when you go through any tutorial on installing any package or
+application you may encounter instructions to install packages with _apt_get_.
+This step is typically a trivial step that is executed without understanding
+the nature and purpose of the packages being installed. The power and simplicity
+of APT resolves all the dependencies of the packages.
+
+[source,bash]
+----
+user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-get install build-essential
+[sudo] password for user:
+----
+
+
+However if you want to dig deeper and understand the nature of the packages
+getting installed you can use the _apt-cache show_ command as follows: 
+
+[source,bash]
+----
+user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-cache show build-essential
+Package: build-essential
+Priority: optional
+Section: devel
+Installed-Size: 37
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Matthias Klose <doko@debian.org>
+Architecture: i386
+Version: 11.6ubuntu4
+Depends: libc6-dev | libc-dev, gcc (>= 4:4.4.3), g++ (>= 4:4.4.3), make, dpkg-dev (>= 1.13.5)
+Filename: pool/main/b/build-essential/build-essential_11.6ubuntu4_i386.deb
+Size: 5654
+MD5sum: d8bd2f0becd7b941d8e10c75f3e73120
+SHA1: 55488e1349c1f49656260dfa8d46dea4f353b3a1
+SHA256: 5594116e639130239f849088321f5ff3cc75cd3a688d1d3504786da1195e4d4d
+Description-en: Informational list of build-essential packages
+ If you do not plan to build Debian packages, you don't need this
+ package.  Starting with dpkg (>= 1.14.18) this package is required
+ for building Debian packages.
+ .
+ This package contains an informational list of packages which are
+ considered essential for building Debian packages.  This package also
+ depends on the packages on that list, to make it easy to have the
+ build-essential packages installed.
+ .
+ If you have this package installed, you only need to install whatever
+ a package specifies as its build-time dependencies to build the
+ package.  Conversely, if you are determining what your package needs
+ to build-depend on, you can always leave out the packages this
+ package depends on.
+ .
+ This package is NOT the definition of what packages are
+ build-essential; the real definition is in the Debian Policy Manual.
+ This package contains merely an informational list, which is all
+ most people need.   However, if this package and the manual disagree,
+ the manual is correct.
+Description-md5: 90ef0ef86cafda0bd16f746eb621d9da
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Build-Essential: yes
+Origin: Ubuntu
+Supported: 9m
+----
+
+The above command gives you insight into the details of the package along
+with dependencies and a description. We check the information for
+_build-essential_ which is not a single package but a list of packages
+which are tagged as _"Build-Essential: yes"_. The same command can be applied
+to any package name listed in your _apt-get install_ command.
