@@ -190,55 +190,55 @@ Allows the use of framset content.
 
 == Paragraphs
 
-= Formatting
+== Formatting
 
-= Styles
+== Styles
 
-= Quotations
+== Quotations
 
-= Computercode
+== Computercode
 
-= Comments
+== Comments
 
-= CSS
+== CSS
 
-= Links
+== Links
 
-= Images
+== Images
 
-= Tables
+== Tables
 
-= Lists
+== Lists
 
-= Blocks
+== Blocks
 
-= Classes
+== Classes
 
-= Layout
+== Layout
 
-= Responsive
+== Responsive
 
-= Forms
+== Forms
 
-= Iframes
+== Iframes
 
-= Color Names
+== Color Names
 
-= Color Values
+== Color Values
 
-= Color Shades
+== Color Shades
 
-= JavaScript
+== JavaScript
 
-= Head
+== Head
 
-= Entities
+== Entities
 
-= Symbols
+== Symbols
 
-= Charset
+== Charset
 
-= URL Encode
+== URL Encode
 
-= XHTML
+== XHTML
 
