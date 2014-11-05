@@ -46,7 +46,32 @@ TechEuphoria
 <div class="large-12 columns">
 <div id="preamble">
 <div class="sectionbody">
-<!-- toc disabled -->
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel0">
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel1">
+<li><a href="#about-the-linux-kernel">1. About The Linux Kernel</a></li>
+<li><a href="#about-beagleboard">2. About BeagleBoard</a></li>
+<li><a href="#about-free-electrons">3. About Free Electrons</a></li>
+</ul>
+</li>
+<li><a href="#training-and-workbench-setup">Training and Workbench Setup</a>
+<ul class="sectlevel1">
+<li><a href="#hardware">4. Hardware</a>
+<ul class="sectlevel2">
+<li><a href="#beaglebone-black">4.1. BeagleBone Black</a></li>
+</ul>
+</li>
+<li><a href="#software">5. Software</a>
+<ul class="sectlevel2">
+<li><a href="#ubuntu">5.1. Ubuntu</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -74,22 +99,39 @@ published work here uses an Ubuntu distribution as the work station.</p>
 <div class="paragraph">
 <p>This journal was started in order to document my exploration of embedded linux
 using a popular low-cost platform i.e. the BeagleBone Black. The end objective
-is to becove well versed with embedded linux development on an ARM based embedded
+is to become well versed with embedded linux development on an ARM based embedded
 device.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>1. About Free Electrons</h2>
+<h2 id="about-the-linux-kernel"><a class="anchor" href="#about-the-linux-kernel"></a>1. About The Linux Kernel</h2>
 <div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+I&#8217;m doing a (free) operating system (just a hobby, won&#8217;t be big and
+professional like gnu) for 386(486) AT clones. This has been brewing
+since April and is starting to get ready. I&#8217;d like any feedback on things
+people like/dislike in minix, as my OS resembles it somewhat (same physical
+layout of the file-system (due to practical reasons) among other things).
+</blockquote>
+<div class="attribution">
+&#8212; Linus Torvald: 25th August 1991
+</div>
+</div>
 <div class="paragraph">
-<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
-embedded linux experts who support companies using Embedded Linux. They
-additionally conduct training workshops for companies on different topics
-such as Linux kernel and device driver development, Android system development,
-Yocto Project and OpenEmbedded development, etc. This journal uses the Free
-Electrons training material which they publish online to explore Embedded Linux
-with the BeagleBone Black board from TI.</p>
+<p>The Linux kernel started off as a hobby project and by a Finnish
+national Linus Torvalds. It is today the OS powering the largest number of
+computers on the planet. It is used in phones, tablets, laptops, netbooks,
+routers, desktops, servers, supercomputers, embedded devices, consumer
+electronics, etc.</p>
+</div>
+<div class="paragraph">
+<p>The development of the Linux kernel is carried out by an army of dynamic
+open source developers, the majority of which comprise of hobbyists.
+Significant contribution to the kernel is now coming from companies using
+the kernel. The development is still spearheaded by Linus who is employed
+by the <a href="http://www.linuxfoundation.org/" target="_blank">Linux Foundation</a>.</p>
 </div>
 </div>
 </div>
@@ -105,6 +147,20 @@ possibilities in a small credit card size form factor.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>3. About Free Electrons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
+embedded linux experts who support companies using Embedded Linux. They
+additionally conduct training workshops for companies on different topics
+such as Linux kernel and device driver development, Android system development,
+Yocto Project and OpenEmbedded development, etc. This journal uses the Free
+Electrons training material which they publish online to explore Embedded Linux
+with the BeagleBone Black board from TI.</p>
+</div>
+</div>
+</div>
 <h1 id="training-and-workbench-setup" class="sect0"><a class="anchor" href="#training-and-workbench-setup"></a>Training and Workbench Setup</h1>
 <div class="openblock partintro">
 <div class="content">
@@ -116,10 +172,10 @@ as details about how to procure the hardware.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="hardware"><a class="anchor" href="#hardware"></a>3. Hardware</h2>
+<h2 id="hardware"><a class="anchor" href="#hardware"></a>4. Hardware</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>3.1. BeagleBone Black</h3>
+<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>4.1. BeagleBone Black</h3>
 <div class="paragraph">
 <p>The BeagleBone Black is the newest member in the BeagleBoard family. The board
 is designed to be a low sized small form factor board. The size of the board
@@ -153,10 +209,10 @@ from the <a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Refe
 </div>
 </div>
 <div class="sect1">
-<h2 id="software"><a class="anchor" href="#software"></a>4. Software</h2>
+<h2 id="software"><a class="anchor" href="#software"></a>5. Software</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ubuntu"><a class="anchor" href="#ubuntu"></a>4.1. Ubuntu</h3>
+<h3 id="ubuntu"><a class="anchor" href="#ubuntu"></a>5.1. Ubuntu</h3>
 <div class="paragraph">
 <p>To work with an embedded system you need a work station on which you can
 perform the various tasks that are required in the development life cycle.
