@@ -1,0 +1,3 @@
+[submodule "stylesheets/_themes"]
+	path = stylesheets/_themes
+	url = https://github.com/asciidoctor/asciidoctor-stylesheet-factory.git

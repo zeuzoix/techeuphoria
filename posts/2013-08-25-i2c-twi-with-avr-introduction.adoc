@@ -1,0 +1,51 @@
+= I2C/TWI with AVR Introduction
+Conrad Gomes
+2013-08-25
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-tags: [electronics, protocols, i2c, twi, bus]
+:excerpt: In this post we'll take a look at implementing an I2C/TWI library which can be used with Atmel's AVR micro-controller. 
+:awestruct-excerpt: {excerpt}
+:i2c-with-avr-register-descriptions-link: http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/
+:github-source-link: https://github.com/zeuzoix/sardine
+
+{excerpt}
+
+The code has been uploaded to GitHub at {github-source-link} and will be
+referenced here. The TWI library consists of the following files:
+
+. twi.h
+. twi.c
+. twi_states.h
+. twi_states.c
+. twi_debug.h
+
+There are two API which the application can use to interface with the I2C/TWI
+interface. The prototypes are in twi.h
+
+[source,c]
+----
+   uint32_t ui_data_sz;
+    
+}TWI_SEND_RECV_BUFFER_PARAMS_X;
+ 
+ 
+TWI_RET_E twi_init(TWI_INIT_PARAMS_X *px_init_params);
+TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                               TWI_MODE_E e_mode);
+ 
+#endif
+----
+
+The first API _twi_init_ is used to initialize the TWI interface in master
+mode by assigning a set of register values to the TWI registers in the AVR Atmel
+micro-controller.
+
+The second API _twi_send_recv_buffer_ is used in both transmit and receive mode
+to send and receive data over the TWI SDA data line.
+
+We'll take a look at the registers used in the programming of the TWI interface
+in the next section i.e.
+
+{i2c-with-avr-register-descriptions-link}[I2C/TWI with AVR Register Descriptions].

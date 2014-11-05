@@ -1,0 +1,46 @@
+= Real Time Clock with DS1307 - Introduction
+Conrad Gomes
+2013-05-18
+:revdate: 2013-05-18 08:08:00 +0530
+:awestruct-tags: [electronics, productization, i2c]
+:ds1307-maximintegrated-link: http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html 
+:next-part: http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/
+:excerpt: You're developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.
+:awestruct-excerpt: {excerpt}
+
+{excerpt}
+
+A real-time clock(RTC) for your system can be made available using chips like 
+the {ds1307-maximintegrated-link}[DS1307^]. This has the ability to be 
+programmed and keep track of the time in seconds, minutes, hours and date in 
+binary coded decimal(BCD) format with compensation for leap years till 2100.
+
+The DS1307 on inspection has 8 pins. The following describes the kind of 
+circuit connections required for this chip.
+
+====
+image::Circuit_Diagram_DS1307.gif[width="640", height="480", align="center"]
+====
+
+Starting at the top left we see pins X1 and X2 connected to a crystal. 
+The crystal provides the clock to the chip and is critical in accurately 
+maintaining the time once programmed. Connections for X1 and X2 is a standard 
+32.768kHz quartz crystal.
+
+The VCC and GND provide the power supply to the chip which is a 5V power 
+supply.
+
+SQW/OUT has dual functionality. It can be used to generate a square wave of
+1Hz, 4kHz, 8kHz and 32kHz or it can simply output either a high or low
+signal.
+
+VBAT is the connection for an external battery. The chip has an automatic
+power fail detect and switch circuitry which will switch to the battery
+in the event of the main power supply failing.
+
+SDA and SCL are the I2C lines which is used by the CPU/Micro-controller to
+read and write the time and date registers.
+
+In the next part we look at the register map of the DS1307.
+
+{next-part}[Next: Real Time Clock with DS1307 Register Map Description^]

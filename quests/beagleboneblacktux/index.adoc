@@ -1,0 +1,144 @@
+// rvm use 2.1@runtime
+// asciidoctor -D /tmp/ -a data-uri -a stem user-manual.adoc
+= Exploring Embedded Linux With The BeagleBone Black
+Conrad Gomes <conrad.s.j.gomes@gmail.com>
+:description: This is a journal of my experience with BeagleBone Black
+:keywords: BeagleBone Black
+:doctype: book
+:compat-mode:
+//:page-layout!:
+:page-layout: base
+:toc: left
+:toclevels: 2
+:sectanchors:
+:sectlinks:
+:sectnums:
+:linkattrs:
+:icons: font
+:source-highlighter: coderay
+:source-language: asciidoc
+:experimental:
+:stem:
+:idprefix:
+:idseparator: -
+:ast: &ast;
+:dagger: pass:normal[^&dagger;^]
+:y: icon:check[role="green"]
+:n: icon:times[role="red"]
+:c: icon:file-text-o[role="blue"]
+:table-caption!:
+:example-caption!:
+:figure-caption!:
+:imagesdir: images
+:includedir: _includes
+:underscore: _
+// Refs
+:uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
+:uri-free-electrons: http://free-electrons.com/
+:uri-beagleboard: http://beagleboard.org/
+:uri-raspberry-pi: http://www.raspberrypi.org/
+:uri-ubuntu: http://www.ubuntu.com/
+:uri-oracle-virtualbox: https://www.virtualbox.org/
+:uri-vmware: http://www.vmware.com
+:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
+
+:compat-mode!:
+
+toc::[]
+
+
+[NOTE]
+.This document is under active development!
+====
+If you find errors or omissions in this document, please don't hesitate to {uri-conrad-mail}[send me a mail].
+====
+
+This journal assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.
+
+
+= Introduction
+
+[partintro]
+--
+This journal was started in order to document my exploration of embedded linux
+using a popular low-cost platform i.e. the BeagleBone Black. The end objective 
+is to becove well versed with embedded linux development on an ARM based embedded
+device. 
+--
+
+== About Free Electrons
+{uri-free-electrons}[Free Electrons^] is an engineering company consisting of
+embedded linux experts who support companies using Embedded Linux. They 
+additionally conduct training workshops for companies on different topics 
+such as Linux kernel and device driver development, Android system development, 
+Yocto Project and OpenEmbedded development, etc. This journal uses the Free 
+Electrons training material which they publish online to explore Embedded Linux
+with the BeagleBone Black board from TI.
+
+== About BeagleBoard
+{uri-beagleboard}[BeagleBoard.org Foundation^] is a non-profit corporation which
+promotes open source software and open hardware. It was started by enthusiasts
+from TI with the aim of providing a powerful platform to design embedded solutions.
+The BeagleBone Black is their fourth board till date which offers a lot of 
+possibilities in a small credit card size form factor.
+
+= Training and Workbench Setup
+
+[partintro]
+--
+This section covers the setup software and hardware used in this journal.
+The sources of the training material and references are mentioned as well
+as details about how to procure the hardware.
+--
+
+== Hardware
+
+=== BeagleBone Black
+
+The BeagleBone Black is the newest member in the BeagleBoard family. The board 
+is designed to be a low sized small form factor board. The size of the board
+is comparable to the size of a credit card and it offers expansion headers to 
+add headers called as capes similar to the {uri-raspberry-pi}[Raspberry Pi^].
+
+====
+image::BeagleBoneBlackREV_A5A.jpg[width="640", height="480", align="center"]
+====
+
+The table below highlights the key onboard components of the board along with
+the connectors available on the board. The diagram of the table below is taken
+from the {link-beagleboneblack-srm-pdf}[BeagleBone Black System Reference Manual^].
+
+====
+image::BeagleBoneBlackFeatures.jpg[width="640", height="480", align="center"]
+====
+
+== Software
+
+=== Ubuntu
+
+To work with an embedded system you need a work station on which you can
+perform the various tasks that are required in the development life cycle.
+These tasks include:
+
+. Editing your build scripts and source code
+. Cross-compiling your source code for the embedded target
+. Transferring or accessing the cross-compiled application and libraries
+to or from the embedded target 
+. Collecting debug information from the target
+. Communicating with the target remotely using its interfaces like
+serial, USB, network, etc..
+
+In this document we use the popular Debian based Linux operating system,
+{uri-ubuntu}[Ubuntu] as our work station for all the tasks listed above.
+Ubuntu can be easily downloaded and installed on any PC or laptop. 
+
+[IMPORTANT]
+.Do not use a virtual machine runnning Ubuntu as your workstation 
+====
+This document uses Ubuntu 14.04 running on a HP laptop. Use of a similar
+environment through a virtual machine runnning on {uri-vmware}[VMWare^] or
+{uri-oracle-virtualbox}[Oracle VirtualBox^] is
+not recommended.
+====
+

@@ -1,0 +1,66 @@
+= Real Time Clock with DS1307 - Register Map Description
+Conrad Gomes
+2013-05-18
+:revdate: 2013-05-18 08:18:00 +0530
+:awestruct-tags: [electronics, productization, i2c]
+:ds1307-maximintegrated-pdf: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+:next-part:
+:prev-part:
+:excerpt: In the first part we went through a brief introduction of the DS1307 chip. We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through I2C we should be able to address the registers of this chip and write and read data based on our application description.
+:awestruct-excerpt: {excerpt}
+
+In the {prev-part}[first part^] we went through a brief introduction of the
+DS1307 chip. + 
+We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
+I2C we should be able to address the registers of this chip and write and read
+data based on our application description.
+
+The internal registers which affect the behaviour of the RTC chip are as follows:
+
+====
+image::DS1307_RegisterMap.png[width="640", height="480", align="center"]
+====
+
+The first 7 registers are used to read and write the time and date.
+Registers 00h and 01h have more or less the same byte definition and
+this is mainly because there are 60 seconds and 60 minutes.
+
+An important difference is bit 7 of register 00h which is the clock halt bit.
+By default this bit is set to 1 on power up of the device which disables the
+oscillator and RTC functionality of the DS1307.
+
+All values are in binary coded decimal. The range of seconds and minutes goes
+from 00 to 59. Therefore for the minutes and seconds we have bits 0 to 3
+representing the lower digit i.e. 0 to 9 and bits 4 to 6 representing the
+higher digit.
+
+The representation of hours can be in the form of either 12 or 24 hour notation.
+Bit 6 indicates the notation used. When high the 12 hour notation is used and
+bit 5 indicates AM/PM with high being PM. In this case the range of values goes
+from 01 to 12. Therefore we have bits 0 to 3 representing the lower digits i.e.
+0 to 9 and bit 4 representing the higher digit i.e. 0 or 1.
+
+In the 24 hour notation the range of values goes from 00 to 23. Therefore the
+lower digit representation remains the same i.e. 0 to 9 represented by bits 0
+to 3 but bits 4 and 5 are used to represent the higher digit i.e. 0 to 2.
+
+Essentially the number of bits reserved for each digit is defined by the
+range of the value. For instance there are only 7 possible days and so we
+have 3 bits representing the day of the week in register 03h. And if we look
+at the date register 04h we see the range of values goes from 01 to 31
+therefore the lower digit of the date can have a maximum value of 9 so four
+bits are reserved whereas the upper digit can have a maximum value of 3
+therefore 2 bits are reserved.
+
+Registers 05h and 06h follow the same pattern. Register 07h controls the
+behaviour of the square wave out signal. Bit 4 controls the functionality
+i.e. whether the pin produces a square wave or a fixed ouput. By default
+the value is 0 causing the pin to output a fixed value governed by the
+bit 7. If bit 4 is set to 1 the pin produces a square wave whose frequency
+is controlled by bits 0 and 1. The number of possible combinations is 4
+with 2 bits and therefore the possibilities are 1Hz, 4.096kHz, 8.192kHz
+and 32.768kHz.
+
+Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
+For further information please go through the data sheet at:
+{ds1307-maximintegrated-pdf}[ds1307-maximintegrated-pdf^]

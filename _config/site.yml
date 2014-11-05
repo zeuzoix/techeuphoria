@@ -1,0 +1,44 @@
+name: TechEuphoria
+title: A Technical Odyssey
+org: conrad.s.j.gomes@gmail.com
+author: Conrad Gomes
+author_url: http://in.linkedin.com/in/conradsjgomes
+#base_url: http://zeuzoix.github.io/techeuphoria/
+#interpolate: false
+edit_base_url: https://github.com/zeuzoix/techeuphoria/edit/develop
+raw_base_url: https://github.com/zeuzoix/techeuphoria/raw/develop
+log_base_url: https://github.com/zeuzoix/techeuphoria/commits/develop
+haml:
+  :ugly: true
+asciidoctor:
+  :eruby: erubis
+  :safe: safe
+  :attributes:
+    idprefix: ''
+    idseparator: '-'
+    icons: 'font'
+    sectanchors: ''
+    linkattrs: ''
+    sitename: TechEuphoria
+    base_url: ''
+    ctx_path: ''
+    source-highlighter: coderay
+    coderay-css: style
+    #imagesdir: .@
+   
+profiles:
+  development:
+    deploy: nil
+  staging:
+    deploy: nil
+  production:
+    base_url: http://zeuzoix.github.io/techeuphoria
+    ctx_path: /techeuphoria
+    asciidoctor:
+      :attributes:
+        base_url: http://zeuzoix.github.io/techeuphoria
+        ctx_path: /techeuphoria
+        imagesdir: http://zeuzoix.github.io/techeuphoria/images
+    deploy:
+      host: github_pages
+      branch: gh-pages

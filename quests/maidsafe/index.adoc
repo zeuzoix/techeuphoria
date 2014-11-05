@@ -1,0 +1,112 @@
+// rvm use 2.1@runtime
+// asciidoctor -D /tmp/ -a data-uri -a stem user-manual.adoc
+= Exploring MaidSafe
+Conrad Gomes <conrad.s.j.gomes@gmail.com>
+:description: This is a journal of my exploration of MaidSafe
+:keywords: MaidSafe, NAS, network, bitcoin
+:doctype: book
+:compat-mode:
+//:page-layout!:
+:page-layout: base
+:toc: left
+:toclevels: 2
+:sectanchors:
+:sectlinks:
+:sectnums:
+:linkattrs:
+:icons: font
+:source-highlighter: coderay
+:source-language: asciidoc
+:experimental:
+:stem:
+:idprefix:
+:idseparator: -
+:ast: &ast;
+:dagger: pass:normal[^&dagger;^]
+:y: icon:check[role="green"]
+:n: icon:times[role="red"]
+:c: icon:file-text-o[role="blue"]
+:table-caption!:
+:example-caption!:
+:figure-caption!:
+:imagesdir: ../images
+:includedir: _includes
+:underscore: _
+// Refs
+:uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
+:uri-gdrive: https://www.google.com/intl/en/drive
+:uri-dropbox: https://www.dropbox.com/
+:uri-spacemonkey: https://www.spacemonkey.com/
+:uri-maidsafe: http://maidsafe.net/
+
+:compat-mode!:
+
+toc::[]
+
+
+[NOTE]
+.This document is under active development!
+====
+If you find errors or omissions in this document, please don't hesitate to {uri-conrad-mail}[send me a mail].
+====
+
+This manual assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.
+
+
+= Introduction
+
+[partintro]
+--
+The current state of cloud storage is fragmented with different services like
+{uri-gdrive}[Google Drive] and {uri-dropbox}[Dropbox] offering services and 
+applications that allow people to store and edit their documents in the cloud.
+However the adoption of cloud storage is still lacking in terms of the amount
+of data that people choose to upload. Other concerns that prevent businesses
+from adopting such services is privacy and security. Most people and businesses
+are still not confortable with storing their data in the cloud for fear of
+theft. 
+
+Other solutions such as maintaining a NAS (Network Access Storage) device are difficult
+to scale and cumbersome to manage. Additionally the loss of data due to hard disk 
+failures is a drawback which ultimately requires the need for some sort of 
+redundancy in the solution to protect the data from unforseen failures in the 
+hardware. This is quite evident as most hard disk drive companies offer cloud storage
+for back up of important data in the event of hard disk damage or loss.
+
+Companies such as {uri-spacemonkey}[SpaceMonkey] try to mix the best of both solutions
+and offer hybrid solutions by creating a distributed cloud without having to maintain
+and manage the storage themselves. By developing software that can manage the data 
+over a large number of networked storage devices, they offer features such as 
+data redundancy and easy access over this network of distributed devices. However 
+the assurance that unauthorized access of the data  is guranteed may still
+be questionable considering the software is still closed.
+
+The {uri-maidsafe}[MaidSafe] network is an attempt to do more than that of storage.
+It publishes its code online as Open Source for anyone to review, modify and use.
+Some of the concepts that it is based on has stemed from Bitcoin and some call it
+a Bitcoin 2.0 application. This document will attempt to analyze MaidSafe and
+see how it works. It is an interesting project as it could have multiple applications
+that could be supported on top of it. Moreover the fact that it is totally decentralized,
+makes it an interesting solution to explore. How does it gurantee speed and security?
+How does it scale? How does it build redundancy? If MaidSafe has solved these problems
+then it would make for an interesting platform.
+
+--
+
+== About MaidSafe
+
+== Code References
+
+== Document References 
+
+= Workstation Setup
+
+[partintro]
+--
+NOTE: Section Pending
+--
+
+== My workstation setup
+
+

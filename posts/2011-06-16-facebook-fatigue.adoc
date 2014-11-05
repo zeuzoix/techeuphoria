@@ -1,0 +1,57 @@
+= Facebook Fatigue
+Conrad Gomes
+2011-06-16
+:awestruct-tags: [design]
+:excerpt: So here's the deal Facebook's this awesome site where over 500 million users can interact with their friends and associates.
+:awestruct-excerpt: {excerpt}
+:facebook-link: https://www.facebook.com
+:mark-zuckerberg-wiki: http://en.wikipedia.org/wiki/Mark_Zuckerberg
+
+{excerpt} Its popularity has been unchallenged leaving companies like Google and
+ Microsoft sitting up and paying attention.
+
+But I've got a theory that Facebook's banking too much on the social connection.
+Facebook's a shiny new red toy engine. It's what everyone wants and needs to
+have. But over time the red paints going to wear out and we're going to go
+after shinier toys.
+
+Facebook is cool because it's purely web based. Awesome, but to a user Facebook
+offers a platform for information sharing. This information is not random,
+it's personal information. It can be a video you like, a picture you love
+or just a status that makes you laugh.
+
+But here's where I draw the line. Facebook's not doing enough to keep me
+dazzled. It's chat doesn't work as well as the Gmail Gtalk plugin. It's
+difficult to marshal content so as to control who views it. It's getting
+old and becoming advertising real estate which I'm not interested in.
+Maybe it is useful to advertisers but from personal speak I'm not looking
+at the ads. I just connect see if there's anything interesting happening
+in my social network and log off.
+
+Facebook launched a new e-mail service with some yap yap difference. Well
+guess what I don't want to use the e-mail service.  Now Google's done well
+in attracting the masses away from leaders such as MSN Hotmail and Yahoo
+mail by offering unlimited e-mail storage. So you've got you're personal
+e-mail with all your contacts located int one place and you've got your
+social connections located in another. Interesting. You'd like to keep
+the two apart because if you're using Facebook for business you wouldn't
+want associates et al dropping in on your social life. It's the tendency
+to separate business and pleasure for fear of not being taken seriously.
+
+People live different lives. Not many people can safely say they're the same
+person to everyone. You're most likely a serious person at work and a loose
+fun loving beer drinking friend at parties. There's a reason why you're not
+the same person. It's because you live in different social circles. Within
+each circle you're a different person.
+
+Facebook's got along way to go before it can match up to my take on what the
+next big thing is going to be. In this Google's trying to claw its way up
+the social curve. But Google's got more and continuously strives to put a
+fresh coat of paint on the red toy train. Google's got millions of Gmail
+users who use Android phones and growing. This is where lies the value.
+You don't talk to strangers. That contact list of yours is your social
+network at least the important one.
+
+For now Facebook's got to prove it's improving and drawing more users to
+consider it seriously. I truly hope {mark-zuckerberg-wiki}[Mark's^] got an ace up his sleeve until
+then I'm going to view his company as the Joker in the pack.
