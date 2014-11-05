@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<div id="preamble">
+<div class="sectionbody">
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel0">
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel1">
+<li><a href="#about-prpl">1. About prpl</a></li>
+<li><a href="#about-openwrt">2. About OpenWrt</a></li>
+</ul>
+</li>
+<li><a href="#building-openwrt">Building OpenWrt</a>
+<ul class="sectlevel1">
+<li><a href="#dependencies">3. Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This document is under active development!</div>
+<div class="paragraph">
+<p>If you find errors or omissions in this document, please don&#8217;t hesitate to {uri-conrad-mail}[send me a mail].</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This journal assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.</p>
+</div>
+</div>
+</div>
+<h1 id="introduction" class="sect0"><a class="anchor" href="#introduction"></a>Introduction</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This journal was started in order to document my exploration of OpenWrt through
+the prpl foundation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-prpl"><a class="anchor" href="#about-prpl"></a>1. About prpl</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-openwrt"><a class="anchor" href="#about-openwrt"></a>2. About OpenWrt</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<h1 id="building-openwrt" class="sect0"><a class="anchor" href="#building-openwrt"></a>Building OpenWrt</h1>
+<div class="sect1">
+<h2 id="dependencies"><a class="anchor" href="#dependencies"></a>3. Dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following is a list of packages that have to be installed in the system.
+Each package has a brief description taken with the help of <em>apt-cache</em>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>build-essential</strong> : Informational list of build-essential packages. If you
+do not plan to build Debian packages, you don&#8217;t need this package.  Starting
+with dpkg (&gt;= 1.14.18) this package is required for building Debian packages.
+This package contains an informational list of packages which are considered
+essential for building Debian packages.  This package also depends on the
+packages on that list, to make it easy to have the build-essential packages
+installed.</p>
+</li>
+<li>
+<p><strong>subversion</strong> : Apache Subversion, also known as svn, is a centralised version
+control system.  Version control systems allow many individuals (who may be
+distributed geographically) to collaborate on a set of files (source code,
+websites, etc).  Subversion began with a CVS paradigm and supports all the major
+features of CVS, but has evolved to support many features that CVS users often
+wish they had.</p>
+</li>
+<li>
+<p><strong>libncurses5-dev</strong> : The ncurses library routines are a terminal-independent
+method of updating character screens with reasonable optimization.This package
+contains the header files, static libraries and symbolic links that developers
+using ncurses will need.</p>
+</li>
+<li>
+<p><strong>zlib1g-dev</strong> : Zlib compression library for development. zlib is a library
+implementing the deflate compression method found in gzip and PKZIP. This
+package includes the development support files.</p>
+</li>
+<li>
+<p><strong>gawk</strong> : GNU awk, a pattern scanning and processing language `awk', a program
+that you can use to select particular records in a file and perform operations
+upon them.</p>
+</li>
+<li>
+<p><strong>gcc-multilib</strong> : GNU C compiler (multilib files). This is the GNU C compiler,
+a fairly portable optimizing compiler for C.</p>
+</li>
+<li>
+<p><strong>flex</strong> : A fast lexical analyzer generator. Flex is a tool for generating
+scanners: programs which recognized lexical patterns in text.</p>
+</li>
+<li>
+<p><strong>git-core</strong> : A fast, scalable, distributed revision control system. Git is
+popular version control system designed to handle very large projects with
+speed and efficiency; it is used for many high profile open source projects,
+most notably the Linux kernel.</p>
+</li>
+<li>
+<p><strong>gettext</strong> : GNU Internationalization utilities. Interesting for authors or
+maintainers of other packages or programs which they want to see
+internationalized.</p>
+</li>
+<li>
+<p><strong>qemu-system-mips</strong> : QEMU full system emulation binaries (mips) QEMU is a
+fast processor emulator: currently the package supports MIPS emulation. By
+using dynamic translation it achieves reasonable speed while being easy to
+port on new host CPUs.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>
