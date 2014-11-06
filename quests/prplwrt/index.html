@@ -57,7 +57,14 @@ TechEuphoria
 </li>
 <li><a href="#building-openwrt">Building OpenWrt</a>
 <ul class="sectlevel1">
-<li><a href="#dependencies">3. Dependencies</a></li>
+<li><a href="#dependencies">3. Dependencies</a>
+<ul class="sectlevel2">
+<li><a href="#installing-dependencies">3.1. Installing Dependencies</a></li>
+<li><a href="#problems-with-installation">3.2. Problems with installation</a></li>
+<li><a href="#solving-the-installation-errors">3.3. Solving the installation errors</a></li>
+</ul>
+</li>
+<li><a href="#cloning-the-openwrt-git-repository">4. Cloning the OpenWrt GIT Repository</a></li>
 </ul>
 </li>
 </ul>
@@ -174,8 +181,152 @@ port on new host CPUs.</p>
 </li>
 </ol>
 </div>
+<div class="sect2">
+<h3 id="installing-dependencies"><a class="anchor" href="#installing-dependencies"></a>3.1. Installing Dependencies</h3>
 <div class="paragraph">
-<p>$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips</p>
+<p>To install the dependencies we use the apt-get command line application in a
+terminal. The dependencies are installed as shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sudo-apt-get-install-dependencies" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/sudo-apt-get-install-dependencies.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sudo-apt-get-install-dependencies.png" alt="sudo apt get install dependencies" width="640" height="480"></a>
+</div>
+<div class="title">Installing dependencies with sudo apt-get install</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The use of sudo is required to grant root priveledges to the apt-get command
+while executing as changes will be made in the system directories. If you don&#8217;t
+have sudo access talk to your system administrator. Getting sudo access is a
+matter of editing the /etc/sudoers file. For further information I suggest you
+read about <a href="https://help.ubuntu.com/community/RootSudo" target="_blank">RootSudo</a> in the Ubuntu community pages.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="problems-with-installation"><a class="anchor" href="#problems-with-installation"></a>3.2. Problems with installation</h3>
+<div class="paragraph">
+<p>While installing the above packages in my work station I encountered the
+following errors which stopped the installation process</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sudo-apt-get-install-dependencies" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/sudo-apt-get-install-dependencies-errors.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sudo-apt-get-install-dependencies-errors.png" alt="sudo apt get install dependencies errors" width="640" height="480"></a>
+</div>
+<div class="title">Errors encountered during installation</div>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-system-common i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-keymaps all 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-system-mips i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-utils i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-system-common_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-keymaps_2.0.0+dfsg-2ubuntu1.5_all.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-system-mips_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-utils_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?<i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Two recommendations provided by apt-get i.e. doing a system update OR
+passing a <em>--fix-missing</em> option to the command.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="solving-the-installation-errors"><a class="anchor" href="#solving-the-installation-errors"></a>3.3. Solving the installation errors</h3>
+<div class="paragraph">
+<p>In my case the first option of doing a system update helped. So the actual
+steps that worker for my workstation are listed in the snippet below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ sudo apt-get update <i class="conum" data-value="1"></i><b>(1)</b>
+Ign http://dl.google.com stable InRelease
+Get:1 http://dl.google.com stable Release.gpg [198 B]
+Ign http://extras.ubuntu.com trusty InRelease
+.
+.
+.
+Ign http://lk.archive.ubuntu.com trusty/multiverse Translation-en_US
+Ign http://lk.archive.ubuntu.com trusty/restricted Translation-en_US
+Ign http://lk.archive.ubuntu.com trusty/universe Translation-en_US
+Fetched 1,722 kB in 19s (87.8 kB/s)
+Reading package lists... Dones <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips <i class="conum" data-value="3"></i><b>(3)</b>
+Reading package lists... Done
+Building dependency tree
+.
+.
+.
+etting up qemu-keymaps (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up qemu-system-mips (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up qemu-utils (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up subversion (1.8.8-1ubuntu3.1) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.3) ... <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Do an update with <em>sudo apt-get update</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>sudo apt-get update succeeds with no errors</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Do an install with <em>sudo apt-get install &#8230;&#8203;</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>sudo apt-get install succeeds with not errors</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cloning-the-openwrt-git-repository"><a class="anchor" href="#cloning-the-openwrt-git-repository"></a>4. Cloning the OpenWrt GIT Repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that we have all the dependencies installed in the system it is time to
+clone the repository. The OpenWrt project is maintained using
+<a href="http://git-scm.com/" target="_blank">GIT</a>. So change directory to the location where you would like
+to keep the source code and clone the repository as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ git clone git://git.openwrt.org/openwrt.git</code></pre>
+</div>
 </div>
 </div>
 </div>
