@@ -35,6 +35,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :includedir: _includes
 :underscore: _
 // Refs
+:uri-rootsudo: https://help.ubuntu.com/community/RootSudo
 
 :compat-mode!:
 
@@ -107,5 +108,101 @@ using dynamic translation it achieves reasonable speed while being easy to
 port on new host CPUs.
 
 
-$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips
+=== Installing Dependencies
+
+To install the dependencies we use the apt-get command line application in a
+terminal. The dependencies are installed as shown below.
+ 
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips
+----
+
+====
+[[sudo-apt-get-install-dependencies]]
+.Installing dependencies with sudo apt-get install
+image::sudo-apt-get-install-dependencies.png[width="640", height="480", align="center", link=images/sudo-apt-get-install-dependencies.png]
+====
+
+The use of sudo is required to grant root priveledges to the apt-get command
+while executing as changes will be made in the system directories. If you don't
+have sudo access talk to your system administrator. Getting sudo access is a
+matter of editing the /etc/sudoers file. For further information I suggest you
+read about {uri-rootsudo}[RootSudo^] in the Ubuntu community pages.
+
+
+=== Problems with installation
+
+While installing the above packages in my work station I encountered the
+following errors which stopped the installation process
+
+====
+[[sudo-apt-get-install-dependencies]]
+.Errors encountered during installation
+image::sudo-apt-get-install-dependencies-errors.png[width="640", height="480", align="center", link=images/sudo-apt-get-install-dependencies-errors.png]
+====
+
+[source,bash]
+----
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-system-common i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-keymaps all 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-system-mips i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+Err http://lk.archive.ubuntu.com/ubuntu/ trusty-updates/main qemu-utils i386 2.0.0+dfsg-2ubuntu1.5
+  404  Not Found [IP: 91.189.92.201 80]
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-system-common_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-keymaps_2.0.0+dfsg-2ubuntu1.5_all.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-system-mips_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Failed to fetch http://lk.archive.ubuntu.com/ubuntu/pool/main/q/qemu/qemu-utils_2.0.0+dfsg-2ubuntu1.5_i386.deb  404  Not Found [IP: 91.189.92.201 80]
+
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?# <1>
+----
+<1> Two recommendations provided by apt-get i.e. doing a system update OR
+passing a _--fix-missing_ option to the command.
+
+
+=== Solving the installation errors
+
+In my case the first option of doing a system update helped. So the actual
+steps that worker for my workstation are listed in the snippet below: 
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ sudo apt-get update # <1>
+Ign http://dl.google.com stable InRelease
+Get:1 http://dl.google.com stable Release.gpg [198 B]                          
+Ign http://extras.ubuntu.com trusty InRelease                                  
+.
+.
+.
+Ign http://lk.archive.ubuntu.com trusty/multiverse Translation-en_US           
+Ign http://lk.archive.ubuntu.com trusty/restricted Translation-en_US           
+Ign http://lk.archive.ubuntu.com trusty/universe Translation-en_US             
+Fetched 1,722 kB in 19s (87.8 kB/s)                                            
+Reading package lists... Dones # <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext qemu-system-mips # <3>
+Reading package lists... Done
+Building dependency tree       
+.
+.
+.
+etting up qemu-keymaps (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up qemu-system-mips (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up qemu-utils (2.0.0+dfsg-2ubuntu1.6) ...
+Setting up subversion (1.8.8-1ubuntu3.1) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.3) ... # <4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ 
+----
+<1> Do an update with _sudo apt-get update_
+<2> sudo apt-get update succeeds with no errors
+<3> Do an install with _sudo apt-get install ..._
+<4> sudo apt-get install succeeds with not errors
+
+
+
+
 
