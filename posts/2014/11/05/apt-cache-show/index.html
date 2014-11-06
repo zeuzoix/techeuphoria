@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/11/05/apt-cache-show/">Getting information about packages using APT</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-11-05T00:00:00+00:00">
+November  5, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>Understanding information about packages before using apt-get</p>
+</div>
+<div class="paragraph">
+<p>The APT( Advanced Packaging Tool) handles software packages on a debian system.
+Typically when you go through any tutorial on installing any package or
+application you may encounter instructions to install packages with <em>apt_get</em>.
+This step is typically a trivial step that is executed without understanding
+the nature and purpose of the packages being installed. The power and simplicity
+of APT resolves all the dependencies of the packages.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-get install build-essential
+[sudo] password for user:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However if you want to dig deeper and understand the nature of the packages
+getting installed you can use the <em>apt-cache show</em> command as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-cache show build-essential
+Package: build-essential
+Priority: optional
+Section: devel
+Installed-Size: 37
+Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;
+Original-Maintainer: Matthias Klose &lt;doko@debian.org&gt;
+Architecture: i386
+Version: 11.6ubuntu4
+Depends: libc6-dev | libc-dev, gcc (&gt;= 4:4.4.3), g++ (&gt;= 4:4.4.3), make, dpkg-dev (&gt;= 1.13.5)
+Filename: pool/main/b/build-essential/build-essential_11.6ubuntu4_i386.deb
+Size: 5654
+MD5sum: d8bd2f0becd7b941d8e10c75f3e73120
+SHA1: 55488e1349c1f49656260dfa8d46dea4f353b3a1
+SHA256: 5594116e639130239f849088321f5ff3cc75cd3a688d1d3504786da1195e4d4d
+Description-en: Informational list of build-essential packages
+ If you do not plan to build Debian packages, you don't need this
+ package.  Starting with dpkg (&gt;= 1.14.18) this package is required
+ for building Debian packages.
+ .
+ This package contains an informational list of packages which are
+ considered essential for building Debian packages.  This package also
+ depends on the packages on that list, to make it easy to have the
+ build-essential packages installed.
+ .
+ If you have this package installed, you only need to install whatever
+ a package specifies as its build-time dependencies to build the
+ package.  Conversely, if you are determining what your package needs
+ to build-depend on, you can always leave out the packages this
+ package depends on.
+ .
+ This package is NOT the definition of what packages are
+ build-essential; the real definition is in the Debian Policy Manual.
+ This package contains merely an informational list, which is all
+ most people need.   However, if this package and the manual disagree,
+ the manual is correct.
+Description-md5: 90ef0ef86cafda0bd16f746eb621d9da
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Build-Essential: yes
+Origin: Ubuntu
+Supported: 9m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command gives you insight into the details of the package along
+with dependencies and a description. We check the information for
+<em>build-essential</em> which is not a single package but a list of packages
+which are tagged as <em>"Build-Essential: yes"</em>. The same command can be applied
+to any package name listed in your <em>apt-get install</em> command.</p>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/packages/">packages</a>
+, <a href="/techeuphoria/posts/tag/apt/">apt</a></div>
+</footer>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2014
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>

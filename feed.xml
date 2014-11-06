@@ -5,9 +5,123 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-11-05T08:40:50+05:30</updated>
+<updated>2014-11-06T20:29:49+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
+<title>Getting information about packages using APT</title>
+<updated>2014-11-06T20:29:49+05:30</updated>
+<published>2014-11-05T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="packages"></category>
+<category term="apt"></category>
+<summary>
+
+Understanding information about packages before using apt-get
+
+
+The APT( Advanced Packaging Tool) handles software packages on a debian system.
+Typically when you go through any tutorial on installing any package or
+application you may encounter instructions to install packages with apt_get.
+This step is typically a trivial step that is executed without understanding
+the nature and purpose of the packages being installed. The power and simplicity
+of APT resolves all the dependencies of the packages.
+
+
+
+user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-get install build-essential
+[sudo] password for user:
+
+
+
+However if you want to dig deeper and understand the nature of the packages
+getting installed you can use the apt-cache show command as follows:
+
+
+
+user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo...
+</summary>
+<content type="html">
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Understanding information about packages before using apt-get&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The APT( Advanced Packaging Tool) handles software packages on a debian system.
+Typically when you go through any tutorial on installing any package or
+application you may encounter instructions to install packages with &lt;em&gt;apt_get&lt;/em&gt;.
+This step is typically a trivial step that is executed without understanding
+the nature and purpose of the packages being installed. The power and simplicity
+of APT resolves all the dependencies of the packages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-get install build-essential
+[sudo] password for user:&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;However if you want to dig deeper and understand the nature of the packages
+getting installed you can use the &lt;em&gt;apt-cache show&lt;/em&gt; command as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;user@ubuntu-VirtualBox:~/mysite/techeuphoria$ sudo apt-cache show build-essential
+Package: build-essential
+Priority: optional
+Section: devel
+Installed-Size: 37
+Maintainer: Ubuntu Developers &amp;lt;ubuntu-devel-discuss@lists.ubuntu.com&amp;gt;
+Original-Maintainer: Matthias Klose &amp;lt;doko@debian.org&amp;gt;
+Architecture: i386
+Version: 11.6ubuntu4
+Depends: libc6-dev | libc-dev, gcc (&amp;gt;= 4:4.4.3), g++ (&amp;gt;= 4:4.4.3), make, dpkg-dev (&amp;gt;= 1.13.5)
+Filename: pool/main/b/build-essential/build-essential_11.6ubuntu4_i386.deb
+Size: 5654
+MD5sum: d8bd2f0becd7b941d8e10c75f3e73120
+SHA1: 55488e1349c1f49656260dfa8d46dea4f353b3a1
+SHA256: 5594116e639130239f849088321f5ff3cc75cd3a688d1d3504786da1195e4d4d
+Description-en: Informational list of build-essential packages
+ If you do not plan to build Debian packages, you don't need this
+ package.  Starting with dpkg (&amp;gt;= 1.14.18) this package is required
+ for building Debian packages.
+ .
+ This package contains an informational list of packages which are
+ considered essential for building Debian packages.  This package also
+ depends on the packages on that list, to make it easy to have the
+ build-essential packages installed.
+ .
+ If you have this package installed, you only need to install whatever
+ a package specifies as its build-time dependencies to build the
+ package.  Conversely, if you are determining what your package needs
+ to build-depend on, you can always leave out the packages this
+ package depends on.
+ .
+ This package is NOT the definition of what packages are
+ build-essential; the real definition is in the Debian Policy Manual.
+ This package contains merely an informational list, which is all
+ most people need.   However, if this package and the manual disagree,
+ the manual is correct.
+Description-md5: 90ef0ef86cafda0bd16f746eb621d9da
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Build-Essential: yes
+Origin: Ubuntu
+Supported: 9m&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The above command gives you insight into the details of the package along
+with dependencies and a description. We check the information for
+&lt;em&gt;build-essential&lt;/em&gt; which is not a single package but a list of packages
+which are tagged as &lt;em&gt;&quot;Build-Essential: yes&quot;&lt;/em&gt;. The same command can be applied
+to any package name listed in your &lt;em&gt;apt-get install&lt;/em&gt; command.&lt;/p&gt;
+&lt;/div&gt;
+</content>
+</entry>
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
 <title>A New Beginning</title>
@@ -1106,120 +1220,6 @@ of change is a file.&lt;/p&gt;
 Setup: &lt;a href=&quot;https://help.github.com/articles/set-up-git&quot; class=&quot;bare&quot;&gt;https://help.github.com/articles/set-up-git&lt;/a&gt;&lt;br&gt;
 Design Basics: &lt;a href=&quot;http://git-scm.com/book/en/Getting-Started-Git-Basics&quot; class=&quot;bare&quot;&gt;http://git-scm.com/book/en/Getting-Started-Git-Basics&lt;/a&gt;&lt;br&gt;
 Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot; class=&quot;bare&quot;&gt;http://try.github.io/levels/1/challenges/1&lt;/a&gt;&lt;br&gt;&lt;/p&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/</id>
-<title>Real Time Clock with DS1307 - Register Map Description</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-05-18T08:18:00+05:30</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/18/real-time-clock-with-ds1307-register-map-description/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="productization"></category>
-<category term="i2c"></category>
-<summary>
-
-In the [first part^] we went through a brief introduction of the
-DS1307 chip.
-We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
-I2C we should be able to address the registers of this chip and write and read
-data based on our application description.
-
-
-The internal registers which affect the behaviour of the RTC chip are as follows:
-
-
-
-
-
-
-
-
-
-
-
-The first 7 registers are used to read and write the time and date.
-Registers 00h and 01h have more or less the same byte definition and
-this is mainly because there are 60 seconds and 60 minutes.
-
-
-An important difference is bit...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the [first part^] we went through a brief introduction of the
-DS1307 chip.&lt;br&gt;
-We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through
-I2C we should be able to address the registers of this chip and write and read
-data based on our application description.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The internal registers which affect the behaviour of the RTC chip are as follows:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/DS1307_RegisterMap.png&quot; alt=&quot;DS1307 RegisterMap&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The first 7 registers are used to read and write the time and date.
-Registers 00h and 01h have more or less the same byte definition and
-this is mainly because there are 60 seconds and 60 minutes.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;An important difference is bit 7 of register 00h which is the clock halt bit.
-By default this bit is set to 1 on power up of the device which disables the
-oscillator and RTC functionality of the DS1307.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;All values are in binary coded decimal. The range of seconds and minutes goes
-from 00 to 59. Therefore for the minutes and seconds we have bits 0 to 3
-representing the lower digit i.e. 0 to 9 and bits 4 to 6 representing the
-higher digit.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The representation of hours can be in the form of either 12 or 24 hour notation.
-Bit 6 indicates the notation used. When high the 12 hour notation is used and
-bit 5 indicates AM/PM with high being PM. In this case the range of values goes
-from 01 to 12. Therefore we have bits 0 to 3 representing the lower digits i.e.
-0 to 9 and bit 4 representing the higher digit i.e. 0 or 1.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the 24 hour notation the range of values goes from 00 to 23. Therefore the
-lower digit representation remains the same i.e. 0 to 9 represented by bits 0
-to 3 but bits 4 and 5 are used to represent the higher digit i.e. 0 to 2.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Essentially the number of bits reserved for each digit is defined by the
-range of the value. For instance there are only 7 possible days and so we
-have 3 bits representing the day of the week in register 03h. And if we look
-at the date register 04h we see the range of values goes from 01 to 31
-therefore the lower digit of the date can have a maximum value of 9 so four
-bits are reserved whereas the upper digit can have a maximum value of 3
-therefore 2 bits are reserved.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Registers 05h and 06h follow the same pattern. Register 07h controls the
-behaviour of the square wave out signal. Bit 4 controls the functionality
-i.e. whether the pin produces a square wave or a fixed ouput. By default
-the value is 0 causing the pin to output a fixed value governed by the
-bit 7. If bit 4 is set to 1 the pin produces a square wave whose frequency
-is controlled by bits 0 and 1. The number of possible combinations is 4
-with 2 bits and therefore the possibilities are 1Hz, 4.096kHz, 8.192kHz
-and 32.768kHz.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Registers 08h to 3Fh provide a 56x8 RAM area for use by the application.
-For further information please go through the data sheet at:
-&lt;a href=&quot;http://datasheets.maximintegrated.com/en/ds/DS1307.pdf&quot; target=&quot;_blank&quot;&gt;ds1307-maximintegrated-pdf&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 </content>
 </entry>
