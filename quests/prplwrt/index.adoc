@@ -36,6 +36,8 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :underscore: _
 // Refs
 :uri-rootsudo: https://help.ubuntu.com/community/RootSudo
+:uri-git-scm: http://git-scm.com/
+:uri-openwrt-git-repos: git://git.openwrt.org/openwrt.git
 
 :compat-mode!:
 
@@ -170,6 +172,7 @@ passing a _--fix-missing_ option to the command.
 
 In my case the first option of doing a system update helped. So the actual
 steps that worker for my workstation are listed in the snippet below: 
+
 [source,bash]
 ----
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$ sudo apt-get update # <1>
@@ -201,6 +204,20 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$
 <2> sudo apt-get update succeeds with no errors
 <3> Do an install with _sudo apt-get install ..._
 <4> sudo apt-get install succeeds with not errors
+
+
+== Cloning the OpenWrt GIT Repository
+
+Now that we have all the dependencies installed in the system it is time to
+clone the repository. The OpenWrt project is maintained using
+{uri-git-scm}[GIT^]. So change directory to the location where you would like
+to keep the source code and clone the repository as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ git clone git://git.openwrt.org/openwrt.git
+----
+
 
 
 
