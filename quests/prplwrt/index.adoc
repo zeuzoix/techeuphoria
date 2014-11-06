@@ -215,8 +215,19 @@ to keep the source code and clone the repository as follows:
 
 [source,bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ git clone git://git.openwrt.org/openwrt.git
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ git clone git://git.openwrt.org/openwrt.git # <1>
+Cloning into 'openwrt'...
+remote: Counting objects: 287173, done.
+remote: Compressing objects: 100% (83724/83724), done.
+remote: Total 287173 (delta 195562), reused 281130 (delta 190331)
+Receiving objects: 100% (287173/287173), 106.03 MiB | 163.00 KiB/s, done.
+Resolving deltas: 100% (195562/195562), done.
+Checking connectivity... done.
+Checking out files: 100% (7375/7375), done. # <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$
 ----
+<1> Command to clone the git repository at git://git.openwrt.org/openwrt.git
+<2> Clone completes without any errors
 
 
 
