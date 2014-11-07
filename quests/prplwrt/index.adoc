@@ -133,7 +133,7 @@ matter of editing the /etc/sudoers file. For further information I suggest you
 read about {uri-rootsudo}[RootSudo^] in the Ubuntu community pages.
 
 
-=== Problems with installation
+=== Problems With Installation
 
 While installing the above packages in my work station I encountered the
 following errors which stopped the installation process
@@ -168,7 +168,7 @@ E: Unable to fetch some archives, maybe run apt-get update or try with --fix-mis
 passing a _--fix-missing_ option to the command.
 
 
-=== Solving the installation errors
+=== Solving The Installation Errors
 
 In my case the first option of doing a system update helped. So the actual
 steps that worker for my workstation are listed in the snippet below: 
@@ -206,7 +206,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$
 <4> sudo apt-get install succeeds with not errors
 
 
-== Cloning the OpenWrt GIT Repository
+== Cloning The OpenWrt GIT Repository
 
 Now that we have all the dependencies installed in the system it is time to
 clone the repository. The OpenWrt project is maintained using
@@ -229,6 +229,152 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$
 <1> Command to clone the git repository at git://git.openwrt.org/openwrt.git
 <2> Clone completes without any errors
 
+== Update OpenWrt Packages
+
+Before we proceed to build the image for OpenWrt we have to run a package
+update script which updates software that can be included in the OpenWrt
+image.
+
+The script checks the feed.conf.default file to get a list of all the
+necessary packages to be updated
+
+=== Break Up Of Update Process
+
+The snippet below captures the steps that take place in order to update
+the OpenWrt packages:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ cd openwrt/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ls
+BSDmakefile  config  Config.in  docs  feeds.conf.default  include  LICENSE  Makefile  package  README  rules.mk  scripts  target  toolchain  tools # <1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ./scripts/feeds update -a # <2>
+Updating feed 'packages' from 'https://github.com/openwrt/packages.git' ...   # <3>
+Cloning into './feeds/packages'...   
+remote: Counting objects: 1852, done.
+remote: Compressing objects: 100% (1535/1535), done.
+remote: Total 1852 (delta 82), reused 1479 (delta 67)
+Receiving objects: 100% (1852/1852), 2.10 MiB | 388.00 KiB/s, done.
+Resolving deltas: 100% (82/82), done.
+Checking connectivity... done.
+Create index file './feeds/packages.index' 
+Collecting package info: done
+Updating feed 'luci' from 'https://github.com/openwrt/luci.git' ...   # <4>
+Cloning into './feeds/luci'...
+remote: Counting objects: 3325, done.
+remote: Compressing objects: 100% (2181/2181), done.
+remote: Total 3325 (delta 951), reused 2585 (delta 566)
+Receiving objects: 100% (3325/3325), 3.72 MiB | 272.00 KiB/s, done.
+Resolving deltas: 100% (951/951), done.
+Checking connectivity... done.
+Create index file './feeds/luci.index' 
+Collecting package info: done
+Updating feed 'routing' from 'https://github.com/openwrt-routing/packages.git' ...   # <5>
+Cloning into './feeds/routing'...
+remote: Counting objects: 248, done.
+remote: Compressing objects: 100% (201/201), done.
+remote: Total 248 (delta 15), reused 180 (delta 12)
+Receiving objects: 100% (248/248), 184.90 KiB | 95.00 KiB/s, done.
+Resolving deltas: 100% (15/15), done.
+Checking connectivity... done.
+Create index file './feeds/routing.index' 
+Collecting package info: done
+Updating feed 'telephony' from 'http://git.openwrt.org/feed/telephony.git' ...   # <6>
+Cloning into './feeds/telephony'...
+remote: Counting objects: 187, done.
+remote: Compressing objects: 100% (164/164), done.
+remote: Total 187 (delta 25), reused 45 (delta 3)
+Receiving objects: 100% (187/187), 97.49 KiB | 94.00 KiB/s, done.
+Resolving deltas: 100% (25/25), done.
+Checking connectivity... done.
+Create index file './feeds/telephony.index' 
+Collecting package info: done
+Updating feed 'management' from 'https://github.com/openwrt-management/packages.git' ...   # <7>
+Cloning into './feeds/management'...
+remote: Counting objects: 29, done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 29 (delta 3), reused 22 (delta 2)
+Unpacking objects: 100% (29/29), done.
+Checking connectivity... done.
+Create index file './feeds/management.index' 
+Collecting package info: done
+----
+<1> Contents of the OpenWrt directory
+<2> Script to update the packages of OpenWrt
+<3> Updating packages packages from https://github.com/openwrt/packages.git
+<4> Updating luci from https://github.com/openwrt/luci.git
+<5> Updating routing from https://github.com/openwrt-routing/packages.git
+<6> Updating telephony from http://git.openwrt.org/feed/telephony.git
+<7> Updating  management from https://github.com/openwrt-management/packages.git
+
+== Configuring The System Image 
+
+Before we can build the image that is booted up by our hardware or emulator
+we need to configure the build for the right target system and also with 
+the correct features that are required by the system when it runs. The
+image is the Linux kernel along with a minimal file system which contains
+the binary applications and libraries which will be essential for the 
+applications running on the system.
+
+The configuration process is similar to that of the Linxu kernel where we
+run _make menuconfig_. The sections below will describe our various selections
+along with appropriate screen shots and placeholders for the various options.
+Additional features can be configured based on the requirements for the system.
+
+=== Make Menuconfig
+
+If you've installed the dependencies given above you should have no problem
+running the _make menuconfig_ command. The execution of the _make menuconfig_
+should be done in the OpenWrt directory.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ make menuconfig
+----
+
+On running make menuconfig in the OpenWrt
+directory you should see a screen as shown below:
+
+====
+[[make-menuconfig-first-screen]]
+.First screen seen after running make menuconfig
+image::make-menuconfig-first-screen.png[width="640", height="480", align="center", link=images/make-menuconfig-first-screen.png]
+====
+
+=== Selecting The Target System
+
+The first screen of the _make menuconfig_ command shows the cursor highlighting
+the Target System. The target system selected is _Atheros AR7xxx/AR9xxx_. To
+change the selection hit the enter key. There will be other targets present.
+In our case we plan to run our built image on an emulator i.e. qemu for the 
+MIPS Malta CoreLV board. Navigate the list of target options available using
+the UP and DOWN arrow keys until the "MIPS Malta CoreLV board (qemu)" is
+selected
+
+====
+[[make-menuconfig-mips-malta-corelv-qemu-target]]
+.Selecting MIPS Malta CoreLV (qemu) as the target
+image::make-menuconfig-mips-malta-corelv-qemu-target.png[width="640", height="480", align="center", link=images/make-menuconfig-mips-malta-corelv-qemu-target.png]
+====
+
+=== Selecting The Subtarget System
+
+If your target selected has further subtargets then you will have to chose
+an appropriate subtarget. The four subtargets available for MIPS Malta
+CoreLV (qemu) are:
+
+. Little Endian
+. Big Endian
+. Little Endian(64 bit)
+. Big Endian(64 bit)
+
+We keep the default i.e. Little Endian
+
+====
+[[make-menuconfig-little-endian-subtarget]]
+.Selecting Little Endian as the subtarget
+image::make-menuconfig-little-endian-subtarget.png[width="640", height="480", align="center", link=images/make-menuconfig-little-endian-subtarget.png]
+====
 
 
 
