@@ -60,11 +60,23 @@ TechEuphoria
 <li><a href="#dependencies">3. Dependencies</a>
 <ul class="sectlevel2">
 <li><a href="#installing-dependencies">3.1. Installing Dependencies</a></li>
-<li><a href="#problems-with-installation">3.2. Problems with installation</a></li>
-<li><a href="#solving-the-installation-errors">3.3. Solving the installation errors</a></li>
+<li><a href="#problems-with-installation">3.2. Problems With Installation</a></li>
+<li><a href="#solving-the-installation-errors">3.3. Solving The Installation Errors</a></li>
 </ul>
 </li>
-<li><a href="#cloning-the-openwrt-git-repository">4. Cloning the OpenWrt GIT Repository</a></li>
+<li><a href="#cloning-the-openwrt-git-repository">4. Cloning The OpenWrt GIT Repository</a></li>
+<li><a href="#update-openwrt-packages">5. Update OpenWrt Packages</a>
+<ul class="sectlevel2">
+<li><a href="#break-up-of-update-process">5.1. Break Up Of Update Process</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-system-image">6. Configuring The System Image</a>
+<ul class="sectlevel2">
+<li><a href="#make-menuconfig">6.1. Make Menuconfig</a></li>
+<li><a href="#selecting-the-target-system">6.2. Selecting The Target System</a></li>
+<li><a href="#selecting-the-subtarget-system">6.3. Selecting The Subtarget System</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -211,7 +223,7 @@ read about <a href="https://help.ubuntu.com/community/RootSudo" target="_blank">
 </div>
 </div>
 <div class="sect2">
-<h3 id="problems-with-installation"><a class="anchor" href="#problems-with-installation"></a>3.2. Problems with installation</h3>
+<h3 id="problems-with-installation"><a class="anchor" href="#problems-with-installation"></a>3.2. Problems With Installation</h3>
 <div class="paragraph">
 <p>While installing the above packages in my work station I encountered the
 following errors which stopped the installation process</p>
@@ -258,7 +270,7 @@ passing a <em>--fix-missing</em> option to the command.</td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="solving-the-installation-errors"><a class="anchor" href="#solving-the-installation-errors"></a>3.3. Solving the installation errors</h3>
+<h3 id="solving-the-installation-errors"><a class="anchor" href="#solving-the-installation-errors"></a>3.3. Solving The Installation Errors</h3>
 <div class="paragraph">
 <p>In my case the first option of doing a system update helped. So the actual
 steps that worker for my workstation are listed in the snippet below:</p>
@@ -315,7 +327,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/techeuphoria/quests/prplwrt$</co
 </div>
 </div>
 <div class="sect1">
-<h2 id="cloning-the-openwrt-git-repository"><a class="anchor" href="#cloning-the-openwrt-git-repository"></a>4. Cloning the OpenWrt GIT Repository</h2>
+<h2 id="cloning-the-openwrt-git-repository"><a class="anchor" href="#cloning-the-openwrt-git-repository"></a>4. Cloning The OpenWrt GIT Repository</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Now that we have all the dependencies installed in the system it is time to
@@ -348,6 +360,221 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$</code></pre>
 <td>Clone completes without any errors</td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="update-openwrt-packages"><a class="anchor" href="#update-openwrt-packages"></a>5. Update OpenWrt Packages</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we proceed to build the image for OpenWrt we have to run a package
+update script which updates software that can be included in the OpenWrt
+image.</p>
+</div>
+<div class="paragraph">
+<p>The script checks the feed.conf.default file to get a list of all the
+necessary packages to be updated</p>
+</div>
+<div class="sect2">
+<h3 id="break-up-of-update-process"><a class="anchor" href="#break-up-of-update-process"></a>5.1. Break Up Of Update Process</h3>
+<div class="paragraph">
+<p>The snippet below captures the steps that take place in order to update
+the OpenWrt packages:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git$ cd openwrt/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ls
+BSDmakefile  config  Config.in  docs  feeds.conf.default  include  LICENSE  Makefile  package  README  rules.mk  scripts  target  toolchain  tools <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ./scripts/feeds update -a <i class="conum" data-value="2"></i><b>(2)</b>
+Updating feed 'packages' from 'https://github.com/openwrt/packages.git' ...   <i class="conum" data-value="3"></i><b>(3)</b>
+Cloning into './feeds/packages'...
+remote: Counting objects: 1852, done.
+remote: Compressing objects: 100% (1535/1535), done.
+remote: Total 1852 (delta 82), reused 1479 (delta 67)
+Receiving objects: 100% (1852/1852), 2.10 MiB | 388.00 KiB/s, done.
+Resolving deltas: 100% (82/82), done.
+Checking connectivity... done.
+Create index file './feeds/packages.index'
+Collecting package info: done
+Updating feed 'luci' from 'https://github.com/openwrt/luci.git' ...   <i class="conum" data-value="4"></i><b>(4)</b>
+Cloning into './feeds/luci'...
+remote: Counting objects: 3325, done.
+remote: Compressing objects: 100% (2181/2181), done.
+remote: Total 3325 (delta 951), reused 2585 (delta 566)
+Receiving objects: 100% (3325/3325), 3.72 MiB | 272.00 KiB/s, done.
+Resolving deltas: 100% (951/951), done.
+Checking connectivity... done.
+Create index file './feeds/luci.index'
+Collecting package info: done
+Updating feed 'routing' from 'https://github.com/openwrt-routing/packages.git' ...   <i class="conum" data-value="5"></i><b>(5)</b>
+Cloning into './feeds/routing'...
+remote: Counting objects: 248, done.
+remote: Compressing objects: 100% (201/201), done.
+remote: Total 248 (delta 15), reused 180 (delta 12)
+Receiving objects: 100% (248/248), 184.90 KiB | 95.00 KiB/s, done.
+Resolving deltas: 100% (15/15), done.
+Checking connectivity... done.
+Create index file './feeds/routing.index'
+Collecting package info: done
+Updating feed 'telephony' from 'http://git.openwrt.org/feed/telephony.git' ...   <i class="conum" data-value="6"></i><b>(6)</b>
+Cloning into './feeds/telephony'...
+remote: Counting objects: 187, done.
+remote: Compressing objects: 100% (164/164), done.
+remote: Total 187 (delta 25), reused 45 (delta 3)
+Receiving objects: 100% (187/187), 97.49 KiB | 94.00 KiB/s, done.
+Resolving deltas: 100% (25/25), done.
+Checking connectivity... done.
+Create index file './feeds/telephony.index'
+Collecting package info: done
+Updating feed 'management' from 'https://github.com/openwrt-management/packages.git' ...   <i class="conum" data-value="7"></i><b>(7)</b>
+Cloning into './feeds/management'...
+remote: Counting objects: 29, done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 29 (delta 3), reused 22 (delta 2)
+Unpacking objects: 100% (29/29), done.
+Checking connectivity... done.
+Create index file './feeds/management.index'
+Collecting package info: done</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Contents of the OpenWrt directory</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Script to update the packages of OpenWrt</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Updating packages packages from <a href="https://github.com/openwrt/packages.git" class="bare">https://github.com/openwrt/packages.git</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Updating luci from <a href="https://github.com/openwrt/luci.git" class="bare">https://github.com/openwrt/luci.git</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Updating routing from <a href="https://github.com/openwrt-routing/packages.git" class="bare">https://github.com/openwrt-routing/packages.git</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Updating telephony from <a href="http://git.openwrt.org/feed/telephony.git" class="bare">http://git.openwrt.org/feed/telephony.git</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Updating  management from <a href="https://github.com/openwrt-management/packages.git" class="bare">https://github.com/openwrt-management/packages.git</a></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-system-image"><a class="anchor" href="#configuring-the-system-image"></a>6. Configuring The System Image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we can build the image that is booted up by our hardware or emulator
+we need to configure the build for the right target system and also with
+the correct features that are required by the system when it runs. The
+image is the Linux kernel along with a minimal file system which contains
+the binary applications and libraries which will be essential for the
+applications running on the system.</p>
+</div>
+<div class="paragraph">
+<p>The configuration process is similar to that of the Linxu kernel where we
+run <em>make menuconfig</em>. The sections below will describe our various selections
+along with appropriate screen shots and placeholders for the various options.
+Additional features can be configured based on the requirements for the system.</p>
+</div>
+<div class="sect2">
+<h3 id="make-menuconfig"><a class="anchor" href="#make-menuconfig"></a>6.1. Make Menuconfig</h3>
+<div class="paragraph">
+<p>If you&#8217;ve installed the dependencies given above you should have no problem
+running the <em>make menuconfig</em> command. The execution of the <em>make menuconfig</em>
+should be done in the OpenWrt directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ make menuconfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On running make menuconfig in the OpenWrt
+directory you should see a screen as shown below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="make-menuconfig-first-screen" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-first-screen.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-first-screen.png" alt="make menuconfig first screen" width="640" height="480"></a>
+</div>
+<div class="title">First screen seen after running make menuconfig</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="selecting-the-target-system"><a class="anchor" href="#selecting-the-target-system"></a>6.2. Selecting The Target System</h3>
+<div class="paragraph">
+<p>The first screen of the <em>make menuconfig</em> command shows the cursor highlighting
+the Target System. The target system selected is <em>Atheros AR7xxx/AR9xxx</em>. To
+change the selection hit the enter key. There will be other targets present.
+In our case we plan to run our built image on an emulator i.e. qemu for the
+MIPS Malta CoreLV board. Navigate the list of target options available using
+the UP and DOWN arrow keys until the "MIPS Malta CoreLV board (qemu)" is
+selected</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="make-menuconfig-mips-malta-corelv-qemu-target" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-mips-malta-corelv-qemu-target.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-mips-malta-corelv-qemu-target.png" alt="make menuconfig mips malta corelv qemu target" width="640" height="480"></a>
+</div>
+<div class="title">Selecting MIPS Malta CoreLV (qemu) as the target</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="selecting-the-subtarget-system"><a class="anchor" href="#selecting-the-subtarget-system"></a>6.3. Selecting The Subtarget System</h3>
+<div class="paragraph">
+<p>If your target selected has further subtargets then you will have to chose
+an appropriate subtarget. The four subtargets available for MIPS Malta
+CoreLV (qemu) are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Little Endian</p>
+</li>
+<li>
+<p>Big Endian</p>
+</li>
+<li>
+<p>Little Endian(64 bit)</p>
+</li>
+<li>
+<p>Big Endian(64 bit)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>We keep the default i.e. Little Endian</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="make-menuconfig-little-endian-subtarget" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-little-endian-subtarget.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-little-endian-subtarget.png" alt="make menuconfig little endian subtarget" width="640" height="480"></a>
+</div>
+<div class="title">Selecting Little Endian as the subtarget</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
