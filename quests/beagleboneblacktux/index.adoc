@@ -46,8 +46,11 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-git-scm: http://git-scm.com/
 :uri-kernel-org: https://www.kernel.org/
 :uri-linux-mtd-org: http://www.linux-mtd.infradead.org/index.html
+:uri-linux-mtd-git: git://git.infradead.org/linux-mtd.git
 :uri-linux-mips-org: http://www.linux-mips.org/wiki/Main_Page
-:uri-linux-arm-org: http://www.arm.linux.org.uk/
+:uri-linux-mips-git: git://git.linux-mips.org/pub/scm/ralf/linux.git
+:uri-linux-usb-org: http://www.linux-usb.org/
+:uri-linux-usb-git: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -230,7 +233,15 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
 Once you have the Linux GIT repository you can pull the latest changes by 
 by running _git pull_.
 
-=== Offical and Unofficial Kernel Sources
+= The Kernel Source Code
+
+[partintro]
+--
+This section covers details about the Linux Kernel source code. We will go through
+the source code, its structure and characteristics.
+--
+
+== Offical and Unofficial Kernel Sources
 
 The official source of the Linux Kernel is available at: +
 {uri-kernel-org}[{uri-kernel-org}^]
@@ -247,17 +258,15 @@ designated as "sub-maintainers".
 
 The official development repository for some sub-systems are given below:
 
-. MTD
-Website: {uri-linux-mtd-org}[{uri-linux-mtd-org}^]
-GIT: git://git.infradead.org/linux-mtd.git
+. MTD +
+*Website:* {uri-linux-mtd-org}[{uri-linux-mtd-org}^] +
+*GIT:* {uri-linux-mtd-git}
 
-. MIPS
-Website: {uri-linux-mips-org}[{uri-linux-mips-org}^]
-GIT: git://git.linux-mips.org/pub/scm/ralf/linux.git
+. MIPS +
+*Website:* {uri-linux-mips-org}[{uri-linux-mips-org}^] +
+*GIT:* {uri-linux-mips-git}
 
-
-
-
-
-
+. USB +
+*Website:* {uri-linux-usb-org}[{uri-linux-usb-org}^] +
+*GIT:* {uri-linux-usb-git}
 
