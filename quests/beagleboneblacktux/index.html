@@ -66,6 +66,8 @@ TechEuphoria
 <li><a href="#software">5. Software</a>
 <ul class="sectlevel2">
 <li><a href="#ubuntu">5.1. Ubuntu</a></li>
+<li><a href="#git">5.2. GIT</a></li>
+<li><a href="#cloning-the-linux-tree-with-git">5.3. Cloning the Linux tree with GIT</a></li>
 </ul>
 </li>
 </ul>
@@ -261,6 +263,71 @@ not recommended.</p>
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="git"><a class="anchor" href="#git"></a>5.2. GIT</h3>
+<div class="paragraph">
+<p>The source code management tool used by the Linux kernel community is
+<a href="http://git-scm.com/">GIT</a>. To use GIT we need to install the packages required
+on our work station using the Advanced Packaging Tool(APT) using a
+command line terminal.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install git gitk git-email</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the packages are successfully installed we will need to configure GIT with
+some basic information about our name and email address</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cloning-the-linux-tree-with-git"><a class="anchor" href="#cloning-the-linux-tree-with-git"></a>5.3. Cloning the Linux tree with GIT</h3>
+<div class="paragraph">
+<p>Now that GIT is present in the workstation we can get the main development tree
+of the Linux kernel as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And if you&#8217;re in a corporarte environment or if your firewall blocks out the
+network port for <em>git</em> you can use <em>http</em> instead as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The whole process should take a while so you can go for a small coffee break
+and come back. Comparitively using <em>git</em> is recommended as it is faster than
+<em>http</em></p>
+</div>
+<div class="paragraph">
+<p>If you happen to have a copy of the Linux GIT repository all you have to do
+is pull in the latest changes</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once you have the Linux GIT repository you can pull the latest changes by
+by running <em>git pull</em>.</p>
 </div>
 </div>
 </div>
