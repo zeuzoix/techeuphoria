@@ -43,6 +43,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-ubuntu: http://www.ubuntu.com/
 :uri-oracle-virtualbox: https://www.virtualbox.org/
 :uri-vmware: http://www.vmware.com
+:uri-git-scm: http://git-scm.com/
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -165,5 +166,63 @@ environment through a virtual machine runnning on {uri-vmware}[VMWare^] or
 {uri-oracle-virtualbox}[Oracle VirtualBox^] is
 not recommended.
 ====
+
+=== GIT
+
+The source code management tool used by the Linux kernel community is 
+{uri-git-scm}[GIT]. To use GIT we need to install the packages required
+on our work station using the Advanced Packaging Tool(APT) using a 
+command line terminal.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install git gitk git-email
+----
+
+Once the packages are successfully installed we will need to configure GIT with
+some basic information about our name and email address
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com
+----
+
+=== Cloning the Linux tree with GIT
+
+Now that GIT is present in the workstation we can get the main development tree
+of the Linux kernel as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+And if you're in a corporarte environment or if your firewall blocks out the 
+network port for _git_ you can use _http_ instead as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+The whole process should take a while so you can go for a small coffee break
+and come back. Comparitively using _git_ is recommended as it is faster than
+_http_
+
+If you happen to have a copy of the Linux GIT repository all you have to do
+is pull in the latest changes
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
+----
+
+Once you have the Linux GIT repository you can pull the latest changes by 
+by running _git pull_.
+
+
 
 
