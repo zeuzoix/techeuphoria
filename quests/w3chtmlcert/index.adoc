@@ -185,6 +185,88 @@ Allows the use of framset content.
 
 == Elements
 
+An HTML document consists of HTML elements. An element consists of content
+wrapped in a set of tags. The name of the tag defines the type of content
+and each element has a start tag and an end tag:
+
+[source,html]
+----
+<tagname>content</tagname>
+----
+
+=== Example of HTML Elements
+
+[source,html]
+----
+<p>Gee whizz this is easy!</p>
+----
+
+In the above example *_<p>_* is the element which defines the start of a 
+paragraph and *_<p>_* defines the end of a paragraph. The content in between
+i.e. *_"Gee whizz this is easy!"_* defines the content that forms the paragraph.
+
+[NOTE]
+====
+Not all HTML elements have a starting and ending tag.
+====
+
+=== Example of Nested HTML elements
+
+HTML elements can be nested. Taking the same Simple HTML page example we can
+clearly see that there are certain HTML elements which are defined within others
+
+[source,html]
+----
+<!DOCTYPE html>
+<html> # <1>
+<body> # <3>
+
+<h1>A Simple HTML Page</h1> # <5>
+
+<p>Gee whizz this is easy!</p> # <6>
+
+</body> # <4>
+</html> # <2>
+----
+<1> Element starting the html document i.e. the html element
+<2> Element ending the html document
+<3> Starting the content of the html document i.e the body element
+<4> Ending the content of the html document
+<5> Heading element with start and end tags
+<6> Paragraph element with start and end tags
+
+So in the above example we can see the *_body_* element nested within the
+*_html_* element
+
+=== Empty HTML Elements
+
+Elements with no content are called empty elements. For example a line break
+element is an empty element. Empty elements need not be closed but can be
+closed in the beginning like this:
+
+[source,html]
+----
+</br>
+----
+
+=== Recommendations
+
+. It is better to have all tags in lower case even though it is not compulsory.
+Browsers should be able to handle tags irrespective of their case. W3C says tags
+*MUST* be in lower case for HTML documents.
+
+. Some elements may be handled correctly in the browser if the end tag is
+forgotten, however it is better to insert the end tag for elements which have
+an end tag.
+
+
+
+
+
+
+
+
+
 == Attributes
 
 == Headings
