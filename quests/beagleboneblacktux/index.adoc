@@ -44,6 +44,10 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-oracle-virtualbox: https://www.virtualbox.org/
 :uri-vmware: http://www.vmware.com
 :uri-git-scm: http://git-scm.com/
+:uri-kernel-org: https://www.kernel.org/
+:uri-linux-mtd-org: http://www.linux-mtd.infradead.org/index.html
+:uri-linux-mips-org: http://www.linux-mips.org/wiki/Main_Page
+:uri-linux-arm-org: http://www.arm.linux.org.uk/
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -170,7 +174,7 @@ not recommended.
 === GIT
 
 The source code management tool used by the Linux kernel community is 
-{uri-git-scm}[GIT]. To use GIT we need to install the packages required
+{uri-git-scm}[GIT^]. To use GIT we need to install the packages required
 on our work station using the Advanced Packaging Tool(APT) using a 
 command line terminal.
 
@@ -187,6 +191,9 @@ some basic information about our name and email address
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com
 ----
+
+Further infomation about GIT can be obtained at: +
+{uri-git-scm}[{uri-git-scm}^].
 
 === Cloning the Linux tree with GIT
 
@@ -222,6 +229,34 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
 
 Once you have the Linux GIT repository you can pull the latest changes by 
 by running _git pull_.
+
+=== Offical and Unofficial Kernel Sources
+
+The official source of the Linux Kernel is available at: +
+{uri-kernel-org}[{uri-kernel-org}^]
+
+The sources present in this website do not represent the entire spectrum of
+features and development that is taking place. Since the kernel is logically
+divided into sub-systems, each sub-system is maintained by a designated
+individual who has been involved with the sub-system and is trusted by Linus.
+So when the merge window opens these individuals who are termed as "maintainers"
+send pull requests to Linus to take in the patches from their repositories for
+merging with the mainline kernel tree. In some cases if the subsystem is large
+it may be divided into smaller subsystems which are managed by individuals
+designated as "sub-maintainers".
+
+The official development repository for some sub-systems are given below:
+
+. MTD
+Website: {uri-linux-mtd-org}[{uri-linux-mtd-org}^]
+GIT: git://git.infradead.org/linux-mtd.git
+
+. MIPS
+Website: {uri-linux-mips-org}[{uri-linux-mips-org}^]
+GIT: git://git.linux-mips.org/pub/scm/ralf/linux.git
+
+
+
 
 
 
