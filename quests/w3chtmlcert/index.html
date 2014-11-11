@@ -73,7 +73,11 @@ TechEuphoria
 <li><a href="#recommendations">4.4. Recommendations</a></li>
 </ul>
 </li>
-<li><a href="#attributes">5. Attributes</a></li>
+<li><a href="#attributes">5. Attributes</a>
+<ul class="sectlevel2">
+<li><a href="#examples-of-attributes">5.1. Examples Of Attributes</a></li>
+</ul>
+</li>
 <li><a href="#headings">6. Headings</a></li>
 <li><a href="#paragraphs">7. Paragraphs</a></li>
 <li><a href="#formatting">8. Formatting</a></li>
@@ -455,7 +459,7 @@ closed in the beginning like this:</p>
 <li>
 <p>It is better to have all tags in lower case even though it is not compulsory.
 Browsers should be able to handle tags irrespective of their case. W3C says tags
-<strong>MUST</strong> be in lower case for HTML documents.</p>
+<strong>MUST</strong> be in lower case for XHTML documents.</p>
 </li>
 <li>
 <p>Some elements may be handled correctly in the browser if the end tag is
@@ -470,7 +474,116 @@ an end tag.</p>
 <div class="sect1">
 <h2 id="attributes"><a class="anchor" href="#attributes"></a>5. Attributes</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Elements can have attributes which provide additional information about the
+elements. The attributes have to be specified in the start tag of the element
+and never in the end tag.</p>
+</div>
+<div class="sect2">
+<h3 id="examples-of-attributes"><a class="anchor" href="#examples-of-attributes"></a>5.1. Examples Of Attributes</h3>
+<div class="paragraph">
+<p>Let&#8217;s take a look at a few attributes and how they are used with the specified
+element.</p>
+</div>
+<div class="sect3">
+<h4 id="the-lang-attribute"><a class="anchor" href="#the-lang-attribute"></a>5.1.1. The lang Attribute</h4>
+<div class="paragraph">
+<p>The followin example shows the <strong><em>lang</em></strong> attribute which is used in the <strong><em>html</em></strong>
+element. We can see that an attribute is defined as a name value pair.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html</span> <span style="color:#b48">lang</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fr</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span>
 
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>Une page HTML simple<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b>
+
+<span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whiz cela est facile !<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The html element with lang attribute and value "fr" for french</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>French translation of "A Simple HTML page"</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>French translation of "Gee whizz this is easy!"</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <strong><em>lang</em></strong> attribute is used by Search engines and Screen readers.</p>
+</div>
+<div class="paragraph">
+<p>The following image shows this page displayed by Firefox</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-lang-attribute" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-lang-attribute.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-lang-attribute.png" alt="simple html page lang attribute" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page in French</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-title-attribute"><a class="anchor" href="#the-title-attribute"></a>5.1.2. The title Attribute</h4>
+<div class="paragraph">
+<p>Paragraphs can be given a title that is displayed whenever the mouse pointer
+is over the paragraph. The following example shows the same example above
+modified with a <strong><em>title</em></strong> attribute associated with the <strong><em>p</em></strong> i.e. paragraph
+element</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html</span> <span style="color:#b48">lang</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fr</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span>
+
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>Une page HTML simple<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span>
+
+<span style="color:#070;font-weight:bold">&lt;p</span> <span style="color:#b48">title</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Simple French Para</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>Gee whiz cela est facile !<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The p element associated  with a title attribute with value "Simple French Para"</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following image shows this page displayed by Firefox when the mouse pointer
+is placed above the paragraph</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-title-attribute" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-title-attribute.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-title-attribute.png" alt="simple html page title attribute" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page in French</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
