@@ -259,15 +259,77 @@ Browsers should be able to handle tags irrespective of their case. W3C says tags
 forgotten, however it is better to insert the end tag for elements which have
 an end tag.
 
-
-
-
-
-
-
-
-
 == Attributes
+
+Elements can have attributes which provide additional information about the
+elements. The attributes have to be specified in the start tag of the element
+and never in the end tag.
+
+=== Examples Of Attributes
+
+Let's take a look at a few attributes and how they are used with the specified
+element.
+
+==== The lang Attribute
+
+The followin example shows the *_lang_* attribute which is used in the *_html_*
+element. We can see that an attribute is defined as a name value pair.
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="fr"> # <1>
+<body>
+
+<h1>Une page HTML simple</h1> #<2>
+
+<p>Gee whiz cela est facile !</p> #<3>
+
+</body>
+</html>
+----
+<1> The html element with lang attribute and value "fr" for french
+<2> French translation of "A Simple HTML page"
+<3> French translation of "Gee whizz this is easy!"
+
+The *_lang_* attribute is used by Search engines and Screen readers.
+
+The following image shows this page displayed by Firefox
+====
+[[img-simple-html-page-lang-attribute]]
+.Simple HTML Page in French
+image::simple-html-page-lang-attribute.png[width="640", height="480", align="center", link=images/simple-html-page-lang-attribute.png]
+====
+
+==== The title Attribute
+
+Paragraphs can be given a title that is displayed whenever the mouse pointer
+is over the paragraph. The following example shows the same example above
+modified with a *_title_* attribute associated with the *_p_* i.e. paragraph
+element
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="fr">
+<body>
+
+<h1>Une page HTML simple</h1>
+
+<p title="Simple French Para">Gee whiz cela est facile !</p> #<1>
+
+</body>
+</html>
+----
+<1> The p element associated  with a title attribute with value "Simple French Para"
+
+The following image shows this page displayed by Firefox when the mouse pointer
+is placed above the paragraph
+====
+[[img-simple-html-page-title-attribute]]
+.Simple HTML Page in French
+image::simple-html-page-title-attribute.png[width="640", height="480", align="center", link=images/simple-html-page-title-attribute.png]
+====
 
 == Headings
 
