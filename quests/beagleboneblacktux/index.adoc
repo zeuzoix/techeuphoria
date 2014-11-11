@@ -518,7 +518,7 @@ bus:
 . USB with libusb, {uri-libusb-org}[{uri-libusb-org}^]
 . SPI wiht spidev, {uri-kernel-org-spidev-doc}[Documentation/spi/spidev^] 
 . I2C with i2cdev, {uri-kernel-org-i2cdev-doc}[Documentation/i2c/dev-interface^]
-. Memory-mapped devices with UIO, including interrupt handling, {uri-free-electrons-uio-howto}
+. Memory-mapped devices with UIO, including interrupt handling, {uri-free-electrons-uio-howto}[{uri-free-electrons-uio-howto}^]
 
 On certain SOCs the vendor also provides a user space device driver along with
 a kernel driver which has access to other processors in the SOC which are
