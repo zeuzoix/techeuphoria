@@ -72,6 +72,11 @@ TechEuphoria
 </li>
 </ul>
 </li>
+<li><a href="#the-kernel-source-code">The Kernel Source Code</a>
+<ul class="sectlevel1">
+<li><a href="#offical-and-unofficial-kernel-sources">6. Offical and Unofficial Kernel Sources</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="admonitionblock note">
@@ -269,7 +274,7 @@ not recommended.</p>
 <h3 id="git"><a class="anchor" href="#git"></a>5.2. GIT</h3>
 <div class="paragraph">
 <p>The source code management tool used by the Linux kernel community is
-<a href="http://git-scm.com/">GIT</a>. To use GIT we need to install the packages required
+<a href="http://git-scm.com/" target="_blank">GIT</a>. To use GIT we need to install the packages required
 on our work station using the Advanced Packaging Tool(APT) using a
 command line terminal.</p>
 </div>
@@ -287,6 +292,10 @@ some basic information about our name and email address</p>
 <pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Further infomation about GIT can be obtained at:<br>
+<a href="http://git-scm.com/" target="_blank">http://git-scm.com/</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -329,6 +338,57 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull</code></pre>
 <p>Once you have the Linux GIT repository you can pull the latest changes by
 by running <em>git pull</em>.</p>
 </div>
+</div>
+</div>
+</div>
+<h1 id="the-kernel-source-code" class="sect0"><a class="anchor" href="#the-kernel-source-code"></a>The Kernel Source Code</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This section covers details about the Linux Kernel source code. We will go through
+the source code, its structure and characteristics.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="offical-and-unofficial-kernel-sources"><a class="anchor" href="#offical-and-unofficial-kernel-sources"></a>6. Offical and Unofficial Kernel Sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The official source of the Linux Kernel is available at:<br>
+<a href="https://www.kernel.org/" target="_blank">https://www.kernel.org/</a></p>
+</div>
+<div class="paragraph">
+<p>The sources present in this website do not represent the entire spectrum of
+features and development that is taking place. Since the kernel is logically
+divided into sub-systems, each sub-system is maintained by a designated
+individual who has been involved with the sub-system and is trusted by Linus.
+So when the merge window opens these individuals who are termed as "maintainers"
+send pull requests to Linus to take in the patches from their repositories for
+merging with the mainline kernel tree. In some cases if the subsystem is large
+it may be divided into smaller subsystems which are managed by individuals
+designated as "sub-maintainers".</p>
+</div>
+<div class="paragraph">
+<p>The official development repository for some sub-systems are given below:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>MTD<br>
+<strong>Website:</strong> <a href="http://www.linux-mtd.infradead.org/index.html" target="_blank">http://www.linux-mtd.infradead.org/index.html</a><br>
+<strong>GIT:</strong> git://git.infradead.org/linux-mtd.git</p>
+</li>
+<li>
+<p>MIPS<br>
+<strong>Website:</strong> <a href="http://www.linux-mips.org/wiki/Main_Page" target="_blank">http://www.linux-mips.org/wiki/Main_Page</a><br>
+<strong>GIT:</strong> git://git.linux-mips.org/pub/scm/ralf/linux.git</p>
+</li>
+<li>
+<p>USB<br>
+<strong>Website:</strong> <a href="http://www.linux-usb.org/" target="_blank">http://www.linux-usb.org/</a><br>
+<strong>GIT:</strong> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git</p>
+</li>
+</ol>
 </div>
 </div>
 </div>

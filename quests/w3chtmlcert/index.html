@@ -65,7 +65,14 @@ TechEuphoria
 <li><a href="#xhtml-1-1">3.8. XHTML 1.1</a></li>
 </ul>
 </li>
-<li><a href="#elements">4. Elements</a></li>
+<li><a href="#elements">4. Elements</a>
+<ul class="sectlevel2">
+<li><a href="#example-of-html-elements">4.1. Example of HTML Elements</a></li>
+<li><a href="#example-of-nested-html-elements">4.2. Example of Nested HTML elements</a></li>
+<li><a href="#empty-html-elements">4.3. Empty HTML Elements</a></li>
+<li><a href="#recommendations">4.4. Recommendations</a></li>
+</ul>
+</li>
 <li><a href="#attributes">5. Attributes</a></li>
 <li><a href="#headings">6. Headings</a></li>
 <li><a href="#paragraphs">7. Paragraphs</a></li>
@@ -338,7 +345,126 @@ will understand the format of the document from its doctype declaration.</p>
 <div class="sect1">
 <h2 id="elements"><a class="anchor" href="#elements"></a>4. Elements</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>An HTML document consists of HTML elements. An element consists of content
+wrapped in a set of tags. The name of the tag defines the type of content
+and each element has a start tag and an end tag:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;tagname&gt;</span>content<span style="color:#070;font-weight:bold">&lt;/tagname&gt;</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-of-html-elements"><a class="anchor" href="#example-of-html-elements"></a>4.1. Example of HTML Elements</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whizz this is easy!<span style="color:#070;font-weight:bold">&lt;/p&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above example <strong><em>&lt;p&gt;</em></strong> is the element which defines the start of a
+paragraph and <strong><em>&lt;p&gt;</em></strong> defines the end of a paragraph. The content in between
+i.e. <strong><em>"Gee whizz this is easy!"</em></strong> defines the content that forms the paragraph.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Not all HTML elements have a starting and ending tag.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-of-nested-html-elements"><a class="anchor" href="#example-of-nested-html-elements"></a>4.2. Example of Nested HTML elements</h3>
+<div class="paragraph">
+<p>HTML elements can be nested. Taking the same Simple HTML page example we can
+clearly see that there are certain HTML elements which are defined within others</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
 
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>A Simple HTML Page<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
+
+<span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whizz this is easy!<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="6"></i><b>(6)</b>
+
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Element starting the html document i.e. the html element</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Element ending the html document</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Starting the content of the html document i.e the body element</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Ending the content of the html document</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Heading element with start and end tags</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Paragraph element with start and end tags</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So in the above example we can see the <strong><em>body</em></strong> element nested within the
+<strong><em>html</em></strong> element</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="empty-html-elements"><a class="anchor" href="#empty-html-elements"></a>4.3. Empty HTML Elements</h3>
+<div class="paragraph">
+<p>Elements with no content are called empty elements. For example a line break
+element is an empty element. Empty elements need not be closed but can be
+closed in the beginning like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;/br&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="recommendations"><a class="anchor" href="#recommendations"></a>4.4. Recommendations</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>It is better to have all tags in lower case even though it is not compulsory.
+Browsers should be able to handle tags irrespective of their case. W3C says tags
+<strong>MUST</strong> be in lower case for HTML documents.</p>
+</li>
+<li>
+<p>Some elements may be handled correctly in the browser if the end tag is
+forgotten, however it is better to insert the end tag for elements which have
+an end tag.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
