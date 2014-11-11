@@ -51,6 +51,12 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-linux-mips-git: git://git.linux-mips.org/pub/scm/ralf/linux.git
 :uri-linux-usb-org: http://www.linux-usb.org/
 :uri-linux-usb-git: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git
+:uri-lkml-programming-religion: http://www.tux.org/lkml/#s15-3
+:uri-free-software-foundation: http://www.fsf.org/
+:uri-libusb-org: http://www.libusb.org/
+:uri-kernel-org-spidev-doc: https://www.kernel.org/doc/Documentation/spi/spidev
+:uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
+:uri-free-electrons-uio-howto: http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -198,41 +204,6 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conr
 Further infomation about GIT can be obtained at: +
 {uri-git-scm}[{uri-git-scm}^].
 
-=== Cloning the Linux tree with GIT
-
-Now that GIT is present in the workstation we can get the main development tree
-of the Linux kernel as follows:
-
-[source,bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-----
-
-And if you're in a corporarte environment or if your firewall blocks out the 
-network port for _git_ you can use _http_ instead as follows:
-
-[source,bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-----
-
-The whole process should take a while so you can go for a small coffee break
-and come back. Comparitively using _git_ is recommended as it is faster than
-_http_
-
-If you happen to have a copy of the Linux GIT repository all you have to do
-is pull in the latest changes
-
-[source,bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
-----
-
-Once you have the Linux GIT repository you can pull the latest changes by 
-by running _git pull_.
-
 = The Kernel Source Code
 
 [partintro]
@@ -269,4 +240,309 @@ The official development repository for some sub-systems are given below:
 . USB +
 *Website:* {uri-linux-usb-org}[{uri-linux-usb-org}^] +
 *GIT:* {uri-linux-usb-git}
+
+=== Cloning the Linux Tree With GIT
+
+Now that GIT is present in the workstation we can get the main development tree
+of the Linux kernel as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+And if you're in a corporarte environment or if your firewall blocks out the 
+network port for _git_ you can use _http_ instead as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+The whole process should take a while so you can go for a small coffee break
+and come back. Comparitively using _git_ is recommended as it is faster than
+_http_
+
+If you happen to have a copy of the Linux GIT repository all you have to do
+is pull in the latest changes
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
+----
+
+Once you have the Linux GIT repository you can pull the latest changes by 
+by running _git pull_.
+
+=== Using Stable Releases
+
+Typically when we are developing a project we reuse multiple projects to build
+our application on top of. Similarly since we will be learing about Embedded
+Linux we cannot use the tip of the tree as it is the latest but not the stablest
+version of the kernel. 
+
+With GIT we don't have to clone the whole repository all over again. Instead we
+can add a reference to a remote tree to our existing clone and fetch all the
+commits which are unique in that repository. As the *_stable_* release is
+derived from the *_mainline_* tree we can add a remote to our repository as
+follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v # <1>
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git # <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
+stable	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch) # <3>
+stable	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)
+----
+<1> _git remote -v_ lists the remotes. By default the git repository from which the repository was cloned will be the main remote
+<2> _git remote add_ adds a new remote with the name stable
+<3> _git remote -v_ lists the new added remote
+
+The last part is fetching the unique commits in the *_stable_* remote. This
+command should take a while.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git fetch stable
+----
+
+
+== Why Are The Sources So Big?
+
+One of the reasons why cloning the kernel sources takes so long is that the
+Linux Kernel source code is BIG. This is because the Kernel source code
+contains many subsystems, frameworks, drivers, network protocols and supports
+many different processor architectures.
+
+=== Size Comparison of Different Kernel Source Directories
+
+If we check the disk usage per directory in the Linux Kernel source code we
+get the distribution below. We'll go through the type of source code in each
+of those directories in a later section.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ du -s ./*/ | sort -nr
+3084600	./drivers/
+723496	./net/
+589520	./fs/
+275636	./arch/
+260960	./sound/
+84020	./kernel/
+52264	./security/
+38628	./include/
+36340	./crypto/
+28968	./Documentation/
+27616	./lib/
+25984	./mm/
+17768	./block/
+8920	./firmware/
+8440	./tools/
+4356	./scripts/
+3760	./ipc/
+3720	./init/
+2596	./virt/
+248	./samples/
+92	./usr/
+----
+
+
+== Programming Religion
+
+The Linux Kernel is written primarily in C with a little assembly code too. The
+source code is written in a version of C supported by Gnu Compiler Collection
+or GCC. Therefore the Linux Kernel source can not be compiled with all C
+compilers.
+
+The assembly code comprises of small sections of code and is basically the 
+GCC's "AT&T-style" syntax of target architecture which will run the kernel.
+
+Even though the Linux Kernel has certain frameworks designed with Object 
+Oriented Principles in mind it is not written in C++. For further
+understanding on why C++ is still not used please see the following link:
+{uri-lkml-programming-religion}[{uri-lkml-programming-religion}^]
+
+And on a lighter note ...
+
+[quote, Linus Torvalds, 19 Jan 2004]
+____
+In fact, in Linux we did try C++ once already, back in 1992.
+
+It sucks. Trust me - writing kernel code in C++ is a BLOODY STUPID IDEA.
+
+The fact is, C++ compilers are not trustworthy. They were even worse in 
+1992, but some fundamental facts haven't changed:
+
+ - the whole C++ exception handling thing is fundamentally broken. It's 
+   _especially_ broken for kernels.
+ - any compiler or language that likes to hide things like memory
+   allocations behind your back just isn't a good choice for a kernel.
+ - you can write object-oriented code (useful for filesystems etc) in C, 
+   _without_ the crap that is C++.
+
+In general, I'd say that anybody who designs his kernel modules for C++ is 
+either 
+ (a) looking for problems
+ (b) a C++ bigot that can't see what he is writing is really just C anyway
+ (c) was given an assignment in CS class to do so.
+
+Feel free to make up (d).
+____
+
+== No C Library
+
+The Linux Kernel is a single program which has its own routines to perform
+common functions. It does not use any user space library like stdlib, rather
+it has equivalent functions that enable it to achieve the same results.
+
+In place of the standard C functions like printf(), memset(), malloc() there
+are functions like printk(), memset(),kmalloc() in the source code.
+
+== Portability
+
+One of the Linux Kernel key features is portability and hardware support.
+It supports a wide variety of architectures and to achieve this the source
+code should be portable across architectures. The architecture specific code is
+all located in the _arch/_ directory. The remaining code in all the other
+directories has to be portable across all architectures.
+
+To achieve portability there are hardware abstraction API for specific
+features:
+
+. Endianess
+- cpu_to_be32()
+- cpu_to_le32()
+- be32_to_cpu()
+- le32_to_cpu()
+. I/O Memory Access
+. Memory barriers 
+. DMA API to flush and invalidate caches
+
+Since the Linux Kernel is designed to run on any processor the use of floating
+point expressions is not allowed. As an example consider the most popular embedded
+architecture i.e. ARM, it does not have a floating point unit. 
+
+== Linux Internal API
+
+One of the main reasons for having drivers in-tree i.e. present along with the
+sources of the Linux Kernel is that the internal Linux API may be changed at 
+any point in time and if a change is proposed and implemented the developer
+responsible for the API change will also have to take the ownership of changing
+all the modules and drivers which use the changed API. In the case of an
+out-of-tree driver the work will be owned by the driver owner and any time a
+change occurs the driver will not compile with the latest kernel source code.
+
+Having said that the Linux Kernel external API i.e. kernel to userspace API like
+system calls, /proc, /sys does not change and is considered to protect the user
+space applications who depend on it.
+
+== Is It Free?
+
+The Linux Kernel is licensed under GNU General Public License version 2. This
+license defines the Linux Kernel as Free Software as defined by the
+{uri-free-software-foundation}[Free Software Foundation^].
+
+. If you redistribute the software you have to do so under the same license
+irrespective of whether it is modified or unmodified.
+
+. If you make modifications to the Linux Kernel you have to release it under
+the same license.
+
+. You only have to do so when your device with the kernel start getting
+distributed
+
+. You only have to license it to your customers and not necessarily the whole
+world.
+
+. It is illegal to distribute a binary kernel with statically compiled
+proprietary drivers.
+
+. Proprietary drivers are frowned upon by the Linux Kernel community as it goes
+against the philosophy of the GPL license.
+
+== Advantages Of GPL Drivers
+
+. It is possible to reuse software from other GPL drivers to write a new GPL
+driver
+
+. A GPL driver has more contributors, testers, reviewers and maintainers
+thereby making it more robust.
+
+. Once the driver is accepted it is easily shipped and distributed by
+others who are using the Linux Kernel.
+
+. A pre-compiled driver will always have to catch up with the latest kernel
+devlopments leaving users of the driver at a loss as they can't upgrade
+their kernel with ease in order to use the latest source with new features
+
+. Making a driver GPL compliant avoids any potential legal hastles
+
+== Advantages Of In-Tree Kernel Drivers
+
+. Acceptance of a driver into the mainline kernel is a step that must be
+done by developers who have developed a GPL compatible driver.
+
+. This allows the developer to release the ownership of maintaining the
+kernel driver to the community. This reduces the cost of maintainence.
+
+. The source of the kernel driver is easily accessible by anyone, as the
+kernel code is widely published.
+
+== User Space Device Drivers
+
+It is possible to develop a user space device driver. There are several 
+scenarios in which a user space device driver is developed:
+
+. The device driver does not depend on any of the frameworks exposed by
+the Linux Kernel.
+
+. The device driver is used by only one application and is not required
+by any other application.
+
+. The kernel provides a simple interface with which the user space device
+driver can control and read the hardware for which it is developed.
+
+=== Examples Of User Space Device Drivers
+
+Certain busses have interfaces exposed by the kernel which can be used to
+develop a user space device driver if the hardware is connected to that 
+bus:
+
+. USB with libusb, {uri-libusb-org}[{uri-libusb-org}^]
+. SPI wiht spidev, {uri-kernel-org-spidev-doc}[Documentation/spi/spidev^] 
+. I2C with i2cdev, {uri-kernel-org-i2cdev-doc}[Documentation/i2c/dev-interface^]
+. Memory-mapped devices with UIO, including interrupt handling, {uri-free-electrons-uio-howto}
+
+On certain SOCs the vendor also provides a user space device driver along with
+a kernel driver which has access to other processors in the SOC which are
+running a firmware for highly specialized applications.
+
+=== The Good And The Bad Of User Space Device Drivers
+
+The Good
+
+. The driver can be written in any programming language or script.
+. The driver can be kept proprietary.
+. The driver runs in user space as an application or daemon.
+. The driver cannot bring down the kernel.
+
+The Bad
+
+. Handling interrupts from the hardware is non-trivial resulting in some sort
+of polling mechanism.
+. The interrupt latency is larger when compared to a kernel device driver.
+
+
+
+
+
+
+
 
