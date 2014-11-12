@@ -57,6 +57,8 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-kernel-org-spidev-doc: https://www.kernel.org/doc/Documentation/spi/spidev
 :uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
 :uri-free-electrons-uio-howto: http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/
+:uri-lxr-free-electrions: http://lxr.free-electrons.com
+:uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
 :compat-mode!:
@@ -582,5 +584,127 @@ sound/:: Sound support code and drivers
 tools/:: Code for various user space tools
 usr/:: Code to generate an initramfs cpio archive file
 virt/:: Virtualization support (KVM)
+
+== Browsing The Sources
+
+One of the most common tasks required by any developer is the ability to browse
+a project and search for:
+
+. A specific symbol such as a function name or variable name
+. The calling function of a function
+. The function definition using a function call point
+. An include file in the project from its declaration in source code
+. A pattern of text
+
+=== Cscope
+
+One such tool is Cscope which allows us to browse the Linux source code with ease
+from editors like vim, emacs and also independently using only cscope.
+
+=== LXR
+
+This is a generic indexing tool and code browser which is available as a web
+service. It supports both C and C++ and it makes it easy to search for 
+declarations, definitions  and symbols. A good examples of LXR with the Linux
+Kernel in action is through the {uri-lxr-free-electrions}[Free Electrons LXR Site^]
+and further information abouit LXR can be obtained from its
+{uri-sourceforge-lxr}[sourceforge page^].
+
+== Getting Accustomed To Browsing The Sources
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Create a branch based on a remote tree to explore a particular stable kernel
+version (from the stable kernel tree).
+. Explore the sources in search for files, function headers or other kinds of
+information. . .
+. Browse the kernel sources with tools like cscope and LXR.
+====
+
+=== Creating A Branch To A Particular Stable Kernel Version
+
+In order to get the list of branches on our stable remote tree we have to
+enter the Linux Kernel source tree and use the _git branch_ command as
+follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a
+* master	#<1>
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+  remotes/stable/linux-2.6.11.y		#<2>
+  remotes/stable/linux-2.6.12.y
+.
+.
+  remotes/stable/linux-3.9.y
+  remotes/stable/master
+----
+<1> Our source code is currently pointing to the master branch
+<2> Remote stable branch remotes/stable/linux-2.6.11.y
+
+We will be working with the 3.13 stable branch and so we will use the remote
+branch *_remotes/stable/linux-3.13.y_* from the list of branches displayed.
+
+Before we do anything let us check the version of our *_master_* branch using
+the top level Makefile in the source code. Using _vim_ or your favourite editor
+or head examine the first few lines of the Makefile
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile 
+VERSION = 3
+PATCHLEVEL = 18
+SUBLEVEL = 0
+EXTRAVERSION = -rc4
+NAME = Diseased Newt
+.
+.
+----
+
+We can see the version of our _master_ branch is at 3.18.0 -rc4 and the name
+of the release is "Diseased Newt". Now let us create a local branch starting
+from the stable remote branch of 3.13.y. The following command uses 
+_git checkout_ to checkout the stable remote branch _stable/linux-3.13.y_ as
+a local branch with the name _3.13.y_.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout -b 3.13.y stable/linux-3.13.y	# <1>
+Checking out files: 100% (27044/27044), done.
+Branch 3.13.y set up to track remote branch linux-3.13.y from stable.
+Switched to a new branch '3.13.y'	# <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a	# <3>
+* 3.13.y	# <4>
+  master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+.
+.
+----
+<1> Command to checkout the stable remote branch as a local branch
+<2> The switch to the new branch takes place successfully
+<3> We list all the branches again
+<4> The git repository now points to the _3.13.y_ local branch
+
+Once again let us examine the first few lines of the top level Makefile. We can
+now see the version is at 3.13.11 and the name of the release is
+"One Giant Leap for Frogkind". So we have successfully managed to create a 
+branch pointing to a stable release of the Linux Kernel source code.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile 
+VERSION = 3
+PATCHLEVEL = 13
+SUBLEVEL = 11
+EXTRAVERSION =
+NAME = One Giant Leap for Frogkind
+.
+.
+----
 
 
