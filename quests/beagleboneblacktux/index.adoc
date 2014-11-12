@@ -539,10 +539,43 @@ The Bad
 of polling mechanism.
 . The interrupt latency is larger when compared to a kernel device driver.
 
+== What's In The Sources?
 
+We'll briefly go through each of the sources in the Linux Source Code and try
+to get an understanding of the overall structure of the source tree. Each
+directory is a placeholder for certain code, scripts and files which serve
+to make up the Linux Kernel project.
 
-
-
-
+=== arch/
+=== block/
+=== COPYING
+=== CREDITS
+=== crypto/
+=== Documentation/
+=== drivers/
+=== firmware/
+=== fs/
+=== include/
+==== include/linux/
+==== include/uapi/
+=== init/
+=== ipc/
+=== Kbuild
+=== Kconfig
+=== kernel/
+=== lib/
+=== MAINTAINERS
+=== Makefile
+=== mm/
+=== net/
+=== README
+=== REPORTING-BUGS
+=== samples/
+=== scripts/
+=== security/
+=== sound/
+=== tools/
+=== usr/
+=== virt/
 
 
