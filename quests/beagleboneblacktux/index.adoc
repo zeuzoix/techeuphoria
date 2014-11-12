@@ -546,36 +546,41 @@ to get an understanding of the overall structure of the source tree. Each
 directory is a placeholder for certain code, scripts and files which serve
 to make up the Linux Kernel project.
 
-=== arch/
-=== block/
-=== COPYING
-=== CREDITS
-=== crypto/
-=== Documentation/
-=== drivers/
-=== firmware/
-=== fs/
-=== include/
-==== include/linux/
-==== include/uapi/
-=== init/
-=== ipc/
-=== Kbuild
-=== Kconfig
-=== kernel/
-=== lib/
-=== MAINTAINERS
-=== Makefile
-=== mm/
-=== net/
-=== README
-=== REPORTING-BUGS
-=== samples/
-=== scripts/
-=== security/
-=== sound/
-=== tools/
-=== usr/
-=== virt/
+arch/<ARCH>:: Architecture specific code. All code that has anything to do with the
+processor the kernel is running on is present in this directory
+*  arch/<ARCH>/mach-<machine>, machine/board specific code
+*  arch/<ARCH>/include/asm, architecture-specific headers
+*  arch/<ARCH>boot/dts, Device Tree source files for certain architecture
+
+block/:: Code relate to block device drivers for hard disk drives and others
+COPYING:: License of the Linux Kernel. 
+CREDITS:: Who Did what?
+crypto/:: Cryptographic libraries
+Documentation/:: Documentation for all things about the Linux Kernel
+drivers/:: Device drivers except for sound which has its own directory below
+firmware/:: Legacy: firmware images extracted from old drivers
+fs/:: Source code for various filesystems (ext2/ubifs/etc..)
+include/:: Kernel headers
+include/linux/:: Linux Kernel core headers
+include/uapi/:: User space API headers
+init/:: Code related to the kernel initaliazation. Includes the main.c
+ipc/:: Code responsible for allowing inter process communication
+Kbuild:: Part of the build system
+Kconfig:: Top level description file for configuration parameters
+kernel/:: The core of the Linux Kernel
+lib/:: Useful library routines (crc32...)
+MAINTAINERS:: Maintainers of different subsystems of the kernel
+Makefile:: Top level makefile
+mm/:: Memory management code
+net/:: Network support code
+README:: Overview and building instructions. Read once atleast.
+REPORTING-BUGS:: Procedure to report bugs with the Linux Kernel
+samples/:: Sample code of usage of frameworks and kernel code
+scripts/:: Useful scripts for internal or external use
+security/:: Support for security features like SELinux
+sound/:: Sound support code and drivers
+tools/:: Code for various user space tools
+usr/:: Code to generate an initramfs cpio archive file
+virt/:: Virtualization support (KVM)
 
 
