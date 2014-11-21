@@ -376,6 +376,166 @@ We keep the default i.e. Little Endian
 image::make-menuconfig-little-endian-subtarget.png[width="640", height="480", align="center", link=images/make-menuconfig-little-endian-subtarget.png]
 ====
 
+=== Selecting The Target Profile
+
+Once the subtarget is selected we have to visit the "Target Profile" section
+and select an appropriate profile. If the target were set to "Lantiq" and
+subtarget were set to "XWAY" we would get the a couple of options as target
+profiles.
+
+====
+[[make-menuconfig-target-lantiq-subtarget-xway-profiles]]
+.Profiles available if target is Lantiq and subtarget is XWAY
+image::make-menuconfig-target-lantiq-subtarget-xway-profiles.png[width="640", height="480", align="center", link=images/make-menuconfig-target-lantiq-subtarget-xway-profiles.png]
+====
+
+However in our setup the target is "MIPS Malta CoreLV (qemu)" and the subtarget
+is "Little Endian" and the only profile available is "Default". 
+
+====
+[[make-menuconfig-default-target-profile]]
+.Selecting Default as the target profile for target "MIPS Malta CoreLV (qemu)" and subtarget "Little Endian"
+image::make-menuconfig-default-target-profile.png[width="640", height="480", align="center", link=images/make-menuconfig-default-target-profile.png]
+====
+
+=== Selecting The Target Images
+
+This option allows us to configure the way in which our system will boot. For
+our qemu system a ramdisk is sufficient. Select "ramdisk" in the target images
+submenu section. A ramdisk image is a compressed root file system image which
+is bundled along with the linux kernel. The kernel loads the ramdisk image into
+memory and starts the initialization scripts after mounting the root file system
+from the loaded ramdisk image.
+
+====
+[[make-menuconfig-target-images-ramdisk]]
+.Selecting ramdisk as the target image type
+image::make-menuconfig-target-images-ramdisk.png[width="640", height="480", align="center", link=images/make-menuconfig-target-images-ramdisk.png]
+====
+
+Hitting enter will select ramdisk from the submenu and will take us to a
+submenu for ramdisk which will allow us to configure the type of ramdisk.
+Below we see that the type of compression is set to none. This can be changed
+by selecting the compression option and choosing the type of compression desired.
+
+====
+[[make-menuconfig-ramdisk-submenu]]
+.Selecting ramdisk gives us configuration options for the ramdisk
+image::make-menuconfig-ramdisk-submenu.png[width="640", height="480", align="center", link=images/make-menuconfig-ramdisk-submenu.png]
+====
+
+The following is the list of compression types available. We keep the
+compression as none for now.
+
+. none
+. gzip
+. bzip2
+. lzma
+. lzo
+. lz4
+. xz
+
+====
+[[make-menuconfig-ramdisk-compression-submenu]]
+.Selecting compression gives us a list of different compression types
+image::make-menuconfig-ramdisk-compression-submenu.png[width="640", height="480", align="center", link=images/make-menuconfig-ramdisk-compression-submenu.png]
+====
+
+We will Exit all submenus as we don't want to change the ramdisk settings.
+
+=== Selecting Advanced Configuration Options
+
+The advanced configuration options changes the build process of OpenWrt. This
+option is available in a checkbox and must first be selected before any
+configuration options can be made available. To do so after highlighting the 
+advanced configuration options we have to hit the spacebar key. This will
+toggle the selection. 
+
+====
+[[make-menuconfig-selecting-advanced-configuration-options]]
+.Selecting advanced configuration options with the spacebar key
+image::make-menuconfig-selecting-advanced-configuration-options.png[width="640", height="480", align="center", link=images/make-menuconfig-selecting-advanced-configuration-options.png]
+====
+Next hit the enter key to open the submenu of the advanced configuration
+options. In our example we have to bypass a bug in the version of Qemu included
+as part of the Ubuntu 14.04 configuration. Go to the "Target Options" menu by
+pressing the down key and hit the spacebar key to select the item.
+
+====
+[[make-menuconfig-advanced-configuration-target-options]]
+.Selecting target options in advanced configuration options with the spacebar key
+image::make-menuconfig-advanced-configuration-target-options.png[width="640", height="480", align="center", link=images/make-menuconfig-advanced-configuration-target-options.png]
+====
+
+Hit the enter key to open the submenu of the target options. Go down and toggle
+the "Build packages with MIPS16 instructions" off.
+
+====
+[[make-menuconfig-toggle-build-packages-with-mips16-instructions-off]]
+.Toggling build packages with mips16 instructions off
+image::make-menuconfig-toggle-build-packages-with-mips16-instructions-off.png[width="640", height="480", align="center", link=images/make-menuconfig-toggle-build-packages-with-mips16-instructions-off.png]
+====
+
+=== Selecting Included Software Packages
+
+It is possible to select the software packages that included as part of the
+build of the image. We can select each of the following to see what gets
+built and packaged in the system.
+
+. Base Systems
+. Boot Loaders
+. Development
+. Firmware
+. Kernel modules
+. Languages
+. Libraries
+. Network
+. Utilities
+
+====
+[[make-menuconfig-selecting-included-software-packages]]
+.Selecting included software packages
+image::make-menuconfig-selecting-included-software-packages.png[width="640", height="480", align="center", link=images/make-menuconfig-selecting-included-software-packages.png]
+====
+
+For instance if we wanted to include debugging utilities like binutils or
+gdbserver we should select the Development option.
+
+====
+[[make-menuconfig-selecting-development-tools]]
+.Selecting development tools
+image::make-menuconfig-selecting-development-tools.png[width="640", height="480", align="center", link=images/make-menuconfig-selecting-development-tools.png]
+====
+
+=== Saving The Configuration
+
+After making all the changes required in the configuration setup we have to
+exit and savethe settings. This is done by simply navigating to the "Exit"
+option and hitting the enter key. We get a prompt asking if we want to save
+the new configuration. 
+
+====
+[[make-menuconfig-confirmation-to-save-new-config]]
+.Confirmation prompt asking if we want to save the configuration
+image::make-menuconfig-confirmation-to-save-new-config.png[width="640", height="480", align="center", link=images/make-menuconfig-confirmation-to-save-new-config.png]
+====
+
+By default the "Yes" option is selected and if we hit the enter key it saves
+the settings to a _.config_ file. If we need to make additional changes we can
+hit the escape key to go back to the menuconfig. At the end after hitting
+the enter key and saving the configuration we get the following message on the
+terminal.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ make menuconfig
+configuration written to .config
+
+*** End of the configuration.
+*** Execute 'make' to start the build or try 'make help'.
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ 
+----
 
 
 
