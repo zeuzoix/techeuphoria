@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>A Technical Odyssey</title>
-<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
-<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
-<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
-<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+<link href="http://localhost:4242/stylesheets/app.css" rel="stylesheet">
+<link href="/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://localhost:4242/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://localhost:4242/humans.txt" rel="author" type="text/plain">
 </head>
 <body class="antialiased">
 <div class="fixed-width">
@@ -16,7 +16,7 @@
 <ul class="title-area">
 <li class="name">
 <h1>
-<a href="/techeuphoria/">
+<a href="/">
 TechEuphoria
 </a>
 </h1>
@@ -29,7 +29,7 @@ TechEuphoria
 <ul class="left">
 <li class="divider">
 <li>
-<a href="/techeuphoria/quests/index.html">/quests</a>
+<a href="/quests/index.html">/quests</a>
 </li>
 </li>
 <li class="divider"></li>
@@ -46,73 +46,7 @@ TechEuphoria
 <div class="large-12 columns">
 <div id="preamble">
 <div class="sectionbody">
-<div id="toc" class="toc">
-<div id="toctitle" class="title">Table of Contents</div>
-<ul class="sectlevel0">
-<li><a href="#introduction">Introduction</a>
-<ul class="sectlevel1">
-<li><a href="#about-the-linux-kernel">1. About The Linux Kernel</a></li>
-<li><a href="#about-beagleboard">2. About BeagleBoard</a></li>
-<li><a href="#about-free-electrons">3. About Free Electrons</a></li>
-</ul>
-</li>
-<li><a href="#training-and-workbench-setup">Training and Workbench Setup</a>
-<ul class="sectlevel1">
-<li><a href="#hardware">4. Hardware</a>
-<ul class="sectlevel2">
-<li><a href="#beaglebone-black">4.1. BeagleBone Black</a></li>
-</ul>
-</li>
-<li><a href="#software">5. Software</a>
-<ul class="sectlevel2">
-<li><a href="#ubuntu">5.1. Ubuntu</a></li>
-<li><a href="#git">5.2. GIT</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#the-kernel-source-code">The Kernel Source Code</a>
-<ul class="sectlevel1">
-<li><a href="#offical-and-unofficial-kernel-sources">6. Offical and Unofficial Kernel Sources</a>
-<ul class="sectlevel2">
-<li><a href="#cloning-the-linux-tree-with-git">6.1. Cloning the Linux Tree With GIT</a></li>
-<li><a href="#using-stable-releases">6.2. Using Stable Releases</a></li>
-</ul>
-</li>
-<li><a href="#why-are-the-sources-so-big">7. Why Are The Sources So Big?</a>
-<ul class="sectlevel2">
-<li><a href="#size-comparison-of-different-kernel-source-directories">7.1. Size Comparison of Different Kernel Source Directories</a></li>
-</ul>
-</li>
-<li><a href="#programming-religion">8. Programming Religion</a></li>
-<li><a href="#no-c-library">9. No C Library</a></li>
-<li><a href="#portability">10. Portability</a></li>
-<li><a href="#linux-internal-api">11. Linux Internal API</a></li>
-<li><a href="#is-it-free">12. Is It Free?</a></li>
-<li><a href="#advantages-of-gpl-drivers">13. Advantages Of GPL Drivers</a></li>
-<li><a href="#advantages-of-in-tree-kernel-drivers">14. Advantages Of In-Tree Kernel Drivers</a></li>
-<li><a href="#user-space-device-drivers">15. User Space Device Drivers</a>
-<ul class="sectlevel2">
-<li><a href="#examples-of-user-space-device-drivers">15.1. Examples Of User Space Device Drivers</a></li>
-<li><a href="#the-good-and-the-bad-of-user-space-device-drivers">15.2. The Good And The Bad Of User Space Device Drivers</a></li>
-</ul>
-</li>
-<li><a href="#what-s-in-the-sources">16. What&#8217;s In The Sources?</a></li>
-<li><a href="#browsing-the-sources">17. Browsing The Sources</a>
-<ul class="sectlevel2">
-<li><a href="#cscope">17.1. Cscope</a></li>
-<li><a href="#lxr">17.2. LXR</a></li>
-</ul>
-</li>
-<li><a href="#getting-accustomed-to-browsing-the-sources">18. Getting Accustomed To Browsing The Sources</a>
-<ul class="sectlevel2">
-<li><a href="#creating-a-branch-to-a-particular-stable-kernel-version">18.1. Creating A Branch To A Particular Stable Kernel Version</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<!-- toc disabled -->
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -140,39 +74,22 @@ published work here uses an Ubuntu distribution as the work station.</p>
 <div class="paragraph">
 <p>This journal was started in order to document my exploration of embedded linux
 using a popular low-cost platform i.e. the BeagleBone Black. The end objective
-is to become well versed with embedded linux development on an ARM based embedded
+is to becove well versed with embedded linux development on an ARM based embedded
 device.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="about-the-linux-kernel"><a class="anchor" href="#about-the-linux-kernel"></a>1. About The Linux Kernel</h2>
+<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>1. About Free Electrons</h2>
 <div class="sectionbody">
-<div class="quoteblock">
-<blockquote>
-I&#8217;m doing a (free) operating system (just a hobby, won&#8217;t be big and
-professional like gnu) for 386(486) AT clones. This has been brewing
-since April and is starting to get ready. I&#8217;d like any feedback on things
-people like/dislike in minix, as my OS resembles it somewhat (same physical
-layout of the file-system (due to practical reasons) among other things).
-</blockquote>
-<div class="attribution">
-&#8212; Linus Torvald: 25th August 1991
-</div>
-</div>
 <div class="paragraph">
-<p>The Linux kernel started off as a hobby project and by a Finnish
-national Linus Torvalds. It is today the OS powering the largest number of
-computers on the planet. It is used in phones, tablets, laptops, netbooks,
-routers, desktops, servers, supercomputers, embedded devices, consumer
-electronics, etc.</p>
-</div>
-<div class="paragraph">
-<p>The development of the Linux kernel is carried out by an army of dynamic
-open source developers, the majority of which comprise of hobbyists.
-Significant contribution to the kernel is now coming from companies using
-the kernel. The development is still spearheaded by Linus who is employed
-by the <a href="http://www.linuxfoundation.org/" target="_blank">Linux Foundation</a>.</p>
+<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
+embedded linux experts who support companies using Embedded Linux. They
+additionally conduct training workshops for companies on different topics
+such as Linux kernel and device driver development, Android system development,
+Yocto Project and OpenEmbedded development, etc. This journal uses the Free
+Electrons training material which they publish online to explore Embedded Linux
+with the BeagleBone Black board from TI.</p>
 </div>
 </div>
 </div>
@@ -188,20 +105,6 @@ possibilities in a small credit card size form factor.</p>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>3. About Free Electrons</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
-embedded linux experts who support companies using Embedded Linux. They
-additionally conduct training workshops for companies on different topics
-such as Linux kernel and device driver development, Android system development,
-Yocto Project and OpenEmbedded development, etc. This journal uses the Free
-Electrons training material which they publish online to explore Embedded Linux
-with the BeagleBone Black board from TI.</p>
-</div>
-</div>
-</div>
 <h1 id="training-and-workbench-setup" class="sect0"><a class="anchor" href="#training-and-workbench-setup"></a>Training and Workbench Setup</h1>
 <div class="openblock partintro">
 <div class="content">
@@ -213,10 +116,10 @@ as details about how to procure the hardware.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="hardware"><a class="anchor" href="#hardware"></a>4. Hardware</h2>
+<h2 id="hardware"><a class="anchor" href="#hardware"></a>3. Hardware</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>4.1. BeagleBone Black</h3>
+<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>3.1. BeagleBone Black</h3>
 <div class="paragraph">
 <p>The BeagleBone Black is the newest member in the BeagleBoard family. The board
 is designed to be a low sized small form factor board. The size of the board
@@ -227,7 +130,7 @@ add headers called as capes similar to the <a href="http://www.raspberrypi.org/"
 <div class="content">
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480">
+<img src="/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480">
 </div>
 </div>
 </div>
@@ -241,7 +144,7 @@ from the <a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Refe
 <div class="content">
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480">
+<img src="/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480">
 </div>
 </div>
 </div>
@@ -250,10 +153,10 @@ from the <a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Refe
 </div>
 </div>
 <div class="sect1">
-<h2 id="software"><a class="anchor" href="#software"></a>5. Software</h2>
+<h2 id="software"><a class="anchor" href="#software"></a>4. Software</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ubuntu"><a class="anchor" href="#ubuntu"></a>5.1. Ubuntu</h3>
+<h3 id="ubuntu"><a class="anchor" href="#ubuntu"></a>4.1. Ubuntu</h3>
 <div class="paragraph">
 <p>To work with an embedded system you need a work station on which you can
 perform the various tasks that are required in the development life cycle.
@@ -304,905 +207,6 @@ not recommended.</p>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="git"><a class="anchor" href="#git"></a>5.2. GIT</h3>
-<div class="paragraph">
-<p>The source code management tool used by the Linux kernel community is
-<a href="http://git-scm.com/" target="_blank">GIT</a>. To use GIT we need to install the packages required
-on our work station using the Advanced Packaging Tool(APT) using a
-command line terminal.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install git gitk git-email</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Once the packages are successfully installed we will need to configure GIT with
-some basic information about our name and email address</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Further infomation about GIT can be obtained at:<br>
-<a href="http://git-scm.com/" target="_blank">http://git-scm.com/</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<h1 id="the-kernel-source-code" class="sect0"><a class="anchor" href="#the-kernel-source-code"></a>The Kernel Source Code</h1>
-<div class="openblock partintro">
-<div class="content">
-<div class="paragraph">
-<p>This section covers details about the Linux Kernel source code. We will go through
-the source code, its structure and characteristics.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="offical-and-unofficial-kernel-sources"><a class="anchor" href="#offical-and-unofficial-kernel-sources"></a>6. Offical and Unofficial Kernel Sources</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The official source of the Linux Kernel is available at:<br>
-<a href="https://www.kernel.org/" target="_blank">https://www.kernel.org/</a></p>
-</div>
-<div class="paragraph">
-<p>The sources present in this website do not represent the entire spectrum of
-features and development that is taking place. Since the kernel is logically
-divided into sub-systems, each sub-system is maintained by a designated
-individual who has been involved with the sub-system and is trusted by Linus.
-So when the merge window opens these individuals who are termed as "maintainers"
-send pull requests to Linus to take in the patches from their repositories for
-merging with the mainline kernel tree. In some cases if the subsystem is large
-it may be divided into smaller subsystems which are managed by individuals
-designated as "sub-maintainers".</p>
-</div>
-<div class="paragraph">
-<p>The official development repository for some sub-systems are given below:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>MTD<br>
-<strong>Website:</strong> <a href="http://www.linux-mtd.infradead.org/index.html" target="_blank">http://www.linux-mtd.infradead.org/index.html</a><br>
-<strong>GIT:</strong> git://git.infradead.org/linux-mtd.git</p>
-</li>
-<li>
-<p>MIPS<br>
-<strong>Website:</strong> <a href="http://www.linux-mips.org/wiki/Main_Page" target="_blank">http://www.linux-mips.org/wiki/Main_Page</a><br>
-<strong>GIT:</strong> git://git.linux-mips.org/pub/scm/ralf/linux.git</p>
-</li>
-<li>
-<p>USB<br>
-<strong>Website:</strong> <a href="http://www.linux-usb.org/" target="_blank">http://www.linux-usb.org/</a><br>
-<strong>GIT:</strong> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git</p>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="cloning-the-linux-tree-with-git"><a class="anchor" href="#cloning-the-linux-tree-with-git"></a>6.1. Cloning the Linux Tree With GIT</h3>
-<div class="paragraph">
-<p>Now that GIT is present in the workstation we can get the main development tree
-of the Linux kernel as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And if you&#8217;re in a corporarte environment or if your firewall blocks out the
-network port for <em>git</em> you can use <em>http</em> instead as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The whole process should take a while so you can go for a small coffee break
-and come back. Comparitively using <em>git</em> is recommended as it is faster than
-<em>http</em></p>
-</div>
-<div class="paragraph">
-<p>If you happen to have a copy of the Linux GIT repository all you have to do
-is pull in the latest changes</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Once you have the Linux GIT repository you can pull the latest changes by
-by running <em>git pull</em>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="using-stable-releases"><a class="anchor" href="#using-stable-releases"></a>6.2. Using Stable Releases</h3>
-<div class="paragraph">
-<p>Typically when we are developing a project we reuse multiple projects to build
-our application on top of. Similarly since we will be learing about Embedded
-Linux we cannot use the tip of the tree as it is the latest but not the stablest
-version of the kernel.</p>
-</div>
-<div class="paragraph">
-<p>With GIT we don&#8217;t have to clone the whole repository all over again. Instead we
-can add a reference to a remote tree to our existing clone and fetch all the
-commits which are unique in that repository. As the <strong><em>stable</em></strong> release is
-derived from the <strong><em>mainline</em></strong> tree we can add a remote to our repository as
-follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v <i class="conum" data-value="1"></i><b>(1)</b>
-origin        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
-origin        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git <i class="conum" data-value="2"></i><b>(2)</b>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v
-origin        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
-origin        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
-stable        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch) <i class="conum" data-value="3"></i><b>(3)</b>
-stable        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><em>git remote -v</em> lists the remotes. By default the git repository from which the repository was cloned will be the main remote</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><em>git remote add</em> adds a new remote with the name stable</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><em>git remote -v</em> lists the new added remote</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The last part is fetching the unique commits in the <strong><em>stable</em></strong> remote. This
-command should take a while.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git fetch stable</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="why-are-the-sources-so-big"><a class="anchor" href="#why-are-the-sources-so-big"></a>7. Why Are The Sources So Big?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>One of the reasons why cloning the kernel sources takes so long is that the
-Linux Kernel source code is BIG. This is because the Kernel source code
-contains many subsystems, frameworks, drivers, network protocols and supports
-many different processor architectures.</p>
-</div>
-<div class="sect2">
-<h3 id="size-comparison-of-different-kernel-source-directories"><a class="anchor" href="#size-comparison-of-different-kernel-source-directories"></a>7.1. Size Comparison of Different Kernel Source Directories</h3>
-<div class="paragraph">
-<p>If we check the disk usage per directory in the Linux Kernel source code we
-get the distribution below. We&#8217;ll go through the type of source code in each
-of those directories in a later section.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ du -s ./*/ | sort -nr
-3084600        ./drivers/
-723496        ./net/
-589520        ./fs/
-275636        ./arch/
-260960        ./sound/
-84020        ./kernel/
-52264        ./security/
-38628        ./include/
-36340        ./crypto/
-28968        ./Documentation/
-27616        ./lib/
-25984        ./mm/
-17768        ./block/
-8920        ./firmware/
-8440        ./tools/
-4356        ./scripts/
-3760        ./ipc/
-3720        ./init/
-2596        ./virt/
-248        ./samples/
-92        ./usr/</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="programming-religion"><a class="anchor" href="#programming-religion"></a>8. Programming Religion</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Linux Kernel is written primarily in C with a little assembly code too. The
-source code is written in a version of C supported by Gnu Compiler Collection
-or GCC. Therefore the Linux Kernel source can not be compiled with all C
-compilers.</p>
-</div>
-<div class="paragraph">
-<p>The assembly code comprises of small sections of code and is basically the
-GCC&#8217;s "AT&amp;T-style" syntax of target architecture which will run the kernel.</p>
-</div>
-<div class="paragraph">
-<p>Even though the Linux Kernel has certain frameworks designed with Object
-Oriented Principles in mind it is not written in C. For further
-understanding on why C is still not used please see the following link:
-<a href="http://www.tux.org/lkml/#s15-3" target="_blank">http://www.tux.org/lkml/#s15-3</a></p>
-</div>
-<div class="paragraph">
-<p>And on a lighter note &#8230;&#8203;</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>In fact, in Linux we did try C++ once already, back in 1992.</p>
-</div>
-<div class="paragraph">
-<p>It sucks. Trust me - writing kernel code in C++ is a BLOODY STUPID IDEA.</p>
-</div>
-<div class="paragraph">
-<p>The fact is, C++ compilers are not trustworthy. They were even worse in
-1992, but some fundamental facts haven&#8217;t changed:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>the whole C++ exception handling thing is fundamentally broken. It&#8217;s
-<em>especially</em> broken for kernels.</p>
-</li>
-<li>
-<p>any compiler or language that likes to hide things like memory
-allocations behind your back just isn&#8217;t a good choice for a kernel.</p>
-</li>
-<li>
-<p>you can write object-oriented code (useful for filesystems etc) in C,
-<em>without</em> the crap that is C++.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In general, I&#8217;d say that anybody who designs his kernel modules for C is
-either
- (a) looking for problems
- (b) a C bigot that can&#8217;t see what he is writing is really just C anyway
- (c) was given an assignment in CS class to do so.</p>
-</div>
-<div class="paragraph">
-<p>Feel free to make up (d).</p>
-</div>
-</blockquote>
-<div class="attribution">
-&#8212; Linus Torvalds<br>
-<cite>19 Jan 2004</cite>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="no-c-library"><a class="anchor" href="#no-c-library"></a>9. No C Library</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Linux Kernel is a single program which has its own routines to perform
-common functions. It does not use any user space library like stdlib, rather
-it has equivalent functions that enable it to achieve the same results.</p>
-</div>
-<div class="paragraph">
-<p>In place of the standard C functions like printf(), memset(), malloc() there
-are functions like printk(), memset(),kmalloc() in the source code.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="portability"><a class="anchor" href="#portability"></a>10. Portability</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>One of the Linux Kernel key features is portability and hardware support.
-It supports a wide variety of architectures and to achieve this the source
-code should be portable across architectures. The architecture specific code is
-all located in the <em>arch/</em> directory. The remaining code in all the other
-directories has to be portable across all architectures.</p>
-</div>
-<div class="paragraph">
-<p>To achieve portability there are hardware abstraction API for specific
-features:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Endianess</p>
-<div class="ulist">
-<ul>
-<li>
-<p>cpu_to_be32()</p>
-</li>
-<li>
-<p>cpu_to_le32()</p>
-</li>
-<li>
-<p>be32_to_cpu()</p>
-</li>
-<li>
-<p>le32_to_cpu()</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>I/O Memory Access</p>
-</li>
-<li>
-<p>Memory barriers</p>
-</li>
-<li>
-<p>DMA API to flush and invalidate caches</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Since the Linux Kernel is designed to run on any processor the use of floating
-point expressions is not allowed. As an example consider the most popular embedded
-architecture i.e. ARM, it does not have a floating point unit.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="linux-internal-api"><a class="anchor" href="#linux-internal-api"></a>11. Linux Internal API</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>One of the main reasons for having drivers in-tree i.e. present along with the
-sources of the Linux Kernel is that the internal Linux API may be changed at
-any point in time and if a change is proposed and implemented the developer
-responsible for the API change will also have to take the ownership of changing
-all the modules and drivers which use the changed API. In the case of an
-out-of-tree driver the work will be owned by the driver owner and any time a
-change occurs the driver will not compile with the latest kernel source code.</p>
-</div>
-<div class="paragraph">
-<p>Having said that the Linux Kernel external API i.e. kernel to userspace API like
-system calls, /proc, /sys does not change and is considered to protect the user
-space applications who depend on it.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="is-it-free"><a class="anchor" href="#is-it-free"></a>12. Is It Free?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Linux Kernel is licensed under GNU General Public License version 2. This
-license defines the Linux Kernel as Free Software as defined by the
-<a href="http://www.fsf.org/" target="_blank">Free Software Foundation</a>.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>If you redistribute the software you have to do so under the same license
-irrespective of whether it is modified or unmodified.</p>
-</li>
-<li>
-<p>If you make modifications to the Linux Kernel you have to release it under
-the same license.</p>
-</li>
-<li>
-<p>You only have to do so when your device with the kernel start getting
-distributed</p>
-</li>
-<li>
-<p>You only have to license it to your customers and not necessarily the whole
-world.</p>
-</li>
-<li>
-<p>It is illegal to distribute a binary kernel with statically compiled
-proprietary drivers.</p>
-</li>
-<li>
-<p>Proprietary drivers are frowned upon by the Linux Kernel community as it goes
-against the philosophy of the GPL license.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="advantages-of-gpl-drivers"><a class="anchor" href="#advantages-of-gpl-drivers"></a>13. Advantages Of GPL Drivers</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>It is possible to reuse software from other GPL drivers to write a new GPL
-driver</p>
-</li>
-<li>
-<p>A GPL driver has more contributors, testers, reviewers and maintainers
-thereby making it more robust.</p>
-</li>
-<li>
-<p>Once the driver is accepted it is easily shipped and distributed by
-others who are using the Linux Kernel.</p>
-</li>
-<li>
-<p>A pre-compiled driver will always have to catch up with the latest kernel
-devlopments leaving users of the driver at a loss as they can&#8217;t upgrade
-their kernel with ease in order to use the latest source with new features</p>
-</li>
-<li>
-<p>Making a driver GPL compliant avoids any potential legal hastles</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="advantages-of-in-tree-kernel-drivers"><a class="anchor" href="#advantages-of-in-tree-kernel-drivers"></a>14. Advantages Of In-Tree Kernel Drivers</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Acceptance of a driver into the mainline kernel is a step that must be
-done by developers who have developed a GPL compatible driver.</p>
-</li>
-<li>
-<p>This allows the developer to release the ownership of maintaining the
-kernel driver to the community. This reduces the cost of maintainence.</p>
-</li>
-<li>
-<p>The source of the kernel driver is easily accessible by anyone, as the
-kernel code is widely published.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="user-space-device-drivers"><a class="anchor" href="#user-space-device-drivers"></a>15. User Space Device Drivers</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>It is possible to develop a user space device driver. There are several
-scenarios in which a user space device driver is developed:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The device driver does not depend on any of the frameworks exposed by
-the Linux Kernel.</p>
-</li>
-<li>
-<p>The device driver is used by only one application and is not required
-by any other application.</p>
-</li>
-<li>
-<p>The kernel provides a simple interface with which the user space device
-driver can control and read the hardware for which it is developed.</p>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="examples-of-user-space-device-drivers"><a class="anchor" href="#examples-of-user-space-device-drivers"></a>15.1. Examples Of User Space Device Drivers</h3>
-<div class="paragraph">
-<p>Certain busses have interfaces exposed by the kernel which can be used to
-develop a user space device driver if the hardware is connected to that
-bus:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>USB with libusb, <a href="http://www.libusb.org/" target="_blank">http://www.libusb.org/</a></p>
-</li>
-<li>
-<p>SPI wiht spidev, <a href="https://www.kernel.org/doc/Documentation/spi/spidev" target="_blank">Documentation/spi/spidev</a></p>
-</li>
-<li>
-<p>I2C with i2cdev, <a href="https://www.kernel.org/doc/Documentation/i2c/dev-interface" target="_blank">Documentation/i2c/dev-interface</a></p>
-</li>
-<li>
-<p>Memory-mapped devices with UIO, including interrupt handling, <a href="http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/" target="_blank">http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/</a></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>On certain SOCs the vendor also provides a user space device driver along with
-a kernel driver which has access to other processors in the SOC which are
-running a firmware for highly specialized applications.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="the-good-and-the-bad-of-user-space-device-drivers"><a class="anchor" href="#the-good-and-the-bad-of-user-space-device-drivers"></a>15.2. The Good And The Bad Of User Space Device Drivers</h3>
-<div class="paragraph">
-<p>The Good</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The driver can be written in any programming language or script.</p>
-</li>
-<li>
-<p>The driver can be kept proprietary.</p>
-</li>
-<li>
-<p>The driver runs in user space as an application or daemon.</p>
-</li>
-<li>
-<p>The driver cannot bring down the kernel.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The Bad</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Handling interrupts from the hardware is non-trivial resulting in some sort
-of polling mechanism.</p>
-</li>
-<li>
-<p>The interrupt latency is larger when compared to a kernel device driver.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="what-s-in-the-sources"><a class="anchor" href="#what-s-in-the-sources"></a>16. What&#8217;s In The Sources?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>We&#8217;ll briefly go through each of the sources in the Linux Source Code and try
-to get an understanding of the overall structure of the source tree. Each
-directory is a placeholder for certain code, scripts and files which serve
-to make up the Linux Kernel project.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">arch/&lt;ARCH&gt;</dt>
-<dd>
-<p>Architecture specific code. All code that has anything to do with the
-processor the kernel is running on is present in this directory</p>
-<div class="ulist">
-<ul>
-<li>
-<p>arch/&lt;ARCH&gt;/mach-&lt;machine&gt;, machine/board specific code</p>
-</li>
-<li>
-<p>arch/&lt;ARCH&gt;/include/asm, architecture-specific headers</p>
-</li>
-<li>
-<p>arch/&lt;ARCH&gt;boot/dts, Device Tree source files for certain architecture</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">block/</dt>
-<dd>
-<p>Code relate to block device drivers for hard disk drives and others</p>
-</dd>
-<dt class="hdlist1">COPYING</dt>
-<dd>
-<p>License of the Linux Kernel.</p>
-</dd>
-<dt class="hdlist1">CREDITS</dt>
-<dd>
-<p>Who Did what?</p>
-</dd>
-<dt class="hdlist1">crypto/</dt>
-<dd>
-<p>Cryptographic libraries</p>
-</dd>
-<dt class="hdlist1">Documentation/</dt>
-<dd>
-<p>Documentation for all things about the Linux Kernel</p>
-</dd>
-<dt class="hdlist1">drivers/</dt>
-<dd>
-<p>Device drivers except for sound which has its own directory below</p>
-</dd>
-<dt class="hdlist1">firmware/</dt>
-<dd>
-<p>Legacy: firmware images extracted from old drivers</p>
-</dd>
-<dt class="hdlist1">fs/</dt>
-<dd>
-<p>Source code for various filesystems (ext2/ubifs/etc..)</p>
-</dd>
-<dt class="hdlist1">include/</dt>
-<dd>
-<p>Kernel headers</p>
-</dd>
-<dt class="hdlist1">include/linux/</dt>
-<dd>
-<p>Linux Kernel core headers</p>
-</dd>
-<dt class="hdlist1">include/uapi/</dt>
-<dd>
-<p>User space API headers</p>
-</dd>
-<dt class="hdlist1">init/</dt>
-<dd>
-<p>Code related to the kernel initaliazation. Includes the main.c</p>
-</dd>
-<dt class="hdlist1">ipc/</dt>
-<dd>
-<p>Code responsible for allowing inter process communication</p>
-</dd>
-<dt class="hdlist1">Kbuild</dt>
-<dd>
-<p>Part of the build system</p>
-</dd>
-<dt class="hdlist1">Kconfig</dt>
-<dd>
-<p>Top level description file for configuration parameters</p>
-</dd>
-<dt class="hdlist1">kernel/</dt>
-<dd>
-<p>The core of the Linux Kernel</p>
-</dd>
-<dt class="hdlist1">lib/</dt>
-<dd>
-<p>Useful library routines (crc32&#8230;&#8203;)</p>
-</dd>
-<dt class="hdlist1">MAINTAINERS</dt>
-<dd>
-<p>Maintainers of different subsystems of the kernel</p>
-</dd>
-<dt class="hdlist1">Makefile</dt>
-<dd>
-<p>Top level makefile</p>
-</dd>
-<dt class="hdlist1">mm/</dt>
-<dd>
-<p>Memory management code</p>
-</dd>
-<dt class="hdlist1">net/</dt>
-<dd>
-<p>Network support code</p>
-</dd>
-<dt class="hdlist1">README</dt>
-<dd>
-<p>Overview and building instructions. Read once atleast.</p>
-</dd>
-<dt class="hdlist1">REPORTING-BUGS</dt>
-<dd>
-<p>Procedure to report bugs with the Linux Kernel</p>
-</dd>
-<dt class="hdlist1">samples/</dt>
-<dd>
-<p>Sample code of usage of frameworks and kernel code</p>
-</dd>
-<dt class="hdlist1">scripts/</dt>
-<dd>
-<p>Useful scripts for internal or external use</p>
-</dd>
-<dt class="hdlist1">security/</dt>
-<dd>
-<p>Support for security features like SELinux</p>
-</dd>
-<dt class="hdlist1">sound/</dt>
-<dd>
-<p>Sound support code and drivers</p>
-</dd>
-<dt class="hdlist1">tools/</dt>
-<dd>
-<p>Code for various user space tools</p>
-</dd>
-<dt class="hdlist1">usr/</dt>
-<dd>
-<p>Code to generate an initramfs cpio archive file</p>
-</dd>
-<dt class="hdlist1">virt/</dt>
-<dd>
-<p>Virtualization support (KVM)</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="browsing-the-sources"><a class="anchor" href="#browsing-the-sources"></a>17. Browsing The Sources</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>One of the most common tasks required by any developer is the ability to browse
-a project and search for:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>A specific symbol such as a function name or variable name</p>
-</li>
-<li>
-<p>The calling function of a function</p>
-</li>
-<li>
-<p>The function definition using a function call point</p>
-</li>
-<li>
-<p>An include file in the project from its declaration in source code</p>
-</li>
-<li>
-<p>A pattern of text</p>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="cscope"><a class="anchor" href="#cscope"></a>17.1. Cscope</h3>
-<div class="paragraph">
-<p>One such tool is Cscope which allows us to browse the Linux source code with ease
-from editors like vim, emacs and also independently using only cscope.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="lxr"><a class="anchor" href="#lxr"></a>17.2. LXR</h3>
-<div class="paragraph">
-<p>This is a generic indexing tool and code browser which is available as a web
-service. It supports both C and C++ and it makes it easy to search for
-declarations, definitions  and symbols. A good examples of LXR with the Linux
-Kernel in action is through the <a href="http://lxr.free-electrons.com" target="_blank">Free Electrons LXR Site</a>
-and further information abouit LXR can be obtained from its
-<a href="http://sourceforge.net/projects/lxr" target="_blank">sourceforge page</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="getting-accustomed-to-browsing-the-sources"><a class="anchor" href="#getting-accustomed-to-browsing-the-sources"></a>18. Getting Accustomed To Browsing The Sources</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="title">This is a hands on session taken from the Free Electrons labs with the following objectives</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a branch based on a remote tree to explore a particular stable kernel
-version (from the stable kernel tree).</p>
-</li>
-<li>
-<p>Explore the sources in search for files, function headers or other kinds of
-information. . .</p>
-</li>
-<li>
-<p>Browse the kernel sources with tools like cscope and LXR.</p>
-</li>
-</ol>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="creating-a-branch-to-a-particular-stable-kernel-version"><a class="anchor" href="#creating-a-branch-to-a-particular-stable-kernel-version"></a>18.1. Creating A Branch To A Particular Stable Kernel Version</h3>
-<div class="paragraph">
-<p>In order to get the list of branches on our stable remote tree we have to
-enter the Linux Kernel source tree and use the <em>git branch</em> command as
-follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a
-* master        <i class="conum" data-value="1"></i><b>(1)</b>
-  remotes/origin/HEAD -&gt; origin/master
-  remotes/origin/master
-  remotes/stable/linux-2.6.11.y                <i class="conum" data-value="2"></i><b>(2)</b>
-  remotes/stable/linux-2.6.12.y
-.
-.
-  remotes/stable/linux-3.9.y
-  remotes/stable/master</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Our source code is currently pointing to the master branch</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Remote stable branch remotes/stable/linux-2.6.11.y</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>We will be working with the 3.13 stable branch and so we will use the remote
-branch <strong><em>remotes/stable/linux-3.13.y</em></strong> from the list of branches displayed.</p>
-</div>
-<div class="paragraph">
-<p>Before we do anything let us check the version of our <strong><em>master</em></strong> branch using
-the top level Makefile in the source code. Using <em>vim</em> or your favourite editor
-or head examine the first few lines of the Makefile</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile
-VERSION = 3
-PATCHLEVEL = 18
-SUBLEVEL = 0
-EXTRAVERSION = -rc4
-NAME = Diseased Newt
-.
-.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We can see the version of our <em>master</em> branch is at 3.18.0 -rc4 and the name
-of the release is "Diseased Newt". Now let us create a local branch starting
-from the stable remote branch of 3.13.y. The following command uses
-<em>git checkout</em> to checkout the stable remote branch <em>stable/linux-3.13.y</em> as
-a local branch with the name <em>3.13.y</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout -b 3.13.y stable/linux-3.13.y        <i class="conum" data-value="1"></i><b>(1)</b>
-Checking out files: 100% (27044/27044), done.
-Branch 3.13.y set up to track remote branch linux-3.13.y from stable.
-Switched to a new branch '3.13.y'        <i class="conum" data-value="2"></i><b>(2)</b>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a        <i class="conum" data-value="3"></i><b>(3)</b>
-* 3.13.y        <i class="conum" data-value="4"></i><b>(4)</b>
-  master
-  remotes/origin/HEAD -&gt; origin/master
-  remotes/origin/master
-.
-.</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Command to checkout the stable remote branch as a local branch</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The switch to the new branch takes place successfully</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>We list all the branches again</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The git repository now points to the <em>3.13.y</em> local branch</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Once again let us examine the first few lines of the top level Makefile. We can
-now see the version is at 3.13.11 and the name of the release is
-"One Giant Leap for Frogkind". So we have successfully managed to create a
-branch pointing to a stable release of the Linux Kernel source code.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile
-VERSION = 3
-PATCHLEVEL = 13
-SUBLEVEL = 11
-EXTRAVERSION =
-NAME = One Giant Leap for Frogkind
-.
-.</code></pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -1219,16 +223,16 @@ Built on Foundation. Baked by Awestruct. Composed with Asciidoc
 <div class="large-6 columns">
 <ul class="inline-list right">
 <li>
-<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+<a href="http://localhost:4242/">Home</a>
 </li>
 </ul>
 </div>
 </footer>
 <script>
-document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+document.write('<script src=' + ('__proto__' in {} ? 'http://localhost:4242/javascripts/vendor/zepto' : 'http://localhost:4242/javascripts/vendor/jquery') + '.js><\/script>')
 </script>
-<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
-<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script src="http://localhost:4242/javascripts/foundation/foundation.js"></script>
+<script src="http://localhost:4242/javascripts/foundation/foundation.topbar.js"></script>
 <script>
 $(document).foundation()
 </script>
