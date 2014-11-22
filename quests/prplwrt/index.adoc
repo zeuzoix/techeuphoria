@@ -537,6 +537,198 @@ configuration written to .config
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ 
 ----
 
+== Building The Image
+
+To build the image after configuration we have to run the make command. This
+short command kicks off a long duration build process. Make sure your
+workstation is connected to a power supply if you happend to be using a laptop.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ make
+ make[1] world
+ make[2] tools/install
+ make[3] -C tools/patch compile
+.
+.
+.
+----
+
+After the build we can see how long it took by checking the timestamp of the
+_bin/malta_ folder and the timestamp of the _.config_ file. The build has
+taken roughly 2 hours and 40 minutes.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ls -l .config
+-rw-rw-r-- 1 conrad conrad 80289 Nov 21 22:04 .config	#<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ ls -l bin/
+total 4
+drwxr-xr-x 3 conrad conrad 4096 Nov 22 00:40 malta	#<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt$ 
+----
+<1> Timestamp of .config is Nov 21 22:04
+<1> Timestamp of the  bin/malta folder is Nov 22 00:40
+
+Let's explore what is there in the _bin_ directory.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ ls -l
+total 13020
+-rw-r--r-- 1 conrad conrad     262 Nov 22 09:19 md5sums
+-rw-r--r-- 1 conrad conrad 1634558 Nov 22 09:19 openwrt-malta-le-uImage-gzip
+-rw-r--r-- 1 conrad conrad 1171681 Nov 22 09:19 openwrt-malta-le-uImage-lzma
+-rwxr-xr-x 1 conrad conrad 3456640 Nov 22 09:18 openwrt-malta-le-vmlinux.elf
+-rwxr-xr-x 1 conrad conrad 7052928 Nov 22 09:19 openwrt-malta-le-vmlinux-initramfs.elf
+drwxr-xr-x 3 conrad conrad    4096 Nov 22 00:03 packages
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ 
+----
+
+md5sums:: This gives the md5sum of the images built. There are four images
+built i.e. openwrt-malta-le-uImage-gzip, openwrt-malta-le-uImage-lzma,
+openwrt-malta-le-vmlinux-initramfs.elf and openwrt-malta-le-vmlinux.elf. The
+md5sums are useful for transferring the images between machines to ensure the
+images received are not corrupted or tampered with in anyway. It is always 
+advisable to check the md5sum of your image with this file before using it.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ cat md5sums 
+f31739d5ee3ce48489608e21d335ddb6 *openwrt-malta-le-uImage-gzip
+5cad2704dc20f2dc35a277db0f8b65fe *openwrt-malta-le-uImage-lzma
+b2c104f7d34f676e2b8d8e6d8a9d5e7d *openwrt-malta-le-vmlinux-initramfs.elf
+3045acf878e5c22a4b4b3a96c85b2ad4 *openwrt-malta-le-vmlinux.elf
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ 
+----
+
+openwrt-malta-le-uImage-gzip:: This is a uboot kernel image compressed with
+gzip. We use the _file_ command to describe the image information.
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ file openwrt-malta-le-uImage-gzip 
+openwrt-malta-le-uImage-gzip: u-boot legacy uImage, MIPS OpenWrt Linux-3.10.58, Linux/MIPS, OS Kernel Image (gzip), 1634494 bytes, Sat Nov 22 09:19:02 2014, Load Address: 0x80100000, Entry Point: 0x80104C50, Header CRC: 0xCCD1848F, Data CRC: 0x72F70CEC
+----
+
+openwrt-malta-le-uImage-lzma:: This is a uboot kernel image compressed with
+lzma
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ file openwrt-malta-le-uImage-lzma 
+openwrt-malta-le-uImage-lzma: u-boot legacy uImage, MIPS OpenWrt Linux-3.10.58, Linux/MIPS, OS Kernel Image (lzma), 1171617 bytes, Sat Nov 22 09:19:01 2014, Load Address: 0x80100000, Entry Point: 0x80104C50, Header CRC: 0xD7C70B9D, Data CRC: 0x8E08D874
+----
+
+openwrt-malta-le-vmlinux-initramfs.elf:: This is a kernel image with the ramdisk
+root file system. The size of this file is the largest as it contains the
+application binaries and libraries in the system. It is an ELF executable.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ file openwrt-malta-le-vmlinux-initramfs.elf 
+openwrt-malta-le-vmlinux-initramfs.elf: ELF 32-bit LSB  executable, MIPS, MIPS32 rel2 version 1 (SYSV), statically linked, stripped
+----
+
+openwrt-malta-le-vmlinux.elf:: This is a kernel image as an ELF executable.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ file openwrt-malta-le-vmlinux.elf 
+openwrt-malta-le-vmlinux.elf: ELF 32-bit LSB  executable, MIPS, MIPS32 rel2 version 1 (SYSV), statically linked, stripped
+----
+
+packages:: This contains the software packages in the form of IPK packages.
+The IPK package is the format of packaging used in OpenWrt to allow different
+packages to be installed in the system. Information about each of the packages
+is in the _base/Packages_ file 
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta/packages$ ls -lR 
+.:
+total 4
+drwxr-xr-x 2 conrad conrad 4096 Nov 22 09:17 base
+
+./base:
+total 1660
+-rw-r--r-- 1 conrad conrad  28432 Nov 22 00:11 base-files_156-r43202_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad 230358 Nov 22 00:34 busybox_1.22.1-4_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  82572 Nov 22 00:29 dropbear_2014.65-2_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  17955 Nov 22 00:29 fstools_2014-10-27-d71297353dc45eaf8f7c252246490746708530f9_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   5183 Nov 22 00:13 hostapd-common_2014-10-25-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  43400 Nov 22 00:13 iw_3.15-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   6753 Nov 22 00:29 iwinfo_2014-10-27.1-d5dc3d0605f76fbbbad005d998497e53a236aeda_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   6331 Nov 22 00:04 jshn_2014-10-14-464e05e33b4c086be0bd932760a41ddcf9373187_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   8887 Nov 22 00:11 jsonfilter_2014-06-19-cdc760c58077f44fc40adbbe41e1556a67c1b9a9_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad    816 Nov 22 00:11 kernel_3.10.58-1-bcf04f3a0c07d8943ddbeeaf32523287_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad 111940 Nov 22 09:17 kmod-cfg80211_3.10.58+2014-10-08-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad    850 Nov 22 00:11 kmod-crypto-aes_3.10.58-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   2035 Nov 22 00:11 kmod-crypto-arc4_3.10.58-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   7979 Nov 22 00:11 kmod-crypto-core_3.10.58-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad 205609 Nov 22 09:17 kmod-mac80211_3.10.58+2014-10-08-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  17581 Nov 22 09:17 kmod-mac80211-hwsim_3.10.58+2014-10-08-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad    829 Nov 22 00:11 kmod-mii_3.10.58-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  18144 Nov 22 00:11 kmod-pcnet32_3.10.58-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   4628 Nov 22 00:04 libblobmsg-json_2014-10-14-464e05e33b4c086be0bd932760a41ddcf9373187_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad 218639 Nov 22 00:03 libc_0.9.33.2-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  32043 Nov 22 00:03 libgcc_4.8-linaro-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  23394 Nov 22 00:29 libiwinfo_2014-10-27.1-d5dc3d0605f76fbbbad005d998497e53a236aeda_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  13510 Nov 22 00:04 libjson-c_0.11-2_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   5906 Nov 22 00:04 libjson-script_2014-10-14-464e05e33b4c086be0bd932760a41ddcf9373187_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  13707 Nov 22 00:03 libnl-tiny_0.1-3_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  17511 Nov 22 00:04 libubox_2014-10-14-464e05e33b4c086be0bd932760a41ddcf9373187_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   9824 Nov 22 00:04 libubus_2014-09-17-4c4f35cf2230d70b9ddd87638ca911e8a563f2f3_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  16917 Nov 22 00:05 libuci_2014-04-11.1-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  12592 Nov 22 00:29 mtd_20_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  60241 Nov 22 00:05 netifd_2014-10-24-b46a8f3b9794efed197ffd2f6f62eb946de5f235_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  57377 Nov 22 00:32 opkg_9c97d5ecd795709c8584e972bfdf3aee3a5b846d-7_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  18108 Nov 22 09:19 Packages #<1>
+-rw-r--r-- 1 conrad conrad   5350 Nov 22 09:19 Packages.gz
+-rw-r--r-- 1 conrad conrad  35630 Nov 22 00:11 procd_2014-11-06-b899234bd657fa1ae1c71315326c3fe2cd9b6cec_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad  24433 Nov 22 00:06 ubox_2014-10-06-0b274c16a3f9d235735a4b84215071e1e004caa9_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   5027 Nov 22 00:04 ubus_2014-09-17-4c4f35cf2230d70b9ddd87638ca911e8a563f2f3_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   8626 Nov 22 00:04 ubusd_2014-09-17-4c4f35cf2230d70b9ddd87638ca911e8a563f2f3_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad   7718 Nov 22 00:05 uci_2014-04-11.1-1_malta_mipsel.ipk
+-rw-r--r-- 1 conrad conrad 220488 Nov 22 00:13 wpad-mini_2014-10-25-1_malta_mipsel.ipk
+----
+<1> Information about all the packages built is present in this file.
+
+== Booting The Image
+
+All the built images and packages are in the _bin/malta_ directory. We will now
+boot the *openwrt-malta-le-vmlinux-initramfs.elf* image file with qemu in little
+endian mode. The _-nographic_ option instructs QEMU to turn off all graphic output
+and send all command lne output and input to the terminal. The _-kernel_ option
+instructs QEMU to boot the following image file.
 
 
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/openwrt/bin/malta$ qemu-system-mipsel -kernel openwrt-malta-le-vmlinux-initramfs.elf -nographic
+qemu-system-mipsel: pci_add_option_rom: failed to find romfile "efi-pcnet.rom"
+qemu-system-mipsel: pci_add_option_rom: failed to find romfile "vgabios-cirrus.bin"
+[    0.000000] Linux version 3.10.58 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.8.3 (OpenWrt/Linaro GCC 4.8-2014.04 r43202) ) #4 SMP Sat Nov 22 09:18:49 IST 2014
+[    0.000000] Config serial console: console=ttyS0,38400n8r
+[    0.000000] bootconsole [early0] enabled
+[    0.000000] CPU revision is: 00019300 (MIPS 24Kc)
+[    0.000000] FPU revision is: 00739300
+[    0.000000] Software DMA cache coherency enabled
+.
+.
+.
+  _______                     ________        __
+ |       |.-----.-----.-----.|  |  |  |.----.|  |_
+ |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+ |_______||   __|_____|__|__||________||__|  |____|
+          |__| W I R E L E S S   F R E E D O M
+ -----------------------------------------------------
+ CHAOS CALMER (Bleeding Edge, r43202)
+ -----------------------------------------------------
+  * 1 1/2 oz Gin            Shake with a glassful
+  * 1/4 oz Triple Sec       of broken ice and pour
+  * 3/4 oz Lime Juice       unstrained into a goblet.
+  * 1 1/2 oz Orange Juice
+  * 1 tsp. Grenadine Syrup
+ -----------------------------------------------------
+root@OpenWrt:/# 
+----
 
