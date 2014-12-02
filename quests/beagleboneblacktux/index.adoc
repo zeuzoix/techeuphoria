@@ -716,3 +716,16 @@ We will demonstrate the commands used with examples taken from the labs.
 The _find_ utility can be used to search for a specific file name. The only
 catch being the name or pattern of the file needs to be known. For instance 
 say you want to locate the logo of Linux in the source code. 
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ find . -name "*.gif" -o -name "*.jpg" -o -name "*.png" -type f 
+./Documentation/logo.gif
+----
+
+We use popular file formats to locate pictures in the source code and
+coincidentally there is one file in the _Documentation_ directory with the
+name _logo.gif_.
+
+
+
