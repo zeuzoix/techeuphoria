@@ -713,6 +713,7 @@ There are several tools that can be used to browse the kernel code and search.
 We will demonstrate the commands used with examples taken from the labs.
 
 ==== Using Find
+
 The _find_ utility can be used to search for a specific file name. The only
 catch being the name or pattern of the file needs to be known. For instance 
 say you want to locate the logo of Linux in the source code. 
@@ -727,5 +728,8 @@ We use popular file formats to locate pictures in the source code and
 coincidentally there is one file in the _Documentation_ directory with the
 name _logo.gif_.
 
+==== Using Git-Grep
+
+The _git-grep_ 
 
 
