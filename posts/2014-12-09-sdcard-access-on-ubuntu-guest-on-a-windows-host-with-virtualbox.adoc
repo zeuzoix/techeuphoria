@@ -1,0 +1,43 @@
+= SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox
+Conrad Gomes
+2014-12-09-14-37
+:awestruct-tags: [virtualbox, sdcard, linux, ubuntu, virtualization]
+:excerpt: We will take a look at how to access an SD Card on a Windows Laptop through an Ubuntu VirtualBox virtual machine.
+:awestruct-excerpt: {excerpt}
+:icons: font
+:freescale-link: http://www.freescale.com
+:imx28-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ
+:virtualbox-link: https://www.virtualbox.org/
+
+{excerpt}
+
+Some of the embedded linux platforms like the
+{imx28-link}[i.MX28 evaluation kit^] from {freescale-link}[Freescale] have SD
+card interfaces with which a firmware image can be flashed and booted up on
+the platform.
+
+If you work in an environment where you use Microsoft Windows as your primary
+OS you might end up using a Linux environment as a virtual machine on Windows.
+For all work involving embedded development for your target board you will
+mostly use linux based tools to build code, remote debugging or even flashing
+your firmware on some sort of flash based device.
+
+== Our Embedded Development Environment
+
+We have a i.mx28 Evaluation Kit with a SD card interface. The platform supports
+booting from firmware flashed on the SD card. In order to access the SD card we
+use a linux based tool for the embedded platform. Unfortunately our linux
+development machine is a virtual machine of Ubuntu running on
+{virtualbox-link}[Oracle's VirtualBox^].
+
+The challenge here is to allow the virtual machine running the guest Ubuntu OS to
+recognize the SD card interface on the laptop running Windows OS as the host OS.
+
+Specifications of the environment:
+
+. Host OS
+. Windows 7 Professional
+. VirtualBox
+. Version 4.3.8
+. Guest OS
+. Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic i686)
