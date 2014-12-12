@@ -8,6 +8,7 @@ Conrad Gomes
 :freescale-link: http://www.freescale.com
 :imx28-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ
 :virtualbox-link: https://www.virtualbox.org/
+:wmic-url: http://technet.microsoft.com/en-us/library/bb742610.aspx
 
 {excerpt}
 
@@ -35,9 +36,95 @@ recognize the SD card interface on the laptop running Windows OS as the host OS.
 
 Specifications of the environment:
 
-. Host OS
-. Windows 7 Professional
-. VirtualBox
-. Version 4.3.8
-. Guest OS
-. Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic i686)
+. *Host OS* : Windows 7 Professional
+. *VirtualBox* : Version 4.3.8
+. *Guest OS* : Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic i686)
+
+== Step 1: Accessing the command prompt on Windows 7
+
+We'll need to access the command prompt to run VirtualBox's _VBoxManage_ utility.
+In order to do so we go to _Start_ then open _Run_ and enter _cmd_ in the text
+box provided.
+
+====
+[[sdcard-open-command-prompt]]
+.Opening the command prompt on Windows 7
+image::sdcard-open-command-prompt.png[width="640", height="480", align="center", link=images/sdcard-open-command-prompt.png]
+====
+
+== Step 2: Determine the physical drive number allocated to the SD Card
+
+In our case we work with a micro SD card and have to use an adapter as shown
+in the diagram below:
+
+====
+[[card-microsd-adaptor-sd]]
+.Micro SD card adapter
+image::card-microsd-adaptor-sd.jpg[width="640", height="480", align="center", link=images/card-microsd-adaptor-sd.jpg]
+====
+
+After we have plugged in our SD card we need to know what physical drive number
+is allocated to it by the Windows 7 system. This will be used as a parameter to
+_VBoxManage_ when we're configuring VirtualBox to use the SD card. We will use
+the Windows Management Instrumentation command-line ({wmic-url}[WMIC^]) tool to determine the
+physical drive.
+
+The command might require administrator priviledges. After execution we
+get to know that our SD card has been allocated a physical drive number of 1.
+
+[source,bash]
+----
+C:\Users\Conrad.Gomes>wmic diskdrive list brief /format:list
+----
+
+====
+[[sdcard-list-diskdrives-using-command-prompt]]
+.Using wmic to get the physical drive number
+image::sdcard-list-diskdrives-using-command-prompt.png[width="640", height="480", align="center", link=images/sdcard-list-diskdrives-using-command-prompt.png]
+====
+
+== Step 3: Allowing the guest OS to access the SD card
+
+The SD card is treated as a physical disk in the system. We need to create an
+image that will represent the entire "raw disk" represented by the SD card.
+To do so we will use the _VBoxManage_ utility available with the VirtualBox
+installation. We first change the directory to the VirtualBox installation
+path where the _VBoxManage_ utility exists. Since VirtualBox is now owned by 
+Oracle it will be installed in the "Oracle" directory in "Program Files".
+
+[source,bash]
+----
+C:\Users\Conrad.Gomes>cd "C:\Program Files\Oracle\VirtualBox"
+
+C:\Program Files\Oracle\VirtualBox>
+----
+
+We should now be able to create the vmdk image mapped to the SD card using
+the command below. Two arguments need to be supplied, the absolute path of
+the file on the host OS i.e. the Windows7 machine which will map to the SD
+card and the raw disk which is expressed as "\\.\PhysicalDriveX" where "X"
+is the physical drive number of the SD card that we obtained using _wmic_.
+
+[source,bash]
+----
+C:\Program Files\Oracle\VirtualBox>VBoxManage.exe internalcommands createrawvmdk -filename "D:\Work\SD-Card.vmdk" -rawdisk "\\.\PhysicalDrive1"
+----
+
+If it succeeds you should see a success message as shown in the screen
+capture:
+
+====
+[[sdcard-vboxmanage-create-rawdisk]]
+.Adding SD card mapping to VMDK image with VBoxManage
+image::sdcard-vboxmanage-create-rawdisk.png[width="640", height="480", align="center", link=images/sdcard-vboxmanage-create-rawdisk.png]
+====
+
+
+
+
+
+
+
+
+
+
