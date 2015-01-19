@@ -4,6 +4,7 @@ Conrad Gomes
 :awestruct-tags: [virtualbox, sdcard, linux, ubuntu, virtualization]
 :excerpt: We will take a look at how to access an SD Card on a Windows Laptop through an Ubuntu VirtualBox virtual machine.
 :awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
 :icons: font
 :freescale-link: http://www.freescale.com
 :imx28-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ
@@ -49,7 +50,7 @@ box provided.
 ====
 [[sdcard-open-command-prompt]]
 .Opening the command prompt on Windows 7
-image::sdcard-open-command-prompt.png[width="640", height="480", align="center", link=images/sdcard-open-command-prompt.png]
+image::sdcard-open-command-prompt.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-open-command-prompt.png]
 ====
 
 == Step 2: Determine the physical drive number allocated to the SD Card
@@ -58,9 +59,9 @@ In our case we work with a micro SD card and have to use an adapter as shown
 in the diagram below:
 
 ====
-[[card-microsd-adaptor-sd]]
+[[sdcard-microsd-adaptor-sd]]
 .Micro SD card adapter
-image::card-microsd-adaptor-sd.jpg[width="640", height="480", align="center", link=images/card-microsd-adaptor-sd.jpg]
+image::sdcard-microsd-adaptor-sd.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-microsd-adaptor-sd.jpg]
 ====
 
 After we have plugged in our SD card we need to know what physical drive number
@@ -80,10 +81,10 @@ C:\Users\Conrad.Gomes>wmic diskdrive list brief /format:list
 ====
 [[sdcard-list-diskdrives-using-command-prompt]]
 .Using wmic to get the physical drive number
-image::sdcard-list-diskdrives-using-command-prompt.png[width="640", height="480", align="center", link=images/sdcard-list-diskdrives-using-command-prompt.png]
+image::sdcard-list-diskdrives-using-command-prompt.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-list-diskdrives-using-command-prompt.png]
 ====
 
-== Step 3: Allowing the guest OS to access the SD card
+== Step 3: Creating and mapping a disk file to the SD Card
 
 The SD card is treated as a physical disk in the system. We need to create an
 image that will represent the entire "raw disk" represented by the SD card.
@@ -98,6 +99,14 @@ C:\Users\Conrad.Gomes>cd "C:\Program Files\Oracle\VirtualBox"
 
 C:\Program Files\Oracle\VirtualBox>
 ----
+
+The capture below highlights the result of the above step
+
+====
+[[sdcard-changedirectory-to-virtualbox]]
+.Changing to the Oracle VirtualBox directory
+image::sdcard-changedirectory-to-virtualbox.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-changedirectory-to-virtualbox.png]
+====
 
 We should now be able to create the vmdk image mapped to the SD card using
 the command below. Two arguments need to be supplied, the absolute path of
@@ -115,9 +124,78 @@ capture:
 
 ====
 [[sdcard-vboxmanage-create-rawdisk]]
-.Adding SD card mapping to VMDK image with VBoxManage
-image::sdcard-vboxmanage-create-rawdisk.png[width="640", height="480", align="center", link=images/sdcard-vboxmanage-create-rawdisk.png]
+.Creating VMDK image with VBoxManage and mapping it to the SD card
+image::sdcard-vboxmanage-create-rawdisk.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-vboxmanage-create-rawdisk.png]
 ====
+
+== Step 4: Allowing the guest OS to access the SD card
+
+Make sure the guest OS virtual machine is "Powered Off" before changing
+its settings. To modify the settings of the virtual machine we have to
+power it off. If not powered off the system will not allow us to add the
+hard disk mapped SD-Card.vmdk file.
+
+====
+[[sdcard-open-virtualbox-settings-when-powered-off]]
+.Open VirtualBox settings when VM is powered off
+image::sdcard-open-virtualbox-settings-when-powered-off.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-open-virtualbox-settings-when-powered-off.png]
+====
+
+Once powered off go to the settings of the virtual machine
+and under the "Controller: SATA" settings click on "Add Hard Disk" button
+as shown below:
+
+====
+[[sdcard-storage-settings-add-harddisk]]
+.Modify storage settings and add hard disk under Controller: SATA settings
+image::sdcard-storage-settings-add-harddisk.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-storage-settings-add-harddisk.png]
+====
+
+Locate the VMDK file created in the previous step and open it to add it as a
+hard disk.
+
+====
+[[sdcard-storage-settings-choose-sd-cardvmdk]]
+.Select the VMDK file and open it as a hard disk
+image::sdcard-storage-settings-choose-sd-cardvmdk.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-storage-settings-choose-sd-cardvmdk.png]
+====
+
+Once successfully opened we should be able to see the file listed as a hard
+disk under "Controller: SATA" as shown below:
+
+====
+[[sdcard-storage-sd-card-vmdk-added]]
+.SD-Card.vmdk is listed as a hard disk under Controller:Sata settings
+image::sdcard-storage-sd-card-vmdk-added.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-storage-sd-card-vmdk-added.png]
+====
+
+== Step 5: Accessing The SD Card On The Guest OS
+
+The next step is to power on the virtual machine and see the SD card added as a
+hard disk in the system. We use _fdisk_ to check and see if the SD card is
+listed in the system. Use of _fdisk_ may require _sudo_ privileges.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~$ sudo fdisk -l
+[sudo] password for ubuntu:
+----
+
+The SD card is visible as _/dev/sde_ device in the system. Further more we can
+see the various partitions and their file formats. It is the last device listed
+by _fdisk_. For comparison sake _fdisk_ can be run before adding the SD card
+as explained here and then compared to see the new hard disk device:
+
+====
+[[sdcard-guest-os-fdisk-list]]
+.Listing the newly added SD card using fdisk
+image::sdcard-guest-os-fdisk-list.png[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-guest-os-fdisk-list.png]
+====
+
+
+
+
+
 
 
 
