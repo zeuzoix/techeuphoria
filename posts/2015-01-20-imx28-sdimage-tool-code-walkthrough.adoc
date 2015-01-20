@@ -1,0 +1,142 @@
+= Understanding The i.MX28 sdimage Utility Code
+Conrad Gomes
+2015-01-20
+:awestruct-tags: [sdcard, linux, i.mx28]
+:excerpt: The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation
+:awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+:freescale-link: http://www.freescale.com
+:imx28-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ
+:imx28-linux-docs-link: https://www.freescale.com/webapp/Download?colCode=L2.6.35_1.1.0_LINUX_DOCS&location=null&fasp=1&WT_TYPE=Supporting%20Information&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=gz&WT_ASSET=Documentation&fileExt=.gz&Parent_nodeId=1285002710766722211624&Parent_pageType=product&Parent_nodeId=1285002710766722211624&Parent_pageType=product
+
+{excerpt}
+
+== MMC Boot
+
+The instructions to prepare a MMC device for boot are given in the i.MX28
+EVK Linux User.s Guide. At the time of writing this post I used the guide
+available from the Freescale website and its revision is
+Rev. L2.6.35_1.1.0. The document can be obtained from
+{imx28-linux-docs-link}[L2.6.35_1.1.0_LINUX_DOCS^].
+
+The steps include using sdimage which is a part of the development
+environment to flash the bootstream images.
+
+This post walks through the steps to extract sdimage from the ltib,
+build it and then goes through the source code for sdimage to understand
+what it is doing as it is not very clear.
+
+== Getting the sdimage utility from ltib
+
+To inspect the source code for sdimage we first extract it from the rpm sources
+in ltib 
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$./ltib -p uuc.spec -m prep
+on't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+
+Processing: uuc
+=================
+Build path taken because: build key set, no prebuilt rpm,
+
+rpmbuild --dbpath /home/ubuntu/beta/projectX/ltib/rootfs//var/lib/rpm --target arm --define '_unpackaged_files_terminate_build 0' --define '_target_cpu arm' --define '__strip strip' --define '_topdir /home/ubuntu/beta/projectX/ltib/rpm' --define '_prefix /usr' --define '_tmppath /home/ubuntu/beta/projectX/ltib/tmp' --define '_rpmdir /home/ubuntu/beta/projectX/ltib/rpm/RPMS'  --define '_mandir /usr/share/man' --define '_sysconfdir /etc' --define '_localstatedir /var' -bp  /home/ubuntu/beta/projectX/ltib/dist/lfs-5.1/uuc/uuc.spec
+Building target platforms: arm
+Building for target arm
+Executing(%prep): /bin/sh -e /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.79873
++ umask 022
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ rm -rf uuc-10.12.01
++ tar -xvvf -
++ /bin/gzip -dc /home/ubuntu/beta/projectX/ltib/rpm/SOURCES/uuc-10.12.01.tar.gz
+drwxrwxr-x root/root         0 2010-09-29 06:35 uuc-10.12.01/
+-rw-rw-r-- root/root       338 2010-09-29 06:35 uuc-10.12.01/Makefile
+-rwxrwxr-x root/root       337 2010-09-29 06:35 uuc-10.12.01/linuxrc
+-rw-rw-r-- root/root      4754 2010-09-29 06:35 uuc-10.12.01/sdimage.c
+-rw-rw-r-- root/root     16753 2010-09-29 06:35 uuc-10.12.01/uu.c
++ STATUS=0
++ [ 0 -ne 0 ]
++ cd uuc-10.12.01
++ exit 0
+Build time for uuc: 0 seconds
+
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+----
+
+== Building the code
+
+To build the code for sdimage we go to the rpm directory with the uuc source
+code and run _gcc_ on the _sdimage.c_ file.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib$ cd rpm/BUILD/uuc-10.12.01/
+ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib/rpm/BUILD/uuc-10.12.01$ gcc sdimage.c -o sdimage
+sdimage.c: In function âinâsdimage.c:134:2: warning: incompatible implicit declaration of built-in function âmsetâenabled by default]
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib/rpm/BUILD/uuc-10.12.01$
+----
+
+== Code Walk Through
+
+. Read arguments passed.
+.. Filter -f and set the firmware file name to g_firmware.
+... e.g imx28_linux.sb
+.. Filter -d and set the device file name to g_filedev.
+... e.g /dev/sde, /dev/mmcblk
+.. Crib and return if either of the arguments are not passed
+. Open the device file and save the handle.
+.. Assign device file handle to devhandle.
+.. Crib and return if error in opening the device file.
+. Open the firmware file and save the handle.
+.. Assign firmware file handle to firmwarehandle.
+.. Crib and return if error in opening the firmware file.
+. Get filestat of firmware file
+.. Crib and return if error in filestat.
+. Read the Master Boot Record (MBR) from device handle devhandle into object variable mbr with a structure which matches the MBR structure
+.. Crib and return if number of bytes read is less than the size of the MBR structure.
+. Check the signature of the MBR, it should be 0xAA55
+.. mbr.sign holds the signature
+.. Crib and return if signature does not match
+. Iterate through the 4 physical partitions and search for a partition type OnTrack DM6 Aux3. (This is the Freescale firmware partition type as given in section 12.11 SD/MMC Boot Mode of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013)
+.. mbr.part[i].filesystem holds the filesystem type
+.. Filesystem type is 'S' in ASCII. Hex code 53. Decimal value 83.
+... To figure out the various filesystem types run fdisk utility. At the command prompt enter 'l' to list partition types.
+... 'S' is hex code 53 which represents Linux partition type which is created when formatting the MMC device with fdisk.
+... If "OnTrack DM6 Aux3" type of partition is not found then crib and return.
+. Check if the size of the partition is greater than one byte plus two times the firmware file size obtained in step 4
+.. Crib and return if less as the partition size is too small.
+.. Partition size has to be slightly greater than twice the firmware file size
+. Intialize the ConfigBlock structure variable bcb
+.. The config block holds the information about the boot information for the driver. (Further information about its structure is given in section 12.11.1 Boot Control Block (BCB) Data Structure of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013) 
+.. This structure holds the information about the primary and secondary boot tags.
+.. The bcb structure is initialized with appropriate signature0x00112233.
+.. The primary boot firmware is given a tag of 1
+.. The start of the primary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.
+.. The secondary boot firmware is given a tag of 2
+.. The start of the secondary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.
+. Write the bcb data
+.. Seek to the first sector of the Freescale firmware partition.
+.. Write the bcb data
+.. Crib and exit if bytes written does not match with the size of the bcb.
+. Write the primary and secondary firmware partitions
+.. Allocate memory of size equal to the firmware file
+... Crib and exit if there is a memory allocation error.
+.. Read the firmware file from the firmwarehandle to a buffer buff.
+... Crib and exit if there is a read error
+.. Seek to the second sector of the Freescale firmware partition.
+.. Write the firmware buffer buff to the address seeked above.
+... Crib and exit if there is a write error
+.. Seek to the sector after the last sector containing the primary firmware.
+.. Write the firmware buffer buff to the address seeked above.
+... Crib and exit if there is a write error
+. Free the buffer allocated
+. Close the device handle devhandle.
+. Close the firmware file handle firmwarehandle.
+. Exit.
