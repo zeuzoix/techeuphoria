@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/">SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2014-12-09T00:00:00+00:00">
+December  9, 2014
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will take a look at how to access an SD Card on a Windows Laptop through an Ubuntu VirtualBox virtual machine.</p>
+</div>
+<div class="paragraph">
+<p>Some of the embedded linux platforms like the
+<a href="http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ" target="_blank">i.MX28 evaluation kit</a> from <a href="http://www.freescale.com">Freescale</a> have SD
+card interfaces with which a firmware image can be flashed and booted up on
+the platform.</p>
+</div>
+<div class="paragraph">
+<p>If you work in an environment where you use Microsoft Windows as your primary
+OS you might end up using a Linux environment as a virtual machine on Windows.
+For all work involving embedded development for your target board you will
+mostly use linux based tools to build code, remote debugging or even flashing
+your firmware on some sort of flash based device.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="our-embedded-development-environment"><a class="anchor" href="#our-embedded-development-environment"></a>Our Embedded Development Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have a i.mx28 Evaluation Kit with a SD card interface. The platform supports
+booting from firmware flashed on the SD card. In order to access the SD card we
+use a linux based tool for the embedded platform. Unfortunately our linux
+development machine is a virtual machine of Ubuntu running on
+<a href="https://www.virtualbox.org/" target="_blank">Oracle&#8217;s VirtualBox</a>.</p>
+</div>
+<div class="paragraph">
+<p>The challenge here is to allow the virtual machine running the guest Ubuntu OS to
+recognize the SD card interface on the laptop running Windows OS as the host OS.</p>
+</div>
+<div class="paragraph">
+<p>Specifications of the environment:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Host OS</strong> : Windows 7 Professional</p>
+</li>
+<li>
+<p><strong>VirtualBox</strong> : Version 4.3.8</p>
+</li>
+<li>
+<p><strong>Guest OS</strong> : Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic i686)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step-1-accessing-the-command-prompt-on-windows-7"><a class="anchor" href="#step-1-accessing-the-command-prompt-on-windows-7"></a>Step 1: Accessing the command prompt on Windows 7</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll need to access the command prompt to run VirtualBox&#8217;s <em>VBoxManage</em> utility.
+In order to do so we go to <em>Start</em> then open <em>Run</em> and enter <em>cmd</em> in the text
+box provided.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-open-command-prompt" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-open-command-prompt.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-open-command-prompt.png" alt="sdcard open command prompt" width="640" height="480"></a>
+</div>
+<div class="title">Figure 1. Opening the command prompt on Windows 7</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step-2-determine-the-physical-drive-number-allocated-to-the-sd-card"><a class="anchor" href="#step-2-determine-the-physical-drive-number-allocated-to-the-sd-card"></a>Step 2: Determine the physical drive number allocated to the SD Card</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In our case we work with a micro SD card and have to use an adapter as shown
+in the diagram below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-microsd-adaptor-sd" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-microsd-adaptor-sd.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-microsd-adaptor-sd.jpg" alt="sdcard microsd adaptor sd" width="640" height="480"></a>
+</div>
+<div class="title">Figure 2. Micro SD card adapter</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>After we have plugged in our SD card we need to know what physical drive number
+is allocated to it by the Windows 7 system. This will be used as a parameter to
+<em>VBoxManage</em> when we&#8217;re configuring VirtualBox to use the SD card. We will use
+the Windows Management Instrumentation command-line (<a href="http://technet.microsoft.com/en-us/library/bb742610.aspx" target="_blank">WMIC</a>) tool to determine the
+physical drive.</p>
+</div>
+<div class="paragraph">
+<p>The command might require administrator priviledges. After execution we
+get to know that our SD card has been allocated a physical drive number of 1.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">C:\Users\Conrad.Gomes&gt;wmic diskdrive list brief /format:list</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-list-diskdrives-using-command-prompt" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-list-diskdrives-using-command-prompt.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-list-diskdrives-using-command-prompt.png" alt="sdcard list diskdrives using command prompt" width="640" height="480"></a>
+</div>
+<div class="title">Figure 3. Using wmic to get the physical drive number</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step-3-creating-and-mapping-a-disk-file-to-the-sd-card"><a class="anchor" href="#step-3-creating-and-mapping-a-disk-file-to-the-sd-card"></a>Step 3: Creating and mapping a disk file to the SD Card</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SD card is treated as a physical disk in the system. We need to create an
+image that will represent the entire "raw disk" represented by the SD card.
+To do so we will use the <em>VBoxManage</em> utility available with the VirtualBox
+installation. We first change the directory to the VirtualBox installation
+path where the <em>VBoxManage</em> utility exists. Since VirtualBox is now owned by
+Oracle it will be installed in the "Oracle" directory in "Program Files".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">C:\Users\Conrad.Gomes&gt;cd &quot;C:\Program Files\Oracle\VirtualBox&quot;
+
+C:\Program Files\Oracle\VirtualBox&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The capture below highlights the result of the above step</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-changedirectory-to-virtualbox" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-changedirectory-to-virtualbox.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-changedirectory-to-virtualbox.png" alt="sdcard changedirectory to virtualbox" width="640" height="480"></a>
+</div>
+<div class="title">Figure 4. Changing to the Oracle VirtualBox directory</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We should now be able to create the vmdk image mapped to the SD card using
+the command below. Two arguments need to be supplied, the absolute path of
+the file on the host OS i.e. the Windows7 machine which will map to the SD
+card and the raw disk which is expressed as "\\.\PhysicalDriveX" where "X"
+is the physical drive number of the SD card that we obtained using <em>wmic</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">C:\Program Files\Oracle\VirtualBox&gt;VBoxManage.exe internalcommands createrawvmdk -filename &quot;D:\Work\SD-Card.vmdk&quot; -rawdisk &quot;\\.\PhysicalDrive1&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If it succeeds you should see a success message as shown in the screen
+capture:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-vboxmanage-create-rawdisk" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-vboxmanage-create-rawdisk.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-vboxmanage-create-rawdisk.png" alt="sdcard vboxmanage create rawdisk" width="640" height="480"></a>
+</div>
+<div class="title">Figure 5. Creating VMDK image with VBoxManage and mapping it to the SD card</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step-4-allowing-the-guest-os-to-access-the-sd-card"><a class="anchor" href="#step-4-allowing-the-guest-os-to-access-the-sd-card"></a>Step 4: Allowing the guest OS to access the SD card</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Make sure the guest OS virtual machine is "Powered Off" before changing
+its settings. To modify the settings of the virtual machine we have to
+power it off. If not powered off the system will not allow us to add the
+hard disk mapped SD-Card.vmdk file.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-open-virtualbox-settings-when-powered-off" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-open-virtualbox-settings-when-powered-off.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-open-virtualbox-settings-when-powered-off.png" alt="sdcard open virtualbox settings when powered off" width="640" height="480"></a>
+</div>
+<div class="title">Figure 6. Open VirtualBox settings when VM is powered off</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Once powered off go to the settings of the virtual machine
+and under the "Controller: SATA" settings click on "Add Hard Disk" button
+as shown below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-storage-settings-add-harddisk" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-storage-settings-add-harddisk.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-settings-add-harddisk.png" alt="sdcard storage settings add harddisk" width="640" height="480"></a>
+</div>
+<div class="title">Figure 7. Modify storage settings and add hard disk under Controller: SATA settings</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Locate the VMDK file created in the previous step and open it to add it as a
+hard disk.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-storage-settings-choose-sd-cardvmdk" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-storage-settings-choose-sd-cardvmdk.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-settings-choose-sd-cardvmdk.png" alt="sdcard storage settings choose sd cardvmdk" width="640" height="480"></a>
+</div>
+<div class="title">Figure 8. Select the VMDK file and open it as a hard disk</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Once successfully opened we should be able to see the file listed as a hard
+disk under "Controller: SATA" as shown below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-storage-sd-card-vmdk-added" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-storage-sd-card-vmdk-added.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-sd-card-vmdk-added.png" alt="sdcard storage sd card vmdk added" width="640" height="480"></a>
+</div>
+<div class="title">Figure 9. SD-Card.vmdk is listed as a hard disk under Controller:Sata settings</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="step-5-accessing-the-sd-card-on-the-guest-os"><a class="anchor" href="#step-5-accessing-the-sd-card-on-the-guest-os"></a>Step 5: Accessing The SD Card On The Guest OS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next step is to power on the virtual machine and see the SD card added as a
+hard disk in the system. We use <em>fdisk</em> to check and see if the SD card is
+listed in the system. Use of <em>fdisk</em> may require <em>sudo</em> privileges.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">ubuntu@ubuntu-VirtualBox:~$ sudo fdisk -l
+[sudo] password for ubuntu:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The SD card is visible as <em>/dev/sde</em> device in the system. Further more we can
+see the various partitions and their file formats. It is the last device listed
+by <em>fdisk</em>. For comparison sake <em>fdisk</em> can be run before adding the SD card
+as explained here and then compared to see the new hard disk device:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="sdcard-guest-os-fdisk-list" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/sdcard-guest-os-fdisk-list.png"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-guest-os-fdisk-list.png" alt="sdcard guest os fdisk list" width="640" height="480"></a>
+</div>
+<div class="title">Figure 10. Listing the newly added SD card using fdisk</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/virtualbox/">virtualbox</a>
+, <a href="/techeuphoria/posts/tag/sdcard/">sdcard</a>
+, <a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/ubuntu/">ubuntu</a>
+, <a href="/techeuphoria/posts/tag/virtualization/">virtualization</a></div>
+</footer>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2015
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>

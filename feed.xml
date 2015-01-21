@@ -5,13 +5,709 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2014-11-22T10:45:32+05:30</updated>
+<updated>2015-01-21T08:52:51+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
+<title>Understanding The i.MX28 sdimage Utility Code</title>
+<updated>2015-01-21T08:52:51+05:30</updated>
+<published>2015-01-20T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="sdcard"></category>
+<category term="linux"></category>
+<category term="i.mx28"></category>
+<category term="mmc"></category>
+<summary>
+
+
+
+The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation
+
+
+
+
+MMC Boot
+
+
+The instructions to prepare a MMC device for boot are given in the i.MX28
+EVK Linux User.s Guide. At the time of writing this post the guide
+available from the Freescale website was used and its revision is
+Rev. L2.6.35_1.1.0. The document can be obtained from
+L2.6.35_1.1.0_LINUX_DOCS.
+
+
+The steps for MMC boot in section 5.1.3.1 include using sdimage which is
+a part of the Linux Target Image Builder (LTIB) development
+environment...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;mmc-boot&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#mmc-boot&quot;&gt;&lt;/a&gt;MMC Boot&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The instructions to prepare a MMC device for boot are given in the i.MX28
+EVK Linux User.s Guide. At the time of writing this post the guide
+available from the Freescale website was used and its revision is
+Rev. L2.6.35_1.1.0. The document can be obtained from
+&lt;a href=&quot;https://www.freescale.com/webapp/Download?colCode=L2.6.35_1.1.0_LINUX_DOCS&amp;amp;location=null&amp;amp;fasp=1&amp;amp;WT_TYPE=Supporting%20Information&amp;amp;WT_VENDOR=FREESCALE&amp;amp;WT_FILE_FORMAT=gz&amp;amp;WT_ASSET=Documentation&amp;amp;fileExt=.gz&amp;amp;Parent_nodeId=1285002710766722211624&amp;amp;Parent_pageType=product&amp;amp;Parent_nodeId=1285002710766722211624&amp;amp;Parent_pageType=product&quot; target=&quot;_blank&quot;&gt;L2.6.35_1.1.0_LINUX_DOCS&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The steps for MMC boot in section 5.1.3.1 include using sdimage which is
+a part of the Linux Target Image Builder (&lt;a href=&quot;http://ltib.org/&quot; target=&quot;_blank&quot;&gt;LTIB&lt;/a&gt;) development
+environment to flash the bootstream images onto the MMC device.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This post walks through the steps to extract sdimage from the LTIB,
+build it and then goes through the source code for sdimage to understand
+what it is doing as it is not very clear.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;getting-the-sdimage-utility-from-ltib&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#getting-the-sdimage-utility-from-ltib&quot;&gt;&lt;/a&gt;Getting the sdimage utility from LTIB&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To inspect the source code for sdimage we first extract it from the rpm sources
+in the LTIB&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$./ltib -p uuc.spec -m prep
+on't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+
+Processing: uuc
+=================
+Build path taken because: build key set, no prebuilt rpm,
+
+rpmbuild --dbpath /home/ubuntu/beta/projectX/ltib/rootfs//var/lib/rpm --target arm --define '_unpackaged_files_terminate_build 0' --define '_target_cpu arm' --define '__strip strip' --define '_topdir /home/ubuntu/beta/projectX/ltib/rpm' --define '_prefix /usr' --define '_tmppath /home/ubuntu/beta/projectX/ltib/tmp' --define '_rpmdir /home/ubuntu/beta/projectX/ltib/rpm/RPMS'  --define '_mandir /usr/share/man' --define '_sysconfdir /etc' --define '_localstatedir /var' -bp  /home/ubuntu/beta/projectX/ltib/dist/lfs-5.1/uuc/uuc.spec
+Building target platforms: arm
+Building for target arm
+Executing(%prep): /bin/sh -e /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.79873
++ umask 022
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ rm -rf uuc-10.12.01
++ tar -xvvf -
++ /bin/gzip -dc /home/ubuntu/beta/projectX/ltib/rpm/SOURCES/uuc-10.12.01.tar.gz
+drwxrwxr-x root/root         0 2010-09-29 06:35 uuc-10.12.01/
+-rw-rw-r-- root/root       338 2010-09-29 06:35 uuc-10.12.01/Makefile
+-rwxrwxr-x root/root       337 2010-09-29 06:35 uuc-10.12.01/linuxrc
+-rw-rw-r-- root/root      4754 2010-09-29 06:35 uuc-10.12.01/sdimage.c
+-rw-rw-r-- root/root     16753 2010-09-29 06:35 uuc-10.12.01/uu.c
++ STATUS=0
++ [ 0 -ne 0 ]
++ cd uuc-10.12.01
++ exit 0
+Build time for uuc: 0 seconds
+
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;building-the-code&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#building-the-code&quot;&gt;&lt;/a&gt;Building the code&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To build the code for sdimage we go to the rpm directory with the uuc source
+code and run &lt;em&gt;gcc&lt;/em&gt; on the &lt;em&gt;sdimage.c&lt;/em&gt; file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd rpm/BUILD/uuc-10.12.01/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$ gcc sdimage.c -o sdimage
+sdimage.c: In function âinâsdimage.c:134:2: warning: incompatible implicit declaration of built-in function âmsetâenabled by default]
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;code-walk-through&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#code-walk-through&quot;&gt;&lt;/a&gt;Code Walk Through&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Read arguments passed.&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Filter -f and set the firmware file name to g_firmware.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;e.g imx28_linux.sb&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Filter -d and set the device file name to g_filedev.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;e.g /dev/sde, /dev/mmcblk&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if either of the arguments are not passed&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Open the device file and save the handle.&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Assign device file handle to devhandle.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if error in opening the device file.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Open the firmware file and save the handle.&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Assign firmware file handle to firmwarehandle.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if error in opening the firmware file.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get filestat of firmware file&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if error in filestat.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read the Master Boot Record (MBR) from device handle devhandle into object variable mbr with a structure which matches the MBR structure&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if number of bytes read is less than the size of the MBR structure.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check the signature of the MBR, it should be 0xAA55&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;mbr.sign holds the signature&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if signature does not match&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Iterate through the 4 physical partitions and search for a partition type OnTrack DM6 Aux3. (This is the Freescale firmware partition type as given in section 12.11 SD/MMC Boot Mode of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013)&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;mbr.part[i].filesystem holds the filesystem type&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Filesystem type is 'S' in ASCII. Hex code 53. Decimal value 83.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;To figure out the various filesystem types run fdisk utility. At the command prompt enter 'l' to list partition types.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;'S' is hex code 53 which represents Linux partition type which is created when formatting the MMC device with fdisk.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If &quot;OnTrack DM6 Aux3&quot; type of partition is not found then crib and return.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the size of the partition is greater than one byte plus two times the firmware file size obtained in step 4&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and return if less as the partition size is too small.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Partition size has to be slightly greater than twice the firmware file size&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Intialize the ConfigBlock structure variable bcb&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;The config block holds the information about the boot information for the driver. (Further information about its structure is given in section 12.11.1 Boot Control Block (BCB) Data Structure of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;This structure holds the information about the primary and secondary boot tags.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The bcb structure is initialized with appropriate signature0x00112233.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The primary boot firmware is given a tag of 1&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The start of the primary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The secondary boot firmware is given a tag of 2&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The start of the secondary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the bcb data&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Seek to the first sector of the Freescale firmware partition.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the bcb data&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and exit if bytes written does not match with the size of the bcb.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the primary and secondary firmware partitions&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Allocate memory of size equal to the firmware file&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and exit if there is a memory allocation error.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read the firmware file from the firmwarehandle to a buffer buff.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and exit if there is a read error&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Seek to the second sector of the Freescale firmware partition.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the firmware buffer buff to the address seeked above.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and exit if there is a write error&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Seek to the sector after the last sector containing the primary firmware.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write the firmware buffer buff to the address seeked above.&lt;/p&gt;
+&lt;div class=&quot;olist lowerroman&quot;&gt;
+&lt;ol class=&quot;lowerroman&quot; type=&quot;i&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Crib and exit if there is a write error&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Free the buffer allocated&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Close the device handle devhandle.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Close the firmware file handle firmwarehandle.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
+<title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
+<updated>2015-01-21T08:06:10+05:30</updated>
+<published>2014-12-09T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="virtualbox"></category>
+<category term="sdcard"></category>
+<category term="linux"></category>
+<category term="ubuntu"></category>
+<category term="virtualization"></category>
+<summary>
+
+
+
+We will take a look at how to access an SD Card on a Windows Laptop through an Ubuntu VirtualBox virtual machine.
+
+
+Some of the embedded linux platforms like the
+i.MX28 evaluation kit from Freescale have SD
+card interfaces with which a firmware image can be flashed and booted up on
+the platform.
+
+
+If you work in an environment where you use Microsoft Windows as your primary
+OS you might end up using a Linux environment as a virtual machine on Windows.
+For all work involving embedded development for your target board you will
+mostly use linux based tools to build code, remote debugging or even flashing
+your firmware...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will take a look at how to access an SD Card on a Windows Laptop through an Ubuntu VirtualBox virtual machine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Some of the embedded linux platforms like the
+&lt;a href=&quot;http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ&quot; target=&quot;_blank&quot;&gt;i.MX28 evaluation kit&lt;/a&gt; from &lt;a href=&quot;http://www.freescale.com&quot;&gt;Freescale&lt;/a&gt; have SD
+card interfaces with which a firmware image can be flashed and booted up on
+the platform.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you work in an environment where you use Microsoft Windows as your primary
+OS you might end up using a Linux environment as a virtual machine on Windows.
+For all work involving embedded development for your target board you will
+mostly use linux based tools to build code, remote debugging or even flashing
+your firmware on some sort of flash based device.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;our-embedded-development-environment&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#our-embedded-development-environment&quot;&gt;&lt;/a&gt;Our Embedded Development Environment&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have a i.mx28 Evaluation Kit with a SD card interface. The platform supports
+booting from firmware flashed on the SD card. In order to access the SD card we
+use a linux based tool for the embedded platform. Unfortunately our linux
+development machine is a virtual machine of Ubuntu running on
+&lt;a href=&quot;https://www.virtualbox.org/&quot; target=&quot;_blank&quot;&gt;Oracle&amp;#8217;s VirtualBox&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The challenge here is to allow the virtual machine running the guest Ubuntu OS to
+recognize the SD card interface on the laptop running Windows OS as the host OS.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Specifications of the environment:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Host OS&lt;/strong&gt; : Windows 7 Professional&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;VirtualBox&lt;/strong&gt; : Version 4.3.8&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Guest OS&lt;/strong&gt; : Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic i686)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;step-1-accessing-the-command-prompt-on-windows-7&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#step-1-accessing-the-command-prompt-on-windows-7&quot;&gt;&lt;/a&gt;Step 1: Accessing the command prompt on Windows 7&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We&amp;#8217;ll need to access the command prompt to run VirtualBox&amp;#8217;s &lt;em&gt;VBoxManage&lt;/em&gt; utility.
+In order to do so we go to &lt;em&gt;Start&lt;/em&gt; then open &lt;em&gt;Run&lt;/em&gt; and enter &lt;em&gt;cmd&lt;/em&gt; in the text
+box provided.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-open-command-prompt&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-open-command-prompt.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-open-command-prompt.png&quot; alt=&quot;sdcard open command prompt&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. Opening the command prompt on Windows 7&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;step-2-determine-the-physical-drive-number-allocated-to-the-sd-card&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#step-2-determine-the-physical-drive-number-allocated-to-the-sd-card&quot;&gt;&lt;/a&gt;Step 2: Determine the physical drive number allocated to the SD Card&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In our case we work with a micro SD card and have to use an adapter as shown
+in the diagram below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-microsd-adaptor-sd&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-microsd-adaptor-sd.jpg&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-microsd-adaptor-sd.jpg&quot; alt=&quot;sdcard microsd adaptor sd&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 2. Micro SD card adapter&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After we have plugged in our SD card we need to know what physical drive number
+is allocated to it by the Windows 7 system. This will be used as a parameter to
+&lt;em&gt;VBoxManage&lt;/em&gt; when we&amp;#8217;re configuring VirtualBox to use the SD card. We will use
+the Windows Management Instrumentation command-line (&lt;a href=&quot;http://technet.microsoft.com/en-us/library/bb742610.aspx&quot; target=&quot;_blank&quot;&gt;WMIC&lt;/a&gt;) tool to determine the
+physical drive.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The command might require administrator priviledges. After execution we
+get to know that our SD card has been allocated a physical drive number of 1.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;C:\Users\Conrad.Gomes&amp;gt;wmic diskdrive list brief /format:list&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-list-diskdrives-using-command-prompt&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-list-diskdrives-using-command-prompt.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-list-diskdrives-using-command-prompt.png&quot; alt=&quot;sdcard list diskdrives using command prompt&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 3. Using wmic to get the physical drive number&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;step-3-creating-and-mapping-a-disk-file-to-the-sd-card&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#step-3-creating-and-mapping-a-disk-file-to-the-sd-card&quot;&gt;&lt;/a&gt;Step 3: Creating and mapping a disk file to the SD Card&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The SD card is treated as a physical disk in the system. We need to create an
+image that will represent the entire &quot;raw disk&quot; represented by the SD card.
+To do so we will use the &lt;em&gt;VBoxManage&lt;/em&gt; utility available with the VirtualBox
+installation. We first change the directory to the VirtualBox installation
+path where the &lt;em&gt;VBoxManage&lt;/em&gt; utility exists. Since VirtualBox is now owned by
+Oracle it will be installed in the &quot;Oracle&quot; directory in &quot;Program Files&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;C:\Users\Conrad.Gomes&amp;gt;cd &quot;C:\Program Files\Oracle\VirtualBox&quot;
+
+C:\Program Files\Oracle\VirtualBox&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The capture below highlights the result of the above step&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-changedirectory-to-virtualbox&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-changedirectory-to-virtualbox.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-changedirectory-to-virtualbox.png&quot; alt=&quot;sdcard changedirectory to virtualbox&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 4. Changing to the Oracle VirtualBox directory&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We should now be able to create the vmdk image mapped to the SD card using
+the command below. Two arguments need to be supplied, the absolute path of
+the file on the host OS i.e. the Windows7 machine which will map to the SD
+card and the raw disk which is expressed as &quot;\\.\PhysicalDriveX&quot; where &quot;X&quot;
+is the physical drive number of the SD card that we obtained using &lt;em&gt;wmic&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;C:\Program Files\Oracle\VirtualBox&amp;gt;VBoxManage.exe internalcommands createrawvmdk -filename &quot;D:\Work\SD-Card.vmdk&quot; -rawdisk &quot;\\.\PhysicalDrive1&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If it succeeds you should see a success message as shown in the screen
+capture:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-vboxmanage-create-rawdisk&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-vboxmanage-create-rawdisk.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-vboxmanage-create-rawdisk.png&quot; alt=&quot;sdcard vboxmanage create rawdisk&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 5. Creating VMDK image with VBoxManage and mapping it to the SD card&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;step-4-allowing-the-guest-os-to-access-the-sd-card&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#step-4-allowing-the-guest-os-to-access-the-sd-card&quot;&gt;&lt;/a&gt;Step 4: Allowing the guest OS to access the SD card&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Make sure the guest OS virtual machine is &quot;Powered Off&quot; before changing
+its settings. To modify the settings of the virtual machine we have to
+power it off. If not powered off the system will not allow us to add the
+hard disk mapped SD-Card.vmdk file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-open-virtualbox-settings-when-powered-off&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-open-virtualbox-settings-when-powered-off.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-open-virtualbox-settings-when-powered-off.png&quot; alt=&quot;sdcard open virtualbox settings when powered off&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 6. Open VirtualBox settings when VM is powered off&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once powered off go to the settings of the virtual machine
+and under the &quot;Controller: SATA&quot; settings click on &quot;Add Hard Disk&quot; button
+as shown below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-storage-settings-add-harddisk&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-storage-settings-add-harddisk.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-settings-add-harddisk.png&quot; alt=&quot;sdcard storage settings add harddisk&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 7. Modify storage settings and add hard disk under Controller: SATA settings&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Locate the VMDK file created in the previous step and open it to add it as a
+hard disk.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-storage-settings-choose-sd-cardvmdk&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-storage-settings-choose-sd-cardvmdk.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-settings-choose-sd-cardvmdk.png&quot; alt=&quot;sdcard storage settings choose sd cardvmdk&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 8. Select the VMDK file and open it as a hard disk&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once successfully opened we should be able to see the file listed as a hard
+disk under &quot;Controller: SATA&quot; as shown below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-storage-sd-card-vmdk-added&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-storage-sd-card-vmdk-added.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-storage-sd-card-vmdk-added.png&quot; alt=&quot;sdcard storage sd card vmdk added&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 9. SD-Card.vmdk is listed as a hard disk under Controller:Sata settings&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;step-5-accessing-the-sd-card-on-the-guest-os&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#step-5-accessing-the-sd-card-on-the-guest-os&quot;&gt;&lt;/a&gt;Step 5: Accessing The SD Card On The Guest OS&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The next step is to power on the virtual machine and see the SD card added as a
+hard disk in the system. We use &lt;em&gt;fdisk&lt;/em&gt; to check and see if the SD card is
+listed in the system. Use of &lt;em&gt;fdisk&lt;/em&gt; may require &lt;em&gt;sudo&lt;/em&gt; privileges.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~$ sudo fdisk -l
+[sudo] password for ubuntu:&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The SD card is visible as &lt;em&gt;/dev/sde&lt;/em&gt; device in the system. Further more we can
+see the various partitions and their file formats. It is the last device listed
+by &lt;em&gt;fdisk&lt;/em&gt;. For comparison sake &lt;em&gt;fdisk&lt;/em&gt; can be run before adding the SD card
+as explained here and then compared to see the new hard disk device:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;sdcard-guest-os-fdisk-list&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/sdcard-guest-os-fdisk-list.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/sdcard-guest-os-fdisk-list.png&quot; alt=&quot;sdcard guest os fdisk list&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 10. Listing the newly added SD card using fdisk&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2014-11-22T10:45:32+05:30</updated>
+<updated>2014-12-02T21:43:24+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -1034,192 +1730,6 @@ Register Intialization we&amp;#8217;ll go through the initialization code for th
 interface and the values assigned to these registers.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/</id>
-<title>I2C/TWI with AVR Introduction</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-08-25T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="protocols"></category>
-<category term="i2c"></category>
-<category term="twi"></category>
-<category term="bus"></category>
-<summary>
-
-In this post we&#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&#8217;s AVR micro-controller.
-
-
-The code has been uploaded to GitHub at https://github.com/zeuzoix/sardine and will be
-referenced here. The TWI library consists of the following files:
-
-
-
-
-twi.h
-
-
-twi.c
-
-
-twi_states.h
-
-
-twi_states.c
-
-
-twi_debug.h
-
-
-
-
-There are two API which the application can use to interface with the I2C/TWI
-interface. The prototypes are in twi.h
-
-
-
-   uint32_t ui_data_sz;
-
-}TWI_SEND_RECV_BUFFER_PARAMS_X;
-
-
-TWI_RET_E twi_init(TWI_INIT_PARAMS_X *px_init_params);
-TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
-                               TWI_MODE_E e_mode);
-
-#endif
-
-
-
-The first API...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In this post we&amp;#8217;ll take a look at implementing an I2C/TWI library which can be used with Atmel&amp;#8217;s AVR micro-controller.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The code has been uploaded to GitHub at &lt;a href=&quot;https://github.com/zeuzoix/sardine&quot; class=&quot;bare&quot;&gt;https://github.com/zeuzoix/sardine&lt;/a&gt; and will be
-referenced here. The TWI library consists of the following files:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;twi.h&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;twi.c&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;twi_states.h&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;twi_states.c&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;twi_debug.h&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;There are two API which the application can use to interface with the I2C/TWI
-interface. The prototypes are in twi.h&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;   uint32_t ui_data_sz;
-
-}TWI_SEND_RECV_BUFFER_PARAMS_X;
-
-
-TWI_RET_E twi_init(TWI_INIT_PARAMS_X *px_init_params);
-TWI_RET_E twi_send_recv_buffer(TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
-                               TWI_MODE_E e_mode);
-
-&lt;span style=&quot;color:#579&quot;&gt;#endif&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The first API &lt;em&gt;twi_init&lt;/em&gt; is used to initialize the TWI interface in master
-mode by assigning a set of register values to the TWI registers in the AVR Atmel
-micro-controller.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The second API &lt;em&gt;twi_send_recv_buffer&lt;/em&gt; is used in both transmit and receive mode
-to send and receive data over the TWI SDA data line.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We&amp;#8217;ll take a look at the registers used in the programming of the TWI interface
-in the next section i.e.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/&quot;&gt;I2C/TWI with AVR Register Descriptions&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/</id>
-<title>GIT</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-05-23T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/05/23/git/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="git"></category>
-<summary>
-
-I&#8217;ve been a SVN user for quite some time. However it&#8217;s good to understand why GIT has risen in popularity.
-
-
-GIT was developed by the same team that developed Linux. Key differences as
-compared to other version control systems
-
-
-
-
-Distributed: Everyone gets access to the repository on their system unlike
-other version control systems which have a central repository on a server.
-The main advantage being that even if network access is not available you
-can still interact with the version control system.
-
-
-Snapshots: A version of a file is the snapshot of the file at that point
-in time. It is not the sum of all differences....
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I&amp;#8217;ve been a SVN user for quite some time. However it&amp;#8217;s good to understand why GIT has risen in popularity.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;GIT was developed by the same team that developed Linux. Key differences as
-compared to other version control systems&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;Distributed: Everyone gets access to the repository on their system unlike
-other version control systems which have a central repository on a server.
-The main advantage being that even if network access is not available you
-can still interact with the version control system.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Snapshots: A version of a file is the snapshot of the file at that point
-in time. It is not the sum of all differences. Basically the smallest unit
-of change is a file.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;URLs that I found useful:&lt;br&gt;
-Setup: &lt;a href=&quot;https://help.github.com/articles/set-up-git&quot; class=&quot;bare&quot;&gt;https://help.github.com/articles/set-up-git&lt;/a&gt;&lt;br&gt;
-Design Basics: &lt;a href=&quot;http://git-scm.com/book/en/Getting-Started-Git-Basics&quot; class=&quot;bare&quot;&gt;http://git-scm.com/book/en/Getting-Started-Git-Basics&lt;/a&gt;&lt;br&gt;
-Test Run: &lt;a href=&quot;http://try.github.io/levels/1/challenges/1&quot; class=&quot;bare&quot;&gt;http://try.github.io/levels/1/challenges/1&lt;/a&gt;&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 </content>
 </entry>

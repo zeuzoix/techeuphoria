@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/">Understanding The i.MX28 sdimage Utility Code</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2015-01-20T00:00:00+00:00">
+January 20, 2015
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mmc-boot"><a class="anchor" href="#mmc-boot"></a>MMC Boot</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The instructions to prepare a MMC device for boot are given in the i.MX28
+EVK Linux User.s Guide. At the time of writing this post the guide
+available from the Freescale website was used and its revision is
+Rev. L2.6.35_1.1.0. The document can be obtained from
+<a href="https://www.freescale.com/webapp/Download?colCode=L2.6.35_1.1.0_LINUX_DOCS&amp;location=null&amp;fasp=1&amp;WT_TYPE=Supporting%20Information&amp;WT_VENDOR=FREESCALE&amp;WT_FILE_FORMAT=gz&amp;WT_ASSET=Documentation&amp;fileExt=.gz&amp;Parent_nodeId=1285002710766722211624&amp;Parent_pageType=product&amp;Parent_nodeId=1285002710766722211624&amp;Parent_pageType=product" target="_blank">L2.6.35_1.1.0_LINUX_DOCS</a>.</p>
+</div>
+<div class="paragraph">
+<p>The steps for MMC boot in section 5.1.3.1 include using sdimage which is
+a part of the Linux Target Image Builder (<a href="http://ltib.org/" target="_blank">LTIB</a>) development
+environment to flash the bootstream images onto the MMC device.</p>
+</div>
+<div class="paragraph">
+<p>This post walks through the steps to extract sdimage from the LTIB,
+build it and then goes through the source code for sdimage to understand
+what it is doing as it is not very clear.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-the-sdimage-utility-from-ltib"><a class="anchor" href="#getting-the-sdimage-utility-from-ltib"></a>Getting the sdimage utility from LTIB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To inspect the source code for sdimage we first extract it from the rpm sources
+in the LTIB</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$./ltib -p uuc.spec -m prep
+on't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+
+Processing: uuc
+=================
+Build path taken because: build key set, no prebuilt rpm,
+
+rpmbuild --dbpath /home/ubuntu/beta/projectX/ltib/rootfs//var/lib/rpm --target arm --define '_unpackaged_files_terminate_build 0' --define '_target_cpu arm' --define '__strip strip' --define '_topdir /home/ubuntu/beta/projectX/ltib/rpm' --define '_prefix /usr' --define '_tmppath /home/ubuntu/beta/projectX/ltib/tmp' --define '_rpmdir /home/ubuntu/beta/projectX/ltib/rpm/RPMS'  --define '_mandir /usr/share/man' --define '_sysconfdir /etc' --define '_localstatedir /var' -bp  /home/ubuntu/beta/projectX/ltib/dist/lfs-5.1/uuc/uuc.spec
+Building target platforms: arm
+Building for target arm
+Executing(%prep): /bin/sh -e /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.79873
++ umask 022
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ cd /home/ubuntu/beta/projectX/ltib/rpm/BUILD
++ rm -rf uuc-10.12.01
++ tar -xvvf -
++ /bin/gzip -dc /home/ubuntu/beta/projectX/ltib/rpm/SOURCES/uuc-10.12.01.tar.gz
+drwxrwxr-x root/root         0 2010-09-29 06:35 uuc-10.12.01/
+-rw-rw-r-- root/root       338 2010-09-29 06:35 uuc-10.12.01/Makefile
+-rwxrwxr-x root/root       337 2010-09-29 06:35 uuc-10.12.01/linuxrc
+-rw-rw-r-- root/root      4754 2010-09-29 06:35 uuc-10.12.01/sdimage.c
+-rw-rw-r-- root/root     16753 2010-09-29 06:35 uuc-10.12.01/uu.c
++ STATUS=0
++ [ 0 -ne 0 ]
++ cd uuc-10.12.01
++ exit 0
+Build time for uuc: 0 seconds
+
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-the-code"><a class="anchor" href="#building-the-code"></a>Building the code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To build the code for sdimage we go to the rpm directory with the uuc source
+code and run <em>gcc</em> on the <em>sdimage.c</em> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd rpm/BUILD/uuc-10.12.01/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$ gcc sdimage.c -o sdimage
+sdimage.c: In function âinâsdimage.c:134:2: warning: incompatible implicit declaration of built-in function âmsetâenabled by default]
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="code-walk-through"><a class="anchor" href="#code-walk-through"></a>Code Walk Through</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Read arguments passed.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Filter -f and set the firmware file name to g_firmware.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>e.g imx28_linux.sb</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Filter -d and set the device file name to g_filedev.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>e.g /dev/sde, /dev/mmcblk</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Crib and return if either of the arguments are not passed</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Open the device file and save the handle.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Assign device file handle to devhandle.</p>
+</li>
+<li>
+<p>Crib and return if error in opening the device file.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Open the firmware file and save the handle.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Assign firmware file handle to firmwarehandle.</p>
+</li>
+<li>
+<p>Crib and return if error in opening the firmware file.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Get filestat of firmware file</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Crib and return if error in filestat.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Read the Master Boot Record (MBR) from device handle devhandle into object variable mbr with a structure which matches the MBR structure</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Crib and return if number of bytes read is less than the size of the MBR structure.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Check the signature of the MBR, it should be 0xAA55</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>mbr.sign holds the signature</p>
+</li>
+<li>
+<p>Crib and return if signature does not match</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Iterate through the 4 physical partitions and search for a partition type OnTrack DM6 Aux3. (This is the Freescale firmware partition type as given in section 12.11 SD/MMC Boot Mode of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>mbr.part[i].filesystem holds the filesystem type</p>
+</li>
+<li>
+<p>Filesystem type is 'S' in ASCII. Hex code 53. Decimal value 83.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>To figure out the various filesystem types run fdisk utility. At the command prompt enter 'l' to list partition types.</p>
+</li>
+<li>
+<p>'S' is hex code 53 which represents Linux partition type which is created when formatting the MMC device with fdisk.</p>
+</li>
+<li>
+<p>If "OnTrack DM6 Aux3" type of partition is not found then crib and return.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Check if the size of the partition is greater than one byte plus two times the firmware file size obtained in step 4</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Crib and return if less as the partition size is too small.</p>
+</li>
+<li>
+<p>Partition size has to be slightly greater than twice the firmware file size</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Intialize the ConfigBlock structure variable bcb</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The config block holds the information about the boot information for the driver. (Further information about its structure is given in section 12.11.1 Boot Control Block (BCB) Data Structure of i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013)</p>
+</li>
+<li>
+<p>This structure holds the information about the primary and secondary boot tags.</p>
+</li>
+<li>
+<p>The bcb structure is initialized with appropriate signature0x00112233.</p>
+</li>
+<li>
+<p>The primary boot firmware is given a tag of 1</p>
+</li>
+<li>
+<p>The start of the primary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.</p>
+</li>
+<li>
+<p>The secondary boot firmware is given a tag of 2</p>
+</li>
+<li>
+<p>The start of the secondary boot firmware is initialized to the next sector after the start of the partition. The bcb structure is stored in the first sector.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write the bcb data</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Seek to the first sector of the Freescale firmware partition.</p>
+</li>
+<li>
+<p>Write the bcb data</p>
+</li>
+<li>
+<p>Crib and exit if bytes written does not match with the size of the bcb.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write the primary and secondary firmware partitions</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Allocate memory of size equal to the firmware file</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Crib and exit if there is a memory allocation error.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Read the firmware file from the firmwarehandle to a buffer buff.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Crib and exit if there is a read error</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Seek to the second sector of the Freescale firmware partition.</p>
+</li>
+<li>
+<p>Write the firmware buffer buff to the address seeked above.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Crib and exit if there is a write error</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Seek to the sector after the last sector containing the primary firmware.</p>
+</li>
+<li>
+<p>Write the firmware buffer buff to the address seeked above.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Crib and exit if there is a write error</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Free the buffer allocated</p>
+</li>
+<li>
+<p>Close the device handle devhandle.</p>
+</li>
+<li>
+<p>Close the firmware file handle firmwarehandle.</p>
+</li>
+<li>
+<p>Exit.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/sdcard/">sdcard</a>
+, <a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/i.mx28/">i.mx28</a>
+, <a href="/techeuphoria/posts/tag/mmc/">mmc</a></div>
+</footer>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2015
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+</body>
+</html>
