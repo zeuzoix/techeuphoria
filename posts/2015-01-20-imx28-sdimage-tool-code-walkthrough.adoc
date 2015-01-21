@@ -1,7 +1,7 @@
 = Understanding The i.MX28 sdimage Utility Code
 Conrad Gomes
 2015-01-20
-:awestruct-tags: [sdcard, linux, i.mx28]
+:awestruct-tags: [sdcard, linux, i.mx28, mmc]
 :excerpt: The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation
 :awestruct-excerpt: {excerpt}
 :awestruct-imagesdir: ../../../../../images
