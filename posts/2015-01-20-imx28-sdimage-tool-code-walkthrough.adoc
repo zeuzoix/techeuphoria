@@ -9,28 +9,30 @@ Conrad Gomes
 :freescale-link: http://www.freescale.com
 :imx28-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MCIMX28EVKJ
 :imx28-linux-docs-link: https://www.freescale.com/webapp/Download?colCode=L2.6.35_1.1.0_LINUX_DOCS&location=null&fasp=1&WT_TYPE=Supporting%20Information&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=gz&WT_ASSET=Documentation&fileExt=.gz&Parent_nodeId=1285002710766722211624&Parent_pageType=product&Parent_nodeId=1285002710766722211624&Parent_pageType=product
+:ltib-org-link: http://ltib.org/
 
 {excerpt}
 
 == MMC Boot
 
 The instructions to prepare a MMC device for boot are given in the i.MX28
-EVK Linux User.s Guide. At the time of writing this post I used the guide
-available from the Freescale website and its revision is
+EVK Linux User.s Guide. At the time of writing this post the guide
+available from the Freescale website was used and its revision is
 Rev. L2.6.35_1.1.0. The document can be obtained from
 {imx28-linux-docs-link}[L2.6.35_1.1.0_LINUX_DOCS^].
 
-The steps include using sdimage which is a part of the development
-environment to flash the bootstream images.
+The steps for MMC boot in section 5.1.3.1 include using sdimage which is
+a part of the Linux Target Image Builder ({ltib-org-link}[LTIB^]) development
+environment to flash the bootstream images onto the MMC device.
 
-This post walks through the steps to extract sdimage from the ltib,
+This post walks through the steps to extract sdimage from the LTIB,
 build it and then goes through the source code for sdimage to understand
 what it is doing as it is not very clear.
 
-== Getting the sdimage utility from ltib
+== Getting the sdimage utility from LTIB
 
 To inspect the source code for sdimage we first extract it from the rpm sources
-in ltib 
+in the LTIB 
 
 [source,bash]
 ----
@@ -75,12 +77,12 @@ code and run _gcc_ on the _sdimage.c_ file.
 
 [source,bash]
 ----
-ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib$ cd rpm/BUILD/uuc-10.12.01/
-ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib/rpm/BUILD/uuc-10.12.01$ gcc sdimage.c -o sdimage
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd rpm/BUILD/uuc-10.12.01/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$ gcc sdimage.c -o sdimage
 sdimage.c: In function âinâsdimage.c:134:2: warning: incompatible implicit declaration of built-in function âmsetâenabled by default]
 .
 .
-ubuntu@ubuntu-VirtualBox:~/beta/HopperGo/ltib/rpm/BUILD/uuc-10.12.01$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$
 ----
 
 == Code Walk Through
