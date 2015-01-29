@@ -1,0 +1,187 @@
+= Building The i.MX28 Board Support Package (BSP) With LTIB
+Conrad Gomes
+2015-01-28
+:awestruct-tags: [linux, i.mx28]
+:excerpt: Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.
+:awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+:freescale-link: http://www.freescale.com
+:imx28-sw-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=IMX28_SW
+:L2.6.35_1.1.0_130130_source.tar.gz-link: https://cache.freescale.com/secured/bsps/L2.6.35_1.1.0_130130_source.tar.gz?__gda__=1422449362_604ff540ab9c9bf39462e7e943e021e3&fileExt=.gz
+:ltib-intro-link: http://ltib.org/home-intro
+:ltib-faq-link: http://ltib.org/documentation-LtibFaq
+
+{excerpt}
+
+== Registering With Freescale
+
+Before we proceed with the download of the source code and tools we need to
+register with the {freescale-link}[Freescale^] website. After registering
+with the website log on to the website with the credentials used at the time
+of registeration:
+
+====
+[[imx28-ltib-bsp-build-freescale-signin]]
+.Signing into the Freescale website
+image::imx28-ltib-bsp-build-freescale-signin.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-signin.png]
+====
+
+== i.MX28 Software and Development Tool Resources
+
+The development software and tools are available in the Linux section of the
+i.MX28 current software releases. When writing this article the page that
+was available to me had the link {imx28-sw-link}[imx28-sw-link^].
+
+On clicking the "Linux source files" link we're taken to a license agreement.
+
+====
+[[imx28-ltib-bsp-build-freescale-eula]]
+.The Freescale Semiconductor Software License Agreement
+image::imx28-ltib-bsp-build-freescale-eula.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-eula.png]
+====
+ 
+If all goes according to plan then you should see a download of the package
+{L2.6.35_1.1.0_130130_source.tar.gz-link}[L2.6.35_1.1.0_130130_source.tar.gz^]
+which you can save to your linux development environment. In my case it is an
+Ubuntu virtual machine running on my Windows laptop. The package download will
+take some time based on your network bandwidth and speed. The size of the
+package is roughly about 710MB.
+
+====
+[[imx28-ltib-bsp-build-freescale-eula]]
+.Download The L2.6.35_1.1.0_130130_source.tar.gz Package
+image::imx28-ltib-bsp-build-freescale-download-package.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-download-package.png]
+====
+
+== Unpacking The IMX28_SW Package 
+
+Move the package to a suitable folder and make sure there is sufficient space
+on the drive before unpacking the gunzipped tarball.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls
+L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar xvzf L2.6.35_1.1.0_130130_source.tar.gz <1>
+L2.6.35_1.1.0_130130_source/
+L2.6.35_1.1.0_130130_source/pkgs/
+L2.6.35_1.1.0_130130_source/pkgs/16colors.txt
+.<2>
+.
+.
+L2.6.35_1.1.0_130130_source/EULA
+L2.6.35_1.1.0_130130_source/package_manifest.txt
+L2.6.35_1.1.0_130130_source/redboot_201003.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls -l
+total 727632
+drwxrwxr-x 3 ubuntu ubuntu      4096 Jan 30  2013 L2.6.35_1.1.0_130130_source <3>
+-rwxrwx--- 1 ubuntu vboxsf 744357641 Jan 20 22:55 L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$
+----
+<1> Gunzip the tarball in one step
+<2> Lot of files being unpacked
+<3> The folder with unpacked contents is L2.6.35_1.1.0_130130_source
+
+== Exploring And Installing The IMX28_SW Package 
+
+The directory L2.6.35_1.1.0_130130_source contains an install script which we run.
+Before proceeding with the installation it presents the EULA which must be accepted
+before installation.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ls
+EULA  install  ltib.tar.gz  package_manifest.txt  pkgs  redboot_201003.zip  tftp.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ./install
+
+You are about to install the LTIB (GNU/Linux Target Image Builder)
+
+Before installing LTIB, you must read and accept the EULA
+(End User License Agreement) which will be presented next.
+
+Do you want to continue ? Y|n
+Y     <1>
+
+Hit enter to continue:
+IMPORTANT. Read the following Freescale Software License Agreement
+.
+.
+----
+<1> Hit 'Y' to read the EULA
+
+At this point we have to scroll and read the EULA before it prompts us with a 
+declaration stating that we have read and accept the EULA, to which we reply
+"yes".
+
+[source,bash]
+----
+.
+.
+I have read and accept the EULA (yes|no):
+yes
+----
+
+Next we're asked about the installation path. We can hit "Enter" to use the default
+which is _/home/ubuntu/beta/projectX/L2.6.35_1.1.0_130130_source_. However it doesn't
+allow us to install it there so we supply a level above the current directory i.e.
+_/home/ubuntu/beta/projectX/_.
+
+[source,bash]
+----
+.
+.
+Copying packages to /home/ubuntu/beta/projectX//ltib/pkgs
+
+Installation complete, your ltib installation has been placed in
+/home/ubuntu/beta/projectX//ltib, to complete the installation:
+
+cd /home/ubuntu/beta/projectX//ltib
+./ltib
+----
+
+The installation is completed along with a hint of the next step which is running
+the Linux Target Image Builder (LTIB) tool.
+
+== What Is LTIB?
+
+Well LTIB is a tool which is used by Freescale to develop, build and deploy the
+software i.e. bootloaders, linux kernel, applications, daemons, etc.. required to
+support the board which in this case happens to be an i.MX28 board. It is uses the 
+RPM way to manage software which has to be built for the target board.
+
+It is advisable to read the Introduction and FAQ section present on the LTIB website at the following
+links:
+
+. {ltib-intro-link}[Introduction^]
+. {ltib-faq-link}[FAQs^] 
+
+== Configuring And Building LTIB
+
+The hint given above is to configure and build LTIB. Within the configuration
+various settings such as toolchain path, platform details, C library to be
+used, etc can be configured.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ cd /home/ubuntu/beta/projectX//ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l
+total 184
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 bin
+drwxrwxrwx 6 ubuntu ubuntu   4096 Jan  8  2013 config
+-rwxrwxrwx 1 ubuntu ubuntu  17989 Jan  8  2013 COPYING
+drwxrwxrwx 3 ubuntu ubuntu   4096 Jan  8  2013 dist
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 doc
+-rwxrwxrwx 1 ubuntu ubuntu     41 Jan 30  2013 hash
+-rwxrwxrwx 1 ubuntu ubuntu 106077 Jan  8  2013 ltib
+drwxr-xr-x 2 ubuntu ubuntu  32768 Jan 28 06:49 pkgs
+-rwxrwxrwx 1 ubuntu ubuntu    952 Jan  8  2013 README
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+----
+
+
+
+
+
+
+
