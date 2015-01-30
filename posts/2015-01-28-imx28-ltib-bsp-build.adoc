@@ -179,9 +179,185 @@ drwxr-xr-x 2 ubuntu ubuntu  32768 Jan 28 06:49 pkgs
 ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
 ----
 
+=== Problems Running LTIB
+
+LTIB failed and cribbed on my system complaninig about missing packages as shown
+below.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+ltib cannot be run because one or more of the host packages needed to run it
+are either missing or out of date or not in ltib's standard path.  Please
+install/upgrade these packages on your host.  If you have your own utilities
+in non-standard paths, please add an entry into the .ltibrc file for example:
+
+%path_std
+/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/my/own/exes
+
+Package                Minimum ver   Installed info
+-------                -----------   ---------------
+zlib                   0             not installed
+rpm                    0             not installed
+rpm-build              0             not installed
+ncurses-devel          0             not installed
+m4                     0             not installed
+bison                  0             not installed
+
+Died at ./ltib line 1409.
+traceback:
+ main::host_checks:1409
+  main:554
 
 
+Started: Fri Jan 30 00:53:17 2015
+Ended:   Fri Jan 30 00:53:17 2015
+Elapsed: 0 seconds
 
 
+Build Failed
 
+Exiting on error or interrupt
+----
 
+Using the Advanced Packaging Tool (APT) utility I was able to fix the missing
+package issues. The stratedgy involves trying to identify the package
+equivalent for Ubuntu using the command below.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search m4    <1>
+----
+<1> Example of searching packages related to m4 using the APT utility
+
+And then installing the package
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4    <1>
+----
+<1> Example of installing m4 using the APT utility
+
+The _ltib_ utility can be executed again to see if the package errors reduce
+with each successful installation. Documentation of installation of the missing
+packages proceeds in the subsections below. They can be avoided if the same
+problems do not exist.
+
+==== Installing _m4_
+
+Installation of _m4_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4     <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Need to get 206 kB of archives.
+After this operation, 390 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...
+----
+<1> Command to install m4
+<2> User input confirming installation
+
+==== Installing _rpm_
+
+Installation of _rpm_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install rpm    <1>
+[sudo] password for ubuntu:
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...
+----
+<1> Command to install rpm
+<2> User input confirming installation
+
+==== Installing _bison_
+
+Installation of _bison_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install bison     <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y
+Get:1 http://us.archive.ubuntu.com/ubuntu/ trusty/main libbison-dev i386 2:3.0.2.dfsg-2 [338 kB]
+.
+.
+.
+update-alternatives: using /usr/bin/bison.yacc to provide /usr/bin/yacc (yacc) in auto mode
+----
+<1> Command to install bison
+<2> User input confirming installation
+
+==== Installing _ncurses-devel_
+
+Installation of _ncurses-devel_ proceeded with no problems after locating the
+correct package name as _libncurses5-dev_.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install libncurses5-dev    <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Setting up libncurses5-dev:i386 (5.9+20140118-1ubuntu1) ...
+----
+<1> Command to install bison
+<2> User input confirming installation
+
+==== Installing _ncurses-devel_
+
+Installation of _zlib_ proceeded with no problems after locating the
+correct package name as _zlib-bin_.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install zlib-bin     <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setting up zlib-bin (1:1.2.8.dfsg-1ubuntu1) ...
+----
+<1> Command to install zlib-bin
