@@ -13,6 +13,7 @@ Conrad Gomes
 :ltib-faq-link: http://ltib.org/documentation-LtibFaq
 :ltib-ubuntu-patch-forum-link: https://community.freescale.com/docs/DOC-93454
 :ltib-dead-link-installation: https://community.freescale.com/thread/308278
+:importgeek-imx-ltib-common-errors-link: https://importgeek.wordpress.com/2014/08/21/imx-ltib-common-errors/
 
 {excerpt}
 
@@ -650,13 +651,360 @@ We see a new set of _wget_ errors this time and after searching the forums
 we get help in this post about dead links in  LTIB installation.
 {ltib-dead-link-installation}[{ltib-dead-link-installation}^].
 
-== Conclusion Of First Failed Attempt
+== Trying By Patching Earlier On
 
 LTIB doesn't work without the patch from Freescale especially if you are using
-a newer Ubuntu system which is greater than Ubuntu 9.0. 
-
-Not sure about the next steps we put this attempt to rest and retry
-with another attempt by applying the patch earlier on rather than later as 
-a logical progression of the installation.
+a newer Ubuntu system which is greater than Ubuntu 9.0. Not sure about the next
+steps we put this attempt to rest and retry with another attempt by applying
+the patch earlier on rather than later as a logical progression of the installation.
 
 Sometimes it's good to erase the board and start with a fresh perspective.
+
+=== Cleaning Up The Old Installation
+
+We clean up the folders created when we install and configure the LTIB package:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ rm -Rf ltib/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ sudo rm -Rf /opt/freescale
+----
+
+=== Repeat The Installaion
+
+As mentioned in section <<Exploring And Installing The IMX28_SW Package>>
+repeat all the installation steps outlined in that session until you get
+the fresh ltib folder created at _/home/ubuntu/beta/projectX/ltib_.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ls
+EULA  install  ltib.tar.gz  package_manifest.txt  pkgs  redboot_201003.zip  tftp.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ./install
+.
+.
+----
+
+=== Apply The Ubuntu Patch
+
+As mentioned in the <<Unpacking The Patch>> and <<Install The Patches>> sections
+patch the fresh ltib folder again. 
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tar xvzf ubuntu-ltib-patch.tgz
+ubuntu-ltib-patch/
+ubuntu-ltib-patch/zlib.patch
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch
+ubuntu-ltib-patch/lkc-1.4-lib.patch
+ubuntu-ltib-patch/mux_server.spec
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch.md5
+ubuntu-ltib-patch/install-patches.sh
+ubuntu-ltib-patch/lkc.spec
+ubuntu-ltib-patch/sparse.spec
+ubuntu-ltib-patch/lkc-1.4-lib.patch.md5
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ 
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ 
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ 
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ubuntu-ltib-patch/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/ubuntu-ltib-patch$ ./install-patches.sh /home/ubuntu/beta/projectX/ltib/
+cp lkc-1.4-lib.patch /opt/freescale/pkgs
+cp lkc-1.4-lib.patch.md5 /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch.md5 /opt/freescale/pkgs
+Patching Spec Files
+Done
+patching file bin/Ltibutils.pm
+----
+
+=== Repeat The Configuration and Build
+
+Again we try to configure and build _LTIB_ with the same command
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib          <1>
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+Installing host support packages.
+
+This only needs to be done once per host, but may take up to
+an hour to complete ...
+
+If an error occurs, a log file with the full output may be found in:
+/home/ubuntu/beta/projectX/ltib/host_config.log
+
+[sudo] password for ubuntu:                  <2>
+Exiting on error or interrupt
+Please see >> /home/ubuntu/beta/projectX/ltib/host_config.log for details
+----
+<1> Execute the _ltib_ command to being the configuration and build
+<1> Enter the login password for sudo
+
+Ok after a while it looks like there's a different type of error that is thrown.
+After opening the _host_config.log_ we see the following type of error related
+to missing _lzo/lzo1x.h_.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tail -n 30 /home/ubuntu/beta/projectX/ltib/host_config.log
+  CC      compr_lzo.o
+compr_lzo.c:31:23: fatal error: lzo/lzo1x.h: No such file or directory
+ #include <lzo/lzo1x.h>
+                       ^
+compilation terminated.
+make: *** [/opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils/compr_lzo.o] Error 1
+error: Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.80059 (%build)
+
+
+RPM build errors:
+    Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.80059 (%build)
+Build time for mtd-utils: 6 seconds
+
+Failed building mtd-utils
+Died at ./ltib line 1392.
+traceback:
+ main::build_host_rpms:1392
+  main::host_checks:1447
+   main:554
+
+
+Started: Thu Feb  5 05:36:42 2015
+Ended:   Thu Feb  5 05:46:54 2015
+Elapsed: 612 seconds
+
+These packages failed to build:
+mtd-utils
+
+Build Failed
+----
+
+Ok so we're missing some package in our system. Let's try using APT again.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search "lzo"    <1>
+file-roller - archive manager for GNOME
+liblzo2-2 - data compression library
+liblzo2-dev - data compression library (development files)
+lrzip - compression program with a very high compression ratio
+lzop - fast compression program
+patool - command line archive file manager
+python-lzo - Python bindings for the LZO data compression library
+zope-debhelper - debhelper script for zope packaging
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search "liblzo2-dev"
+liblzo2-dev - data compression library (development files)
+----
+<1> Example of searching packages related to lzo using the APT utility
+<2> Looks like a good candidate since header file is missing and it is a development package
+
+Installing the package liblzo2-dev
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install liblzo2-dev
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Unpacking liblzo2-dev:i386 (2.06-1.2ubuntu1.1) ...
+Setting up liblzo2-dev:i386 (2.06-1.2ubuntu1.1) ...
+----
+<1> Installation of liblzo2-dev
+
+Running _ltib_ again we get an error almost immediately. Again we open the
+_/home/ubuntu/beta/projectX/ltib/host_config.log_ file and see that the build stopped
+with a message as shown below:
+
+
+[source,bash]
+----
+Processing: u-boot-tools
+==========================
+
+Processing: mtd-utils
+=======================
+Build path taken because: directory build, no prebuilt rpm,
+
+Cowardly refusing to clobber existing directory:            <1>
+ /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+Remove this by hand if you really want to rebuild this package from scratch
+
+Died at ./ltib line 1392.
+traceback:
+ main::build_host_rpms:1392
+  main::host_checks:1447
+   main:554
+----
+<1> Reason why _ltib_ fails
+
+Let's do as it says and try again.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+----
+
+It fails again. After opening the _host_config.log_ we see the following type of error related
+to missing _uuid/uuid.h_. 
+
+[source,bash]
+----
+.
+.
+  LD      jffs2reader
+  CC      mkfs.ubifs/mkfs.ubifs.o
+In file included from mkfs.ubifs/mkfs.ubifs.c:25:0:
+mkfs.ubifs/mkfs.ubifs.h:48:23: fatal error: uuid/uuid.h: No such file or directory
+ #include <uuid/uuid.h>
+                       ^
+.
+.
+----
+Ok so we're missing another package in our system. Let's try using APT again.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search uuid   <1>
+.
+.
+libuuid1 - Universally Unique ID library
+postgresql-contrib-9.3 - additional facilities for PostgreSQL
+uuid-dev - universally unique id library - headers and static libraries    <1>
+uuid-runtime - runtime components for the Universally Unique ID library
+uuidcdef - Universally Unique Identifier (UUID) generator
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install uuid-dev     <2>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following NEW packages will be installed:
+  uuid-dev
+.
+.
+Setting up uuid-dev (2.20.1-5.1ubuntu20.3) ...
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+----
+<1> Looks like a good candidate as header files are missing
+<2> Installing the package
+<3> Removing mtd-utils as it won't build because of the previous error
+
+
+It fails again. After opening the _host_config.log_ we see the following type of error related
+to missing _/usr/include/sys/types.h_. This is different from the previous errors. It looks
+like some system header file is not in place where it should be. After searching a bit on Google
+this blog entry gives us clues as to how to fix these errors
+{importgeek-imx-ltib-common-errors-link}[{importgeek-imx-ltib-common-errors-link}^]
+
+It looks like the _types.h_ file is in _/usr/incude/i386-linux-gnu/sys_ so we create a softlink as
+shown below to solve this issue:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ vim /home/ubuntu/beta/projectX/ltib/host_config.log
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd /usr/include/
+ubuntu@ubuntu-VirtualBox:/usr/include$ sudo ln -s i386-linux-gnu/sys sys
+ubuntu@ubuntu-VirtualBox:/usr/include$ cd -
+/home/ubuntu/beta/projectX/ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+----
+
+It fails again. Opening up the _host_config.log_ file we see the error as follows:
+
+[source,bash]
+----
+.
+.
+gcc AESKey.o Blob.o crc.o DataSource.o DataTarget.o ELFSourceFile.o EncoreBootImage.o EvalContext.o GHSSecInfo.o GlobMatcher.o HexValues.o Logging.o Operation.o OptionDictionary.o options.o OutputSection.o Random.o RijndaelCBCMAC.o rijndael.o SHA1.o SourceFile.o SRecordSourceFile.o stdafx.o StELFFile.o StExecutableImage.o StSRecordFile.o Value.o Version.o format_string.o ExcludesListMatcher.o SearchPath.o DataSourceImager.o IVTDataSource.o BootImageGenerator.o ConversionController.o ElftosbAST.o elftosb.o elftosb_lexer.o ElftosbLexer.o elftosb_parser.tab.o EncoreBootImageGenerator.o -lstdc++ -o elftosb
+/usr/bin/ld: ElftosbAST.o: undefined reference to symbol 'powf@@GLIBC_2.0'       <1>
+//lib/i386-linux-gnu/libm.so.6: error adding symbols: DSO missing from command line
+collect2: error: ld returned 1 exit status
+make[1]: *** [elftosb] Error 1
+make[1]: Leaving directory `/opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0/bld/linux'
+make: *** [all] Error 2
+error: Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.5414 (%build)
+.
+.
+----
+<1> Exact error is an unknown reference to symbol 'powf@@GLIBC_2.0'
+
+This error is covered in the same blog link given above so we follow the instructions
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cp /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz ~/beta/projectX/.      <1>
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ~/beta/projectX/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls
+elftosb-2.6.35.3-1.1.0.tar.gz  L2.6.35_1.1.0_130130_source  L2.6.35_1.1.0_130130_source.tar.gz  ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar xvzf elftosb-2.6.35.3-1.1.0.tar.gz       <2>
+elftosb-2.6.35.3-1.1.0/
+elftosb-2.6.35.3-1.1.0/COPYING
+elftosb-2.6.35.3-1.1.0/ReadMe.txt
+elftosb-2.6.35.3-1.1.0/bdfiles/
+elftosb-2.6.35.3-1.1.0/bdfiles/basic_test_cmd.e
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cd elftosb-2.6.35.3-1.1.0/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ ls     <3>
+bdfiles  COPYING   elftosb.ccscc  elftosb.sln  elftosb.xcodeproj  keygen    makefile.rules  sbtool    test_elftosb.bat  test_files
+common   elftosb2  elftosb.ncb    elftosb.suo  encryptgpk         makefile  ReadMe.txt      stdafx.h  test_elftosb.sh   winsupport
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ vim makefile.rules       <4>
+----
+<1> Copy elftosb-2.6.35.3-1.1.0.tar.gz from the pkgs directory to a temporary location
+<2> Unpack the compressed tarball
+<3> List the contents in elftosb-2.6.35.3-1.1.0 after unpacking
+<4> Edit the makefile.rules
+
+The makefile requires adding the maths library to the LIBS path
+
+[source,makefile]
+----
+.
+.
+.
+OBJ_FILES_KEYGEN =         \
+   ${OBJ_FILES_COMMON} \
+   keygen.o
+
+
+LIBS =     -lstdc++ -lm       <1>
+
+
+ifeq ("${UNAMES}", "Linux")
+EXEC_FILE_ELFTOSB2 = elftosb
+EXEC_FILE_SBTOOL = sbtool
+.
+.
+.
+----
+<1> -lm is added to LIBS
+
+Now repack the tarball, overwrite the orignal tarball, remove the build folder and run _ltib_ again
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ cd ..
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar cvzf elftosb-2.6.35.3-1.1.0.tar.gz elftosb-2.6.35.3-1.1.0/       <1>
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cp elftosb-2.6.35.3-1.1.0.tar.gz /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz        <2>
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0      <3>
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cd ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib    <4>
+----
+<1> Repacking elftosb-2.6.35.3-1.1.0/ into elftosb-2.6.35.3-1.1.0.tar.gz
+<2> Overwriting the original /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz package
+<3> Removing the previous /opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0 build directory
+<4> Trying to build again
+
+
+
+
