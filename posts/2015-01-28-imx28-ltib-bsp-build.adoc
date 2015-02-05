@@ -1,4 +1,4 @@
-= [Fail] Building The i.MX28 Board Support Package (BSP) With LTIB - Attempt1
+=  Building The i.MX28 Board Support Package (BSP) With LTIB
 Conrad Gomes
 2015-01-28
 :awestruct-tags: [linux, i.mx28]
