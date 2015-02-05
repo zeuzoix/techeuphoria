@@ -1,0 +1,662 @@
+= [Fail] Building The i.MX28 Board Support Package (BSP) With LTIB - Attempt1
+Conrad Gomes
+2015-01-28
+:awestruct-tags: [linux, i.mx28]
+:excerpt: My first attempt at building the BSP for i.MX28 evaluation board. Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.
+:awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+:freescale-link: http://www.freescale.com
+:imx28-sw-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=IMX28_SW
+:L2.6.35_1.1.0_130130_source.tar.gz-link: https://cache.freescale.com/secured/bsps/L2.6.35_1.1.0_130130_source.tar.gz?__gda__=1422449362_604ff540ab9c9bf39462e7e943e021e3&fileExt=.gz
+:ltib-intro-link: http://ltib.org/home-intro
+:ltib-faq-link: http://ltib.org/documentation-LtibFaq
+:ltib-ubuntu-patch-forum-link: https://community.freescale.com/docs/DOC-93454
+:ltib-dead-link-installation: https://community.freescale.com/thread/308278
+
+{excerpt}
+
+== Registering With Freescale
+
+Before we proceed with the download of the source code and tools we need to
+register with the {freescale-link}[Freescale^] website. After registering
+with the website log on to the website with the credentials used at the time
+of registeration:
+
+====
+[[imx28-ltib-bsp-build-freescale-signin]]
+.Signing into the Freescale website
+image::imx28-ltib-bsp-build-freescale-signin.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-signin.png]
+====
+
+== i.MX28 Software and Development Tool Resources
+
+The development software and tools are available in the Linux section of the
+i.MX28 current software releases. When writing this article the page that
+was available to me had the link {imx28-sw-link}[imx28-sw-link^].
+
+On clicking the "Linux source files" link we're taken to a license agreement.
+
+====
+[[imx28-ltib-bsp-build-freescale-eula]]
+.The Freescale Semiconductor Software License Agreement
+image::imx28-ltib-bsp-build-freescale-eula.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-eula.png]
+====
+ 
+If all goes according to plan then you should see a download of the package
+{L2.6.35_1.1.0_130130_source.tar.gz-link}[L2.6.35_1.1.0_130130_source.tar.gz^]
+which you can save to your linux development environment. In my case it is an
+Ubuntu virtual machine running on my Windows laptop. The package download will
+take some time based on your network bandwidth and speed. The size of the
+package is roughly about 710MB.
+
+====
+[[imx28-ltib-bsp-build-freescale-eula]]
+.Download The L2.6.35_1.1.0_130130_source.tar.gz Package
+image::imx28-ltib-bsp-build-freescale-download-package.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-download-package.png]
+====
+
+== Unpacking The IMX28_SW Package 
+
+Move the package to a suitable folder and make sure there is sufficient space
+on the drive before unpacking the gunzipped tarball.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls
+L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar xvzf L2.6.35_1.1.0_130130_source.tar.gz <1>
+L2.6.35_1.1.0_130130_source/
+L2.6.35_1.1.0_130130_source/pkgs/
+L2.6.35_1.1.0_130130_source/pkgs/16colors.txt
+.<2>
+.
+.
+L2.6.35_1.1.0_130130_source/EULA
+L2.6.35_1.1.0_130130_source/package_manifest.txt
+L2.6.35_1.1.0_130130_source/redboot_201003.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls -l
+total 727632
+drwxrwxr-x 3 ubuntu ubuntu      4096 Jan 30  2013 L2.6.35_1.1.0_130130_source <3>
+-rwxrwx--- 1 ubuntu vboxsf 744357641 Jan 20 22:55 L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$
+----
+<1> Gunzip the tarball in one step
+<2> Lot of files being unpacked
+<3> The folder with unpacked contents is L2.6.35_1.1.0_130130_source
+
+== Exploring And Installing The IMX28_SW Package 
+
+The directory L2.6.35_1.1.0_130130_source contains an install script which we run.
+Before proceeding with the installation it presents the EULA which must be accepted
+before installation.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ls
+EULA  install  ltib.tar.gz  package_manifest.txt  pkgs  redboot_201003.zip  tftp.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ./install
+
+You are about to install the LTIB (GNU/Linux Target Image Builder)
+
+Before installing LTIB, you must read and accept the EULA
+(End User License Agreement) which will be presented next.
+
+Do you want to continue ? Y|n
+Y     <1>
+
+Hit enter to continue:
+IMPORTANT. Read the following Freescale Software License Agreement
+.
+.
+----
+<1> Hit 'Y' to read the EULA
+
+At this point we have to scroll and read the EULA before it prompts us with a 
+declaration stating that we have read and accept the EULA, to which we reply
+"yes".
+
+[source,bash]
+----
+.
+.
+I have read and accept the EULA (yes|no):
+yes
+----
+
+Next we're asked about the installation path. We can hit "Enter" to use the default
+which is _/home/ubuntu/beta/projectX/L2.6.35_1.1.0_130130_source_. However it doesn't
+allow us to install it there so we supply a level above the current directory i.e.
+_/home/ubuntu/beta/projectX/_.
+
+[source,bash]
+----
+.
+.
+Copying packages to /home/ubuntu/beta/projectX//ltib/pkgs
+
+Installation complete, your ltib installation has been placed in
+/home/ubuntu/beta/projectX//ltib, to complete the installation:
+
+cd /home/ubuntu/beta/projectX//ltib
+./ltib
+----
+
+The installation is completed along with a hint of the next step which is running
+the Linux Target Image Builder (LTIB) tool.
+
+== What Is LTIB?
+
+Well LTIB is a tool which is used by Freescale to develop, build and deploy the
+software i.e. bootloaders, linux kernel, applications, daemons, etc.. required to
+support the board which in this case happens to be an i.MX28 board. It is uses the 
+RPM way to manage software which has to be built for the target board.
+
+It is advisable to read the Introduction and FAQ section present on the LTIB website at the following
+links:
+
+. {ltib-intro-link}[Introduction^]
+. {ltib-faq-link}[FAQs^] 
+
+== Configuring And Building LTIB
+
+The hint given above is to configure and build LTIB. Within the configuration
+various settings such as toolchain path, platform details, C library to be
+used, etc can be configured.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ cd /home/ubuntu/beta/projectX//ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l
+total 184
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 bin
+drwxrwxrwx 6 ubuntu ubuntu   4096 Jan  8  2013 config
+-rwxrwxrwx 1 ubuntu ubuntu  17989 Jan  8  2013 COPYING
+drwxrwxrwx 3 ubuntu ubuntu   4096 Jan  8  2013 dist
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 doc
+-rwxrwxrwx 1 ubuntu ubuntu     41 Jan 30  2013 hash
+-rwxrwxrwx 1 ubuntu ubuntu 106077 Jan  8  2013 ltib
+drwxr-xr-x 2 ubuntu ubuntu  32768 Jan 28 06:49 pkgs
+-rwxrwxrwx 1 ubuntu ubuntu    952 Jan  8  2013 README
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+----
+
+=== Problems Running LTIB
+
+Okay there were several issues seen while trying to install _LTIB_ on my Ubuntu 
+system. We'll take a look at each one as they occurred in sequence and my steps
+taken to fix all of them.
+
+WARNING: This part will vary from system to system. It depends on your system
+configuration so you may face issues different to those listed here.
+
+==== Fixing Dependency Issues
+
+LTIB failed and cribbed on my system complaninig about missing packages as shown
+below.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+ltib cannot be run because one or more of the host packages needed to run it
+are either missing or out of date or not in ltib's standard path.  Please
+install/upgrade these packages on your host.  If you have your own utilities
+in non-standard paths, please add an entry into the .ltibrc file for example:
+
+%path_std
+/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/my/own/exes
+
+Package                Minimum ver   Installed info
+-------                -----------   ---------------
+zlib                   0             not installed
+rpm                    0             not installed
+rpm-build              0             not installed
+ncurses-devel          0             not installed
+m4                     0             not installed
+bison                  0             not installed
+
+Died at ./ltib line 1409.
+traceback:
+ main::host_checks:1409
+  main:554
+
+
+Started: Fri Jan 30 00:53:17 2015
+Ended:   Fri Jan 30 00:53:17 2015
+Elapsed: 0 seconds
+
+
+Build Failed
+
+Exiting on error or interrupt
+----
+
+Using the Advanced Packaging Tool (APT) utility we are able to fix the missing
+package issues. The stratedgy involves trying to identify the package
+equivalent for Ubuntu using the command below.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search m4    <1>
+----
+<1> Example of searching packages related to m4 using the APT utility
+
+And then installing the package
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4    <1>
+----
+<1> Example of installing m4 using the APT utility
+
+The _ltib_ utility can be executed again to see if the package errors reduce
+with each successful installation. Documentation of installation of the missing
+packages proceeds in the subsections below. They can be avoided if the same
+problems do not exist.
+
+===== Installing _m4_
+
+Installation of _m4_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4     <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Need to get 206 kB of archives.
+After this operation, 390 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...
+----
+<1> Command to install m4
+<2> User input confirming installation
+
+===== Installing _rpm_
+
+Installation of _rpm_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install rpm    <1>
+[sudo] password for ubuntu:
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...
+----
+<1> Command to install rpm
+<2> User input confirming installation
+
+===== Installing _bison_
+
+Installation of _bison_ proceeded with no problems
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install bison     <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y
+Get:1 http://us.archive.ubuntu.com/ubuntu/ trusty/main libbison-dev i386 2:3.0.2.dfsg-2 [338 kB]
+.
+.
+.
+update-alternatives: using /usr/bin/bison.yacc to provide /usr/bin/yacc (yacc) in auto mode
+----
+<1> Command to install bison
+<2> User input confirming installation
+
+===== Installing _ncurses-devel_
+
+Installation of _ncurses-devel_ proceeded with no problems after locating the
+correct package name as _libncurses5-dev_.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install libncurses5-dev    <1>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    <2>
+.
+.
+.
+Setting up libncurses5-dev:i386 (5.9+20140118-1ubuntu1) ...
+----
+<1> Command to install bison
+<2> User input confirming installation
+
+===== Installing _zlib_
+
+Installation of _zlib_ was not straightforward after several attempts to install
+packages like _zlibc_ & _zlib-bin_ LTIB was still failing and cribbing saying
+the package was missing from the system. 
+
+Aparently all the dependencies are stored in the file _./bin/Ltibutils.pm_. So
+on greping the file for zlib we get the paths which are searched for in order to
+look for the zlib package.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm     <1>
+                        `makeinfo --version 2>/dev/null`;
+                    },
+    zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') ); @f > 1 ? 1 : 0 },
+    'zlib-devel' => sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{
+----
+<1> Greping 4 lines after(-A 4) and 2 lines before(-B 2) for zlib in the file Ltibutils.pm
+
+After doing going through some basic perl sites it was decided to print the
+value of array _@f_ which was being used in the _get_ver_ function exposed
+by Ltibutils.pm. The following was the change done:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+                        `makeinfo --version 2>/dev/null`;
+                    },
+    zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') );print "Value of list = @f\n"; @f > 1 ? 1 : 0 },  <2>
+    'zlib-devel' => sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{
+----
+<1> Greping 4 lines after(-A 4) and 2 lines before(-B 2) for zlib in the file Ltibutils.pm
+<2> _print "Value of list = @f\n";_ is added
+
+Additionally we run _ltib_ with verbose option _--verbose_ to see if we can
+get any more details that can help us debug the dependency issue. This time after
+we execute the _ltib_ script we get the details below:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib --verbose
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+.
+.
+.
+pkg=gcc-c++, min=2.96, got: 4.8.2,
+ref=4, min=2
+pkg=sudo, min=0, got: 1.8.9,
+ref=1, min=0
+Value of list = /usr/lib/i386-linux-gnu/libz.so    <1>
+pkg=zlib, min=0, got: -1, not installed            <2>
+pkg=zlib-devel, min=0, got: 0,
+ref=0, min=0
+pkg=rpm, min=0, got: 4.0.4,
+ref=4, min=0
+.
+.
+.
+pkg=rpm-build, min=0, got: 4.0.4,
+ref=4, min=0
+.
+.
+.
+Build Failed
+
+Exiting on error or interrupt
+ubuntu@ubuntu-VirtualBox:~/beta/project
+----
+<1> This is the value of _@f_ which implies that our zlib library is /usr/lib/i386-linux-gnu/libz.so
+<2> This print indicates that the version obtained is -1 and hence it is forced to mark _zlib_ as not installed
+
+The flow of calls is:
+
+. _check_basic_deps_ in _ltib_ iterates through _$pkg_ to find each version with _get_ver_
+. _get_ver_ is defined in _bin/Ltibutils.pm_ and has a series of checks for the version
+.. If the $pkg is not defined in the predefined _app_checks_ it issues a
+'$pkg --version 2>/dev/null' to get the package version information
+.. If the $pkg is defined as 'CODE' it executes the pkg as a function call
+.. Lastly it executes the value of `$app_checks->{$pkg}`
+.. If _$__ is not set to anything then -1 is returned as the version
+
+Finally after understanding the mapping of _app_checks_ for zlib it looked as
+though the expression _@f > 1 ? 1 : 0 _ was evaluating to 1 instead of 2. And
+this was because only one path was valid from the list of paths i.e.
+_/usr/lib/i386-linux-gnu/libz.so_. This is a softlink to the path
+_/lib/i386-linux-gnu/libz.so.1.2.8_ so we add that to the list of options
+available. This change is similar to  With this change the zlib dependency is
+detected and the file now looks like this:
+
+[source,bash]
+----
+buntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+                        `makeinfo --version 2>/dev/null`;
+                    },
+    zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/lib/i386-linux-gnu/libz.so*'),   <1>
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),  <2>
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') );print "Value of list = @f\n"; @f > 1 ? 1 : 0 },
+    'zlib-devel' => sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{
+----
+<1> This is the new path added in _bin/Ltibutils.pm_
+<2> This is the original path which is detected in the system. The above path is the actual file to this soft link.
+
+We revert all changes except the fix to the original script files i.e.
+_print "Value of list = @f\n";_ which was added for debugging and is not
+required now.
+
+
+==== Setting _sudo_ Permissions For _rpm_
+
+The next issue was because of a test done by _ltib_ to check if there are
+_sudo_ permissions for _rpm_. 
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+.
+.
+.
+Don't have LWP::UserAgent
+
+I ran the command: sudo -S -l which returned:      <1>
+
+[sudo] password for ubuntu: Sorry, try again.
+[sudo] password for ubuntu: Sorry, try again.
+[sudo] password for ubuntu: Sorry, try again.
+sudo: 3 incorrect password attempts
+
+This means you don't have sudo permission to execute rpm commands as root           <2>
+without a password.  This is needed for this build script to operate correctly.
+
+To configure this, as root using the command "/usr/sbin/visudo",     <3>
+and add the following line in the User privilege section:
+
+ubuntu ALL = NOPASSWD: /usr/bin/rpm, /opt/freescale/ltib/usr/bin/rpm
+.
+.
+.
+----
+<1> _ltib_ explaining what is run to test for _sudo_ priviledges
+<2> Explaning what is wrong in the system
+<3> Potential fix
+
+We can execute "/usr/sbin/visudo" as indicated or "sudo vim /etc/sudoers" is also
+fine.
+
+==== Installing The Host Support Packages
+
+After fixing the sudo issue we run _ltib_ yet again to find a new problem as
+shown below:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+Installing host support packages.
+
+This only needs to be done once per host, but may take up to
+an hour to complete ...
+
+If an error occurs, a log file with the full output may be found in:
+/home/ubuntu/beta/projectX/ltib/host_config.log
+
+Exiting on error or interrupt                                                    <1>
+Please see >> /home/ubuntu/beta/projectX/ltib/host_config.log for details
+----
+<1> Exited on error
+
+Opening the _/home/ubuntu/beta/projectX/ltib/host_config.log_ file we see that there
+is some trouble building the _lkc_ packge:
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tail /home/ubuntu/beta/projectX/ltib/host_config.log
+
+Started: Tue Feb  3 04:13:25 2015
+Ended:   Tue Feb  3 04:13:29 2015
+Elapsed: 4 seconds
+
+These packages failed to build:
+lkc
+
+Build Failed
+----
+
+==== Searching For A Simpler Installation 
+
+Aparently most of the problems seen are due to the newer version of Ubuntu of
+my system. When going through the Freescale forums for similar problems a 
+solution was provided in the form of a patch at
+{ltib-ubuntu-patch-forum-link}[{ltib-ubuntu-patch-forum-link}^].
+
+The temporary fix to find zlib as a dependency was removed and the patch was
+installed using the steps highlighted in the forum.
+
+===== Unpacking The Patch
+
+The patch file has to be copied to the ltib directory and untarred there.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls
+bin  config  COPYING  dist  doc  hash  host_config.log  ltib  README  tmp  ubuntu-ltib-patch.tgz      <1>
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tar xvzf ubuntu-ltib-patch.tgz       <2>
+ubuntu-ltib-patch/
+ubuntu-ltib-patch/zlib.patch
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch
+ubuntu-ltib-patch/lkc-1.4-lib.patch
+ubuntu-ltib-patch/mux_server.spec
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch.md5
+ubuntu-ltib-patch/install-patches.sh
+ubuntu-ltib-patch/lkc.spec
+ubuntu-ltib-patch/sparse.spec
+ubuntu-ltib-patch/lkc-1.4-lib.patch.md5
+----
+<1> List of files in the _ltib_ directory. _ubuntu-ltib-patch.tgz_ is the new addition.
+<2> Untarring the package.
+
+===== Install The Patches
+
+Go to the extracted directory and run _install-patches.sh_ with the full path
+of the _ltib_ directory to install the patches.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ubuntu-ltib-patch/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/ubuntu-ltib-patch$ ./install-patches.sh /home/ubuntu/beta/projectX/ltib/
+cp lkc-1.4-lib.patch /opt/freescale/pkgs
+cp lkc-1.4-lib.patch.md5 /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch.md5 /opt/freescale/pkgs
+Patching Spec Files
+Done
+patching file bin/Ltibutils.pm
+----
+
+After running the _ltib_ script we were able to see the path added to the _bin/Ltibutils.pm_
+file.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+                        `makeinfo --version 2>/dev/null`;
+                    },
+    zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') ); @f > 1 ? 1 : 0 },
+    'zlib-devel' => sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{
+----
+
+We see a new set of _wget_ errors this time and after searching the forums
+we get help in this post about dead links in  LTIB installation.
+{ltib-dead-link-installation}[{ltib-dead-link-installation}^].
+
+== Conclusion Of First Failed Attempt
+
+LTIB doesn't work without the patch from Freescale especially if you are using
+a newer Ubuntu system which is greater than Ubuntu 9.0. 
+
+Not sure about the next steps we put this attempt to rest and retry
+with another attempt by applying the patch earlier on rather than later as 
+a logical progression of the installation.
+
+Sometimes it's good to erase the board and start with a fresh perspective.
