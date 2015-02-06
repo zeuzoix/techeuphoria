@@ -1,0 +1,83 @@
+=  Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2
+Conrad Gomes
+2015-02-06
+:awestruct-tags: [linux, i.mx28]
+:excerpt: In the first part we worked on getting LTIB configured for our machine. We ran into alot of problems but fixed each problem after a bit of online reading. In this part we attempt to actually build the bootloaders, kernel and applications with LTIB which will comprise the BSP
+:awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+:freescale-link: http://www.freescale.com
+:imx28-sw-link: http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=IMX28_SW
+:L2.6.35_1.1.0_130130_source.tar.gz-link: https://cache.freescale.com/secured/bsps/L2.6.35_1.1.0_130130_source.tar.gz?__gda__=1422449362_604ff540ab9c9bf39462e7e943e021e3&fileExt=.gz
+:ltib-intro-link: http://ltib.org/home-intro
+:ltib-faq-link: http://ltib.org/documentation-LtibFaq
+:ltib-ubuntu-patch-forum-link: https://community.freescale.com/docs/DOC-93454
+:ltib-dead-link-installation: https://community.freescale.com/thread/308278
+:importgeek-imx-ltib-common-errors-link: https://importgeek.wordpress.com/2014/08/21/imx-ltib-common-errors/
+
+{excerpt}
+
+== Configuring LTIB for i.MX28
+
+LTIB Offers a lot of flexibility in choosing the type of embedded system that
+is required for the platform. Depending on the use case different aspects can
+be configured using _ltib_. 
+
+=== Selecting The Platform
+
+On running _ltib_ it will display the ncurses dialog which is used to select
+the desired platform. In our case it is Freescale iMX reference boards as shown
+below:
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-platform-selection]]
+.Ncurses screen with platform selection
+image::imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png]
+====
+
+On exiting it will ask you if you want to save the configuration. Make sure 
+"yes" is selected and then exit:
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration]]
+.Saving the new configuration
+image::imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration.png]
+====
+
+=== Selecting The Freescale Platform Type And Profile
+
+It will then ask you to select the type of Freescale as i.MX28 development platform
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform]]
+.Selecting the type of development platform as imx28
+image::imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png]
+====
+
+Also select the package profile. We select the "Test and Development profile"
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile]]
+.Selecting the type of profile as "Test and Development profile"
+image::imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile.png]
+====
+
+On exiting it will ask you if you want to save the configuration. Make sure 
+"yes" is selected and then exit:
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration]]
+.Saving the new configuration of development platform
+image::imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration.png]
+====
+
+=== Configuring The Freescale i.MX28 Board Package
+
+We see the ncurses configuration page for the i.MX28 board. From here the various
+features of the board can be configured.
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration]]
+.Saving the new configuration of development platform
+image::imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png]
+====
+
