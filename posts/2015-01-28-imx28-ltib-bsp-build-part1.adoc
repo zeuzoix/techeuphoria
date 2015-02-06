@@ -1,4 +1,4 @@
-=  Building The i.MX28 Board Support Package (BSP) With LTIB
+=  Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1
 Conrad Gomes
 2015-01-28
 :awestruct-tags: [linux, i.mx28]
@@ -159,7 +159,7 @@ links:
 . {ltib-intro-link}[Introduction^]
 . {ltib-faq-link}[FAQs^] 
 
-== Configuring And Building LTIB
+== Building LTIB
 
 The hint given above is to configure and build LTIB. Within the configuration
 various settings such as toolchain path, platform details, C library to be
@@ -322,7 +322,7 @@ Reading state information... Done
 .
 .
 .
-Do you want to continue? [Y/n] Y
+Do you want to continue? [Y/n] Y          <2>
 Get:1 http://us.archive.ubuntu.com/ubuntu/ trusty/main libbison-dev i386 2:3.0.2.dfsg-2 [338 kB]
 .
 .
@@ -390,7 +390,7 @@ by Ltibutils.pm. The following was the change done:
 
 [source,bash]
 ----
-ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm        <1>
                         `makeinfo --version 2>/dev/null`;
                     },
     zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
@@ -717,7 +717,7 @@ Done
 patching file bin/Ltibutils.pm
 ----
 
-=== Repeat The Configuration and Build
+=== Repeat The Build
 
 Again we try to configure and build _LTIB_ with the same command
 
@@ -744,7 +744,9 @@ Exiting on error or interrupt
 Please see >> /home/ubuntu/beta/projectX/ltib/host_config.log for details
 ----
 <1> Execute the _ltib_ command to being the configuration and build
-<1> Enter the login password for sudo
+<2> Enter the login password for sudo
+
+==== Missing _lzo/lzo1x.h_
 
 Ok after a while it looks like there's a different type of error that is thrown.
 After opening the _host_config.log_ we see the following type of error related
@@ -791,7 +793,7 @@ Ok so we're missing some package in our system. Let's try using APT again.
 ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search "lzo"    <1>
 file-roller - archive manager for GNOME
 liblzo2-2 - data compression library
-liblzo2-dev - data compression library (development files)
+liblzo2-dev - data compression library (development files)        <2>
 lrzip - compression program with a very high compression ratio
 lzop - fast compression program
 patool - command line archive file manager
@@ -807,7 +809,7 @@ Installing the package liblzo2-dev
 
 [source,bash]
 ----
-ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install liblzo2-dev
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install liblzo2-dev  <1>
 Reading package lists... Done
 Building dependency tree
 Reading state information... Done
@@ -853,6 +855,8 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/u
 ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
 ----
 
+==== Missing _uuid/uuid.h_
+
 It fails again. After opening the _host_config.log_ we see the following type of error related
 to missing _uuid/uuid.h_. 
 
@@ -892,12 +896,13 @@ The following NEW packages will be installed:
 .
 .
 Setting up uuid-dev (2.20.1-5.1ubuntu20.3) ...
-ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils        <3>
 ----
 <1> Looks like a good candidate as header files are missing
 <2> Installing the package
 <3> Removing mtd-utils as it won't build because of the previous error
 
+==== Missing _/usr/include/sys/types.h_
 
 It fails again. After opening the _host_config.log_ we see the following type of error related
 to missing _/usr/include/sys/types.h_. This is different from the previous errors. It looks
@@ -917,6 +922,8 @@ ubuntu@ubuntu-VirtualBox:/usr/include$ cd -
 /home/ubuntu/beta/projectX/ltib
 ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
 ----
+
+==== Loader Error Missing Maths Library
 
 It fails again. Opening up the _host_config.log_ file we see the error as follows:
 
@@ -1005,6 +1012,20 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib    <4>
 <3> Removing the previous /opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0 build directory
 <4> Trying to build again
 
+==== Ncurses At Last!
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-platform-selection]]
+.Ncurses screen with platform selection
+image::imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png]
+====
+
+Phew that took some fair amount of tinkering. We finally are able to move to the
+next step which is configuration of the BSP.
+
+== Conclusion
+
+Well after a lot of probing we were finally able to build LTIB for our Ubuntu 14.04.1 LTS system. Since this post has been insanely long I've decided to split it into two parts.
 
 
 
