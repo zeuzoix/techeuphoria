@@ -14,6 +14,7 @@ Conrad Gomes
 :ltib-ubuntu-patch-forum-link: https://community.freescale.com/docs/DOC-93454
 :ltib-dead-link-installation: https://community.freescale.com/thread/308278
 :importgeek-imx-ltib-common-errors-link: https://importgeek.wordpress.com/2014/08/21/imx-ltib-common-errors/
+:ltib-faqs-lpp-gpp: http://www.bitshrine.org/autodocs/LtibFaq.html#ref_95
 
 {excerpt}
 
@@ -54,11 +55,11 @@ It will then ask you to select the type of Freescale as i.MX28 development platf
 image::imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png]
 ====
 
-Also select the package profile. We select the "Test and Development profile"
+Also select the package profile. We select the "(Min profile)"
 ====
-[[imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile]]
-.Selecting the type of profile as "Test and Development profile"
-image::imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-test-package-profile.png]
+[[imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile]]
+.Selecting the type of profile as "Min profile"
+image::imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile.png]
 ====
 
 On exiting it will ask you if you want to save the configuration. Make sure 
@@ -77,7 +78,176 @@ features of the board can be configured.
 
 ====
 [[imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration]]
-.Saving the new configuration of development platform
-image::imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png]
+.Saving and exiting without modifying the default configuration
+image::imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png]
 ====
+
+=== Default Build
+
+The configuration loaded can be built without modifying it. We can take a look
+and see what's happening just by hitting exit and running the _LTIB_ build. The
+steps are hit _exit_. Then save the configuration when prompted on the ncurses 
+screen. We see is a failure to build of the kind:
+
+[source, bash]
+----
+Installing: gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5 from the PPP  <1>
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5 from the GPP
+http://bitshrine.org/gpp/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5:
+22:44:07 ERROR 404: Not Found.
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm from the PPP
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm from the GPP
+http://bitshrine.org/gpp/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm:
+22:44:08 ERROR 404: Not Found.
+Can't get: gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm at ./ltib line 2560.   <2>
+Died at ./ltib line 2560.
+traceback:
+ main::check_toolchain_setup:2560
+  main::pre_build_checks:1465
+   main:569
+
+
+Started: Tue Feb 10 22:25:52 2015
+Ended:   Tue Feb 10 22:44:08 2015
+Elapsed: 1096 seconds
+
+
+Build Failed
+
+Exiting on error or interrupt
+----
+<1> It looks like the toolchain is not found in the PPP and GPP after trying to install it from the local cache
+<2> The _LTIB_ build fails
+
+For further information about PPP and GPP please check out the following link: +
+{ltib-faqs-lpp-gpp}[Where do the sources get downloaded from^]
+
+=== Selecting The Right Toolchain
+
+The toolchain is the set of tools including the cross-compiler which is required
+to build the BSP for development on the desired target. By default the toolchain
+selected is _ARM, gcc-4.6.2, multilib, neon optimized, gnueabi/eglibc2.13_. We
+have to change this to _ARM, gcc-4.4.4, multilib, neon optimized_ which is the
+correct one available in the _LTIB_ system. Run the following to bring up the
+ncurses configuration page:
+
+[source, bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib --configure
+----
+
+With that go to the "Toolchain selection" section and hit _Enter_ on the default
+option which is _Toolchain (ARM, gcc-4.6.2, multilib, neon optimized, gnueabi/eglibc2.13)_
+We see a pop up with a list of toolchains. Select the _ARM, gcc-4.4.4, multilib, neon optimized_
+option.
+
+====
+[[imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection]]
+.Selecting the appropriate toolchain
+image::imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection]
+====
+
+On exiting we see the BSP being built which takes some time to complete. This is
+a test and development profile BSP which is built so it may not be exactly what
+is required for your target. 
+
+[source,bash]
+----
+sudo /opt/freescale/ltib/usr/bin/rpm --root /home/ubuntu/beta/projectX/ltib/rootfs --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' modeps 2>/dev/null
+sudo /opt/freescale/ltib/usr/bin/rpm --root /home/ubuntu/beta/projectX/ltib/rootfs --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' /home/ubuntu/beta/projectX/ltib/rpm/RPMS/arm/modeps-1.0-1.arm.rpm
+error: failed to stat /run/user/110/gvfs: Permission denied
+Preparing...                ########################################### [100%]
+   1:modeps                 ########################################### [100%]
+
+Processing deployment operations
+==================================
+making filesystem image file
+staging directory is /home/ubuntu/beta/projectX/ltib/rootfs.tmp
+removing the boot directory and files
+removing man files and directories
+removing info files
+removing /usr/share/locale directory
+removing static libraries
+removing target rpm database
+stripping binaries and libraries
+
+Filesystem stats, including padding:
+
+    Total size            = 15040k
+    Total number of files = 1293
+
+
+Started: Wed Feb 11 04:30:28 2015
+Ended:   Wed Feb 11 04:45:46 2015
+Elapsed: 918 seconds
+
+Build Succeeded
+----
+
+=== Exploring The Built BSP
+
+After building, _LTIB_ will generate the following in the _rootfs/boot/_
+directory:
+
+[source, bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l rootfs/boot/
+total 19784
+lrwxrwxrwx 1 root root       6 Feb 11 04:42 bootable_kernel -> uImage
+-rwxr-xr-x 1 root root   50960 Feb 11 04:45 boot_prep
+-rwxr-xr-x 1 root root     803 Feb 11 04:45 create_updater.sh
+-rw-r--r-- 1 root root 2586880 Feb 11 04:45 imx28_ivt_linux.sb       <1>
+-rw-r--r-- 1 root root  141184 Feb 11 04:45 imx28_ivt_uboot.sb       <2>
+-rw-r--r-- 1 root root 2586688 Feb 11 04:45 imx28_linux.sb           <3>
+-rw-r--r-- 1 root root  141040 Feb 11 04:45 imx28_uboot.sb           <4>
+-rw-r--r-- 1 root root   52953 Feb 11 04:42 linux.config
+-rwxr-xr-x 1 root root   14855 Feb 11 04:45 linux_prep
+-rwxr-xr-x 1 root root   57469 Feb 11 04:45 power_prep
+-rw-r--r-- 1 root root 1224927 Feb 11 04:42 System.map
+-rwxr-xr-x 1 root root  518068 Feb 11 04:33 u-boot
+-rwxr-xr-x 1 root root  123572 Feb 11 04:33 u-boot.bin
+-rw-r--r-- 1 root root 2566320 Feb 11 04:42 uImage                   <5>
+-rw-r--r-- 1 root root    1236 Feb 11 04:45 updater.bd
+-rw-r--r-- 1 root root    1421 Feb 11 04:45 updater_ivt.bd
+-rwxr-xr-x 1 root root 7523413 Feb 11 04:42 vmlinux                  <6>
+-rwxr-xr-x 1 root root 2566256 Feb 11 04:42 zImage                   <7>
+----
+<1> The HAB enabled bootstream of bootlets and kernel image
+<2> The HAB enabled bootstream of bootloet and uboot image
+<3> The HAB disabled bootstream of bootlets and kernel image
+<4> The HAB disabled bootstream of bootloet and uboot image
+<5> The uboot compatible kernel image
+<6> The ELF format kernel image 
+<7> The compressed self extracting image of the kernel
+
+The application rootfs is generated in the top directory of _ltib_
+as a JFFS2 filesystem image which can be flashed onto a NAND partition.
+The filesystem format can be changed to EXT2/EXT3/etc.. by changing the
+configuration of the _LTIB_ build.
+
+[source,bash]
+----
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l
+total 5308
+drwxrwxrwx  2 ubuntu ubuntu    4096 Feb 11 03:49 bin
+drwxrwxrwx  6 ubuntu ubuntu    4096 Feb 11 04:30 config
+-rwxrwxrwx  1 ubuntu ubuntu   17989 Jan  8  2013 COPYING
+drwxrwxrwx  3 ubuntu ubuntu    4096 Jan  8  2013 dist
+drwxrwxrwx  2 ubuntu ubuntu    4096 Jan  8  2013 doc
+-rwxrwxrwx  1 ubuntu ubuntu      41 Jan 30  2013 hash
+-rw-rw-r--  1 ubuntu ubuntu    1366 Feb 11 04:30 host_config.log
+-rwxrwxrwx  1 ubuntu ubuntu  106077 Jan  8  2013 ltib
+-rwxrwxrwx  1 ubuntu ubuntu     952 Jan  8  2013 README
+-rw-rw-r--  1 ubuntu ubuntu     227 Feb 11 04:45 RELEASE_INFO
+drwxrwxr-x 17 ubuntu ubuntu    4096 Feb 11 04:42 rootfs
+lrwxrwxrwx  1 ubuntu ubuntu      14 Feb 11 04:45 rootfs_image -> ./rootfs.jffs2
+-rw-r--r--  1 ubuntu ubuntu 5242880 Feb 11 04:45 rootfs.jffs2        <1>
+drwxrwxr-x  7 ubuntu ubuntu    4096 Feb 11 04:32 rpm
+drwxrwxr-x  2 ubuntu ubuntu    4096 Feb 11 04:45 tmp
+drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch
+----
+<1> JFFS2 image of rootfs
+
+With that we have completed building our first BSP with _LTIB_
 
