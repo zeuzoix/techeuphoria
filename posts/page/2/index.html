@@ -49,6 +49,388 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/">I2C/TWI with AVR Register Initialization</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-08-31T00:00:00+00:00">
+August 31, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&#8217;ll go through the twi_init API and the initialization of the TWI interface.</p>
+</div>
+<div class="paragraph">
+<p>The initialization code in the <a href="https://github.com/zeuzoix/sardine/blob/master/testbench.c">testbench.c</a> initializes the
+TWI/I2C library as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
+x_twi_init_params.pfn_debug = testbench_debug;
+e_twi_ret = twi_init(&amp;x_twi_init_params);
+<span style="color:#080;font-weight:bold">if</span>(eTWI_SUCCESS != e_twi_ret)
+{
+   i_ret = -<span style="color:#00D">1</span>;
+   <span style="color:#080;font-weight:bold">goto</span> LBL_INIT_IO_RET;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The API <em>twi_init</em> takes a structure variable x_twi_init_params of the type
+shown below.  The definition is in <a href="https://github.com/zeuzoix/sardine/blob/master/twi.h">twi.h</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_PARAMS_X
+{
+   TWI_INIT_MODE_E e_mode;
+   TWI_DEBUG_PFN pfn_debug;
+
+}TWI_INIT_PARAMS_X;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The TWI interface can be initialized based on several modes each of which
+is given an identifier which signifies the CPU clock frequency, SCL clock
+speed and the pre-scaler value. For instance in the enumeration definition
+below <em>eTWI_INIT_MODE_16_0000M_100K_1</em> is the mode for a 16.0000MHz
+micro-controller, with the desired SCL clock frequency set at 100KHz and
+the pre-scaler set to 1.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_INIT_MODE_E
+{
+   eTWI_INIT_MODE_16_0000M_100K_1 = <span style="color:#00D">0</span>,
+   eTWI_INIT_MODE_16_0000M_400K_1,
+   eTWI_INIT_MODE_16_0000M_100K_4,
+   eTWI_INIT_MODE_16_0000M_400K_4,
+   eTWI_INIT_MODE_INVALID
+
+}TWI_INIT_MODE_E;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Internally if we take a look at the twi_init function defined in
+<a href="https://github.com/zeuzoix/sardine/blob/master/twi.c">twi.c</a> we see a look up table is employed to initialize the
+5 registers TWBR, TWCR, TWSR, TWDR, TWAR. The look up table has the
+following structure for each row:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_INIT_REG_X
+{
+   TWI_INIT_MODE_E e_mode;
+   uint8_t uc_twbr;
+   uint8_t uc_twcr;
+   uint8_t uc_twsr;
+   uint8_t uc_twdr;
+   uint8_t uc_twar;
+
+}TWI_INIT_REG_X;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The lookup table is a global array gxa_init_reg and is defined as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#088;font-weight:bold">static</span> TWI_INIT_REG_X gxa_init_reg[] =
+{
+   {
+      eTWI_INIT_MODE_16_0000M_100K_1,
+      <span style="color:#02b">0x48</span>,                               <span style="color:#777">//0b01001000</span>
+      <span style="color:#02b">0x80</span>,                               <span style="color:#777">//0b10000000</span>
+      <span style="color:#02b">0x00</span>,                               <span style="color:#777">//0b00000000</span>
+      <span style="color:#02b">0x00</span>,                               <span style="color:#777">//0b00000000</span>
+      <span style="color:#02b">0x00</span>                                <span style="color:#777">//0b00000000</span>
+   }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code in twi_init cycles through the array gxa_init_reg until it finds
+the correct mode and then initializes the 5 registers with the values associated
+with the mode.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">for</span>(uc_i = <span style="color:#00D">0</span> ; uc_i &lt; uc_size_arr ; uc_i++)
+{
+   <span style="color:#080;font-weight:bold">if</span>(px_init_params-&gt;e_mode == gxa_init_reg[uc_i].e_mode)
+   {
+      px_init_reg = &amp;gxa_init_reg[uc_i];
+      <span style="color:#080;font-weight:bold">break</span>;
+   }
+}
+
+<span style="color:#080;font-weight:bold">if</span>(<span style="color:#069">NULL</span> == px_init_reg)
+{
+   <span style="color:#080;font-weight:bold">if</span>(<span style="color:#069">NULL</span> != px_init_params-&gt;pfn_debug)
+   {
+      px_init_params-&gt;pfn_debug(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Can't find correct mode</span><span style="color:#710">&quot;</span></span>);
+   }
+
+   e_ret = eTWI_FAILURE;
+   <span style="color:#080;font-weight:bold">goto</span> LBL_TWI_INIT_RET;
+}
+
+TWBR = px_init_reg-&gt;uc_twbr;
+TWCR = px_init_reg-&gt;uc_twcr;
+TWSR = px_init_reg-&gt;uc_twsr;
+TWDR = px_init_reg-&gt;uc_twdr;
+TWAR = px_init_reg-&gt;uc_twar;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the <a href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/">next</a> section we&#8217;ll check out transmit
+and receive functionality on the TWI/I2C bus with I2C/TWI with AVR Data Transfer.</p>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+, <a href="/techeuphoria/posts/tag/twi/">twi</a>
+, <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/">I2C/TWI with AVR Register Descriptions</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-08-29T00:00:00+00:00">
+August 29, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>So you want to program the TWI/I2C interface of the AVR. Well you&#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
+there is a bunch of registers which are used to control the pins themselves.
+Let&#8217;s take a look at them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-bit-rate-register-twbr"><a class="anchor" href="#twi-bit-rate-register-twbr"></a>TWI Bit Rate Register (TWBR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register controls the SCL clock frequency which can either be 100Hz or
+400Hz.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWBR.png" alt="TWI TWBR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The equation to set the correct SCL clock frequency is:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: left">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/svg.latex.svg" alt="svg.latex">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>CPUclockfreq</strong> is the CPU clock frequency(16MHz in my case).</p>
+</li>
+<li>
+<p><strong>SCLfreq</strong> is the desired SCL clock frequency(100Hz in my case).</p>
+</li>
+<li>
+<p><strong>TWBR</strong> is the value we store in the register.</p>
+</li>
+<li>
+<p><strong>TWPS</strong> is the prescaler bits in the TWI status register TWSR which can take
+values from 0 to 3(0 in my case).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-control-register-twcr"><a class="anchor" href="#twi-control-register-twcr"></a>TWI Control Register (TWCR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is used to control the operation of the TWI/I2C interface. Start
+or stop a transaction and acknowledge the receipt of a data packet.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWCR.png" alt="TWI TWCR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bit 7 - TWINT:</strong> Set when the TWI has finished it&#8217;s task. Also used to initiate
+a transaction. This flag is normally cleared by writing a 1 to it. All other
+operations to the TWDR and TWAR must be done before this is cleared.</p>
+</li>
+<li>
+<p><strong>Bit 6 - TWEA:</strong> Controls generation of the acknowledge bit.</p>
+</li>
+<li>
+<p><strong>Bit 5 - TWSTA:</strong> Controls generation of a start bit.</p>
+</li>
+<li>
+<p><strong>Bit 4 - TWSTO:</strong> Controls generation of a stop bit.</p>
+</li>
+<li>
+<p><strong>Bit 3 - TWWC:</strong> This is a read only bit. It is set if you write TWDR when TWINT
+is low. It is reset if you write TWDR when TWINT is high.</p>
+</li>
+<li>
+<p><strong>Bit 2 - TWEN:</strong> This bit enables the TWI/I2C interface</p>
+</li>
+<li>
+<p><strong>Bit 0 - TWIE:</strong> This bit in conjunction with the I-bit in SREG enables the
+interrupt mode</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-status-register-twsr"><a class="anchor" href="#twi-status-register-twsr"></a>TWI Status Register (TWSR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After every operation of the TWI interface this register is read to understand the
+status of the bus.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWSR.png" alt="TWI TWSR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:3 - TWS7:TWS3:</strong> Status of the last TWI/I2C transaction</p>
+</li>
+<li>
+<p><strong>Bits 1:0 - TWPS1:TWPS0:</strong> These are the pre-scaler bits used to modify the SCL frequency.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-data-register-twdr"><a class="anchor" href="#twi-data-register-twdr"></a>TWI Data Register (TWDR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is used to stores the bytes to be transmitted or the bytes received
+on the TWI bus.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWDR.png" alt="TWI TWDR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:0 - TWD7:TWD0:</strong> Data byte to be written to the TWI bus or read from the TWI bus.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="twi-address-register-twar"><a class="anchor" href="#twi-address-register-twar"></a>TWI Address Register (TWAR)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This register is loaded with the 7 bit Slave address to which it must respond
+to when programmed as a slave or when working in a multiple master mode. In
+the multiple master mode the device will compete to be a master and if it senses
+that it has lost the arbitration of the line it will have to turn into a slave
+and listen for a possible message from another master device.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="http://zeuzoix.github.io/techeuphoria/images/TWI_TWAR.png" alt="TWI TWAR" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bits 7:1 - TWA6: TWA0:</strong> 7 bit slave address of the TWI interface.</p>
+</li>
+<li>
+<p><strong>Bit 0 - TWGCE:</strong> Indicates if the device will acknowledge a general call when
+sent. A general call is an address to all the slaves connected on the bus. The
+Slave address for a general call is usually all 0s.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In the <a href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/">next</a> section I2C/TWI with AVR
+Register Intialization we&#8217;ll go through the initialization code for the TWI/I2C
+interface and the values assigned to these registers.</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+, <a href="/techeuphoria/posts/tag/twi/">twi</a>
+, <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/08/25/i2c-twi-with-avr-introduction/">I2C/TWI with AVR Introduction</a>
 </h1>
 <h4>
@@ -692,147 +1074,6 @@ the same irrespective of how it is built.</p>
 , <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
 , <a href="/techeuphoria/posts/tag/linux/">linux</a>
 , <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/01/19/an-operating-system-called-linux/">An Operating System Called Linux</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-01-19T00:00:00+00:00">
-January 19, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="paragraph">
-<p>This post highlights the comparison of the required functionalities of an OS with that of Linux.An operating system is a software program which provides 5 management functions:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CPU</p>
-</li>
-<li>
-<p>Memory</p>
-</li>
-<li>
-<p>Networking</p>
-</li>
-<li>
-<p>Storage</p>
-</li>
-<li>
-<p>Device Input/Output</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Linux if one were to draw a block diagram can be represented as:</p>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="imageblock">
-<div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/linux-kernel-architecture-diagram.png" alt="linux kernel architecture diagram">
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>In this diagram the core operating system is the Linux Kernel. The management
-functions which map to the generic definition of an operating system are:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Process management</p>
-</li>
-<li>
-<p>Memory management</p>
-</li>
-<li>
-<p>Network</p>
-</li>
-<li>
-<p>File Systems</p>
-</li>
-<li>
-<p>Device Drivers</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Applications viz. Firefox, vim, LibreOffice, Bash, etc run in the User memory
-space and are not part of the Linux Kernel memory space. An application
-interfaces with the Linux Kernel through the system call interface.</p>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a>
-, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2011/10/16/ifanaticism/">iFanaticism</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2011-10-16T00:00:00+00:00">
-October 16, 2011
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="paragraph">
-<p>It&#8217;s amazing, I&#8217;m going through the news paper and I read about people in Tokyo who&#8217;ve queued outside an Apple store to buy the iPhone 4s in memory of the late Steve Jobs.</p>
-</div>
-<div class="paragraph">
-<p>What was it about Steve Jobs that moves people not in his own country but in
-countries other than his own? What was it about him that caused millions to
-pour out their hearts on twitter and facebook when they heard of his death.
-Steve Jobs has been catapulted to the status of a rock-star. No other
-entrepreneur has ever had the admiration and adoration of millions of
-people. It&#8217;s pure fanaticism!</p>
-</div>
-<div class="paragraph">
-<p>His products have been sought after by many fans. People literally stand in
-queues to pick up Apple&#8217;s products. They want the real deal. People don&#8217;t buy
-cheaper imitations from China. They find value for money in those gadgets.
-Enough to convert them into evangelists for Apple.</p>
-</div>
-<div class="paragraph">
-<p>Steve Jobs now shares his place with those that inspired and evoked euphoria
-in the millions. People like Curt Cobain, Elvis Presley and Michael Jackson.
-He redefined product conceptualization. But there&#8217;s a question that comes to
-my mind. Steve&#8217;s best was at the end of his life. Was it his awareness of his
-condition that pushed him to create the best products of Apple?</p>
-</div>
-<div class="paragraph">
-<p>Whatever it was one thing&#8217;s for sure, he&#8217;s made a dent in the universe.</p>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a></div>
 </footer>
 <hr>
 </article>

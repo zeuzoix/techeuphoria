@@ -5,13 +5,1999 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2015-01-21T08:52:51+05:30</updated>
+<updated>2015-02-20T20:08:41+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
+<title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
+<updated>2015-02-20T20:08:41+05:30</updated>
+<published>2015-02-06T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="i.mx28"></category>
+<summary>
+
+
+
+In the first part we worked on getting LTIB configured for our machine. We ran into alot of problems but fixed each problem after a bit of online reading. In this part we attempt to actually build the bootloaders, kernel and applications with LTIB which will comprise the BSP
+
+
+
+
+Configuring LTIB for i.MX28
+
+
+LTIB Offers a lot of flexibility in choosing the type of embedded system that
+is required for the platform. Depending on the use case different aspects can
+be configured using ltib.
+
+
+Selecting The Platform
+
+On running ltib it will display the ncurses dialog which is used to select
+the desired platform. In our case...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the first part we worked on getting LTIB configured for our machine. We ran into alot of problems but fixed each problem after a bit of online reading. In this part we attempt to actually build the bootloaders, kernel and applications with LTIB which will comprise the BSP&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;configuring-ltib-for-i-mx28&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#configuring-ltib-for-i-mx28&quot;&gt;&lt;/a&gt;Configuring LTIB for i.MX28&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;LTIB Offers a lot of flexibility in choosing the type of embedded system that
+is required for the platform. Depending on the use case different aspects can
+be configured using &lt;em&gt;ltib&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;selecting-the-platform&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#selecting-the-platform&quot;&gt;&lt;/a&gt;Selecting The Platform&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On running &lt;em&gt;ltib&lt;/em&gt; it will display the ncurses dialog which is used to select
+the desired platform. In our case it is Freescale iMX reference boards as shown
+below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-platform-selection&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses platform selection&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. Ncurses screen with platform selection&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On exiting it will ask you if you want to save the configuration. Make sure
+&quot;yes&quot; is selected and then exit:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-save-new-configuration.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses save new configuration&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 2. Saving the new configuration&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;selecting-the-freescale-platform-type-and-profile&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#selecting-the-freescale-platform-type-and-profile&quot;&gt;&lt;/a&gt;Selecting The Freescale Platform Type And Profile&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It will then ask you to select the type of Freescale as i.MX28 development platform&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-chose-platform.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses select mx28 platform chose platform&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 3. Selecting the type of development platform as imx28&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Also select the package profile. We select the &quot;(Min profile)&quot;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-select-mx28-platform-type-preconfig-min-profile.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses select mx28 platform type preconfig min profile&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 4. Selecting the type of profile as &quot;Min profile&quot;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On exiting it will ask you if you want to save the configuration. Make sure
+&quot;yes&quot; is selected and then exit:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection-save-new-configuration.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses platform selection save new configuration&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 5. Saving the new configuration of development platform&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;configuring-the-freescale-i-mx28-board-package&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#configuring-the-freescale-i-mx28-board-package&quot;&gt;&lt;/a&gt;Configuring The Freescale i.MX28 Board Package&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We see the ncurses configuration page for the i.MX28 board. From here the various
+features of the board can be configured.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-mx28-board-configuration.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses mx28 board configuration&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 6. Saving and exiting without modifying the default configuration&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;default-build&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#default-build&quot;&gt;&lt;/a&gt;Default Build&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The configuration loaded can be built without modifying it. We can take a look
+and see what&amp;#8217;s happening just by hitting exit and running the &lt;em&gt;LTIB&lt;/em&gt; build. The
+steps are hit &lt;em&gt;exit&lt;/em&gt;. Then save the configuration when prompted on the ncurses
+screen. We see is a failure to build of the kind:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;Installing: gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5 from the PPP  &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5 from the GPP
+http://bitshrine.org/gpp/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm.md5:
+22:44:07 ERROR 404: Not Found.
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm from the PPP
+Try gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm from the GPP
+http://bitshrine.org/gpp/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm:
+22:44:08 ERROR 404: Not Found.
+Can't get: gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12-1.i386.rpm at ./ltib line 2560.   &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+Died at ./ltib line 2560.
+traceback:
+ main::check_toolchain_setup:2560
+  main::pre_build_checks:1465
+   main:569
+
+
+Started: Tue Feb 10 22:25:52 2015
+Ended:   Tue Feb 10 22:44:08 2015
+Elapsed: 1096 seconds
+
+
+Build Failed
+
+Exiting on error or interrupt&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;It looks like the toolchain is not found in the PPP and GPP after trying to install it from the local cache&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The &lt;em&gt;LTIB&lt;/em&gt; build fails&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For further information about PPP and GPP please check out the following link:&lt;br&gt;
+&lt;a href=&quot;http://www.bitshrine.org/autodocs/LtibFaq.html#ref_95&quot; target=&quot;_blank&quot;&gt;Where do the sources get downloaded from&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;selecting-the-right-toolchain&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#selecting-the-right-toolchain&quot;&gt;&lt;/a&gt;Selecting The Right Toolchain&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The toolchain is the set of tools including the cross-compiler which is required
+to build the BSP for development on the desired target. By default the toolchain
+selected is &lt;em&gt;ARM, gcc-4.6.2, multilib, neon optimized, gnueabi/eglibc2.13&lt;/em&gt;. We
+have to change this to &lt;em&gt;ARM, gcc-4.4.4, multilib, neon optimized&lt;/em&gt; which is the
+correct one available in the &lt;em&gt;LTIB&lt;/em&gt; system. Run the following to bring up the
+ncurses configuration page:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib --configure&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With that go to the &quot;Toolchain selection&quot; section and hit &lt;em&gt;Enter&lt;/em&gt; on the default
+option which is &lt;em&gt;Toolchain (ARM, gcc-4.6.2, multilib, neon optimized, gnueabi/eglibc2.13)&lt;/em&gt;
+We see a pop up with a list of toolchains. Select the &lt;em&gt;ARM, gcc-4.4.4, multilib, neon optimized&lt;/em&gt;
+option.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses mx28 toolchain selection&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 7. Selecting the appropriate toolchain&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On exiting we see the BSP being built which takes some time to complete. This is
+a test and development profile BSP which is built so it may not be exactly what
+is required for your target.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;sudo /opt/freescale/ltib/usr/bin/rpm --root /home/ubuntu/beta/projectX/ltib/rootfs --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' modeps 2&amp;gt;/dev/null
+sudo /opt/freescale/ltib/usr/bin/rpm --root /home/ubuntu/beta/projectX/ltib/rootfs --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' /home/ubuntu/beta/projectX/ltib/rpm/RPMS/arm/modeps-1.0-1.arm.rpm
+error: failed to stat /run/user/110/gvfs: Permission denied
+Preparing...                ########################################### [100%]
+   1:modeps                 ########################################### [100%]
+
+Processing deployment operations
+==================================
+making filesystem image file
+staging directory is /home/ubuntu/beta/projectX/ltib/rootfs.tmp
+removing the boot directory and files
+removing man files and directories
+removing info files
+removing /usr/share/locale directory
+removing static libraries
+removing target rpm database
+stripping binaries and libraries
+
+Filesystem stats, including padding:
+
+    Total size            = 15040k
+    Total number of files = 1293
+
+
+Started: Wed Feb 11 04:30:28 2015
+Ended:   Wed Feb 11 04:45:46 2015
+Elapsed: 918 seconds
+
+Build Succeeded&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;exploring-the-built-bsp&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#exploring-the-built-bsp&quot;&gt;&lt;/a&gt;Exploring The Built BSP&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After building, &lt;em&gt;LTIB&lt;/em&gt; will generate the following in the &lt;em&gt;rootfs/boot/&lt;/em&gt;
+directory:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l rootfs/boot/
+total 19784
+lrwxrwxrwx 1 root root       6 Feb 11 04:42 bootable_kernel -&amp;gt; uImage
+-rwxr-xr-x 1 root root   50960 Feb 11 04:45 boot_prep
+-rwxr-xr-x 1 root root     803 Feb 11 04:45 create_updater.sh
+-rw-r--r-- 1 root root 2586880 Feb 11 04:45 imx28_ivt_linux.sb       &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+-rw-r--r-- 1 root root  141184 Feb 11 04:45 imx28_ivt_uboot.sb       &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+-rw-r--r-- 1 root root 2586688 Feb 11 04:45 imx28_linux.sb           &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+-rw-r--r-- 1 root root  141040 Feb 11 04:45 imx28_uboot.sb           &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;
+-rw-r--r-- 1 root root   52953 Feb 11 04:42 linux.config
+-rwxr-xr-x 1 root root   14855 Feb 11 04:45 linux_prep
+-rwxr-xr-x 1 root root   57469 Feb 11 04:45 power_prep
+-rw-r--r-- 1 root root 1224927 Feb 11 04:42 System.map
+-rwxr-xr-x 1 root root  518068 Feb 11 04:33 u-boot
+-rwxr-xr-x 1 root root  123572 Feb 11 04:33 u-boot.bin
+-rw-r--r-- 1 root root 2566320 Feb 11 04:42 uImage                   &lt;i class=&quot;conum&quot; data-value=&quot;5&quot;&gt;&lt;/i&gt;&lt;b&gt;(5)&lt;/b&gt;
+-rw-r--r-- 1 root root    1236 Feb 11 04:45 updater.bd
+-rw-r--r-- 1 root root    1421 Feb 11 04:45 updater_ivt.bd
+-rwxr-xr-x 1 root root 7523413 Feb 11 04:42 vmlinux                  &lt;i class=&quot;conum&quot; data-value=&quot;6&quot;&gt;&lt;/i&gt;&lt;b&gt;(6)&lt;/b&gt;
+-rwxr-xr-x 1 root root 2566256 Feb 11 04:42 zImage                   &lt;i class=&quot;conum&quot; data-value=&quot;7&quot;&gt;&lt;/i&gt;&lt;b&gt;(7)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The HAB enabled bootstream of bootlets and kernel image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The HAB enabled bootstream of bootloet and uboot image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The HAB disabled bootstream of bootlets and kernel image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The HAB disabled bootstream of bootloet and uboot image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;5&quot;&gt;&lt;/i&gt;&lt;b&gt;5&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The uboot compatible kernel image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;6&quot;&gt;&lt;/i&gt;&lt;b&gt;6&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The ELF format kernel image&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;7&quot;&gt;&lt;/i&gt;&lt;b&gt;7&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The compressed self extracting image of the kernel&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The application rootfs is generated in the top directory of &lt;em&gt;ltib&lt;/em&gt;
+as a JFFS2 filesystem image which can be flashed onto a NAND partition.
+The filesystem format can be changed to EXT2/EXT3/etc.. by changing the
+configuration of the &lt;em&gt;LTIB&lt;/em&gt; build.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l
+total 5308
+drwxrwxrwx  2 ubuntu ubuntu    4096 Feb 11 03:49 bin
+drwxrwxrwx  6 ubuntu ubuntu    4096 Feb 11 04:30 config
+-rwxrwxrwx  1 ubuntu ubuntu   17989 Jan  8  2013 COPYING
+drwxrwxrwx  3 ubuntu ubuntu    4096 Jan  8  2013 dist
+drwxrwxrwx  2 ubuntu ubuntu    4096 Jan  8  2013 doc
+-rwxrwxrwx  1 ubuntu ubuntu      41 Jan 30  2013 hash
+-rw-rw-r--  1 ubuntu ubuntu    1366 Feb 11 04:30 host_config.log
+-rwxrwxrwx  1 ubuntu ubuntu  106077 Jan  8  2013 ltib
+-rwxrwxrwx  1 ubuntu ubuntu     952 Jan  8  2013 README
+-rw-rw-r--  1 ubuntu ubuntu     227 Feb 11 04:45 RELEASE_INFO
+drwxrwxr-x 17 ubuntu ubuntu    4096 Feb 11 04:42 rootfs
+lrwxrwxrwx  1 ubuntu ubuntu      14 Feb 11 04:45 rootfs_image -&amp;gt; ./rootfs.jffs2
+-rw-r--r--  1 ubuntu ubuntu 5242880 Feb 11 04:45 rootfs.jffs2        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+drwxrwxr-x  7 ubuntu ubuntu    4096 Feb 11 04:32 rpm
+drwxrwxr-x  2 ubuntu ubuntu    4096 Feb 11 04:45 tmp
+drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;JFFS2 image of rootfs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With that we have completed building our first BSP with &lt;em&gt;LTIB&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
+<title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
+<updated>2015-02-20T20:08:41+05:30</updated>
+<published>2015-01-28T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="i.mx28"></category>
+<summary>
+
+
+
+My first attempt at building the BSP for i.MX28 evaluation board. Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.
+
+
+
+
+Registering With Freescale
+
+
+Before we proceed with the download of the source code and tools we need to
+register with the Freescale website. After registering
+with the website log on to the website with the credentials used at the time
+of registeration:
+
+
+
+
+
+
+
+Figure 1. Signing into the Freescale website
+
+
+
+
+
+
+i.MX28 Software and Development Tool Resources
+
+
+The development software and tools are available in the Linux section of...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My first attempt at building the BSP for i.MX28 evaluation board. Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;registering-with-freescale&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#registering-with-freescale&quot;&gt;&lt;/a&gt;Registering With Freescale&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Before we proceed with the download of the source code and tools we need to
+register with the &lt;a href=&quot;http://www.freescale.com&quot; target=&quot;_blank&quot;&gt;Freescale&lt;/a&gt; website. After registering
+with the website log on to the website with the credentials used at the time
+of registeration:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-signin&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-signin.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-signin.png&quot; alt=&quot;imx28 ltib bsp build freescale signin&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. Signing into the Freescale website&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;i-mx28-software-and-development-tool-resources&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#i-mx28-software-and-development-tool-resources&quot;&gt;&lt;/a&gt;i.MX28 Software and Development Tool Resources&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The development software and tools are available in the Linux section of the
+i.MX28 current software releases. When writing this article the page that
+was available to me had the link &lt;a href=&quot;http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=IMX28_SW&quot; target=&quot;_blank&quot;&gt;imx28-sw-link&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On clicking the &quot;Linux source files&quot; link we&amp;#8217;re taken to a license agreement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-eula&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-eula.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-eula.png&quot; alt=&quot;imx28 ltib bsp build freescale eula&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 2. The Freescale Semiconductor Software License Agreement&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If all goes according to plan then you should see a download of the package
+{L2.6.35_1.1.0_130130_source.tar.gz-link}[L2.6.35_1.1.0_130130_source.tar.gz^]
+which you can save to your linux development environment. In my case it is an
+Ubuntu virtual machine running on my Windows laptop. The package download will
+take some time based on your network bandwidth and speed. The size of the
+package is roughly about 710MB.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-eula&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-download-package.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-download-package.png&quot; alt=&quot;imx28 ltib bsp build freescale download package&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 3. Download The L2.6.35_1.1.0_130130_source.tar.gz Package&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;unpacking-the-imx28_sw-package&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#unpacking-the-imx28_sw-package&quot;&gt;&lt;/a&gt;Unpacking The IMX28_SW Package&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Move the package to a suitable folder and make sure there is sufficient space
+on the drive before unpacking the gunzipped tarball.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls
+L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar xvzf L2.6.35_1.1.0_130130_source.tar.gz &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+L2.6.35_1.1.0_130130_source/
+L2.6.35_1.1.0_130130_source/pkgs/
+L2.6.35_1.1.0_130130_source/pkgs/16colors.txt
+.&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+.
+.
+L2.6.35_1.1.0_130130_source/EULA
+L2.6.35_1.1.0_130130_source/package_manifest.txt
+L2.6.35_1.1.0_130130_source/redboot_201003.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls -l
+total 727632
+drwxrwxr-x 3 ubuntu ubuntu      4096 Jan 30  2013 L2.6.35_1.1.0_130130_source &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+-rwxrwx--- 1 ubuntu vboxsf 744357641 Jan 20 22:55 L2.6.35_1.1.0_130130_source.tar.gz
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Gunzip the tarball in one step&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Lot of files being unpacked&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The folder with unpacked contents is L2.6.35_1.1.0_130130_source&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;exploring-and-installing-the-imx28_sw-package&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#exploring-and-installing-the-imx28_sw-package&quot;&gt;&lt;/a&gt;Exploring And Installing The IMX28_SW Package&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The directory L2.6.35_1.1.0_130130_source contains an install script which we run.
+Before proceeding with the installation it presents the EULA which must be accepted
+before installation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ls
+EULA  install  ltib.tar.gz  package_manifest.txt  pkgs  redboot_201003.zip  tftp.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ./install
+
+You are about to install the LTIB (GNU/Linux Target Image Builder)
+
+Before installing LTIB, you must read and accept the EULA
+(End User License Agreement) which will be presented next.
+
+Do you want to continue ? Y|n
+Y     &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+
+Hit enter to continue:
+IMPORTANT. Read the following Freescale Software License Agreement
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Hit 'Y' to read the EULA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;At this point we have to scroll and read the EULA before it prompts us with a
+declaration stating that we have read and accept the EULA, to which we reply
+&quot;yes&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;.
+.
+I have read and accept the EULA (yes|no):
+yes&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Next we&amp;#8217;re asked about the installation path. We can hit &quot;Enter&quot; to use the default
+which is &lt;em&gt;/home/ubuntu/beta/projectX/L2.6.35_1.1.0_130130_source&lt;/em&gt;. However it doesn&amp;#8217;t
+allow us to install it there so we supply a level above the current directory i.e.
+&lt;em&gt;/home/ubuntu/beta/projectX/&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;.
+.
+Copying packages to /home/ubuntu/beta/projectX//ltib/pkgs
+
+Installation complete, your ltib installation has been placed in
+/home/ubuntu/beta/projectX//ltib, to complete the installation:
+
+cd /home/ubuntu/beta/projectX//ltib
+./ltib&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The installation is completed along with a hint of the next step which is running
+the Linux Target Image Builder (LTIB) tool.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;what-is-ltib&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#what-is-ltib&quot;&gt;&lt;/a&gt;What Is LTIB?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Well LTIB is a tool which is used by Freescale to develop, build and deploy the
+software i.e. bootloaders, linux kernel, applications, daemons, etc.. required to
+support the board which in this case happens to be an i.MX28 board. It is uses the
+RPM way to manage software which has to be built for the target board.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is advisable to read the Introduction and FAQ section present on the LTIB website at the following
+links:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://ltib.org/home-intro&quot; target=&quot;_blank&quot;&gt;Introduction&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://ltib.org/documentation-LtibFaq&quot; target=&quot;_blank&quot;&gt;FAQs&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;building-ltib&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#building-ltib&quot;&gt;&lt;/a&gt;Building LTIB&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The hint given above is to configure and build LTIB. Within the configuration
+various settings such as toolchain path, platform details, C library to be
+used, etc can be configured.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ cd /home/ubuntu/beta/projectX//ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls -l
+total 184
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 bin
+drwxrwxrwx 6 ubuntu ubuntu   4096 Jan  8  2013 config
+-rwxrwxrwx 1 ubuntu ubuntu  17989 Jan  8  2013 COPYING
+drwxrwxrwx 3 ubuntu ubuntu   4096 Jan  8  2013 dist
+drwxrwxrwx 2 ubuntu ubuntu   4096 Jan  8  2013 doc
+-rwxrwxrwx 1 ubuntu ubuntu     41 Jan 30  2013 hash
+-rwxrwxrwx 1 ubuntu ubuntu 106077 Jan  8  2013 ltib
+drwxr-xr-x 2 ubuntu ubuntu  32768 Jan 28 06:49 pkgs
+-rwxrwxrwx 1 ubuntu ubuntu    952 Jan  8  2013 README
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;problems-running-ltib&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#problems-running-ltib&quot;&gt;&lt;/a&gt;Problems Running LTIB&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Okay there were several issues seen while trying to install &lt;em&gt;LTIB&lt;/em&gt; on my Ubuntu
+system. We&amp;#8217;ll take a look at each one as they occurred in sequence and my steps
+taken to fix all of them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock warning&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-warning&quot; title=&quot;Warning&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+This part will vary from system to system. It depends on your system
+configuration so you may face issues different to those listed here.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;fixing-dependency-issues&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#fixing-dependency-issues&quot;&gt;&lt;/a&gt;Fixing Dependency Issues&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;LTIB failed and cribbed on my system complaninig about missing packages as shown
+below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+ltib cannot be run because one or more of the host packages needed to run it
+are either missing or out of date or not in ltib's standard path.  Please
+install/upgrade these packages on your host.  If you have your own utilities
+in non-standard paths, please add an entry into the .ltibrc file for example:
+
+%path_std
+/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/my/own/exes
+
+Package                Minimum ver   Installed info
+-------                -----------   ---------------
+zlib                   0             not installed
+rpm                    0             not installed
+rpm-build              0             not installed
+ncurses-devel          0             not installed
+m4                     0             not installed
+bison                  0             not installed
+
+Died at ./ltib line 1409.
+traceback:
+ main::host_checks:1409
+  main:554
+
+
+Started: Fri Jan 30 00:53:17 2015
+Ended:   Fri Jan 30 00:53:17 2015
+Elapsed: 0 seconds
+
+
+Build Failed
+
+Exiting on error or interrupt&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Using the Advanced Packaging Tool (APT) utility we are able to fix the missing
+package issues. The stratedgy involves trying to identify the package
+equivalent for Ubuntu using the command below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search m4    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Example of searching packages related to m4 using the APT utility&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And then installing the package&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Example of installing m4 using the APT utility&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;em&gt;ltib&lt;/em&gt; utility can be executed again to see if the package errors reduce
+with each successful installation. Documentation of installation of the missing
+packages proceeds in the subsections below. They can be avoided if the same
+problems do not exist.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;installing-em-m4-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-em-m4-em&quot;&gt;&lt;/a&gt;Installing &lt;em&gt;m4&lt;/em&gt;
+&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installation of &lt;em&gt;m4&lt;/em&gt; proceeded with no problems&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install m4     &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Need to get 206 kB of archives.
+After this operation, 390 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y    &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Command to install m4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;User input confirming installation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;installing-em-rpm-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-em-rpm-em&quot;&gt;&lt;/a&gt;Installing &lt;em&gt;rpm&lt;/em&gt;
+&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installation of &lt;em&gt;rpm&lt;/em&gt; proceeded with no problems&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install rpm    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+[sudo] password for ubuntu:
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+.
+.
+.
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Command to install rpm&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;User input confirming installation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;installing-em-bison-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-em-bison-em&quot;&gt;&lt;/a&gt;Installing &lt;em&gt;bison&lt;/em&gt;
+&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installation of &lt;em&gt;bison&lt;/em&gt; proceeded with no problems&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install bison     &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y          &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+Get:1 http://us.archive.ubuntu.com/ubuntu/ trusty/main libbison-dev i386 2:3.0.2.dfsg-2 [338 kB]
+.
+.
+.
+update-alternatives: using /usr/bin/bison.yacc to provide /usr/bin/yacc (yacc) in auto mode&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Command to install bison&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;User input confirming installation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;installing-em-ncurses-devel-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-em-ncurses-devel-em&quot;&gt;&lt;/a&gt;Installing &lt;em&gt;ncurses-devel&lt;/em&gt;
+&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installation of &lt;em&gt;ncurses-devel&lt;/em&gt; proceeded with no problems after locating the
+correct package name as &lt;em&gt;libncurses5-dev&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install libncurses5-dev    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Do you want to continue? [Y/n] Y    &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+.
+.
+.
+Setting up libncurses5-dev:i386 (5.9+20140118-1ubuntu1) ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Command to install bison&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;User input confirming installation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;installing-em-zlib-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-em-zlib-em&quot;&gt;&lt;/a&gt;Installing &lt;em&gt;zlib&lt;/em&gt;
+&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installation of &lt;em&gt;zlib&lt;/em&gt; was not straightforward after several attempts to install
+packages like &lt;em&gt;zlibc&lt;/em&gt; &amp;amp; &lt;em&gt;zlib-bin&lt;/em&gt; LTIB was still failing and cribbing saying
+the package was missing from the system.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aparently all the dependencies are stored in the file &lt;em&gt;./bin/Ltibutils.pm&lt;/em&gt;. So
+on greping the file for zlib we get the paths which are searched for in order to
+look for the zlib package.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm     &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+                        `makeinfo --version 2&amp;gt;/dev/null`;
+                    },
+    zlib         =&amp;gt; sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') ); @f &amp;gt; 1 ? 1 : 0 },
+    'zlib-devel' =&amp;gt; sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Greping 4 lines after(-A 4) and 2 lines before(-B 2) for zlib in the file Ltibutils.pm&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After doing going through some basic perl sites it was decided to print the
+value of array &lt;em&gt;@f&lt;/em&gt; which was being used in the &lt;em&gt;get_ver&lt;/em&gt; function exposed
+by Ltibutils.pm. The following was the change done:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+                        `makeinfo --version 2&amp;gt;/dev/null`;
+                    },
+    zlib         =&amp;gt; sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') );print &quot;Value of list = @f\n&quot;; @f &amp;gt; 1 ? 1 : 0 },  &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+    'zlib-devel' =&amp;gt; sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Greping 4 lines after(-A 4) and 2 lines before(-B 2) for zlib in the file Ltibutils.pm&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;em&gt;print &quot;Value of list = @f\n&quot;;&lt;/em&gt; is added&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Additionally we run &lt;em&gt;ltib&lt;/em&gt; with verbose option &lt;em&gt;--verbose&lt;/em&gt; to see if we can
+get any more details that can help us debug the dependency issue. This time after
+we execute the &lt;em&gt;ltib&lt;/em&gt; script we get the details below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib --verbose
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+.
+.
+.
+pkg=gcc-c++, min=2.96, got: 4.8.2,
+ref=4, min=2
+pkg=sudo, min=0, got: 1.8.9,
+ref=1, min=0
+Value of list = /usr/lib/i386-linux-gnu/libz.so    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+pkg=zlib, min=0, got: -1, not installed            &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+pkg=zlib-devel, min=0, got: 0,
+ref=0, min=0
+pkg=rpm, min=0, got: 4.0.4,
+ref=4, min=0
+.
+.
+.
+pkg=rpm-build, min=0, got: 4.0.4,
+ref=4, min=0
+.
+.
+.
+Build Failed
+
+Exiting on error or interrupt
+ubuntu@ubuntu-VirtualBox:~/beta/project&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;This is the value of &lt;em&gt;@f&lt;/em&gt; which implies that our zlib library is /usr/lib/i386-linux-gnu/libz.so&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;This print indicates that the version obtained is -1 and hence it is forced to mark &lt;em&gt;zlib&lt;/em&gt; as not installed&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The flow of calls is:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;check_basic_deps&lt;/em&gt; in &lt;em&gt;ltib&lt;/em&gt; iterates through &lt;em&gt;$pkg&lt;/em&gt; to find each version with &lt;em&gt;get_ver&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;get_ver&lt;/em&gt; is defined in &lt;em&gt;bin/Ltibutils.pm&lt;/em&gt; and has a series of checks for the version&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;If the $pkg is not defined in the predefined &lt;em&gt;app_checks&lt;/em&gt; it issues a
+'$pkg --version 2&amp;gt;/dev/null' to get the package version information&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the $pkg is defined as 'CODE' it executes the pkg as a function call&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Lastly it executes the value of &lt;code&gt;$app_checks&amp;#8594;{$pkg}&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If &lt;em&gt;$_&lt;/em&gt; is not set to anything then -1 is returned as the version&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally after understanding the mapping of &lt;em&gt;app_checks&lt;/em&gt; for zlib it looked as
+though the expression &lt;em&gt;@f &amp;gt; 1 ? 1 : 0 _ was evaluating to 1 instead of 2. And
+this was because only one path was valid from the list of paths i.e.
+_/usr/lib/i386-linux-gnu/libz.so&lt;/em&gt;. This is a softlink to the path
+&lt;em&gt;/lib/i386-linux-gnu/libz.so.1.2.8&lt;/em&gt; so we add that to the list of options
+available. This change is similar to  With this change the zlib dependency is
+detected and the file now looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;buntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+                        `makeinfo --version 2&amp;gt;/dev/null`;
+                    },
+    zlib         =&amp;gt; sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/lib/i386-linux-gnu/libz.so*'),   &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),  &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') );print &quot;Value of list = @f\n&quot;; @f &amp;gt; 1 ? 1 : 0 },
+    'zlib-devel' =&amp;gt; sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;This is the new path added in &lt;em&gt;bin/Ltibutils.pm&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;This is the original path which is detected in the system. The above path is the actual file to this soft link.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We revert all changes except the fix to the original script files i.e.
+&lt;em&gt;print &quot;Value of list = @f\n&quot;;&lt;/em&gt; which was added for debugging and is not
+required now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;setting-em-sudo-em-permissions-for-em-rpm-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#setting-em-sudo-em-permissions-for-em-rpm-em&quot;&gt;&lt;/a&gt;Setting &lt;em&gt;sudo&lt;/em&gt; Permissions For &lt;em&gt;rpm&lt;/em&gt;
+&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The next issue was because of a test done by &lt;em&gt;ltib&lt;/em&gt; to check if there are
+&lt;em&gt;sudo&lt;/em&gt; permissions for &lt;em&gt;rpm&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+.
+.
+.
+Don't have LWP::UserAgent
+
+I ran the command: sudo -S -l which returned:      &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+
+[sudo] password for ubuntu: Sorry, try again.
+[sudo] password for ubuntu: Sorry, try again.
+[sudo] password for ubuntu: Sorry, try again.
+sudo: 3 incorrect password attempts
+
+This means you don't have sudo permission to execute rpm commands as root           &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+without a password.  This is needed for this build script to operate correctly.
+
+To configure this, as root using the command &quot;/usr/sbin/visudo&quot;,     &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+and add the following line in the User privilege section:
+
+ubuntu ALL = NOPASSWD: /usr/bin/rpm, /opt/freescale/ltib/usr/bin/rpm
+.
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;em&gt;ltib&lt;/em&gt; explaining what is run to test for &lt;em&gt;sudo&lt;/em&gt; priviledges&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Explaning what is wrong in the system&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Potential fix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We can execute &quot;/usr/sbin/visudo&quot; as indicated or &quot;sudo vim /etc/sudoers&quot; is also
+fine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;installing-the-host-support-packages&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#installing-the-host-support-packages&quot;&gt;&lt;/a&gt;Installing The Host Support Packages&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After fixing the sudo issue we run &lt;em&gt;ltib&lt;/em&gt; yet again to find a new problem as
+shown below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+Installing host support packages.
+
+This only needs to be done once per host, but may take up to
+an hour to complete ...
+
+If an error occurs, a log file with the full output may be found in:
+/home/ubuntu/beta/projectX/ltib/host_config.log
+
+Exiting on error or interrupt                                                    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Please see &amp;gt;&amp;gt; /home/ubuntu/beta/projectX/ltib/host_config.log for details&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Exited on error&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Opening the &lt;em&gt;/home/ubuntu/beta/projectX/ltib/host_config.log&lt;/em&gt; file we see that there
+is some trouble building the &lt;em&gt;lkc&lt;/em&gt; packge:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tail /home/ubuntu/beta/projectX/ltib/host_config.log
+
+Started: Tue Feb  3 04:13:25 2015
+Ended:   Tue Feb  3 04:13:29 2015
+Elapsed: 4 seconds
+
+These packages failed to build:
+lkc
+
+Build Failed&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;searching-for-a-simpler-installation&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#searching-for-a-simpler-installation&quot;&gt;&lt;/a&gt;Searching For A Simpler Installation&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Aparently most of the problems seen are due to the newer version of Ubuntu of
+my system. When going through the Freescale forums for similar problems a
+solution was provided in the form of a patch at
+&lt;a href=&quot;https://community.freescale.com/docs/DOC-93454&quot; target=&quot;_blank&quot;&gt;https://community.freescale.com/docs/DOC-93454&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The temporary fix to find zlib as a dependency was removed and the patch was
+installed using the steps highlighted in the forum.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;unpacking-the-patch&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#unpacking-the-patch&quot;&gt;&lt;/a&gt;Unpacking The Patch&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The patch file has to be copied to the ltib directory and untarred there.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ls
+bin  config  COPYING  dist  doc  hash  host_config.log  ltib  README  tmp  ubuntu-ltib-patch.tgz      &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tar xvzf ubuntu-ltib-patch.tgz       &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+ubuntu-ltib-patch/
+ubuntu-ltib-patch/zlib.patch
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch
+ubuntu-ltib-patch/lkc-1.4-lib.patch
+ubuntu-ltib-patch/mux_server.spec
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch.md5
+ubuntu-ltib-patch/install-patches.sh
+ubuntu-ltib-patch/lkc.spec
+ubuntu-ltib-patch/sparse.spec
+ubuntu-ltib-patch/lkc-1.4-lib.patch.md5&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;List of files in the &lt;em&gt;ltib&lt;/em&gt; directory. &lt;em&gt;ubuntu-ltib-patch.tgz&lt;/em&gt; is the new addition.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Untarring the package.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect4&quot;&gt;
+&lt;h5 id=&quot;install-the-patches&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#install-the-patches&quot;&gt;&lt;/a&gt;Install The Patches&lt;/h5&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Go to the extracted directory and run &lt;em&gt;install-patches.sh&lt;/em&gt; with the full path
+of the &lt;em&gt;ltib&lt;/em&gt; directory to install the patches.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ubuntu-ltib-patch/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/ubuntu-ltib-patch$ ./install-patches.sh /home/ubuntu/beta/projectX/ltib/
+cp lkc-1.4-lib.patch /opt/freescale/pkgs
+cp lkc-1.4-lib.patch.md5 /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch.md5 /opt/freescale/pkgs
+Patching Spec Files
+Done
+patching file bin/Ltibutils.pm&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After running the &lt;em&gt;ltib&lt;/em&gt; script we were able to see the path added to the &lt;em&gt;bin/Ltibutils.pm&lt;/em&gt;
+file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ grep -A 4 -B 2 zlib ./bin/Ltibutils.pm
+                        `makeinfo --version 2&amp;gt;/dev/null`;
+                    },
+    zlib         =&amp;gt; sub { my @f = (glob('/usr/lib/libz.so*'),
+                                   glob('/lib/libz.so*'),
+                                   glob('/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/lib64/libz.so*'),
+                                   glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                   glob('/usr/lib32/libz.so*'),
+                                   glob('/usr/lib/x86_64-linux-gnu/libz.so*') ); @f &amp;gt; 1 ? 1 : 0 },
+    'zlib-devel' =&amp;gt; sub { -f '/usr/include/zlib.h' },
+};
+
+sub get_ver
+{&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We see a new set of &lt;em&gt;wget&lt;/em&gt; errors this time and after searching the forums
+we get help in this post about dead links in  LTIB installation.
+&lt;a href=&quot;https://community.freescale.com/thread/308278&quot; target=&quot;_blank&quot;&gt;https://community.freescale.com/thread/308278&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;trying-by-patching-earlier-on&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#trying-by-patching-earlier-on&quot;&gt;&lt;/a&gt;Trying By Patching Earlier On&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;LTIB doesn&amp;#8217;t work without the patch from Freescale especially if you are using
+a newer Ubuntu system which is greater than Ubuntu 9.0. Not sure about the next
+steps we put this attempt to rest and retry with another attempt by applying
+the patch earlier on rather than later as a logical progression of the installation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sometimes it&amp;#8217;s good to erase the board and start with a fresh perspective.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;cleaning-up-the-old-installation&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#cleaning-up-the-old-installation&quot;&gt;&lt;/a&gt;Cleaning Up The Old Installation&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We clean up the folders created when we install and configure the LTIB package:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX$ rm -Rf ltib/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ sudo rm -Rf /opt/freescale&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;repeat-the-installaion&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#repeat-the-installaion&quot;&gt;&lt;/a&gt;Repeat The Installaion&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As mentioned in section &lt;a href=&quot;#exploring-and-installing-the-imx28_sw-package&quot;&gt;Exploring And Installing The IMX28_SW Package&lt;/a&gt;
+repeat all the installation steps outlined in that session until you get
+the fresh ltib folder created at &lt;em&gt;/home/ubuntu/beta/projectX/ltib&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ls
+EULA  install  ltib.tar.gz  package_manifest.txt  pkgs  redboot_201003.zip  tftp.zip
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/L2.6.35_1.1.0_130130_source$ ./install
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;apply-the-ubuntu-patch&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#apply-the-ubuntu-patch&quot;&gt;&lt;/a&gt;Apply The Ubuntu Patch&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As mentioned in the &lt;a href=&quot;#unpacking-the-patch&quot;&gt;Unpacking The Patch&lt;/a&gt; and &lt;a href=&quot;#install-the-patches&quot;&gt;Install The Patches&lt;/a&gt; sections
+patch the fresh ltib folder again.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tar xvzf ubuntu-ltib-patch.tgz
+ubuntu-ltib-patch/
+ubuntu-ltib-patch/zlib.patch
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch
+ubuntu-ltib-patch/lkc-1.4-lib.patch
+ubuntu-ltib-patch/mux_server.spec
+ubuntu-ltib-patch/sparse-0.4-fixlabel.patch.md5
+ubuntu-ltib-patch/install-patches.sh
+ubuntu-ltib-patch/lkc.spec
+ubuntu-ltib-patch/sparse.spec
+ubuntu-ltib-patch/lkc-1.4-lib.patch.md5
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ubuntu-ltib-patch/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/ubuntu-ltib-patch$ ./install-patches.sh /home/ubuntu/beta/projectX/ltib/
+cp lkc-1.4-lib.patch /opt/freescale/pkgs
+cp lkc-1.4-lib.patch.md5 /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch /opt/freescale/pkgs
+cp sparse-0.4-fixlabel.patch.md5 /opt/freescale/pkgs
+Patching Spec Files
+Done
+patching file bin/Ltibutils.pm&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;repeat-the-build&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#repeat-the-build&quot;&gt;&lt;/a&gt;Repeat The Build&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Again we try to configure and build &lt;em&gt;LTIB&lt;/em&gt; with the same command&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib          &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Don't have HTTP::Request::Common
+Don't have LWP::UserAgent
+Cannot test proxies, or remote file availability without both
+HTTP::Request::Common and LWP::UserAgent
+defined(@array) is deprecated at /home/ubuntu/beta/projectX/ltib/bin/Ltibutils.pm line 362.
+        (Maybe you should just omit the defined()?)
+
+Installing host support packages.
+
+This only needs to be done once per host, but may take up to
+an hour to complete ...
+
+If an error occurs, a log file with the full output may be found in:
+/home/ubuntu/beta/projectX/ltib/host_config.log
+
+[sudo] password for ubuntu:                  &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+Exiting on error or interrupt
+Please see &amp;gt;&amp;gt; /home/ubuntu/beta/projectX/ltib/host_config.log for details&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Execute the &lt;em&gt;ltib&lt;/em&gt; command to being the configuration and build&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Enter the login password for sudo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;missing-em-lzo-lzo1x-h-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#missing-em-lzo-lzo1x-h-em&quot;&gt;&lt;/a&gt;Missing &lt;em&gt;lzo/lzo1x.h&lt;/em&gt;
+&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ok after a while it looks like there&amp;#8217;s a different type of error that is thrown.
+After opening the &lt;em&gt;host_config.log&lt;/em&gt; we see the following type of error related
+to missing &lt;em&gt;lzo/lzo1x.h&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ tail -n 30 /home/ubuntu/beta/projectX/ltib/host_config.log
+  CC      compr_lzo.o
+compr_lzo.c:31:23: fatal error: lzo/lzo1x.h: No such file or directory
+ #include &amp;lt;lzo/lzo1x.h&amp;gt;
+                       ^
+compilation terminated.
+make: *** [/opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils/compr_lzo.o] Error 1
+error: Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.80059 (%build)
+
+
+RPM build errors:
+    Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.80059 (%build)
+Build time for mtd-utils: 6 seconds
+
+Failed building mtd-utils
+Died at ./ltib line 1392.
+traceback:
+ main::build_host_rpms:1392
+  main::host_checks:1447
+   main:554
+
+
+Started: Thu Feb  5 05:36:42 2015
+Ended:   Thu Feb  5 05:46:54 2015
+Elapsed: 612 seconds
+
+These packages failed to build:
+mtd-utils
+
+Build Failed&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ok so we&amp;#8217;re missing some package in our system. Let&amp;#8217;s try using APT again.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search &quot;lzo&quot;    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+file-roller - archive manager for GNOME
+liblzo2-2 - data compression library
+liblzo2-dev - data compression library (development files)        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+lrzip - compression program with a very high compression ratio
+lzop - fast compression program
+patool - command line archive file manager
+python-lzo - Python bindings for the LZO data compression library
+zope-debhelper - debhelper script for zope packaging
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search &quot;liblzo2-dev&quot;
+liblzo2-dev - data compression library (development files)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Example of searching packages related to lzo using the APT utility&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Looks like a good candidate since header file is missing and it is a development package&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installing the package liblzo2-dev&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install liblzo2-dev  &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Unpacking liblzo2-dev:i386 (2.06-1.2ubuntu1.1) ...
+Setting up liblzo2-dev:i386 (2.06-1.2ubuntu1.1) ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Installation of liblzo2-dev&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Running &lt;em&gt;ltib&lt;/em&gt; again we get an error almost immediately. Again we open the
+&lt;em&gt;/home/ubuntu/beta/projectX/ltib/host_config.log&lt;/em&gt; file and see that the build stopped
+with a message as shown below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;Processing: u-boot-tools
+==========================
+
+Processing: mtd-utils
+=======================
+Build path taken because: directory build, no prebuilt rpm,
+
+Cowardly refusing to clobber existing directory:            &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+ /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+Remove this by hand if you really want to rebuild this package from scratch
+
+Died at ./ltib line 1392.
+traceback:
+ main::build_host_rpms:1392
+  main::host_checks:1447
+   main:554&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Reason why &lt;em&gt;ltib&lt;/em&gt; fails&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s do as it says and try again.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;missing-em-uuid-uuid-h-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#missing-em-uuid-uuid-h-em&quot;&gt;&lt;/a&gt;Missing &lt;em&gt;uuid/uuid.h&lt;/em&gt;
+&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It fails again. After opening the &lt;em&gt;host_config.log&lt;/em&gt; we see the following type of error related
+to missing &lt;em&gt;uuid/uuid.h&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;.
+.
+  LD      jffs2reader
+  CC      mkfs.ubifs/mkfs.ubifs.o
+In file included from mkfs.ubifs/mkfs.ubifs.c:25:0:
+mkfs.ubifs/mkfs.ubifs.h:48:23: fatal error: uuid/uuid.h: No such file or directory
+ #include &amp;lt;uuid/uuid.h&amp;gt;
+                       ^
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ok so we&amp;#8217;re missing another package in our system. Let&amp;#8217;s try using APT again.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-cache search uuid   &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+.
+.
+libuuid1 - Universally Unique ID library
+postgresql-contrib-9.3 - additional facilities for PostgreSQL
+uuid-dev - universally unique id library - headers and static libraries    &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+uuid-runtime - runtime components for the Universally Unique ID library
+uuidcdef - Universally Unique Identifier (UUID) generator
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo apt-get install uuid-dev     &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following NEW packages will be installed:
+  uuid-dev
+.
+.
+Setting up uuid-dev (2.20.1-5.1ubuntu20.3) ...
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/mtd-utils        &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Looks like a good candidate as header files are missing&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Installing the package&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Removing mtd-utils as it won&amp;#8217;t build because of the previous error&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;missing-em-usr-include-sys-types-h-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#missing-em-usr-include-sys-types-h-em&quot;&gt;&lt;/a&gt;Missing &lt;em&gt;/usr/include/sys/types.h&lt;/em&gt;
+&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It fails again. After opening the &lt;em&gt;host_config.log&lt;/em&gt; we see the following type of error related
+to missing &lt;em&gt;/usr/include/sys/types.h&lt;/em&gt;. This is different from the previous errors. It looks
+like some system header file is not in place where it should be. After searching a bit on Google
+this blog entry gives us clues as to how to fix these errors
+&lt;a href=&quot;https://importgeek.wordpress.com/2014/08/21/imx-ltib-common-errors/&quot; target=&quot;_blank&quot;&gt;https://importgeek.wordpress.com/2014/08/21/imx-ltib-common-errors/&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It looks like the &lt;em&gt;types.h&lt;/em&gt; file is in &lt;em&gt;/usr/incude/i386-linux-gnu/sys&lt;/em&gt; so we create a softlink as
+shown below to solve this issue:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ vim /home/ubuntu/beta/projectX/ltib/host_config.log
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd /usr/include/
+ubuntu@ubuntu-VirtualBox:/usr/include$ sudo ln -s i386-linux-gnu/sys sys
+ubuntu@ubuntu-VirtualBox:/usr/include$ cd -
+/home/ubuntu/beta/projectX/ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;loader-error-missing-maths-library&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#loader-error-missing-maths-library&quot;&gt;&lt;/a&gt;Loader Error Missing Maths Library&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It fails again. Opening up the &lt;em&gt;host_config.log&lt;/em&gt; file we see the error as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;.
+.
+gcc AESKey.o Blob.o crc.o DataSource.o DataTarget.o ELFSourceFile.o EncoreBootImage.o EvalContext.o GHSSecInfo.o GlobMatcher.o HexValues.o Logging.o Operation.o OptionDictionary.o options.o OutputSection.o Random.o RijndaelCBCMAC.o rijndael.o SHA1.o SourceFile.o SRecordSourceFile.o stdafx.o StELFFile.o StExecutableImage.o StSRecordFile.o Value.o Version.o format_string.o ExcludesListMatcher.o SearchPath.o DataSourceImager.o IVTDataSource.o BootImageGenerator.o ConversionController.o ElftosbAST.o elftosb.o elftosb_lexer.o ElftosbLexer.o elftosb_parser.tab.o EncoreBootImageGenerator.o -lstdc++ -o elftosb
+/usr/bin/ld: ElftosbAST.o: undefined reference to symbol 'powf@@GLIBC_2.0'       &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+//lib/i386-linux-gnu/libm.so.6: error adding symbols: DSO missing from command line
+collect2: error: ld returned 1 exit status
+make[1]: *** [elftosb] Error 1
+make[1]: Leaving directory `/opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0/bld/linux'
+make: *** [all] Error 2
+error: Bad exit status from /home/ubuntu/beta/projectX/ltib/tmp/rpm-tmp.5414 (%build)
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Exact error is an unknown reference to symbol 'powf@@GLIBC_2.0'&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This error is covered in the same blog link given above so we follow the instructions&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cp /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz ~/beta/projectX/.      &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ cd ~/beta/projectX/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ ls
+elftosb-2.6.35.3-1.1.0.tar.gz  L2.6.35_1.1.0_130130_source  L2.6.35_1.1.0_130130_source.tar.gz  ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar xvzf elftosb-2.6.35.3-1.1.0.tar.gz       &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+elftosb-2.6.35.3-1.1.0/
+elftosb-2.6.35.3-1.1.0/COPYING
+elftosb-2.6.35.3-1.1.0/ReadMe.txt
+elftosb-2.6.35.3-1.1.0/bdfiles/
+elftosb-2.6.35.3-1.1.0/bdfiles/basic_test_cmd.e
+.
+.
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cd elftosb-2.6.35.3-1.1.0/
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ ls     &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+bdfiles  COPYING   elftosb.ccscc  elftosb.sln  elftosb.xcodeproj  keygen    makefile.rules  sbtool    test_elftosb.bat  test_files
+common   elftosb2  elftosb.ncb    elftosb.suo  encryptgpk         makefile  ReadMe.txt      stdafx.h  test_elftosb.sh   winsupport
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ vim makefile.rules       &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Copy elftosb-2.6.35.3-1.1.0.tar.gz from the pkgs directory to a temporary location&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Unpack the compressed tarball&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;List the contents in elftosb-2.6.35.3-1.1.0 after unpacking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Edit the makefile.rules&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The makefile requires adding the maths library to the LIBS path&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;makefile&quot;&gt;.
+.
+.
+OBJ_FILES_KEYGEN =         \
+   ${OBJ_FILES_COMMON} \
+   keygen.o
+
+
+LIBS =     -lstdc++ -lm       &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+
+
+ifeq (&quot;${UNAMES}&quot;, &quot;Linux&quot;)
+EXEC_FILE_ELFTOSB2 = elftosb
+EXEC_FILE_SBTOOL = sbtool
+.
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;-lm is added to LIBS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now repack the tarball, overwrite the orignal tarball, remove the build folder and run &lt;em&gt;ltib&lt;/em&gt; again&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ubuntu@ubuntu-VirtualBox:~/beta/projectX/elftosb-2.6.35.3-1.1.0$ cd ..
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ tar cvzf elftosb-2.6.35.3-1.1.0.tar.gz elftosb-2.6.35.3-1.1.0/       &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cp elftosb-2.6.35.3-1.1.0.tar.gz /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ sudo rm -Rf /opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0      &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+ubuntu@ubuntu-VirtualBox:~/beta/projectX$ cd ltib
+ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib$ ./ltib    &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Repacking elftosb-2.6.35.3-1.1.0/ into elftosb-2.6.35.3-1.1.0.tar.gz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Overwriting the original /opt/freescale/pkgs/elftosb-2.6.35.3-1.1.0.tar.gz package&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Removing the previous /opt/freescale/ltib/usr/src/rpm/BUILD/elftosb-2.6.35.3-1.1.0 build directory&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Trying to build again&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;ncurses-at-last&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#ncurses-at-last&quot;&gt;&lt;/a&gt;Ncurses At Last!&lt;/h4&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;imx28-ltib-bsp-build-freescale-ncurses-platform-selection&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/imx28-ltib-bsp-build-freescale-ncurses-platform-selection.png&quot; alt=&quot;imx28 ltib bsp build freescale ncurses platform selection&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 4. Ncurses screen with platform selection&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Phew that took some fair amount of tinkering. We finally are able to move to the
+next step which is configuration of the BSP.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#conclusion&quot;&gt;&lt;/a&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Well after a lot of probing we were finally able to build LTIB for our Ubuntu 14.04.1 LTS system. Since this post has been insanely long I&amp;#8217;ve decided to split it into two parts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2015-01-21T08:52:51+05:30</updated>
+<updated>2015-01-21T08:54:16+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -393,7 +2379,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2015-01-21T08:06:10+05:30</updated>
+<updated>2015-01-21T08:54:16+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -707,7 +2693,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2014-12-02T21:43:24+05:30</updated>
+<updated>2015-01-21T08:54:16+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -1279,456 +3265,6 @@ their description now:&lt;/p&gt;
    eTWI_MODE_INVALID
 
 }TWI_MODE_E;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/</id>
-<title>I2C/TWI with AVR Register Initialization</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-08-31T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="protocols"></category>
-<category term="i2c"></category>
-<category term="twi"></category>
-<category term="bus"></category>
-<summary>
-
-We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&#8217;ll go through the twi_init API and the initialization of the TWI interface.
-
-
-The initialization code in the testbench.c initializes the
-TWI/I2C library as follows:
-
-
-
-x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
-x_twi_init_params.pfn_debug = testbench_debug;
-e_twi_ret = twi_init(&amp;x_twi_init_params);
-if(eTWI_SUCCESS != e_twi_ret)
-{
-   i_ret = -1;
-   goto LBL_INIT_IO_RET;
-}
-
-
-
-The API twi_init takes a structure variable x_twi_init_params of the type
-shown below.  The definition is in twi.h:
-
-
-
-typedef struct _TWI_INIT_PARAMS_X
-{
-   TWI_INIT_MODE_E e_mode;
-   TWI_DEBUG_PFN pfn_debug;
-
-}TWI_INIT_PARAMS_X;
-
-
-
-The TWI interface can be initialized based on several modes each of which
-is given...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We learned about the different registers available in the Atmel AVR microcontroller to program the TWI interface. In this section we&amp;#8217;ll go through the twi_init API and the initialization of the TWI interface.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The initialization code in the &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/testbench.c&quot;&gt;testbench.c&lt;/a&gt; initializes the
-TWI/I2C library as follows:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;x_twi_init_params.e_mode = eTWI_INIT_MODE_16_0000M_100K_1;
-x_twi_init_params.pfn_debug = testbench_debug;
-e_twi_ret = twi_init(&amp;amp;x_twi_init_params);
-&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(eTWI_SUCCESS != e_twi_ret)
-{
-   i_ret = -&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;;
-   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; LBL_INIT_IO_RET;
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The API &lt;em&gt;twi_init&lt;/em&gt; takes a structure variable x_twi_init_params of the type
-shown below.  The definition is in &lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.h&quot;&gt;twi.h&lt;/a&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_PARAMS_X
-{
-   TWI_INIT_MODE_E e_mode;
-   TWI_DEBUG_PFN pfn_debug;
-
-}TWI_INIT_PARAMS_X;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The TWI interface can be initialized based on several modes each of which
-is given an identifier which signifies the CPU clock frequency, SCL clock
-speed and the pre-scaler value. For instance in the enumeration definition
-below &lt;em&gt;eTWI_INIT_MODE_16_0000M_100K_1&lt;/em&gt; is the mode for a 16.0000MHz
-micro-controller, with the desired SCL clock frequency set at 100KHz and
-the pre-scaler set to 1.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_INIT_MODE_E
-{
-   eTWI_INIT_MODE_16_0000M_100K_1 = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
-   eTWI_INIT_MODE_16_0000M_400K_1,
-   eTWI_INIT_MODE_16_0000M_100K_4,
-   eTWI_INIT_MODE_16_0000M_400K_4,
-   eTWI_INIT_MODE_INVALID
-
-}TWI_INIT_MODE_E;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Internally if we take a look at the twi_init function defined in
-&lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.c&quot;&gt;twi.c&lt;/a&gt; we see a look up table is employed to initialize the
-5 registers TWBR, TWCR, TWSR, TWDR, TWAR. The look up table has the
-following structure for each row:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_INIT_REG_X
-{
-   TWI_INIT_MODE_E e_mode;
-   uint8_t uc_twbr;
-   uint8_t uc_twcr;
-   uint8_t uc_twsr;
-   uint8_t uc_twdr;
-   uint8_t uc_twar;
-
-}TWI_INIT_REG_X;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The lookup table is a global array gxa_init_reg and is defined as follows:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; TWI_INIT_REG_X gxa_init_reg[] =
-{
-   {
-      eTWI_INIT_MODE_16_0000M_100K_1,
-      &lt;span style=&quot;color:#02b&quot;&gt;0x48&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b01001000&lt;/span&gt;
-      &lt;span style=&quot;color:#02b&quot;&gt;0x80&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b10000000&lt;/span&gt;
-      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
-      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;,                               &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
-      &lt;span style=&quot;color:#02b&quot;&gt;0x00&lt;/span&gt;                                &lt;span style=&quot;color:#777&quot;&gt;//0b00000000&lt;/span&gt;
-   }
-};&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The code in twi_init cycles through the array gxa_init_reg until it finds
-the correct mode and then initializes the 5 registers with the values associated
-with the mode.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;for&lt;/span&gt;(uc_i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt; ; uc_i &amp;lt; uc_size_arr ; uc_i++)
-{
-   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(px_init_params-&amp;gt;e_mode == gxa_init_reg[uc_i].e_mode)
-   {
-      px_init_reg = &amp;amp;gxa_init_reg[uc_i];
-      &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;break&lt;/span&gt;;
-   }
-}
-
-&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(&lt;span style=&quot;color:#069&quot;&gt;NULL&lt;/span&gt; == px_init_reg)
-{
-   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt;(&lt;span style=&quot;color:#069&quot;&gt;NULL&lt;/span&gt; != px_init_params-&amp;gt;pfn_debug)
-   {
-      px_init_params-&amp;gt;pfn_debug(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Can't find correct mode&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
-   }
-
-   e_ret = eTWI_FAILURE;
-   &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; LBL_TWI_INIT_RET;
-}
-
-TWBR = px_init_reg-&amp;gt;uc_twbr;
-TWCR = px_init_reg-&amp;gt;uc_twcr;
-TWSR = px_init_reg-&amp;gt;uc_twsr;
-TWDR = px_init_reg-&amp;gt;uc_twdr;
-TWAR = px_init_reg-&amp;gt;uc_twar;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the &lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/&quot;&gt;next&lt;/a&gt; section we&amp;#8217;ll check out transmit
-and receive functionality on the TWI/I2C bus with I2C/TWI with AVR Data Transfer.&lt;/p&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/</id>
-<title>I2C/TWI with AVR Register Descriptions</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-08-29T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="protocols"></category>
-<category term="i2c"></category>
-<category term="twi"></category>
-<category term="bus"></category>
-<summary>
-
-
-
-So you want to program the TWI/I2C interface of the AVR. Well you&#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
-there is a bunch of registers which are used to control the pins themselves.
-Let&#8217;s take a look at them.
-
-
-
-
-TWI Bit Rate Register (TWBR)
-
-
-This register controls the SCL clock frequency which can either be 100Hz or
-400Hz.
-
-
-
-
-
-
-
-
-
-
-
-The equation to set the correct SCL clock frequency is:
-
-
-
-
-
-
-
-
-
-
-
-
-
-CPUclockfreq is the CPU clock frequency(16MHz in my case).
-
-
-SCLfreq is the desired SCL clock frequency(100Hz in my case).
-
-
-TWBR is the...
-</summary>
-<content type="html">
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;So you want to program the TWI/I2C interface of the AVR. Well you&amp;#8217;ll need to read up about the registers used to control this interface. Though the microcontroller uses two pins SDA and SDC to drive the bus
-there is a bunch of registers which are used to control the pins themselves.
-Let&amp;#8217;s take a look at them.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;twi-bit-rate-register-twbr&quot;&gt;
-&lt;a class=&quot;anchor&quot; href=&quot;#twi-bit-rate-register-twbr&quot;&gt;&lt;/a&gt;TWI Bit Rate Register (TWBR)&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This register controls the SCL clock frequency which can either be 100Hz or
-400Hz.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWBR.png&quot; alt=&quot;TWI TWBR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The equation to set the correct SCL clock frequency is:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: left&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/svg.latex.svg&quot; alt=&quot;svg.latex&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;CPUclockfreq&lt;/strong&gt; is the CPU clock frequency(16MHz in my case).&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;SCLfreq&lt;/strong&gt; is the desired SCL clock frequency(100Hz in my case).&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;TWBR&lt;/strong&gt; is the value we store in the register.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;TWPS&lt;/strong&gt; is the prescaler bits in the TWI status register TWSR which can take
-values from 0 to 3(0 in my case).&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;twi-control-register-twcr&quot;&gt;
-&lt;a class=&quot;anchor&quot; href=&quot;#twi-control-register-twcr&quot;&gt;&lt;/a&gt;TWI Control Register (TWCR)&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This register is used to control the operation of the TWI/I2C interface. Start
-or stop a transaction and acknowledge the receipt of a data packet.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWCR.png&quot; alt=&quot;TWI TWCR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 7 - TWINT:&lt;/strong&gt; Set when the TWI has finished it&amp;#8217;s task. Also used to initiate
-a transaction. This flag is normally cleared by writing a 1 to it. All other
-operations to the TWDR and TWAR must be done before this is cleared.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 6 - TWEA:&lt;/strong&gt; Controls generation of the acknowledge bit.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 5 - TWSTA:&lt;/strong&gt; Controls generation of a start bit.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 4 - TWSTO:&lt;/strong&gt; Controls generation of a stop bit.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 3 - TWWC:&lt;/strong&gt; This is a read only bit. It is set if you write TWDR when TWINT
-is low. It is reset if you write TWDR when TWINT is high.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 2 - TWEN:&lt;/strong&gt; This bit enables the TWI/I2C interface&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 0 - TWIE:&lt;/strong&gt; This bit in conjunction with the I-bit in SREG enables the
-interrupt mode&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;twi-status-register-twsr&quot;&gt;
-&lt;a class=&quot;anchor&quot; href=&quot;#twi-status-register-twsr&quot;&gt;&lt;/a&gt;TWI Status Register (TWSR)&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;After every operation of the TWI interface this register is read to understand the
-status of the bus.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWSR.png&quot; alt=&quot;TWI TWSR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bits 7:3 - TWS7:TWS3:&lt;/strong&gt; Status of the last TWI/I2C transaction&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bits 1:0 - TWPS1:TWPS0:&lt;/strong&gt; These are the pre-scaler bits used to modify the SCL frequency.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;twi-data-register-twdr&quot;&gt;
-&lt;a class=&quot;anchor&quot; href=&quot;#twi-data-register-twdr&quot;&gt;&lt;/a&gt;TWI Data Register (TWDR)&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This register is used to stores the bytes to be transmitted or the bytes received
-on the TWI bus.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWDR.png&quot; alt=&quot;TWI TWDR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bits 7:0 - TWD7:TWD0:&lt;/strong&gt; Data byte to be written to the TWI bus or read from the TWI bus.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;twi-address-register-twar&quot;&gt;
-&lt;a class=&quot;anchor&quot; href=&quot;#twi-address-register-twar&quot;&gt;&lt;/a&gt;TWI Address Register (TWAR)&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This register is loaded with the 7 bit Slave address to which it must respond
-to when programmed as a slave or when working in a multiple master mode. In
-the multiple master mode the device will compete to be a master and if it senses
-that it has lost the arbitration of the line it will have to turn into a slave
-and listen for a possible message from another master device.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;exampleblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;div class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/TWI_TWAR.png&quot; alt=&quot;TWI TWAR&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bits 7:1 - TWA6: TWA0:&lt;/strong&gt; 7 bit slave address of the TWI interface.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Bit 0 - TWGCE:&lt;/strong&gt; Indicates if the device will acknowledge a general call when
-sent. A general call is an address to all the slaves connected on the bus. The
-Slave address for a general call is usually all 0s.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In the &lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/&quot;&gt;next&lt;/a&gt; section I2C/TWI with AVR
-Register Intialization we&amp;#8217;ll go through the initialization code for the TWI/I2C
-interface and the values assigned to these registers.&lt;/p&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </content>

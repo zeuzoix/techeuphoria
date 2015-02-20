@@ -1350,7 +1350,7 @@ table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoo
   display: table-cell;
   line-height: 1.6; }
 
-/* line 24, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 24, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 code {
   font-size: 0.9375em;
   padding: 1px 3px 0;
@@ -1361,11 +1361,11 @@ code {
   border-radius: 4px;
   text-shadow: none; }
 
-/* line 34, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 34, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 kbd.keyseq {
   color: #555555; }
 
-/* line 38, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 38, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 kbd:not(.keyseq) {
   display: inline-block;
   color: #222222;
@@ -1382,57 +1382,57 @@ kbd:not(.keyseq) {
   vertical-align: middle;
   white-space: nowrap; }
 
-/* line 54, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 54, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 kbd kbd:first-child {
   margin-left: 0; }
 
-/* line 58, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 58, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 kbd kbd:last-child {
   margin-right: 0; }
 
-/* line 62, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 62, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .menuseq, .menu {
   color: #090909; }
 
-/* line 68, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 68, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 p a > code {
   text-decoration: underline; }
-/* line 71, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 71, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 p a > code:hover {
   color: #561309; }
 
-/* line 97, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 97, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toc {
   border-bottom: 3px double #ebebeb;
   padding-bottom: 1.25em; }
-/* line 102, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 102, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toc > ul, #toc > ol {
   margin-left: 0.25em; }
-/* line 107, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 107, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toc ul.sectlevel0 > li > a, #toc ol.sectlevel0 > li > a {
   font-style: italic; }
-/* line 111, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 111, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toc ul.sectlevel0 ul.sectlevel1, #toc ol.sectlevel0 ol.sectlevel1 {
   margin-left: 0;
   margin-top: 0.5em;
   margin-bottom: 0.5em; }
-/* line 116, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 116, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toc ul, #toc ol {
   list-style-type: none; }
 
-/* line 121, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 121, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #toctitle {
   color: #7a2518; }
 
-/* line 126, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 126, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .sect1 {
   padding-bottom: 1.25em; }
 
-/* line 130, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 130, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .sect1 + .sect1 {
   border-top: 3px double #ebebeb; }
 
-/* line 135, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 135, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content h1 > a.anchor, h2 > a.anchor, h3 > a.anchor, #toctitle > a.anchor, .sidebarblock > .content > .title > a.anchor, h4 > a.anchor, h5 > a.anchor, h6 > a.anchor {
   position: absolute;
   width: 1em;
@@ -1442,30 +1442,30 @@ p a > code:hover {
   visibility: hidden;
   text-align: center;
   font-weight: normal; }
-/* line 145, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 145, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content h1 > a.anchor:before, h2 > a.anchor:before, h3 > a.anchor:before, #toctitle > a.anchor:before, .sidebarblock > .content > .title > a.anchor:before, h4 > a.anchor:before, h5 > a.anchor:before, h6 > a.anchor:before {
   content: '\00A7';
   font-size: .85em;
   vertical-align: text-top;
   display: block;
   margin-top: 0.05em; }
-/* line 157, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 157, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content h1:hover > a.anchor, #content h1 > a.anchor:hover, h2:hover > a.anchor, h2 > a.anchor:hover, h3:hover > a.anchor, #toctitle:hover > a.anchor, .sidebarblock > .content > .title:hover > a.anchor, h3 > a.anchor:hover, #toctitle > a.anchor:hover, .sidebarblock > .content > .title > a.anchor:hover, h4:hover > a.anchor, h4 > a.anchor:hover, h5:hover > a.anchor, h5 > a.anchor:hover, h6:hover > a.anchor, h6 > a.anchor:hover {
   visibility: visible; }
-/* line 161, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 161, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content h1 > a.link, h2 > a.link, h3 > a.link, #toctitle > a.link, .sidebarblock > .content > .title > a.link, h4 > a.link, h5 > a.link, h6 > a.link {
   color: #ba3925;
   text-decoration: none; }
-/* line 165, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 165, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content h1 > a.link:hover, h2 > a.link:hover, h3 > a.link:hover, #toctitle > a.link:hover, .sidebarblock > .content > .title > a.link:hover, h4 > a.link:hover, h5 > a.link:hover, h6 > a.link:hover {
   color: #a53221; }
 
-/* line 189, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 189, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .ulist > .title, .olist > .title, .dlist > .title, .qlist > .title, .hdlist > .title {
   text-align: left;
   font-weight: bold; }
 
-/* line 196, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 196, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .tableblock > caption {
   text-align: left;
   font-weight: bold;
@@ -1473,37 +1473,37 @@ p a > code:hover {
   overflow: visible;
   max-width: 0; }
 
-/* line 211, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 211, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p {
   font-size: inherit; }
 
-/* line 215, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 215, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table {
   border: 0;
   background: none;
   width: 100%; }
-/* line 219, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 219, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table td.icon {
   text-align: center;
   width: 80px; }
-/* line 222, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 222, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table td.icon img {
   max-width: none; }
-/* line 225, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 225, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table td.icon .title {
   font-weight: bold;
   text-transform: uppercase; }
-/* line 231, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 231, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table td.content {
   padding-left: 1.125em;
   padding-right: 1.25em;
   border-left: 1px solid #dddddd;
   color: #6f6f6f; }
-/* line 237, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 237, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .admonitionblock > table td.content > .paragraph:last-child > p {
   margin-bottom: 0; }
 
-/* line 243, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 243, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .exampleblock > .content {
   border-style: solid;
   border-width: 1px;
@@ -1529,16 +1529,16 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p {
 /* line 56, /var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_panels.scss */
 .exampleblock > .content h1.subheader, .exampleblock > .content h2.subheader, .exampleblock > .content h3.subheader, .exampleblock > .content .subheader#toctitle, .sidebarblock.exampleblock > .content > .subheader.title, .exampleblock > .content h4.subheader, .exampleblock > .content h5.subheader, .exampleblock > .content h6.subheader {
   line-height: 1.4; }
-/* line 250, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 250, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child {
   margin-bottom: 0; }
 
-/* line 255, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 255, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .exampleblock.result > .content {
   -webkit-box-shadow: 0 1px 8px #d9d9d9;
   box-shadow: 0 1px 8px #d9d9d9; }
 
-/* line 259, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 259, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .sidebarblock {
   border-style: solid;
   border-width: 1px;
@@ -1564,30 +1564,30 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p {
 /* line 56, /var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_panels.scss */
 .sidebarblock h1.subheader, .sidebarblock h2.subheader, .sidebarblock h3.subheader, .sidebarblock .subheader#toctitle, .sidebarblock > .content > .subheader.title, .sidebarblock h4.subheader, .sidebarblock h5.subheader, .sidebarblock h6.subheader {
   line-height: 1.4; }
-/* line 264, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 264, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .sidebarblock > .content > .title {
   color: #7a2518;
   margin-top: 0;
   line-height: 1.6; }
-/* line 277, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 277, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .sidebarblock > .content > .paragraph:last-child p {
   margin-bottom: 0; }
 
-/* line 289, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 289, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 pre {
   color: inherit;
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   overflow-x: auto;
   line-height: 1.6; }
 
-/* line 296, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 296, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .verseblock {
   margin-bottom: 1.25em; }
 
-/* line 301, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 301, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .literalblock, .listingblock {
   margin-bottom: 1.25em; }
-/* line 304, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 304, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .literalblock > .content > pre, .listingblock > .content > pre {
   background: none;
   color: inherit;
@@ -1600,12 +1600,12 @@ pre {
   padding: 0.75em 0.75em 0.5em 0.75em;
   word-wrap: break-word;
   line-height: 1.6; }
-/* line 319, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 319, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .literalblock > .content > pre.nowrap, .listingblock > .content > pre.nowrap {
   overflow-x: auto;
   white-space: pre;
   word-wrap: normal; }
-/* line 325, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 325, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .literalblock > .content > pre > code, .listingblock > .content > pre > code {
   font-size: 1em;
   white-space: inherit;
@@ -1616,68 +1616,68 @@ pre {
   font-weight: normal;
   border: none; }
 @media only screen {
-  /* line 304, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+  /* line 304, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
   .literalblock > .content > pre, .listingblock > .content > pre {
     font-size: 0.8em; } }
 @media only screen and (min-width: 768px) {
-  /* line 304, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+  /* line 304, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
   .literalblock > .content > pre, .listingblock > .content > pre {
     font-size: 0.9em; } }
 @media only screen and (min-width: 1280px) {
-  /* line 304, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+  /* line 304, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
   .literalblock > .content > pre, .listingblock > .content > pre {
     font-size: 1em; } }
 
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .xml:before {
   content: "xml";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .html:before {
   content: "html";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .ruby:before {
   content: "ruby";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .asciidoc:before {
   content: "asciidoc";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .java:before {
   content: "java";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .javascript:before {
   content: "javascript";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .css:before {
   content: "css";
   text-transform: uppercase;
   float: right;
   font-size: 0.9em;
   color: #999; }
-/* line 367, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 367, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .listingblock:hover .scss:before {
   content: "scss";
   text-transform: uppercase;
@@ -1685,38 +1685,38 @@ pre {
   font-size: 0.9em;
   color: #999; }
 
-/* line 393, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 393, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock {
   margin: 0 0 1.25em;
   padding: 0.5625em 1.25em 0 1.1875em;
   border-left: 1px solid #dddddd; }
-/* line 398, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 398, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock blockquote {
   margin: 0 0 1.25em 0;
   padding: 0 0 0.5625em 0;
   border: 0; }
-/* line 403, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 403, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock blockquote > .paragraph:last-child p {
   margin-bottom: 0; }
-/* line 408, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 408, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock .attribution {
   margin-top: -.25em;
   padding-bottom: 0.5625em;
   font-size: inherit;
   color: #555555; }
-/* line 413, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 413, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock .attribution br {
   display: none; }
-/* line 416, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 416, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .quoteblock .attribution cite {
   display: block;
   margin-bottom: 0.625em; }
 
-/* line 425, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 425, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table thead th, table tfoot th {
   font-weight: bold; }
 
-/* line 429, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 429, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table.tableblock.grid-all {
   border-collapse: separate;
   border-spacing: 1px;
@@ -1725,142 +1725,142 @@ table.tableblock.grid-all {
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd; }
 
-/* line 438, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 438, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table.tableblock.frame-topbot, table.tableblock.frame-none {
   border-left: 0;
   border-right: 0; }
 
-/* line 444, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 444, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table.tableblock.frame-sides, table.tableblock.frame-none {
   border-top: 0;
   border-bottom: 0; }
 
-/* line 451, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 451, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 table.tableblock td .paragraph:last-child p, table.tableblock td > p:last-child {
   margin-bottom: 0; }
 
-/* line 458, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 458, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.halign-left, td.tableblock.halign-left {
   text-align: left; }
 
-/* line 458, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 458, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.halign-right, td.tableblock.halign-right {
   text-align: right; }
 
-/* line 458, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 458, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.halign-center, td.tableblock.halign-center {
   text-align: center; }
 
-/* line 465, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 465, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.valign-top, td.tableblock.valign-top {
   vertical-align: top; }
 
-/* line 465, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 465, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.valign-bottom, td.tableblock.valign-bottom {
   vertical-align: bottom; }
 
-/* line 465, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 465, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 th.tableblock.valign-middle, td.tableblock.valign-middle {
   vertical-align: middle; }
 
-/* line 470, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 470, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 p.tableblock.header {
   color: #222222;
   font-weight: bold; }
 
-/* line 475, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 475, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 td > div.verse {
   white-space: pre; }
 
-/* line 489, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 489, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol {
   margin-left: 1.75em; }
 
-/* line 493, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 493, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ul li ol {
   margin-left: 1.5em; }
 
-/* line 497, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 497, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 dl dd {
   margin-left: 1.125em; }
 
-/* line 503, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 503, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 dl dd:last-child, dl dd:last-child > :last-child {
   margin-bottom: 0; }
 
-/* line 509, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 509, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .unstyled dl dt {
   font-weight: normal;
   font-style: normal; }
 
-/* line 520, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 520, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol > li p, ul > li p, ul dd, ol dd, .olist .olist, .ulist .olist, .olist .ulist {
   margin-bottom: 0.625em; }
 
-/* line 526, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 526, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ul.unstyled, ol.unnumbered, ul.checklist {
   list-style-type: none;
   margin-left: 0.625em; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.arabic {
   list-style-type: decimal; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.decimal {
   list-style-type: decimal-leading-zero; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.loweralpha {
   list-style-type: lower-alpha; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.upperalpha {
   list-style-type: upper-alpha; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.lowerroman {
   list-style-type: lower-roman; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.upperroman {
   list-style-type: upper-roman; }
 
-/* line 532, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 532, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 ol.lowergreek {
   list-style-type: lower-greek; }
 
-/* line 548, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 548, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .hdlist > table, .colist > table {
   border: 0;
   background: none; }
-/* line 552, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 552, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .hdlist > table > tbody > tr, .colist > table > tbody > tr {
   background: none; }
 
-/* line 558, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 558, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .literalblock + .colist, .listingblock + .colist {
   margin-top: -0.5em; }
 
-/* line 563, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 563, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .colist > table tr > td:first-of-type {
   padding: 0 .8em;
   line-height: 1; }
-/* line 568, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 568, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .colist > table tr > td:last-of-type {
   padding: 0.25em 0; }
 
-/* line 573, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 573, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 td.hdlist1 {
   vertical-align: top;
   padding-right: .8em;
   font-weight: bold; }
 
-/* line 579, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 579, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .qanda > ol > li > p:first-child {
   color: #00467f; }
 
-/* line 585, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 585, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .thumb, .th {
   line-height: 0;
   display: inline-block;
@@ -1868,272 +1868,272 @@ td.hdlist1 {
   -webkit-box-shadow: 0 0 0 1px #dddddd;
   box-shadow: 0 0 0 1px #dddddd; }
 
-/* line 595, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 595, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock {
   margin-bottom: 1.25em; }
-/* line 598, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 598, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock.left, .imageblock[style*="float: left"] {
   margin: 0.25em 0.625em 1.25em 0; }
-/* line 602, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 602, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock.right, .imageblock[style*="float: right"] {
   margin: 0.25em 0 1.25em 0.625em; }
-/* line 606, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 606, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock > .title {
   margin-bottom: 0; }
-/* line 611, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 611, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock.thumb, .imageblock.th {
   border-width: 6px; }
-/* line 613, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 613, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .imageblock.thumb > .title, .imageblock.th > .title {
   padding: 0 0.125em; }
 
-/* line 627, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 627, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .image.left, .image.right {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
   display: inline-block;
   line-height: 0; }
-/* line 634, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 634, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .image.left {
   margin-right: 0.625em; }
-/* line 638, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 638, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .image.right {
   margin-left: 0.625em; }
 
-/* line 645, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 645, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 span.footnote, span.footnoteref {
   vertical-align: super;
   font-size: 0.875em; }
-/* line 648, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 648, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 span.footnote a, span.footnoteref a {
   text-decoration: none; }
 
-/* line 653, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 653, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #footnotes {
   padding: 0.75em 0.375em;
   margin-bottom: 1.25em; }
-/* line 657, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 657, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #footnotes hr {
   width: 20%;
   min-width: 6.25em;
   margin: -.25em 0 .75em 0;
   border-width: 1px 0 0 0; }
-/* line 663, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 663, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #footnotes .footnote {
   line-height: 1.3;
   font-size: 0.875em;
   margin-left: 1.2em;
   text-indent: -1.2em;
   margin-bottom: .2em; }
-/* line 671, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 671, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #footnotes .footnote a:first-of-type {
   font-weight: bold;
   text-decoration: none; }
-/* line 677, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 677, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #footnotes .footnote:last-of-type {
   margin-bottom: 0; }
 
-/* line 683, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 683, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 #content #footnotes {
   margin-top: -0.625em; }
 
-/* line 688, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 688, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .gist .file-data > table {
   border: none;
   background: #fff;
   width: 100%;
   margin-bottom: 0; }
-/* line 693, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 693, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .gist .file-data > table td.line-data {
   width: 99%; }
 
-/* line 700, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 700, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 div.unbreakable {
   page-break-inside: avoid; }
 
-/* line 704, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 704, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .big {
   font-size: larger; }
 
-/* line 708, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 708, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .small {
   font-size: smaller; }
 
-/* line 713, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 713, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .underline {
   text-decoration: underline; }
 
-/* line 713, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 713, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .overline {
   text-decoration: overline; }
 
-/* line 713, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 713, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .line-through {
   text-decoration: line-through; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .aqua {
   color: #00bfbf; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .aqua-background {
   background-color: #00fafa; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .black {
   color: black; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .black-background {
   background-color: black; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .blue {
   color: #0000bf; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .blue-background {
   background-color: #0000fa; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .fuchsia {
   color: #bf00bf; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .fuchsia-background {
   background-color: #fa00fa; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .gray {
   color: #606060; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .gray-background {
   background-color: #7d7d7d; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .green {
   color: #006000; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .green-background {
   background-color: #007d00; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .lime {
   color: #00bf00; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .lime-background {
   background-color: #00fa00; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .maroon {
   color: #600000; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .maroon-background {
   background-color: #7d0000; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .navy {
   color: #000060; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .navy-background {
   background-color: #00007d; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .olive {
   color: #606000; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .olive-background {
   background-color: #7d7d00; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .purple {
   color: #600060; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .purple-background {
   background-color: #7d007d; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .red {
   color: #bf0000; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .red-background {
   background-color: #fa0000; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .silver {
   color: #909090; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .silver-background {
   background-color: #bcbcbc; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .teal {
   color: #006060; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .teal-background {
   background-color: #007d7d; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .white {
   color: #bfbfbf; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .white-background {
   background-color: #fafafa; }
 
-/* line 720, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 720, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .yellow {
   color: #bfbf00; }
 
-/* line 724, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
+/* line 724, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/asciidoc/_content.scss */
 .yellow-background {
   background-color: #fafa00; }
 
-/* line 6, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_asciidoc-embedded.scss */
+/* line 6, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_asciidoc-embedded.scss */
 #content h1:first-of-type:not([class]) {
   border-bottom: 1px solid #dddddd;
   padding-bottom: 0.5em;
   margin-bottom: 0.75em; }
 
-/* line 4, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 4, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon [class^="icon-"]:before {
   font-size: 2.5em;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   cursor: default; }
-/* line 10, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 10, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon .icon-note:before {
   content: "\f05a";
   color: #005498;
   color: #003f72; }
-/* line 22, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 22, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon .icon-tip:before {
   content: "\f0eb";
   text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8);
   color: #111; }
-/* line 35, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 35, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon .icon-warning:before {
   content: "\f071";
   color: #bf6900; }
-/* line 41, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 41, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon .icon-caution:before {
   content: "\f06d";
   color: #bf3400; }
-/* line 47, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 47, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .admonitionblock td.icon .icon-important:before {
   content: "\f06a";
   color: #bf0000; }
 
-/* line 56, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 56, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .conum {
   display: inline-block;
   color: white !important;
@@ -2151,20 +2151,20 @@ div.unbreakable {
   position: relative;
   top: -2px;
   letter-spacing: -1px; }
-/* line 73, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 73, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .conum * {
   color: white !important; }
-/* line 77, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 77, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .conum + b {
   display: none; }
-/* line 81, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 81, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .conum:after {
   content: attr(data-value); }
-/* line 87, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
+/* line 87, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/components/_awesome-icons.scss */
 .conum:not([data-value]):empty {
   display: none; }
 
-/* line 9, /home/conrad/git/techeuphoria/stylesheets/_themes/sass/asciidoctor-embedded.scss */
+/* line 9, /home/conrad/Training/git/techeuphoria/stylesheets/_themes/sass/asciidoctor-embedded.scss */
 .literalblock > .content > pre, .listingblock > .content > pre {
   -webkit-border-radius: 0;
   border-radius: 0; }
@@ -2987,21 +2987,21 @@ ul.pagination li {
   float: none;
   display: inline-block; }
 
-/* line 12, /home/conrad/git/techeuphoria/stylesheets/app.scss */
+/* line 12, /home/conrad/Training/git/techeuphoria/stylesheets/app.scss */
 .top-bar a {
   text-decoration: none; }
 
-/* line 15, /home/conrad/git/techeuphoria/stylesheets/app.scss */
+/* line 15, /home/conrad/Training/git/techeuphoria/stylesheets/app.scss */
 h1 em {
   letter-spacing: 1px; }
 
-/* line 18, /home/conrad/git/techeuphoria/stylesheets/app.scss */
+/* line 18, /home/conrad/Training/git/techeuphoria/stylesheets/app.scss */
 body > footer {
   background: #222222;
   padding: 1.25em;
   color: #dddddd; }
 
-/* line 24, /home/conrad/git/techeuphoria/stylesheets/app.scss */
+/* line 24, /home/conrad/Training/git/techeuphoria/stylesheets/app.scss */
 body > footer-area {
   background: #222222;
   padding: 1.25em;
