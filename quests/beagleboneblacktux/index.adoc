@@ -730,6 +730,75 @@ name _logo.gif_.
 
 ==== Using Git-Grep
 
-The _git-grep_ 
+The _git-grep_ command can be used to search within a git project. For instance
+if we want to search for the name of the maintainer of MVNETA network driver we
+would use it as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep MVNETA		<1>
+MAINTAINERS:MARVELL MVNETA ETHERNET DRIVER 			<2>
+arch/arm/configs/mvebu_defconfig:CONFIG_MVNETA=y
+drivers/net/ethernet/marvell/Kconfig:     This driver is used by the MV643XX_ETH and MVNETA drivers.
+drivers/net/ethernet/marvell/Kconfig:config MVNETA
+.
+.
+.
+----
+<1> We search for MVNETA with _git grep_
+<2> We get the maintainers as MARVELL for MVNETA ETHERNET DRIVER
+
+To get line numbers for the references of the regex being searched we have
+to set the environment for git. This can be done locally (--local) specific
+to the git project or globally(--global) for all git projects on the workstation.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git config --local grep.lineNumber true		<1>
+----
+<1> Enabling line numbers in the search in my local linux git clone
+
+It is possible to search in a specific branch of the project with
+_git-grep_. For instance let us try to find the _platform_device_register_
+function in all header files in the linux project in the branch 
+_remotes/stable/linux-3.7.y_
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-3.7.y -- '*.h' 	<1>
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:99:     return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:123:    return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:140:    platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-db8500.h:26:     return platform_device_register_resndata(parent, "nmk-ske-keypad", -1,
+remotes/stable/linux-3.7.y:arch/arm/plat-mxc/include/mach/devices-common.h:31:  return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:43:extern int platform_device_register(struct platform_device *);		<2>	
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:69:extern struct platform_device *platform_device_register_full(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:73: * platform_device_register_resndata - add a platform-level device with
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:86:static inline struct platform_device *platform_device_register_resndata(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:102: return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:106: * platform_device_register_simple - add a platform-level device and its resources
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:127:static inline struct platform_device *platform_device_register_simple(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:131: return platform_device_register_resndata(NULL, name, id,
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:136: * platform_device_register_data - add a platform-level device with platform-specific data
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:151:static inline struct platform_device *platform_device_register_data(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:155: return platform_device_register_resndata(parent, name, id,
+----
+<1> Expression searches for _platform_device_register_ declaration in _remotes/stable/linux-3.7.y_
+<2> The function is declared on line 43 in _include/linux/platform_device.h_ in the branch _linux-3.7.y_
+
+If we compare it to one of the older stable branches of _remotes/stable/linux-2.6.11.y_
+we get fewer header files with reference to the function name.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-2.6.11.y -- '*.h'	<1>
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:54:/* Update all memory resources by paddr, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:58:/* Get platform_data pointer out of platform device, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/linux/device.h:380:extern int platform_device_register(struct platform_device *);			<2>
+remotes/stable/linux-2.6.11.y:include/linux/device.h:392:extern struct platform_device *platform_device_register_simple(char *, unsigned int, struct resource *, unsigned int);
+----
+<1> Expression searches for _platform_device_register_ declaration in _remotes/stable/linux-2.6.11.y_
+<2> The function is declared on line 380 in _include/linux/platform_device.h_ in the branch _linux-2.6.11.y_
+
 
 
