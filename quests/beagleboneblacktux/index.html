@@ -1232,7 +1232,115 @@ name <em>logo.gif</em>.</p>
 <div class="sect3">
 <h4 id="using-git-grep"><a class="anchor" href="#using-git-grep"></a>18.2.2. Using Git-Grep</h4>
 <div class="paragraph">
-<p>The <em>git-grep</em></p>
+<p>The <em>git-grep</em> command can be used to search within a git project. For instance
+if we want to search for the name of the maintainer of MVNETA network driver we
+would use it as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep MVNETA                <i class="conum" data-value="1"></i><b>(1)</b>
+MAINTAINERS:MARVELL MVNETA ETHERNET DRIVER                         <i class="conum" data-value="2"></i><b>(2)</b>
+arch/arm/configs/mvebu_defconfig:CONFIG_MVNETA=y
+drivers/net/ethernet/marvell/Kconfig:     This driver is used by the MV643XX_ETH and MVNETA drivers.
+drivers/net/ethernet/marvell/Kconfig:config MVNETA
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We search for MVNETA with <em>git grep</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We get the maintainers as MARVELL for MVNETA ETHERNET DRIVER</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To get line numbers for the references of the regex being searched we have
+to set the environment for git. This can be done locally (--local) specific
+to the git project or globally(--global) for all git projects on the workstation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git config --local grep.lineNumber true                <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enabling line numbers in the search in my local linux git clone</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>It is possible to search in a specific branch of the project with
+<em>git-grep</em>. For instance let us try to find the <em>platform_device_register</em>
+function in all header files in the linux project in the branch
+<em>remotes/stable/linux-3.7.y</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-3.7.y -- '*.h'         <i class="conum" data-value="1"></i><b>(1)</b>
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:99:     return platform_device_register_full(&amp;pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:123:    return platform_device_register_full(&amp;pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:140:    platform_device_register_full(&amp;pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-db8500.h:26:     return platform_device_register_resndata(parent, &quot;nmk-ske-keypad&quot;, -1,
+remotes/stable/linux-3.7.y:arch/arm/plat-mxc/include/mach/devices-common.h:31:  return platform_device_register_full(&amp;pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:43:extern int platform_device_register(struct platform_device *);                <i class="conum" data-value="2"></i><b>(2)</b>
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:69:extern struct platform_device *platform_device_register_full(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:73: * platform_device_register_resndata - add a platform-level device with
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:86:static inline struct platform_device *platform_device_register_resndata(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:102: return platform_device_register_full(&amp;pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:106: * platform_device_register_simple - add a platform-level device and its resources
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:127:static inline struct platform_device *platform_device_register_simple(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:131: return platform_device_register_resndata(NULL, name, id,
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:136: * platform_device_register_data - add a platform-level device with platform-specific data
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:151:static inline struct platform_device *platform_device_register_data(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:155: return platform_device_register_resndata(parent, name, id,</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Expression searches for <em>platform_device_register</em> declaration in <em>remotes/stable/linux-3.7.y</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The function is declared on line 43 in <em>include/linux/platform_device.h</em> in the branch <em>linux-3.7.y</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If we compare it to one of the older stable branches of <em>remotes/stable/linux-2.6.11.y</em>
+we get fewer header files with reference to the function name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-2.6.11.y -- '*.h'        <i class="conum" data-value="1"></i><b>(1)</b>
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:54:/* Update all memory resources by paddr, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:58:/* Get platform_data pointer out of platform device, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/linux/device.h:380:extern int platform_device_register(struct platform_device *);                        <i class="conum" data-value="2"></i><b>(2)</b>
+remotes/stable/linux-2.6.11.y:include/linux/device.h:392:extern struct platform_device *platform_device_register_simple(char *, unsigned int, struct resource *, unsigned int);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Expression searches for <em>platform_device_register</em> declaration in <em>remotes/stable/linux-2.6.11.y</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The function is declared on line 380 in <em>include/linux/platform_device.h</em> in the branch <em>linux-2.6.11.y</em></td>
+</tr>
+</table>
 </div>
 </div>
 </div>
