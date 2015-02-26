@@ -10,7 +10,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :page-layout: base
 //:toc: left
 :toc: macro
-:toclevels: 2
+:toclevels: 4
 :toc-title: Table of Contents
 :sectanchors:
 :sectlinks:
@@ -58,6 +58,8 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
 :uri-free-electrons-uio-howto: http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/
 :uri-lxr-free-electrions: http://lxr.free-electrons.com
+:uri-lxr-free-electrions-ident-search: http://lxr.free-electrons.com/ident
+:uri-lxr-free-electrions-free-text-search: http://lxr.free-electrons.com/search
 :uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
 
@@ -800,5 +802,12 @@ remotes/stable/linux-2.6.11.y:include/linux/device.h:392:extern struct platform_
 <1> Expression searches for _platform_device_register_ declaration in _remotes/stable/linux-2.6.11.y_
 <2> The function is declared on line 380 in _include/linux/platform_device.h_ in the branch _linux-2.6.11.y_
 
+==== Using Linux Cross Reference
+
+We can make use of an automated tool like Linux Cross Reference or
+LXR as well:
+
+. Identifier search: {uri-lxr-free-electrions-ident-search}[{uri-lxr-free-electrions-ident-search}^]
+. Free text search: {uri-lxr-free-electrions-free-text-search}[{uri-lxr-free-electrions-free-text-search}]
 
 
