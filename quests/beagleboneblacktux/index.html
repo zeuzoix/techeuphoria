@@ -107,7 +107,13 @@ TechEuphoria
 <li><a href="#getting-accustomed-to-browsing-the-sources">18. Getting Accustomed To Browsing The Sources</a>
 <ul class="sectlevel2">
 <li><a href="#creating-a-branch-to-a-particular-stable-kernel-version">18.1. Creating A Branch To A Particular Stable Kernel Version</a></li>
-<li><a href="#searching-tools">18.2. Searching Tools</a></li>
+<li><a href="#searching-tools">18.2. Searching Tools</a>
+<ul class="sectlevel3">
+<li><a href="#using-find">18.2.1. Using Find</a></li>
+<li><a href="#using-git-grep">18.2.2. Using Git-Grep</a></li>
+<li><a href="#using-linux-cross-reference">18.2.3. Using Linux Cross Reference</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1341,6 +1347,23 @@ remotes/stable/linux-2.6.11.y:include/linux/device.h:392:extern struct platform_
 <td>The function is declared on line 380 in <em>include/linux/platform_device.h</em> in the branch <em>linux-2.6.11.y</em></td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="using-linux-cross-reference"><a class="anchor" href="#using-linux-cross-reference"></a>18.2.3. Using Linux Cross Reference</h4>
+<div class="paragraph">
+<p>We can make use of an automated tool like Linux Cross Reference or
+LXR as well:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Identifier search: <a href="http://lxr.free-electrons.com/ident" target="_blank">http://lxr.free-electrons.com/ident</a></p>
+</li>
+<li>
+<p>Free text search: <a href="http://lxr.free-electrons.com/search">http://lxr.free-electrons.com/search</a></p>
+</li>
+</ol>
 </div>
 </div>
 </div>
