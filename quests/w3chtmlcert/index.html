@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>A Technical Odyssey</title>
-<link href="http://localhost:4242/stylesheets/app.css" rel="stylesheet">
-<link href="/feed.xml" rel="alternate" type="application/atom+xml">
-<script src="http://localhost:4242/javascripts/vendor/custom.modernizr.js"></script>
-<link href="http://localhost:4242/humans.txt" rel="author" type="text/plain">
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
 </head>
 <body class="antialiased">
 <div class="fixed-width">
@@ -16,7 +16,7 @@
 <ul class="title-area">
 <li class="name">
 <h1>
-<a href="/">
+<a href="/techeuphoria/">
 TechEuphoria
 </a>
 </h1>
@@ -29,7 +29,7 @@ TechEuphoria
 <ul class="left">
 <li class="divider">
 <li>
-<a href="/quests/index.html">/quests</a>
+<a href="/techeuphoria/quests/index.html">/quests</a>
 </li>
 </li>
 <li class="divider"></li>
@@ -46,7 +46,70 @@ TechEuphoria
 <div class="large-12 columns">
 <div id="preamble">
 <div class="sectionbody">
-<!-- toc disabled -->
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel0">
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel1">
+<li><a href="#what-is-html">1. What is HTML?</a></li>
+<li><a href="#creating-a-simple-html-page">2. Creating a simple HTML page</a></li>
+<li><a href="#doctype">3. Doctype</a>
+<ul class="sectlevel2">
+<li><a href="#html-5">3.1. HTML 5</a></li>
+<li><a href="#html-4-01-strict">3.2. HTML 4.01 Strict</a></li>
+<li><a href="#html-4-01-transitional">3.3. HTML 4.01 Transitional</a></li>
+<li><a href="#html-4-01-frameset">3.4. HTML 4.01 Frameset</a></li>
+<li><a href="#xhtml-1-0-strict">3.5. XHTML 1.0 Strict</a></li>
+<li><a href="#xhtml-1-0-transitional">3.6. XHTML 1.0 Transitional</a></li>
+<li><a href="#xhtml-1-0-frameset">3.7. XHTML 1.0 Frameset</a></li>
+<li><a href="#xhtml-1-1">3.8. XHTML 1.1</a></li>
+</ul>
+</li>
+<li><a href="#elements">4. Elements</a>
+<ul class="sectlevel2">
+<li><a href="#example-of-html-elements">4.1. Example of HTML Elements</a></li>
+<li><a href="#example-of-nested-html-elements">4.2. Example of Nested HTML elements</a></li>
+<li><a href="#empty-html-elements">4.3. Empty HTML Elements</a></li>
+<li><a href="#recommendations">4.4. Recommendations</a></li>
+</ul>
+</li>
+<li><a href="#attributes">5. Attributes</a>
+<ul class="sectlevel2">
+<li><a href="#examples-of-attributes">5.1. Examples Of Attributes</a></li>
+</ul>
+</li>
+<li><a href="#headings">6. Headings</a></li>
+<li><a href="#paragraphs">7. Paragraphs</a></li>
+<li><a href="#formatting">8. Formatting</a></li>
+<li><a href="#styles">9. Styles</a></li>
+<li><a href="#quotations">10. Quotations</a></li>
+<li><a href="#computercode">11. Computercode</a></li>
+<li><a href="#comments">12. Comments</a></li>
+<li><a href="#css">13. CSS</a></li>
+<li><a href="#links">14. Links</a></li>
+<li><a href="#images">15. Images</a></li>
+<li><a href="#tables">16. Tables</a></li>
+<li><a href="#lists">17. Lists</a></li>
+<li><a href="#blocks">18. Blocks</a></li>
+<li><a href="#classes">19. Classes</a></li>
+<li><a href="#layout">20. Layout</a></li>
+<li><a href="#responsive">21. Responsive</a></li>
+<li><a href="#forms">22. Forms</a></li>
+<li><a href="#iframes">23. Iframes</a></li>
+<li><a href="#color-names">24. Color Names</a></li>
+<li><a href="#color-values">25. Color Values</a></li>
+<li><a href="#color-shades">26. Color Shades</a></li>
+<li><a href="#javascript">27. JavaScript</a></li>
+<li><a href="#head">28. Head</a></li>
+<li><a href="#entities">29. Entities</a></li>
+<li><a href="#symbols">30. Symbols</a></li>
+<li><a href="#charset">31. Charset</a></li>
+<li><a href="#url-encode">32. URL Encode</a></li>
+<li><a href="#xhtml">33. XHTML</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -71,79 +134,626 @@ TechEuphoria
 <div class="ulist">
 <ul>
 <li>
-<p><strong>HTML</strong> stands for *H*yper *T*ext *M*ark *U*p language.</p>
+<p><strong>HTML</strong> stands for <strong>H</strong>yper <strong>T</strong>ext <strong>M</strong>ark <strong>U</strong>p language.</p>
 </li>
 <li>
-<p>Markup language is a way of presenting a document</p>
+<p>Markup language is a way of presenting a document with meta information
+which is separate from the information of the document.</p>
+</li>
+<li>
+<p>The meta information is represented as TAGs in the HTML document</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<h1 id="editors" class="sect0"><a class="anchor" href="#editors"></a>Editors</h1>
+<div class="sect1">
+<h2 id="creating-a-simple-html-page"><a class="anchor" href="#creating-a-simple-html-page"></a>2. Creating a simple HTML page</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A simple HTML page can be created using a text editor like Vim or Emacs on
+Linux. Similarly Notepad can be used to create a simple HTML document. To
+manage the complexity of larger projects and websites professional editors
+such as Adobe Dreamweaver, Kompozer, etc</p>
+</div>
+<div class="paragraph">
+<p>On opening your favourite editor type out the following to create a simple
+HTML page:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span>
 
-<h1 id="basic" class="sect0"><a class="anchor" href="#basic"></a>Basic</h1>
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>A Simple HTML Page<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span>
 
-<h1 id="elements" class="sect0"><a class="anchor" href="#elements"></a>Elements</h1>
+<span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whizz this is easy!<span style="color:#070;font-weight:bold">&lt;/p&gt;</span>
 
-<h1 id="attributes" class="sect0"><a class="anchor" href="#attributes"></a>Attributes</h1>
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the above is typed in save the file with a suitable name and remember
+the location of the file saved. If you are using Firefox you should go to
+"File" in the menu bar and select the "Open File" option. Browse your file
+system for the file you have just saved and open it. The following shows
+the simple HTML page rendered by Firefox and Chrome respectively.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-chrome-print-screen" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-chrome-print-screen.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-chrome-print-screen.png" alt="simple html page chrome print screen" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page on Chrome</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-firefox-print-screen" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-firefox-print-screen.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-firefox-print-screen.png" alt="simple html page firefox print screen" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page on Firefox</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="doctype"><a class="anchor" href="#doctype"></a>3. Doctype</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The &lt;!DOCTYPE&gt; declaration specifies the type of HTML document. The doctype
+declaration is NOT a tag. There are different versions of HTML. The browser
+will understand the format of the document from its doctype declaration.</p>
+</div>
+<div class="sect2">
+<h3 id="html-5"><a class="anchor" href="#html-5"></a>3.1. HTML 5</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="html-4-01-strict"><a class="anchor" href="#html-4-01-strict"></a>3.2. HTML 4.01 Strict</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Does <strong>NOT</strong> allows the use of framset content.</p>
+</li>
+<li>
+<p>Does <strong>NOT</strong> include presentational elements.</p>
+</li>
+<li>
+<p>Does <strong>NOT</strong> include deprecated elements like font.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="html-4-01-transitional"><a class="anchor" href="#html-4-01-transitional"></a>3.3. HTML 4.01 Transitional</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Does <strong>NOT</strong> allow the use of framset content.</p>
+</li>
+<li>
+<p>Includes presentational elements.</p>
+</li>
+<li>
+<p>Includes deprecated elements like font.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="html-4-01-frameset"><a class="anchor" href="#html-4-01-frameset"></a>3.4. HTML 4.01 Frameset</h3>
+<div class="paragraph">
+<p>Allows the use of framset content.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Frameset//EN&quot; &quot;http://www.w3.org/TR/html4/frameset.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="xhtml-1-0-strict"><a class="anchor" href="#xhtml-1-0-strict"></a>3.5. XHTML 1.0 Strict</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Similar to HTML 4.01 Strict</p>
+</li>
+<li>
+<p>Must be written as well-formed XML</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="xhtml-1-0-transitional"><a class="anchor" href="#xhtml-1-0-transitional"></a>3.6. XHTML 1.0 Transitional</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Similar to HTML 4.01 Transitional</p>
+</li>
+<li>
+<p>Must be written as well-formed XML</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="xhtml-1-0-frameset"><a class="anchor" href="#xhtml-1-0-frameset"></a>3.7. XHTML 1.0 Frameset</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Similar to HTML 4.01 Frameset</p>
+</li>
+<li>
+<p>Must be written as well-formed XML</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Frameset//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="xhtml-1-1"><a class="anchor" href="#xhtml-1-1"></a>3.8. XHTML 1.1</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Equal to XHTML 1.0 Strict.</p>
+</li>
+<li>
+<p>Allows the addition of modules (for example to provide ruby support for East-Asian languages).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="elements"><a class="anchor" href="#elements"></a>4. Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An HTML document consists of HTML elements. An element consists of content
+wrapped in a set of tags. The name of the tag defines the type of content
+and each element has a start tag and an end tag:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;tagname&gt;</span>content<span style="color:#070;font-weight:bold">&lt;/tagname&gt;</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-of-html-elements"><a class="anchor" href="#example-of-html-elements"></a>4.1. Example of HTML Elements</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whizz this is easy!<span style="color:#070;font-weight:bold">&lt;/p&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above example <strong><em>&lt;p&gt;</em></strong> is the element which defines the start of a
+paragraph and <strong><em>&lt;p&gt;</em></strong> defines the end of a paragraph. The content in between
+i.e. <strong><em>"Gee whizz this is easy!"</em></strong> defines the content that forms the paragraph.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Not all HTML elements have a starting and ending tag.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-of-nested-html-elements"><a class="anchor" href="#example-of-nested-html-elements"></a>4.2. Example of Nested HTML elements</h3>
+<div class="paragraph">
+<p>HTML elements can be nested. Taking the same Simple HTML page example we can
+clearly see that there are certain HTML elements which are defined within others</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
 
-<h1 id="headings" class="sect0"><a class="anchor" href="#headings"></a>Headings</h1>
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>A Simple HTML Page<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
 
-<h1 id="paragraphs" class="sect0"><a class="anchor" href="#paragraphs"></a>Paragraphs</h1>
+<span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whizz this is easy!<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="6"></i><b>(6)</b>
 
-<h1 id="formatting" class="sect0"><a class="anchor" href="#formatting"></a>Formatting</h1>
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Element starting the html document i.e. the html element</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Element ending the html document</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Starting the content of the html document i.e the body element</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Ending the content of the html document</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Heading element with start and end tags</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Paragraph element with start and end tags</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So in the above example we can see the <strong><em>body</em></strong> element nested within the
+<strong><em>html</em></strong> element</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="empty-html-elements"><a class="anchor" href="#empty-html-elements"></a>4.3. Empty HTML Elements</h3>
+<div class="paragraph">
+<p>Elements with no content are called empty elements. For example a line break
+element is an empty element. Empty elements need not be closed but can be
+closed in the beginning like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#070;font-weight:bold">&lt;/br&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="recommendations"><a class="anchor" href="#recommendations"></a>4.4. Recommendations</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>It is better to have all tags in lower case even though it is not compulsory.
+Browsers should be able to handle tags irrespective of their case. W3C says tags
+<strong>MUST</strong> be in lower case for XHTML documents.</p>
+</li>
+<li>
+<p>Some elements may be handled correctly in the browser if the end tag is
+forgotten, however it is better to insert the end tag for elements which have
+an end tag.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="attributes"><a class="anchor" href="#attributes"></a>5. Attributes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Elements can have attributes which provide additional information about the
+elements. The attributes have to be specified in the start tag of the element
+and never in the end tag.</p>
+</div>
+<div class="sect2">
+<h3 id="examples-of-attributes"><a class="anchor" href="#examples-of-attributes"></a>5.1. Examples Of Attributes</h3>
+<div class="paragraph">
+<p>Let&#8217;s take a look at a few attributes and how they are used with the specified
+element.</p>
+</div>
+<div class="sect3">
+<h4 id="the-lang-attribute"><a class="anchor" href="#the-lang-attribute"></a>5.1.1. The lang Attribute</h4>
+<div class="paragraph">
+<p>The followin example shows the <strong><em>lang</em></strong> attribute which is used in the <strong><em>html</em></strong>
+element. We can see that an attribute is defined as a name value pair.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html</span> <span style="color:#b48">lang</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fr</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span>
 
-<h1 id="styles" class="sect0"><a class="anchor" href="#styles"></a>Styles</h1>
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>Une page HTML simple<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b>
 
-<h1 id="quotations" class="sect0"><a class="anchor" href="#quotations"></a>Quotations</h1>
+<span style="color:#070;font-weight:bold">&lt;p&gt;</span>Gee whiz cela est facile !<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
 
-<h1 id="computercode" class="sect0"><a class="anchor" href="#computercode"></a>Computercode</h1>
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The html element with lang attribute and value "fr" for french</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>French translation of "A Simple HTML page"</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>French translation of "Gee whizz this is easy!"</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <strong><em>lang</em></strong> attribute is used by Search engines and Screen readers.</p>
+</div>
+<div class="paragraph">
+<p>The following image shows this page displayed by Firefox</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-lang-attribute" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-lang-attribute.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-lang-attribute.png" alt="simple html page lang attribute" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page in French</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-title-attribute"><a class="anchor" href="#the-title-attribute"></a>5.1.2. The title Attribute</h4>
+<div class="paragraph">
+<p>Paragraphs can be given a title that is displayed whenever the mouse pointer
+is over the paragraph. The following example shows the same example above
+modified with a <strong><em>title</em></strong> attribute associated with the <strong><em>p</em></strong> i.e. paragraph
+element</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span style="color:#34b">&lt;!DOCTYPE html&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;html</span> <span style="color:#b48">lang</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fr</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;body&gt;</span>
 
-<h1 id="comments" class="sect0"><a class="anchor" href="#comments"></a>Comments</h1>
+<span style="color:#070;font-weight:bold">&lt;h1&gt;</span>Une page HTML simple<span style="color:#070;font-weight:bold">&lt;/h1&gt;</span>
 
-<h1 id="css" class="sect0"><a class="anchor" href="#css"></a>CSS</h1>
+<span style="color:#070;font-weight:bold">&lt;p</span> <span style="color:#b48">title</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Simple French Para</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>Gee whiz cela est facile !<span style="color:#070;font-weight:bold">&lt;/p&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
 
-<h1 id="links" class="sect0"><a class="anchor" href="#links"></a>Links</h1>
+<span style="color:#070;font-weight:bold">&lt;/body&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The p element associated  with a title attribute with value "Simple French Para"</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following image shows this page displayed by Firefox when the mouse pointer
+is placed above the paragraph</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="img-simple-html-page-title-attribute" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/simple-html-page-title-attribute.png"><img src="http://zeuzoix.github.io/techeuphoria/images/simple-html-page-title-attribute.png" alt="simple html page title attribute" width="640" height="480"></a>
+</div>
+<div class="title">Simple HTML Page in French</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="headings"><a class="anchor" href="#headings"></a>6. Headings</h2>
+<div class="sectionbody">
 
-<h1 id="images" class="sect0"><a class="anchor" href="#images"></a>Images</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="paragraphs"><a class="anchor" href="#paragraphs"></a>7. Paragraphs</h2>
+<div class="sectionbody">
 
-<h1 id="tables" class="sect0"><a class="anchor" href="#tables"></a>Tables</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="formatting"><a class="anchor" href="#formatting"></a>8. Formatting</h2>
+<div class="sectionbody">
 
-<h1 id="lists" class="sect0"><a class="anchor" href="#lists"></a>Lists</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="styles"><a class="anchor" href="#styles"></a>9. Styles</h2>
+<div class="sectionbody">
 
-<h1 id="blocks" class="sect0"><a class="anchor" href="#blocks"></a>Blocks</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quotations"><a class="anchor" href="#quotations"></a>10. Quotations</h2>
+<div class="sectionbody">
 
-<h1 id="classes" class="sect0"><a class="anchor" href="#classes"></a>Classes</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="computercode"><a class="anchor" href="#computercode"></a>11. Computercode</h2>
+<div class="sectionbody">
 
-<h1 id="layout" class="sect0"><a class="anchor" href="#layout"></a>Layout</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comments"><a class="anchor" href="#comments"></a>12. Comments</h2>
+<div class="sectionbody">
 
-<h1 id="responsive" class="sect0"><a class="anchor" href="#responsive"></a>Responsive</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="css"><a class="anchor" href="#css"></a>13. CSS</h2>
+<div class="sectionbody">
 
-<h1 id="forms" class="sect0"><a class="anchor" href="#forms"></a>Forms</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="links"><a class="anchor" href="#links"></a>14. Links</h2>
+<div class="sectionbody">
 
-<h1 id="iframes" class="sect0"><a class="anchor" href="#iframes"></a>Iframes</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="images"><a class="anchor" href="#images"></a>15. Images</h2>
+<div class="sectionbody">
 
-<h1 id="color-names" class="sect0"><a class="anchor" href="#color-names"></a>Color Names</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tables"><a class="anchor" href="#tables"></a>16. Tables</h2>
+<div class="sectionbody">
 
-<h1 id="color-values" class="sect0"><a class="anchor" href="#color-values"></a>Color Values</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lists"><a class="anchor" href="#lists"></a>17. Lists</h2>
+<div class="sectionbody">
 
-<h1 id="color-shades" class="sect0"><a class="anchor" href="#color-shades"></a>Color Shades</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="blocks"><a class="anchor" href="#blocks"></a>18. Blocks</h2>
+<div class="sectionbody">
 
-<h1 id="javascript" class="sect0"><a class="anchor" href="#javascript"></a>JavaScript</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="classes"><a class="anchor" href="#classes"></a>19. Classes</h2>
+<div class="sectionbody">
 
-<h1 id="head" class="sect0"><a class="anchor" href="#head"></a>Head</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="layout"><a class="anchor" href="#layout"></a>20. Layout</h2>
+<div class="sectionbody">
 
-<h1 id="entities" class="sect0"><a class="anchor" href="#entities"></a>Entities</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="responsive"><a class="anchor" href="#responsive"></a>21. Responsive</h2>
+<div class="sectionbody">
 
-<h1 id="symbols" class="sect0"><a class="anchor" href="#symbols"></a>Symbols</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="forms"><a class="anchor" href="#forms"></a>22. Forms</h2>
+<div class="sectionbody">
 
-<h1 id="charset" class="sect0"><a class="anchor" href="#charset"></a>Charset</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="iframes"><a class="anchor" href="#iframes"></a>23. Iframes</h2>
+<div class="sectionbody">
 
-<h1 id="url-encode" class="sect0"><a class="anchor" href="#url-encode"></a>URL Encode</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="color-names"><a class="anchor" href="#color-names"></a>24. Color Names</h2>
+<div class="sectionbody">
 
-<h1 id="xhtml" class="sect0"><a class="anchor" href="#xhtml"></a>XHTML</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="color-values"><a class="anchor" href="#color-values"></a>25. Color Values</h2>
+<div class="sectionbody">
 
+</div>
+</div>
+<div class="sect1">
+<h2 id="color-shades"><a class="anchor" href="#color-shades"></a>26. Color Shades</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="javascript"><a class="anchor" href="#javascript"></a>27. JavaScript</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="head"><a class="anchor" href="#head"></a>28. Head</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="entities"><a class="anchor" href="#entities"></a>29. Entities</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="symbols"><a class="anchor" href="#symbols"></a>30. Symbols</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="charset"><a class="anchor" href="#charset"></a>31. Charset</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="url-encode"><a class="anchor" href="#url-encode"></a>32. URL Encode</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="xhtml"><a class="anchor" href="#xhtml"></a>33. XHTML</h2>
+<div class="sectionbody">
+
+</div>
+</div>
 </div>
 </div>
 <footer class="row" style="max-width: 100%">
@@ -158,16 +768,16 @@ Built on Foundation. Baked by Awestruct. Composed with Asciidoc
 <div class="large-6 columns">
 <ul class="inline-list right">
 <li>
-<a href="http://localhost:4242/">Home</a>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
 </li>
 </ul>
 </div>
 </footer>
 <script>
-document.write('<script src=' + ('__proto__' in {} ? 'http://localhost:4242/javascripts/vendor/zepto' : 'http://localhost:4242/javascripts/vendor/jquery') + '.js><\/script>')
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
 </script>
-<script src="http://localhost:4242/javascripts/foundation/foundation.js"></script>
-<script src="http://localhost:4242/javascripts/foundation/foundation.topbar.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
 <script>
 $(document).foundation()
 </script>
