@@ -32,6 +32,7 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :example-caption!:
 :figure-caption!:
 :imagesdir: images
+:awestruct-imagesdir: images
 :includedir: _includes
 :underscore: _
 // Refs
@@ -144,7 +145,9 @@ is comparable to the size of a credit card and it offers expansion headers to
 add headers called as capes similar to the {uri-raspberry-pi}[Raspberry Pi^].
 
 ====
-image::BeagleBoneBlackREV_A5A.jpg[width="640", height="480", align="center"]
+[[beagleboneblacktux-BeagleBoneBlackREV_A5A]]
+.Beagle Bone Black Revision A5A Board
+image::BeagleBoneBlackREV_A5A.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/BeagleBoneBlackREV_A5A.jpg]
 ====
 
 The table below highlights the key onboard components of the board along with
@@ -152,7 +155,9 @@ the connectors available on the board. The diagram of the table below is taken
 from the {link-beagleboneblack-srm-pdf}[BeagleBone Black System Reference Manual^].
 
 ====
-image::BeagleBoneBlackFeatures.jpg[width="640", height="480", align="center"]
+[[beagleboneblacktux-BeagleBoneBlackFeatures]]
+.Beagle Bone Black Feature Table
+image::BeagleBoneBlackFeatures.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/BeagleBoneBlackFeatures.jpg]
 ====
 
 == Software
@@ -1003,14 +1008,18 @@ Again we try running _make xconfig_ and see the graphical interface as shown
 in the screen capture below:
 
 ====
-image::make-xconfig-screenshot.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-xconfig-screenshot]]
+.Screenshot of xconfig interface
+image::make-xconfig-screenshot.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-xconfig-screenshot.png]
 ====
 
 It is possible to search for a particular feature using the search interface.
 This can be invoked with a *CTRL + F* keyboard combination.
 
 ====
-image::make-xconfig-search-imx.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-xconfig-search]]
+.Screenshot of xconfig search
+image::make-xconfig-search-imx.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-xconfig-search-imx.png]
 ====
 
 === Graphical Configuration Interface _gconfig_
@@ -1064,7 +1073,9 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make menuconfig
 We get the following screen shot one the interface is invoked from the shell.
 
 ====
-image::make-menuconfig-screenshot.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-menuconfig-screenshot]]
+.Screenshot of menuconfig interface
+image::make-menuconfig-screenshot.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-menuconfig-screenshot.png]
 ====
 
 Searching with the _menuconfig_ interface is done by hitting the '/' key similar
@@ -1072,13 +1083,17 @@ to _vim_. Once the search page is displayed we can enter a key word for the
 search.
 
 ====
-image::make-menuconfig-search-imx.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-menuconfig-search-imx]]
+.Screenshot of menuconfig search
+image::make-menuconfig-search-imx.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-menuconfig-search-imx.png]
 ====
 
 The results of the search are displayed as follows:
 
 ====
-image::make-menuconfig-search-imx-results.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-menuconfig-search-results]]
+.Screenshot of menuconfig search results
+image::make-menuconfig-search-imx-results.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-menuconfig-search-imx-results.png]
 ====
 
 
@@ -1096,8 +1111,29 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make nconfig
 We get the following screen shot once the interface is invoked from the shell.
 
 ====
-image::make-nconfig-screenshot.png[width="640", height="480", align="center"]
+[[beagleboneblacktux-make-nconfig-screenshot]]
+.Screenshot of nconfig interface
+image::make-nconfig-screenshot.png[width="640", height="480", align="center", link={awestruct-imagesdir}/make-nconfig-screenshot.png]
 ====
+
+=== make oldconfig
+
+If we are upgrading to a newer release and use the _.config_ file from an older
+release of the Linux kernel then we need to run _make oldconfig_. This will
+inform us of the configuration settings that are irrelevant in the newer release
+and if there are newer features or parameters then it will prompt us asking for
+appropriate values for these settings.
+
+Another scenario in which _make oldconfig_ may come in use is if we modify the
+_.config_ file by hand.
+
+=== Reverting To A Previous Configuration
+
+If we mess up our configuration and build a kernel that is unusable then we can
+revert to the older configuration that the kernel was built. This is done by
+copyting the _.config.old_ file which gets created if we use any of the
+configuration interfaces available. All the interfaces save a copy of the
+existing configuration file _.config_ as a back up in _.config.old_
 
 
 
