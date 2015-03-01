@@ -123,6 +123,15 @@ TechEuphoria
 <li><a href="#kernel-configuration-in-the-system">19.1.1. Kernel Configuration In The System</a></li>
 </ul>
 </li>
+<li><a href="#configuring-features-as-modules">19.2. Configuring Features As Modules</a></li>
+<li><a href="#kernel-option-types">19.3. Kernel Option Types</a></li>
+<li><a href="#kernel-option-dependencies">19.4. Kernel Option Dependencies</a></li>
+<li><a href="#graphical-configuration-interface-em-xconfig-em">19.5. Graphical Configuration Interface <em>xconfig</em></a></li>
+<li><a href="#graphical-configuration-interface-em-gconfig-em">19.6. Graphical Configuration Interface <em>gconfig</em></a></li>
+<li><a href="#text-configuration-interface-em-menuconfig-em">19.7. Text Configuration Interface <em>menuconfig</em></a></li>
+<li><a href="#text-configuration-interface-em-nconfig-em">19.8. Text Configuration Interface <em>nconfig</em></a></li>
+<li><a href="#make-oldconfig">19.9. make oldconfig</a></li>
+<li><a href="#reverting-to-a-previous-configuration">19.10. Reverting To A Previous Configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -241,10 +250,11 @@ add headers called as capes similar to the <a href="http://www.raspberrypi.org/"
 </div>
 <div class="exampleblock">
 <div class="content">
-<div class="imageblock" style="text-align: center">
+<div id="beagleboneblacktux-BeagleBoneBlackREV_A5A" class="imageblock" style="text-align: center">
 <div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480">
+<a class="image" href="images/BeagleBoneBlackREV_A5A.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480"></a>
 </div>
+<div class="title">Beagle Bone Black Revision A5A Board</div>
 </div>
 </div>
 </div>
@@ -255,10 +265,11 @@ from the <a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Refe
 </div>
 <div class="exampleblock">
 <div class="content">
-<div class="imageblock" style="text-align: center">
+<div id="beagleboneblacktux-BeagleBoneBlackFeatures" class="imageblock" style="text-align: center">
 <div class="content">
-<img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480">
+<a class="image" href="images/BeagleBoneBlackFeatures.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480"></a>
 </div>
+<div class="title">Beagle Bone Black Feature Table</div>
 </div>
 </div>
 </div>
@@ -1524,6 +1535,333 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-features-as-modules"><a class="anchor" href="#configuring-features-as-modules"></a>19.2. Configuring Features As Modules</h3>
+<div class="paragraph">
+<p>Upon configuring the kernel source and completion of the build we get
+a single image which represents the kernel and all the features it is
+configured for. However it is possible to configure some of the features
+such as device drivers, filesystems, driver tests, etc. as separate
+entities called <strong>kernel modules</strong>.</p>
+</div>
+<div class="paragraph">
+<p>By configuring certain features as modules we are able to keep the size
+of the kernel to a minimum. Kernel modules can be loaded from user space
+to support certain applications on execution or on insertion of certain
+devices into the system buses like USB, PCI, etc..</p>
+</div>
+<div class="paragraph">
+<p>Therefore in the configuration of certain features it is possible to select
+if the feature needs to be compiled as a kernel module. All kernel modules
+will have to be stored in a file system and will have to be loaded into the
+running kernel by some user space application or script.</p>
+</div>
+<div class="paragraph">
+<p>An important point to note in choosing if a feature should be compiled as
+a module is the latency with which the feature needs to be activated from
+boot of the system. As the kernel module is stored in a filesystem, it will
+not be loadable until the filesystem is mounted in the kernel.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kernel-option-types"><a class="anchor" href="#kernel-option-types"></a>19.3. Kernel Option Types</h3>
+<div class="paragraph">
+<p>When selecting different features and configuring the kernel we come across
+different types based on the information required to complete the
+configuration.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">bool</dt>
+<dd>
+<p><em>true</em> or <em>false</em> to indicate presence or absence of the feature
+respectively.</p>
+</dd>
+<dt class="hdlist1">tristate</dt>
+<dd>
+<p><em>true</em> or <em>false</em> similar to bool option types and also a third
+state i.e. <em>module</em> to indicate it is a kernel module.</p>
+</dd>
+<dt class="hdlist1">int</dt>
+<dd>
+<p>If an integer value is required in the configuration of the feature.</p>
+</dd>
+<dt class="hdlist1">hex</dt>
+<dd>
+<p>If a hexadecimal value is required in the configuration of the feature.</p>
+</dd>
+<dt class="hdlist1">string</dt>
+<dd>
+<p>If a string value is requried in the configuration of the feature.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kernel-option-dependencies"><a class="anchor" href="#kernel-option-dependencies"></a>19.4. Kernel Option Dependencies</h3>
+<div class="paragraph">
+<p>There will be dependencies between different kernel objects. To describe
+the dependency there are two types:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">depends on dependencies</dt>
+<dd>
+<p>The option that is dependent on another remains
+invisible until the later is enabled.</p>
+</dd>
+<dt class="hdlist1">select dependencies</dt>
+<dd>
+<p>The option on selection automatically selects the
+object on which it depends on in the configuration.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="graphical-configuration-interface-em-xconfig-em"><a class="anchor" href="#graphical-configuration-interface-em-xconfig-em"></a>19.5. Graphical Configuration Interface <em>xconfig</em></h3>
+<div class="paragraph">
+<p>The xconfig configuration utitlity which uses Qt is invoked when running
+<em>make xconfig</em> in the root directory. If we try to invoke it we get the
+following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/Git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make xconfig
+  CHECK   qt                                                                <i class="conum" data-value="1"></i><b>(1)</b>
+* Unable to find the QT4 tool qmake. Trying to use QT3
+*
+* Unable to find any QT installation. Please make sure that
+* the QT4 or QT3 development package is correctly installed and
+* either qmake can be found or install pkg-config or set
+* the QTDIR environment variable to the correct location.                <i class="conum" data-value="2"></i><b>(2)</b>
+*
+make[1]: *** No rule to make target `scripts/kconfig/.tmp_qtcheck', needed by `scripts/kconfig/qconf.o'.  Stop.
+make: *** [xconfig] Error 2
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The target rule checks for qt</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A nice description of what is probably wrong with our Ubuntu distribution</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ok we need to install Qt in our system. The dependencies are <em>libqt4-dev</em>
+and <em>g++</em>. For older kernel sources the dependencies are <em>libqt3-mt-dev</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ sudo apt-get install libqt4-dev g++        <i class="conum" data-value="1"></i><b>(1)</b>
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.
+Setting up libqtwebkit-dev (2.3.2-0ubuntu7) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Installing the prerequisites</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Again we try running <em>make xconfig</em> and see the graphical interface as shown
+in the screen capture below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-xconfig-screenshot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-xconfig-screenshot.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-xconfig-screenshot.png" alt="make xconfig screenshot" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of xconfig interface</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It is possible to search for a particular feature using the search interface.
+This can be invoked with a <strong>CTRL + F</strong> keyboard combination.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-xconfig-search" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-xconfig-search-imx.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-xconfig-search-imx.png" alt="make xconfig search imx" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of xconfig search</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="graphical-configuration-interface-em-gconfig-em"><a class="anchor" href="#graphical-configuration-interface-em-gconfig-em"></a>19.6. Graphical Configuration Interface <em>gconfig</em></h3>
+<div class="paragraph">
+<p>Another graphical interface is the <em>gconfig</em> target.This GTK based configuration
+gives the following error when we invoke it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make gconfig                <i class="conum" data-value="1"></i><b>(1)</b>
+*
+* Unable to find the GTK+ installation. Please make sure that
+* the GTK+ 2.0 development package is correctly installed...
+* You need gtk+-2.0, glib-2.0 and libglade-2.0.                                        <i class="conum" data-value="2"></i><b>(2)</b>
+*
+make[1]: *** No rule to make target `scripts/kconfig/.tmp_gtkcheck', needed by `scripts/kconfig/gconf.o'.  Stop.
+make: *** [gconfig] Error 2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We invoke the target gconfig of the root directory makefile</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A helpful message indicates a missing GTK+ installation in our Ubun</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In this case we have to install the debian package <em>libglade2-dev</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ sudo apt-get install libglade2-dev
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+.
+.
+.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="text-configuration-interface-em-menuconfig-em"><a class="anchor" href="#text-configuration-interface-em-menuconfig-em"></a>19.7. Text Configuration Interface <em>menuconfig</em></h3>
+<div class="paragraph">
+<p>This configuration interface requires no graphical interface and only
+requires the <em>libncurses-dev</em> debian package to be installed. This interface
+is popular with other projects such as Linux Target Image Builder (LTIB),
+Busybox, OpenWrt, etc.. It works well enough for us to ignore the graphical
+interfaces. It is brought up using a <em>make menuconfig</em> command in the root
+directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make menuconfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We get the following screen shot one the interface is invoked from the shell.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-menuconfig-screenshot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-screenshot.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-screenshot.png" alt="make menuconfig screenshot" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of menuconfig interface</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Searching with the <em>menuconfig</em> interface is done by hitting the '/' key similar
+to <em>vim</em>. Once the search page is displayed we can enter a key word for the
+search.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-menuconfig-search-imx" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-search-imx.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-search-imx.png" alt="make menuconfig search imx" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of menuconfig search</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The results of the search are displayed as follows:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-menuconfig-search-results" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-menuconfig-search-imx-results.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-menuconfig-search-imx-results.png" alt="make menuconfig search imx results" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of menuconfig search results</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="text-configuration-interface-em-nconfig-em"><a class="anchor" href="#text-configuration-interface-em-nconfig-em"></a>19.8. Text Configuration Interface <em>nconfig</em></h3>
+<div class="paragraph">
+<p>Another similar test based configuration interface is <em>nconfig</em> with the same
+dependency on <em>libncurses_dev</em> debian package. Again to invoke the interface
+we will have to use <em>make nconfig</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make nconfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We get the following screen shot once the interface is invoked from the shell.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-make-nconfig-screenshot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/make-nconfig-screenshot.png"><img src="http://zeuzoix.github.io/techeuphoria/images/make-nconfig-screenshot.png" alt="make nconfig screenshot" width="640" height="480"></a>
+</div>
+<div class="title">Screenshot of nconfig interface</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="make-oldconfig"><a class="anchor" href="#make-oldconfig"></a>19.9. make oldconfig</h3>
+<div class="paragraph">
+<p>If we are upgrading to a newer release and use the <em>.config</em> file from an older
+release of the Linux kernel then we need to run <em>make oldconfig</em>. This will
+inform us of the configuration settings that are irrelevant in the newer release
+and if there are newer features or parameters then it will prompt us asking for
+appropriate values for these settings.</p>
+</div>
+<div class="paragraph">
+<p>Another scenario in which <em>make oldconfig</em> may come in use is if we modify the
+<em>.config</em> file by hand.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reverting-to-a-previous-configuration"><a class="anchor" href="#reverting-to-a-previous-configuration"></a>19.10. Reverting To A Previous Configuration</h3>
+<div class="paragraph">
+<p>If we mess up our configuration and build a kernel that is unusable then we can
+revert to the older configuration that the kernel was built. This is done by
+copyting the <em>.config.old</em> file which gets created if we use any of the
+configuration interfaces available. All the interfaces save a copy of the
+existing configuration file <em>.config</em> as a back up in <em>.config.old</em></p>
 </div>
 </div>
 </div>
