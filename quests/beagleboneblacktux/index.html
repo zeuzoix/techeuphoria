@@ -134,6 +134,13 @@ TechEuphoria
 <li><a href="#reverting-to-a-previous-configuration">19.10. Reverting To A Previous Configuration</a></li>
 </ul>
 </li>
+<li><a href="#compiling-the-kernel">20. Compiling The Kernel</a></li>
+<li><a href="#kernel-installation">21. Kernel Installation</a>
+<ul class="sectlevel2">
+<li><a href="#kernel-module-installation">21.1. Kernel Module Installation</a></li>
+<li><a href="#cleaning-up">21.2. Cleaning Up</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1862,6 +1869,205 @@ revert to the older configuration that the kernel was built. This is done by
 copyting the <em>.config.old</em> file which gets created if we use any of the
 configuration interfaces available. All the interfaces save a copy of the
 existing configuration file <em>.config</em> as a back up in <em>.config.old</em></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="compiling-the-kernel"><a class="anchor" href="#compiling-the-kernel"></a>20. Compiling The Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After configuring the kernel with one of the configuration interfaces we can
+proceed to build the kernel by issuing a <em>make</em> command in the root directory.
+If blessed with multiple CPU cores then the build can be speed up using a
+<em>make -j 4</em> command which instructs make to run 4 jobs in parallel.</p>
+</div>
+<div class="paragraph">
+<p>After the build the following will be generated:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">vmlinux</dt>
+<dd>
+<p>Raw and uncompressed image which can be used for debugging purposes.
+This image cannot be booted.</p>
+</dd>
+<dt class="hdlist1">arch/&lt;ARCH&gt;/boot/*Image</dt>
+<dd>
+<p>The final kernel image which can be booted e.g.
+bzImage for x86 and zImage for ARM. There may also be compressed images
+generated.</p>
+</dd>
+<dt class="hdlist1">arch/&lt;ARCH&gt;/boot/dts/*.dtb</dt>
+<dd>
+<p>Compiled Device Tree files for certain
+architectures. This will be loaded by the bootloader before the kernel image.</p>
+</dd>
+<dt class="hdlist1">kernel modules(*.ko)</dt>
+<dd>
+<p>This will be generated in the directory corresponding
+to the driver/feature for which module type of configuration option was
+selected.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kernel-installation"><a class="anchor" href="#kernel-installation"></a>21. Kernel Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A kernel compiled for the host machine on which it is built can be installed
+in the system by issuing a <em>make install</em> after the build is successful. To
+install the kernel image we would required root permissions.</p>
+</div>
+<div class="paragraph">
+<p>The installation includes the following:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">/boot/vmlinuz-&lt;version&gt;</dt>
+<dd>
+<p>The compressed kernel image. This is copied from
+the <em>arch/&lt;ARCH&gt;/boot</em> directory.</p>
+</dd>
+<dt class="hdlist1">/boot/System.map-&lt;version&gt;</dt>
+<dd>
+<p>This file stores the kernel symbols along with
+their addresses and will be handy in the event of a Kernel panic</p>
+</dd>
+<dt class="hdlist1">/boot/config-&lt;version&gt;</dt>
+<dd>
+<p>This is the configuration file <em>.config</em> saved
+along with the compiled kernel</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The installation may also reconfigured the bootloader to take the new
+kernel settings so that on the next boot the new kernel will be visible.</p>
+</div>
+<div class="sect2">
+<h3 id="kernel-module-installation"><a class="anchor" href="#kernel-module-installation"></a>21.1. Kernel Module Installation</h3>
+<div class="paragraph">
+<p>Along with the kernel the compiled modules will also have to be installed
+in the system. To achieve this there is a target <em>modules_install</em> which
+can be executed after executing the <em>install</em> target of the root makefile.</p>
+</div>
+<div class="paragraph">
+<p>The kernel modules and related files are installed in the
+<em>/lib/modules/&lt;version&gt;/</em> directory. If we explore this directory we will
+see the following:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">kernel/</dt>
+<dd>
+<p>This directory contains a directory structure similar to the
+kernel source code. The kernel modules will be saved in the same directory
+structure as the source from which they were built.</p>
+</dd>
+<dt class="hdlist1">modules.alias</dt>
+<dd>
+<p>Aliases for the modules for loading utilities. An example
+of the contents of this file is given below:</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ head /lib/modules/3.13.0-45-generic/modules.alias
+# Aliases extracted from modules themselves.
+alias char-major-10-134 apm
+alias aes-asm aes_i586
+alias aes aes_i586
+alias twofish-asm twofish_i586
+alias twofish twofish_i586
+alias salsa20-asm salsa20_i586
+alias salsa20 salsa20_i586
+alias serpent serpent_sse2_i586
+alias aes aesni_intel</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">modules.dep</dt>
+<dd>
+<p>Highlights the dependencies between modules. This will be used by
+<em>modprobe</em> to choose which kernel modules have to be loaded before loading a
+particular module. In the example below mce_inject.ko has no dependency and can
+be loaded without any issue. But twofish-i586.ko depends on twofish_common.ko
+which must be loaded first.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ head /lib/modules/3.13.0-45-generic/modules.dep
+kernel/arch/x86/kernel/cpu/mcheck/mce-inject.ko:
+kernel/arch/x86/kernel/msr.ko:
+kernel/arch/x86/kernel/cpuid.ko:
+kernel/arch/x86/kernel/apm.ko:
+kernel/arch/x86/crypto/glue_helper.ko:
+kernel/arch/x86/crypto/aes-i586.ko:
+kernel/arch/x86/crypto/twofish-i586.ko: kernel/crypto/twofish_common.ko
+kernel/arch/x86/crypto/salsa20-i586.ko:
+kernel/arch/x86/crypto/serpent-sse2-i586.ko: kernel/crypto/xts.ko kernel/crypto/serpent_generic.ko kernel/crypto/lrw.ko kernel/crypto/gf128mul.ko kernel/arch/x86/crypto/glue_helper.ko kernel/crypto/ablk_helper.ko kernel/crypto/cryptd.ko
+kernel/arch/x86/crypto/aesni-intel.ko: kernel/arch/x86/crypto/aes-i586.ko kernel/crypto/xts.ko kernel/crypto/lrw.ko kernel/crypto/gf128mul.ko kernel/crypto/ablk_helper.ko kernel/crypto/cryptd.ko</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">modules.symbols</dt>
+<dd>
+<p>Describes the kernel module to which a symbol belongs. It can
+be useful during debugging of a Kernel panic. For example we can see that
+cfg80211_report_obss_beacon belongs to the cfg80211 kernel module.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ head /lib/modules/3.13.0-45-generic/modules.symbols
+# Aliases for symbols, used by symbol_request().
+alias symbol:cfg80211_report_obss_beacon cfg80211
+alias symbol:drm_dp_link_train_channel_eq_delay drm_kms_helper
+alias symbol:VBoxHost_RTThreadPreemptDisable vboxdrv
+alias symbol:__twofish_setkey twofish_common
+alias symbol:get_wd_exp_mode_sd bpctl_mod
+alias symbol:hsi_register_controller hsi
+alias symbol:mlx4_db_free mlx4_core
+alias symbol:sdhci_remove_host sdhci
+alias symbol:videobuf_dma_init_kernel videobuf_dma_sg</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cleaning-up"><a class="anchor" href="#cleaning-up"></a>21.2. Cleaning Up</h3>
+<div class="paragraph">
+<p>There are several targets that are used to clean up files that have been
+generated by the configuration and compilation of the Linux kernel source
+code.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">make clean</dt>
+<dd>
+<p>This will remove all the generated object code files to allow
+us to rebuilt the kernel.</p>
+</dd>
+<dt class="hdlist1">make mrproper</dt>
+<dd>
+<p>Remove all the generated files including the configuration
+file <em>.config</em>. It may be used if we are rebuilding the kernel source
+code for a different architecture.</p>
+</dd>
+<dt class="hdlist1">make distclean</dt>
+<dd>
+<p>This target is used to remove editor backup files. It is
+mainly used when generating patches.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
