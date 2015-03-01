@@ -909,3 +909,196 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
 <2> The kernel running is _3.13.0-45-generic_
 <3> Listing the configuration file of this kernel in _/boot/_
 <4> The configuration file is _config-3.13.0-45-generic_
+
+=== Configuring Features As Modules
+
+Upon configuring the kernel source and completion of the build we get
+a single image which represents the kernel and all the features it is 
+configured for. However it is possible to configure some of the features
+such as device drivers, filesystems, driver tests, etc. as separate
+entities called *kernel modules*.
+
+By configuring certain features as modules we are able to keep the size
+of the kernel to a minimum. Kernel modules can be loaded from user space
+to support certain applications on execution or on insertion of certain
+devices into the system buses like USB, PCI, etc..
+
+Therefore in the configuration of certain features it is possible to select
+if the feature needs to be compiled as a kernel module. All kernel modules
+will have to be stored in a file system and will have to be loaded into the
+running kernel by some user space application or script.
+
+An important point to note in choosing if a feature should be compiled as
+a module is the latency with which the feature needs to be activated from 
+boot of the system. As the kernel module is stored in a filesystem, it will
+not be loadable until the filesystem is mounted in the kernel.
+
+=== Kernel Option Types
+
+When selecting different features and configuring the kernel we come across
+different types based on the information required to complete the
+configuration.
+
+bool:: _true_ or _false_ to indicate presence or absence of the feature
+respectively.
+tristate:: _true_ or _false_ similar to bool option types and also a third
+state i.e. _module_ to indicate it is a kernel module.
+int:: If an integer value is required in the configuration of the feature.
+hex:: If a hexadecimal value is required in the configuration of the feature.
+string:: If a string value is requried in the configuration of the feature.
+
+=== Kernel Option Dependencies
+
+There will be dependencies between different kernel objects. To describe
+the dependency there are two types:
+
+depends on dependencies:: The option that is dependent on another remains
+invisible until the later is enabled.
+select dependencies:: The option on selection automatically selects the
+object on which it depends on in the configuration.
+ 
+=== Graphical Configuration Interface _xconfig_
+
+The xconfig configuration utitlity which uses Qt is invoked when running
+_make xconfig_ in the root directory. If we try to invoke it we get the
+following error:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/Git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make xconfig
+  CHECK   qt								<1>
+* Unable to find the QT4 tool qmake. Trying to use QT3
+*
+* Unable to find any QT installation. Please make sure that
+* the QT4 or QT3 development package is correctly installed and
+* either qmake can be found or install pkg-config or set
+* the QTDIR environment variable to the correct location.		<2>
+*
+make[1]: *** No rule to make target `scripts/kconfig/.tmp_qtcheck', needed by `scripts/kconfig/qconf.o'.  Stop.
+make: *** [xconfig] Error 2
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+----
+<1> The target rule checks for qt
+<2> A nice description of what is probably wrong with our Ubuntu distribution
+
+Ok we need to install Qt in our system. The dependencies are _libqt4-dev_
+and _g++_. For older kernel sources the dependencies are _libqt3-mt-dev_.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ sudo apt-get install libqt4-dev g++	<1>
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+.
+.
+.
+Setting up libqtwebkit-dev (2.3.2-0ubuntu7) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.5) ...
+----
+<1> Installing the prerequisites 
+
+Again we try running _make xconfig_ and see the graphical interface as shown
+in the screen capture below:
+
+====
+image::make-xconfig-screenshot.png[width="640", height="480", align="center"]
+====
+
+It is possible to search for a particular feature using the search interface.
+This can be invoked with a *CTRL + F* keyboard combination.
+
+====
+image::make-xconfig-search-imx.png[width="640", height="480", align="center"]
+====
+
+=== Graphical Configuration Interface _gconfig_
+
+Another graphical interface is the _gconfig_ target.This GTK based configuration
+gives the following error when we invoke it:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make gconfig		<1>
+*
+* Unable to find the GTK+ installation. Please make sure that
+* the GTK+ 2.0 development package is correctly installed...
+* You need gtk+-2.0, glib-2.0 and libglade-2.0.					<2>
+*
+make[1]: *** No rule to make target `scripts/kconfig/.tmp_gtkcheck', needed by `scripts/kconfig/gconf.o'.  Stop.
+make: *** [gconfig] Error 2
+----
+<1> We invoke the target gconfig of the root directory makefile
+<2> A helpful message indicates a missing GTK+ installation in our Ubun
+
+In this case we have to install the debian package _libglade2-dev_
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ sudo apt-get install libglade2-dev
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+.
+.
+.
+----
+
+=== Text Configuration Interface _menuconfig_
+
+This configuration interface requires no graphical interface and only
+requires the _libncurses-dev_ debian package to be installed. This interface
+is popular with other projects such as Linux Target Image Builder (LTIB),
+Busybox, OpenWrt, etc.. It works well enough for us to ignore the graphical
+interfaces. It is brought up using a _make menuconfig_ command in the root
+directory.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make menuconfig
+----
+
+We get the following screen shot one the interface is invoked from the shell.
+
+====
+image::make-menuconfig-screenshot.png[width="640", height="480", align="center"]
+====
+
+Searching with the _menuconfig_ interface is done by hitting the '/' key similar
+to _vim_. Once the search page is displayed we can enter a key word for the
+search.
+
+====
+image::make-menuconfig-search-imx.png[width="640", height="480", align="center"]
+====
+
+The results of the search are displayed as follows:
+
+====
+image::make-menuconfig-search-imx-results.png[width="640", height="480", align="center"]
+====
+
+
+=== Text Configuration Interface _nconfig_
+
+Another similar test based configuration interface is _nconfig_ with the same
+dependency on _libncurses_dev_ debian package. Again to invoke the interface
+we will have to use _make nconfig_.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make nconfig
+----
+
+We get the following screen shot once the interface is invoked from the shell.
+
+====
+image::make-nconfig-screenshot.png[width="640", height="480", align="center"]
+====
+
+
+
+
