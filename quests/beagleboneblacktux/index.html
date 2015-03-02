@@ -141,6 +141,7 @@ TechEuphoria
 <li><a href="#cleaning-up">21.2. Cleaning Up</a></li>
 </ul>
 </li>
+<li><a href="#cross-compiling-the-kernel">22. Cross-Compiling The Kernel</a></li>
 </ul>
 </li>
 </ul>
@@ -2069,6 +2070,44 @@ mainly used when generating patches.</p>
 </dd>
 </dl>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cross-compiling-the-kernel"><a class="anchor" href="#cross-compiling-the-kernel"></a>22. Cross-Compiling The Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When we work with embedded targets such as the Beagle Bone Black board
+we have to compile the kernel for the architecture of that board i.e.
+ARM. A kernel compiled on our x86 workstation will not execute on the
+Beagle Bone Black because it is compiled for an x86 architecture.</p>
+</div>
+<div class="paragraph">
+<p>The process of compiling the kernel on our work station for another
+architecture is referred to as cross-compilation. The kernel can be
+compiled on the Beagle Bone Black if it has a toolchain installed on
+it. However as the processing power of embedded targets is much lower
+than that of PCs and servers it becomes more efficient to employ
+a cross-compilation toolchain for embedded development.</p>
+</div>
+<div class="paragraph">
+<p>A cross-compiler can be recognized by its prefix which indicates
+the system for which it will compile the source code. For example
+<em>mips-linux-gcc</em> indicates that the cross-compiler will generate
+a binary that can be executed on a MIPS based architecture whereas
+a <em>arm-linux-gnueabi-gcc</em> indicates that the cross-compiler will
+generate a binary that can be executed on an ARM based architecture.</p>
+</div>
+<div class="paragraph">
+<p>To specify the architecture for which the kernel source code is
+to be compiled we have to pass a variable <strong><em>ARCH</em></strong> to the top level
+makefile. This should map to any of the subdirectories in the
+<em>arch/</em> directory of the kernel source code e.g. <em>arm</em>.</p>
+</div>
+<div class="paragraph">
+<p>To specify the cross compilation toolchain we have to pass the
+<strong><em>CROSS_COMPILE</em></strong> variable which represents the prefix of the
+toolchain e.g. <em>mips-linux-</em> or <em>arm-linux-gnueabi-</em>.</p>
 </div>
 </div>
 </div>
