@@ -1260,6 +1260,36 @@ code for a different architecture.
 make distclean:: This target is used to remove editor backup files. It is
 mainly used when generating patches.
 
+== Cross-Compiling The Kernel
+
+When we work with embedded targets such as the Beagle Bone Black board
+we have to compile the kernel for the architecture of that board i.e.
+ARM. A kernel compiled on our x86 workstation will not execute on the
+Beagle Bone Black because it is compiled for an x86 architecture.
+
+The process of compiling the kernel on our work station for another
+architecture is referred to as cross-compilation. The kernel can be
+compiled on the Beagle Bone Black if it has a toolchain installed on
+it. However as the processing power of embedded targets is much lower
+than that of PCs and servers it becomes more efficient to employ
+a cross-compilation toolchain for embedded development.
+
+A cross-compiler can be recognized by its prefix which indicates
+the system for which it will compile the source code. For example
+_mips-linux-gcc_ indicates that the cross-compiler will generate
+a binary that can be executed on a MIPS based architecture whereas
+a _arm-linux-gnueabi-gcc_ indicates that the cross-compiler will
+generate a binary that can be executed on an ARM based architecture.
+
+To specify the architecture for which the kernel source code is
+to be compiled we have to pass a variable *_ARCH_* to the top level
+makefile. This should map to any of the subdirectories in the
+_arch/_ directory of the kernel source code e.g. _arm_.
+
+To specify the cross compilation toolchain we have to pass the
+*_CROSS_COMPILE_* variable which represents the prefix of the 
+toolchain e.g. _mips-linux-_ or _arm-linux-gnueabi-_.
+
 
 
 
