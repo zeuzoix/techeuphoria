@@ -142,6 +142,11 @@ TechEuphoria
 </ul>
 </li>
 <li><a href="#cross-compiling-the-kernel">22. Cross-Compiling The Kernel</a></li>
+<li><a href="#predefined-configuration-files">23. Predefined Configuration Files</a>
+<ul class="sectlevel2">
+<li><a href="#saving-our-default-configuration">23.1. Saving Our Default Configuration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2108,6 +2113,71 @@ makefile. This should map to any of the subdirectories in the
 <p>To specify the cross compilation toolchain we have to pass the
 <strong><em>CROSS_COMPILE</em></strong> variable which represents the prefix of the
 toolchain e.g. <em>mips-linux-</em> or <em>arm-linux-gnueabi-</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="predefined-configuration-files"><a class="anchor" href="#predefined-configuration-files"></a>23. Predefined Configuration Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many times when working with embedded boards we don&#8217;t set the configuration
+of a particular board from scratch. It is easier if there is a predefined
+configuration with which we can start from and there is in most cases. We
+get a list of predefined configurations from <em>make help</em> which allows us to
+set the <em>.config</em> to a particular configuration for a specific board.</p>
+</div>
+<div class="paragraph">
+<p>For instance if we run <em>make viper_defconfig</em> it will overwrite the <em>.config</em>
+file with the file from <em>arch/arm/configs/viper_defconfig</em>. To get a list of
+default configurations we can either use <em>make help</em> or the find utility as
+shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find . -name *_defconfig |head
+./arch/arc/configs/tb10x_defconfig
+./arch/arc/configs/fpga_defconfig
+./arch/arc/configs/fpga_noramfs_defconfig
+./arch/arc/configs/nsimosci_defconfig
+./arch/mn10300/configs/asb2364_defconfig
+.
+.
+.
+./arch/ia64/configs/sim_defconfig
+./arch/ia64/configs/tiger_defconfig
+./arch/xtensa/configs/iss_defconfig
+./arch/xtensa/configs/s6105_defconfig
+./arch/xtensa/configs/common_defconfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once we&#8217;ve loaded a default configuration which is basically a minimal
+configuration it&#8217;s time to tailor the configuration to our specifications.
+This will include running one of the configuration interfaces like
+<em>make menuconfig</em>. We see the settings of the default configuration in the
+interface.</p>
+</div>
+<div class="sect2">
+<h3 id="saving-our-default-configuration"><a class="anchor" href="#saving-our-default-configuration"></a>23.1. Saving Our Default Configuration</h3>
+<div class="paragraph">
+<p>We also have the ability to save our configuration once it is tailored, as
+a default configuration. This can be done by running the command
+<em>make savedefconfig</em>. Running this target causes make to save the <em>.config</em>
+file with a name <em>defconfig</em>. We can move the new <em>defconfig</em> file to
+the architecture <em>configs</em> directory with an appropriate name.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>mv defconfig arch/&lt;ARCH&gt;/configs/my_favourite_config</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Overall the choice of starting from a default minimal configuration lies with
+the developer. We can also start from scratch but be mindful about selection of
+the CPU selection and the correct device drivers.</p>
+</div>
 </div>
 </div>
 </div>
