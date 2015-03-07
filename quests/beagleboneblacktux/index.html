@@ -141,10 +141,14 @@ TechEuphoria
 <li><a href="#cleaning-up">21.2. Cleaning Up</a></li>
 </ul>
 </li>
-<li><a href="#cross-compiling-the-kernel">22. Cross-Compiling The Kernel</a></li>
-<li><a href="#predefined-configuration-files">23. Predefined Configuration Files</a>
+<li><a href="#cross-compiling-the-kernel">22. Cross-Compiling The Kernel</a>
 <ul class="sectlevel2">
-<li><a href="#saving-our-default-configuration">23.1. Saving Our Default Configuration</a></li>
+<li><a href="#predefined-configuration-files">22.1. Predefined Configuration Files</a></li>
+<li><a href="#saving-our-default-configuration">22.2. Saving Our Default Configuration</a></li>
+<li><a href="#device-tree">22.3. Device Tree</a></li>
+<li><a href="#steps-to-build-and-install-a-kernel">22.4. Steps To Build and Install A Kernel</a></li>
+<li><a href="#using-u-boot">22.5. Using U-Boot</a></li>
+<li><a href="#kernel-command-line">22.6. Kernel Command Line</a></li>
 </ul>
 </li>
 </ul>
@@ -2114,11 +2118,8 @@ makefile. This should map to any of the subdirectories in the
 <strong><em>CROSS_COMPILE</em></strong> variable which represents the prefix of the
 toolchain e.g. <em>mips-linux-</em> or <em>arm-linux-gnueabi-</em>.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="predefined-configuration-files"><a class="anchor" href="#predefined-configuration-files"></a>23. Predefined Configuration Files</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="predefined-configuration-files"><a class="anchor" href="#predefined-configuration-files"></a>22.1. Predefined Configuration Files</h3>
 <div class="paragraph">
 <p>Many times when working with embedded boards we don&#8217;t set the configuration
 of a particular board from scratch. It is easier if there is a predefined
@@ -2157,8 +2158,9 @@ This will include running one of the configuration interfaces like
 <em>make menuconfig</em>. We see the settings of the default configuration in the
 interface.</p>
 </div>
+</div>
 <div class="sect2">
-<h3 id="saving-our-default-configuration"><a class="anchor" href="#saving-our-default-configuration"></a>23.1. Saving Our Default Configuration</h3>
+<h3 id="saving-our-default-configuration"><a class="anchor" href="#saving-our-default-configuration"></a>22.2. Saving Our Default Configuration</h3>
 <div class="paragraph">
 <p>We also have the ability to save our configuration once it is tailored, as
 a default configuration. This can be done by running the command
@@ -2177,6 +2179,125 @@ the architecture <em>configs</em> directory with an appropriate name.</p>
 <p>Overall the choice of starting from a default minimal configuration lies with
 the developer. We can also start from scratch but be mindful about selection of
 the CPU selection and the correct device drivers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="device-tree"><a class="anchor" href="#device-tree"></a>22.3. Device Tree</h3>
+<div class="paragraph">
+<p>Most embedded platforms have non-discoverable hardware which exists as part
+of the SOC. This hardware has to be described to the kernel in the form of
+code or a special hardware description language called <em>Device Tree</em>.</p>
+</div>
+<div class="paragraph">
+<p>The <em>Device Tree</em> language is used only recently in certain architectures
+such as ARM, PowerPC, ARC, etc.. The Device Tree source file is compiled
+into a binary called Device Tree Blob by a compiler and passed to the kernel
+through the bootloader. Each board will have its own unique hardware and
+therefore will have a unique device tree source file.</p>
+</div>
+<div class="paragraph">
+<p>The <em>Device Tree</em> files will be located in the
+ <em>/arch/&lt;ARCH&gt;/boot/dts/</em> folder. The bootloader has to have the capability
+to load the <em>Device Tree Blob</em> and the kernel image before starting
+execution of the kernel.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="steps-to-build-and-install-a-kernel"><a class="anchor" href="#steps-to-build-and-install-a-kernel"></a>22.4. Steps To Build and Install A Kernel</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the kernel source code using <em>make menuconfig</em></p>
+</li>
+<li>
+<p>Build the kernel using <em>make</em> with &lt;ARCH&gt; and &lt;CROSS_COMPILE&gt; set if building
+for and embedded platform.</p>
+</li>
+<li>
+<p>Copy the built image from <em>arch/&lt;ARCH&gt;/boot/</em>.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The image name will depend on the architecture e.g. bzImage, zImage, etc..</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Install the kernel image. For an embedded platform do <strong>NOT</strong> run <em>make install</em>.
+It is better to simply copy the built kernel image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The installation can be customized by editing the <em>arch/&lt;ARCH&gt;/boot/install.sh</em>
+script.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Install the modules. For an embedded platform do <strong>NOT</strong> run <em>make modules_install</em>
+without the <em>INSTALL_MOD_PATH=&lt;dir&gt;/</em> variable. This ensures we don&#8217;t mess around
+with the system kernel modules.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-u-boot"><a class="anchor" href="#using-u-boot"></a>22.5. Using U-Boot</h3>
+<div class="paragraph">
+<p>A popular bootloader with embedded platforms is U-Boot. U-Boot works with a
+format of kernel image called <em>uImage</em>. This is generated from the <em>zImage</em> using
+a <em>make uImage</em> target execution for ARM. Newer versions of U-Boot also support
+booting of the ARM based kernel image zImage directly.</p>
+</div>
+<div class="paragraph">
+<p>Some ARM platforms require the LOADADDR to be passed along with the <em>make uImage</em>
+target execution. The address associated with this variable represents the
+physical memory where the image is executed in.</p>
+</div>
+<div class="paragraph">
+<p>U-Boot also has the ability to load the <em>Device Tree Blob</em> in memory and pass
+it to the kernel. The boot process follows the steps</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Load the kernel zImage or uImage at address X</p>
+</li>
+<li>
+<p>Load the &lt;board&gt;.dtb file at Y</p>
+</li>
+<li>
+<p>Boot the kernel with bootz X -Y or bootm X - Y. The - indicates no initramfs.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kernel-command-line"><a class="anchor" href="#kernel-command-line"></a>22.6. Kernel Command Line</h3>
+<div class="paragraph">
+<p>The kernel takes in a list of arguments which can affect its behavior at run
+time. These argument can be hardcoded during the configuration of the kernel
+source code by setting the CONFIG_CMDLINE option.</p>
+</div>
+<div class="paragraph">
+<p>The command line argument can also be passed to the kernel at boot up using
+an environment variable like <em>bootargs</em> in the case of U-Boot.</p>
+</div>
+<div class="paragraph">
+<p>There are several kernel arguments documented in
+<em>Documentation/kernel-parameters.txt</em>. We typically set:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>root =  for the root filesystem</p>
+</li>
+<li>
+<p>console = for the destination of the kernel messages</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
