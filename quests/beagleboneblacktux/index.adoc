@@ -1290,7 +1290,7 @@ To specify the cross compilation toolchain we have to pass the
 *_CROSS_COMPILE_* variable which represents the prefix of the 
 toolchain e.g. _mips-linux-_ or _arm-linux-gnueabi-_.
 
-== Predefined Configuration Files
+=== Predefined Configuration Files
 
 Many times when working with embedded boards we don't set the configuration
 of a particular board from scratch. It is easier if there is a predefined
@@ -1340,6 +1340,75 @@ the architecture _configs_ directory with an appropriate name.
 Overall the choice of starting from a default minimal configuration lies with
 the developer. We can also start from scratch but be mindful about selection of
 the CPU selection and the correct device drivers.
+
+=== Device Tree
+
+Most embedded platforms have non-discoverable hardware which exists as part 
+of the SOC. This hardware has to be described to the kernel in the form of
+code or a special hardware description language called _Device Tree_.
+
+The _Device Tree_ language is used only recently in certain architectures
+such as ARM, PowerPC, ARC, etc.. The Device Tree source file is compiled
+into a binary called Device Tree Blob by a compiler and passed to the kernel
+through the bootloader. Each board will have its own unique hardware and
+therefore will have a unique device tree source file.
+
+The _Device Tree_ files will be located in the
+ _/arch/<ARCH>/boot/dts/_ folder. The bootloader has to have the capability
+to load the _Device Tree Blob_ and the kernel image before starting
+execution of the kernel.
+
+=== Steps To Build and Install A Kernel
+
+. Configure the kernel source code using _make menuconfig_
+. Build the kernel using _make_ with <ARCH> and <CROSS_COMPILE> set if building
+for and embedded platform.
+. Copy the built image from _arch/<ARCH>/boot/_.
+.. The image name will depend on the architecture e.g. bzImage, zImage, etc..
+. Install the kernel image. For an embedded platform do *NOT* run _make install_.
+It is better to simply copy the built kernel image.
+.. The installation can be customized by editing the _arch/<ARCH>/boot/install.sh_
+script.
+. Install the modules. For an embedded platform do *NOT* run _make modules_install_
+without the _INSTALL_MOD_PATH=<dir>/_ variable. This ensures we don't mess around
+with the system kernel modules.
+
+=== Using U-Boot
+
+A popular bootloader with embedded platforms is U-Boot. U-Boot works with a
+format of kernel image called _uImage_. This is generated from the _zImage_ using
+a _make uImage_ target execution for ARM. Newer versions of U-Boot also support
+booting of the ARM based kernel image zImage directly.
+
+Some ARM platforms require the LOADADDR to be passed along with the _make uImage_
+target execution. The address associated with this variable represents the
+physical memory where the image is executed in.
+
+U-Boot also has the ability to load the _Device Tree Blob_ in memory and pass
+it to the kernel. The boot process follows the steps
+
+. Load the kernel zImage or uImage at address X
+. Load the <board>.dtb file at Y
+. Boot the kernel with bootz X -Y or bootm X - Y. The - indicates no initramfs.
+
+=== Kernel Command Line
+
+The kernel takes in a list of arguments which can affect its behavior at run
+time. These argument can be hardcoded during the configuration of the kernel
+source code by setting the CONFIG_CMDLINE option.
+
+The command line argument can also be passed to the kernel at boot up using
+an environment variable like _bootargs_ in the case of U-Boot.
+
+There are several kernel arguments documented in
+_Documentation/kernel-parameters.txt_. We typically set:
+
+. root =  for the root filesystem
+. console = for the destination of the kernel messages
+
+
+
+
 
 
 
