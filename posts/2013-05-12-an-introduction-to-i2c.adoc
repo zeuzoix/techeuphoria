@@ -4,6 +4,7 @@ Conrad Gomes
 ifndef::awestruct[]
 :imagesdir: ../images
 endif::[]
+:awestruct-imagesdir: ../../../../../images
 :awestruct-tags: [electronics, protocols, i2c, twi, bus]
 :excerpt: I2C is a serial data bus used to interface low speed peripherals developed by Phillips.
 :awestruct-excerpt: {excerpt}
@@ -36,5 +37,7 @@ More information at : +
 . {esaacademy-link}[{esaacademy-link}^]
 
 ====
-image::I2C.svg[width="640", height="480", align="center"]
+[[I2C]]
+.Diagram showing an I2C configuration
+image::I2C.svg[width="640", height="480", align="center", link={awestruct-imagesdir}/I2C.svg]
 ====

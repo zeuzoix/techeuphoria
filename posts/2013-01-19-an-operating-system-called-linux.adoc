@@ -4,6 +4,7 @@ Conrad Gomes
 ifndef::awestruct[]
 :imagesdir: ../images
 endif::[]
+:awestruct-imagesdir: ../../../../../images
 :awestruct-tags: [design, kernel, linux]
 :excerpt: This post highlights the comparison of the required functionalities of an OS with that of Linux.
 :awestruct-excerpt: {excerpt}
@@ -18,7 +19,9 @@ endif::[]
 
 Linux if one were to draw a block diagram can be represented as:
 ====
-image::linux-kernel-architecture-diagram.png[]
+[[linux-kernel-architecture-diagram]]
+.Linux kernel architecture diagram
+image::linux-kernel-architecture-diagram.png[width="640", height="480", align="center", link={awestruct-imagesdir}/linux-kernel-architecture-diagram.png]
 ====
 ////
 [ditaa, linux-kernel-architecture-diagram]

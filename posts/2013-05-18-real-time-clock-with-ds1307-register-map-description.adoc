@@ -5,9 +5,13 @@ Conrad Gomes
 :awestruct-tags: [electronics, productization, i2c]
 :ds1307-maximintegrated-pdf: http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
 :next-part:
-:prev-part:
+:prev-part: http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/
 :excerpt: In the first part we went through a brief introduction of the DS1307 chip. We know the DS1307 can be programmed via the I2C bus i.e SDA and SCL. Through I2C we should be able to address the registers of this chip and write and read data based on our application description.
 :awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
 
 In the {prev-part}[first part^] we went through a brief introduction of the
 DS1307 chip. + 
@@ -18,7 +22,9 @@ data based on our application description.
 The internal registers which affect the behaviour of the RTC chip are as follows:
 
 ====
-image::DS1307_RegisterMap.png[width="640", height="480", align="center"]
+[[DS1307_RegisterMap]]
+.Register map of the DS1307 RTC
+image::DS1307_RegisterMap.png[width="640", height="480", align="center", link={awestruct-imagesdir}/DS1307_RegisterMap.png]
 ====
 
 The first 7 registers are used to read and write the time and date.

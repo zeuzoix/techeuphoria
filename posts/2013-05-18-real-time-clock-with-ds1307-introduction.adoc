@@ -6,6 +6,10 @@ Conrad Gomes
 :ds1307-maximintegrated-link: http://www.maximintegrated.com/en/products/digital/real-time-clocks/DS1307.html 
 :next-part: http://zeuzoix.github.io/techeuphoria/posts/2013/08/29/i2c-twi-with-avr-register-descriptions/
 :excerpt: You're developing a product and you need it to track time even when the power is switched off, what do you use? A real-time clock.
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
 :awestruct-excerpt: {excerpt}
 
 {excerpt}
@@ -19,7 +23,9 @@ The DS1307 on inspection has 8 pins. The following describes the kind of
 circuit connections required for this chip.
 
 ====
-image::Circuit_Diagram_DS1307.gif[width="640", height="480", align="center"]
+[[Circuit_Diagram_DS1307]]
+.Circuit diagram of DS1307
+image::Circuit_Diagram_DS1307.gif[width="640", height="480", align="center", link={awestruct-imagesdir}/Circuit_Diagram_DS1307.gif]
 ====
 
 Starting at the top left we see pins X1 and X2 connected to a crystal. 

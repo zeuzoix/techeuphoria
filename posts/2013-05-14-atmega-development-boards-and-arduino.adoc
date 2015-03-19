@@ -8,6 +8,10 @@ Conrad Gomes
 :esrijan-ddk-board-website: http://esrijan.com/index.php?pagefile=lddk
 :excerpt:  I've been going through various sources trying to figure out what the Electronic DIY community uses to develop LED cubes, RC controlled cars, etc.
 :awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
 
 {excerpt}
 I've been going through various sources trying to figure out what the Electronic 
@@ -37,7 +41,9 @@ The kit can be used to learn about Linux device drivers or can be used as a
 ATmega AVR development board for your electronics project.
 
 ====
-image::lddk_connected.jpg[width="640", height="480", align="center"]
+[[lddk_connected]]
+.LDDK board
+image::lddk_connected.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/lddk_connected.jpg]
 ====
 
 The board has a USB interface through which you can program the ATmega 

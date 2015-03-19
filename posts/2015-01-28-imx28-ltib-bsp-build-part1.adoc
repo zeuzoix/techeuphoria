@@ -4,6 +4,9 @@ Conrad Gomes
 :awestruct-tags: [linux, i.mx28]
 :excerpt: My first attempt at building the BSP for i.MX28 evaluation board. Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.
 :awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
 :freescale-link: http://www.freescale.com

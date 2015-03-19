@@ -4,6 +4,7 @@ Conrad Gomes
 ifndef::awestruct[]
 :imagesdir: ../images
 endif::[]
+:awestruct-imagesdir: ../../../../../images
 :i2c-with-avr-register-initialization-link: http://zeuzoix.github.io/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/
 :awestruct-tags: [electronics, protocols, i2c, twi, bus]
 :excerpt: So you want to program the TWI/I2C interface of the AVR. Well you'll need to read up about the registers used to control this interface.
@@ -19,12 +20,16 @@ This register controls the SCL clock frequency which can either be 100Hz or
 400Hz.
 
 ====
-image::TWI_TWBR.png[width="640", height="480", align="center"]
+[[TWI_TBR]]
+.TWI bit rate register map
+image::TWI_TWBR.png[width="640", height="480", align="center", link={awestruct-imagesdir}/TWI_TWBR.png]
 ====
 
 The equation to set the correct SCL clock frequency is:
 
 ====
+[[Clock-Frequency-Equation]]
+.SCL clock frequency equation
 image::svg.latex.svg[align="left"]
 ====
 
@@ -41,7 +46,9 @@ This register is used to control the operation of the TWI/I2C interface. Start
 or stop a transaction and acknowledge the receipt of a data packet.
 
 ====
-image::TWI_TWCR.png[width="640", height="480", align="center"]
+[[TWI_TWCR]]
+.TWI control register map
+image::TWI_TWCR.png[width="640", height="480", align="center", link={awestruct-imagesdir}/TWI_TWCR.png]
 ====
 
 . *Bit 7 - TWINT:* Set when the TWI has finished it's task. Also used to initiate
@@ -62,7 +69,9 @@ After every operation of the TWI interface this register is read to understand t
 status of the bus.
 
 ====
-image::TWI_TWSR.png[width="640", height="480", align="center"]
+[[TWI_TWSR]]
+.TWI status register map
+image::TWI_TWSR.png[width="640", height="480", align="center", link={awestruct-imagesdir}/TWI_TWSR.png]
 ====
 
 . *Bits 7:3 - TWS7:TWS3:* Status of the last TWI/I2C transaction
@@ -74,7 +83,9 @@ This register is used to stores the bytes to be transmitted or the bytes receive
 on the TWI bus.
 
 ====
-image::TWI_TWDR.png[width="640", height="480", align="center"]
+[[TWI_TWDR]]
+.TWI data register map
+image::TWI_TWDR.png[width="640", height="480", align="center", link={awestruct-imagesdir}/TWI_TWDR.png]
 ====
 
 . *Bits 7:0 - TWD7:TWD0:* Data byte to be written to the TWI bus or read from the TWI bus. 
@@ -88,7 +99,9 @@ that it has lost the arbitration of the line it will have to turn into a slave
 and listen for a possible message from another master device.
 
 ====
-image::TWI_TWAR.png[width="640", height="480", align="center"]
+[[TWI_TWAR]]
+.TWI address register map
+image::TWI_TWAR.png[width="640", height="480", align="center", link={awestruct-imagesdir}/TWI_TWAR.png]
 ====
 
 . *Bits 7:1 - TWA6: TWA0:* 7 bit slave address of the TWI interface.

@@ -4,6 +4,9 @@ Conrad Gomes
 :awestruct-tags: [linux, i.mx28]
 :excerpt: In the first part we worked on getting LTIB configured for our machine. We ran into alot of problems but fixed each problem after a bit of online reading. In this part we attempt to actually build the bootloaders, kernel and applications with LTIB which will comprise the BSP
 :awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
 :freescale-link: http://www.freescale.com
@@ -145,7 +148,7 @@ option.
 ====
 [[imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection]]
 .Selecting the appropriate toolchain
-image::imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection]
+image::imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/imx28-ltib-bsp-build-freescale-ncurses-mx28-toolchain-selection.png]
 ====
 
 On exiting we see the BSP being built which takes some time to complete. This is
