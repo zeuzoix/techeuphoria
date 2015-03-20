@@ -1,0 +1,196 @@
+== Cross-Compiling The Kernel
+
+When we work with embedded targets such as the Beagle Bone Black board
+we have to compile the kernel for the architecture of that board i.e.
+ARM. A kernel compiled on our x86 workstation will not execute on the
+Beagle Bone Black because it is compiled for an x86 architecture.
+
+The process of compiling the kernel on our work station for another
+architecture is referred to as cross-compilation. The kernel can be
+compiled on the Beagle Bone Black if it has a toolchain installed on
+it. However as the processing power of embedded targets is much lower
+than that of PCs and servers it becomes more efficient to employ
+a cross-compilation toolchain for embedded development.
+
+A cross-compiler can be recognized by its prefix which indicates
+the system for which it will compile the source code. For example
+_mips-linux-gcc_ indicates that the cross-compiler will generate
+a binary that can be executed on a MIPS based architecture whereas
+a _arm-linux-gnueabi-gcc_ indicates that the cross-compiler will
+generate a binary that can be executed on an ARM based architecture.
+
+To specify the architecture for which the kernel source code is
+to be compiled we have to pass a variable *_ARCH_* to the top level
+makefile. This should map to any of the subdirectories in the
+_arch/_ directory of the kernel source code e.g. _arm_.
+
+To specify the cross compilation toolchain we have to pass the
+*_CROSS_COMPILE_* variable which represents the prefix of the 
+toolchain e.g. _mips-linux-_ or _arm-linux-gnueabi-_.
+
+=== Predefined Configuration Files
+
+Many times when working with embedded boards we don't set the configuration
+of a particular board from scratch. It is easier if there is a predefined
+configuration with which we can start from and there is in most cases. We
+get a list of predefined configurations from _make help_ which allows us to
+set the _.config_ to a particular configuration for a specific board.
+
+For instance if we run _make viper_defconfig_ it will overwrite the _.config_
+file with the file from _arch/arm/configs/viper_defconfig_. To get a list of
+default configurations we can either use _make help_ or the find utility as
+shown below:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find . -name *_defconfig |head
+./arch/arc/configs/tb10x_defconfig
+./arch/arc/configs/fpga_defconfig
+./arch/arc/configs/fpga_noramfs_defconfig
+./arch/arc/configs/nsimosci_defconfig
+./arch/mn10300/configs/asb2364_defconfig
+.
+.
+.
+./arch/ia64/configs/sim_defconfig
+./arch/ia64/configs/tiger_defconfig
+./arch/xtensa/configs/iss_defconfig
+./arch/xtensa/configs/s6105_defconfig
+./arch/xtensa/configs/common_defconfig
+----
+
+Once we've loaded a default configuration which is basically a minimal
+configuration it's time to tailor the configuration to our specifications.
+This will include running one of the configuration interfaces like
+_make menuconfig_. We see the settings of the default configuration in the
+interface.
+
+=== Saving Our Default Configuration
+
+We also have the ability to save our configuration once it is tailored, as
+a default configuration. This can be done by running the command
+_make savedefconfig_. Running this target causes make to save the _.config_
+file with a name _defconfig_. We can move the new _defconfig_ file to
+the architecture _configs_ directory with an appropriate name.
+
+* mv defconfig arch/<ARCH>/configs/my_favourite_config
+
+Overall the choice of starting from a default minimal configuration lies with
+the developer. We can also start from scratch but be mindful about selection of
+the CPU selection and the correct device drivers.
+
+=== Device Tree
+
+Most embedded platforms have non-discoverable hardware which exists as part 
+of the SOC. This hardware has to be described to the kernel in the form of
+code or a special hardware description language called _Device Tree_.
+
+The _Device Tree_ language is used only recently in certain architectures
+such as ARM, PowerPC, ARC, etc.. The Device Tree source file is compiled
+into a binary called Device Tree Blob by a compiler and passed to the kernel
+through the bootloader. Each board will have its own unique hardware and
+therefore will have a unique device tree source file.
+
+The _Device Tree_ files will be located in the
+ _/arch/<ARCH>/boot/dts/_ folder. The bootloader has to have the capability
+to load the _Device Tree Blob_ and the kernel image before starting
+execution of the kernel.
+
+=== Steps To Build and Install A Kernel
+
+. Configure the kernel source code using _make menuconfig_
+. Build the kernel using _make_ with <ARCH> and <CROSS_COMPILE> set if building
+for and embedded platform.
+. Copy the built image from _arch/<ARCH>/boot/_.
+.. The image name will depend on the architecture e.g. bzImage, zImage, etc..
+. Install the kernel image. For an embedded platform do *NOT* run _make install_.
+It is better to simply copy the built kernel image.
+.. The installation can be customized by editing the _arch/<ARCH>/boot/install.sh_
+script.
+. Install the modules. For an embedded platform do *NOT* run _make modules_install_
+without the _INSTALL_MOD_PATH=<dir>/_ variable. This ensures we don't mess around
+with the system kernel modules.
+
+=== Using U-Boot
+
+A popular bootloader with embedded platforms is U-Boot. U-Boot works with a
+format of kernel image called _uImage_. This is generated from the _zImage_ using
+a _make uImage_ target execution for ARM. Newer versions of U-Boot also support
+booting of the ARM based kernel image zImage directly.
+
+Some ARM platforms require the LOADADDR to be passed along with the _make uImage_
+target execution. The address associated with this variable represents the
+physical memory where the image is executed in.
+
+U-Boot also has the ability to load the _Device Tree Blob_ in memory and pass
+it to the kernel. The boot process follows the steps
+
+. Load the kernel zImage or uImage at address X
+. Load the <board>.dtb file at Y
+. Boot the kernel with bootz X -Y or bootm X - Y. The - indicates no initramfs.
+
+=== Kernel Command Line
+
+The kernel takes in a list of arguments which can affect its behavior at run
+time. These argument can be hardcoded during the configuration of the kernel
+source code by setting the CONFIG_CMDLINE option.
+
+The command line argument can also be passed to the kernel at boot up using
+an environment variable like _bootargs_ in the case of U-Boot.
+
+There are several kernel arguments documented in
+_Documentation/kernel-parameters.txt_. We typically set:
+
+. root =  for the root filesystem
+. console = for the destination of the kernel messages
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

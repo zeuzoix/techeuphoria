@@ -1,0 +1,20 @@
+== Compiling The Kernel
+
+After configuring the kernel with one of the configuration interfaces we can
+proceed to build the kernel by issuing a _make_ command in the root directory.
+If blessed with multiple CPU cores then the build can be speed up using a
+_make -j 4_ command which instructs make to run 4 jobs in parallel.
+
+After the build the following will be generated:
+
+vmlinux:: Raw and uncompressed image which can be used for debugging purposes.
+This image cannot be booted.
+arch/<ARCH>/boot/*Image:: The final kernel image which can be booted e.g.
+bzImage for x86 and zImage for ARM. There may also be compressed images
+generated.
+arch/<ARCH>/boot/dts/*.dtb:: Compiled Device Tree files for certain
+architectures. This will be loaded by the bootloader before the kernel image.
+kernel modules(*.ko):: This will be generated in the directory corresponding
+to the driver/feature for which module type of configuration option was
+selected.
+
