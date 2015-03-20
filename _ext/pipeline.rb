@@ -1,5 +1,7 @@
 require './stylesheets/_themes/lib/functions.rb'
 require 'zurb-foundation'
+require 'awestruct_ext'
+
 
 Awestruct::Extensions::Pipeline.new do
   helper Awestruct::Extensions::Partial

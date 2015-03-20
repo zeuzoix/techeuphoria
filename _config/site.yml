@@ -13,6 +13,7 @@ haml:
 asciidoctor:
   :eruby: erubis
   :safe: safe
+#  :base_dir: null
   :attributes:
     idprefix: ''
     idseparator: '-'
