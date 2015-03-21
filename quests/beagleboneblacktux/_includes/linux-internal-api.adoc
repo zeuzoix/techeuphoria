@@ -1,0 +1,13 @@
+== Linux Internal API
+
+One of the main reasons for having drivers in-tree i.e. present along with the
+sources of the Linux Kernel is that the internal Linux API may be changed at 
+any point in time and if a change is proposed and implemented the developer
+responsible for the API change will also have to take the ownership of changing
+all the modules and drivers which use the changed API. In the case of an
+out-of-tree driver the work will be owned by the driver owner and any time a
+change occurs the driver will not compile with the latest kernel source code.
+
+Having said that the Linux Kernel external API i.e. kernel to userspace API like
+system calls, /proc, /sys does not change and is considered to protect the user
+space applications who depend on it.

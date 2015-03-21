@@ -1,0 +1,38 @@
+== Why Are The Sources So Big?
+
+One of the reasons why cloning the kernel sources takes so long is that the
+Linux Kernel source code is BIG. This is because the Kernel source code
+contains many subsystems, frameworks, drivers, network protocols and supports
+many different processor architectures.
+
+=== Size Comparison of Different Kernel Source Directories
+
+If we check the disk usage per directory in the Linux Kernel source code we
+get the distribution below. We'll go through the type of source code in each
+of those directories in a later section.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ du -s ./*/ | sort -nr
+3084600	./drivers/
+723496	./net/
+589520	./fs/
+275636	./arch/
+260960	./sound/
+84020	./kernel/
+52264	./security/
+38628	./include/
+36340	./crypto/
+28968	./Documentation/
+27616	./lib/
+25984	./mm/
+17768	./block/
+8920	./firmware/
+8440	./tools/
+4356	./scripts/
+3760	./ipc/
+3720	./init/
+2596	./virt/
+248	./samples/
+92	./usr/
+----

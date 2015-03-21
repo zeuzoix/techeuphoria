@@ -1,0 +1,26 @@
+:uri-free-software-foundation: http://www.fsf.org/
+
+== Is It Free?
+
+The Linux Kernel is licensed under GNU General Public License version 2. This
+license defines the Linux Kernel as Free Software as defined by the
+{uri-free-software-foundation}[Free Software Foundation^].
+
+. If you redistribute the software you have to do so under the same license
+irrespective of whether it is modified or unmodified.
+
+. If you make modifications to the Linux Kernel you have to release it under
+the same license.
+
+. You only have to do so when your device with the kernel start getting
+distributed
+
+. You only have to license it to your customers and not necessarily the whole
+world.
+
+. It is illegal to distribute a binary kernel with statically compiled
+proprietary drivers.
+
+. Proprietary drivers are frowned upon by the Linux Kernel community as it goes
+against the philosophy of the GPL license.
+

@@ -1,0 +1,22 @@
+:uri-linux-foundation: http://www.linuxfoundation.org/
+
+== About The Linux Kernel
+
+"I'm doing a (free) operating system (just a hobby, won't be big and
+professional like gnu) for 386(486) AT clones. This has been brewing
+since April and is starting to get ready. I'd like any feedback on things
+people like/dislike in minix, as my OS resembles it somewhat (same physical
+layout of the file-system (due to practical reasons) among other things)."
+-- Linus Torvald: 25th August 1991
+
+The Linux kernel started off as a hobby project and by a Finnish
+national Linus Torvalds. It is today the OS powering the largest number of
+computers on the planet. It is used in phones, tablets, laptops, netbooks,
+routers, desktops, servers, supercomputers, embedded devices, consumer
+electronics, etc.
+
+The development of the Linux kernel is carried out by an army of dynamic
+open source developers, the majority of which comprise of hobbyists. 
+Significant contribution to the kernel is now coming from companies using
+the kernel. The development is still spearheaded by Linus who is employed
+by the {uri-linux-foundation}[Linux Foundation^].

@@ -1,0 +1,44 @@
+:uri-lkml-programming-religion: http://www.tux.org/lkml/#s15-3
+
+== Programming Religion
+
+The Linux Kernel is written primarily in C with a little assembly code too. The
+source code is written in a version of C supported by Gnu Compiler Collection
+or GCC. Therefore the Linux Kernel source can not be compiled with all C
+compilers.
+
+The assembly code comprises of small sections of code and is basically the 
+GCC's "AT&T-style" syntax of target architecture which will run the kernel.
+
+Even though the Linux Kernel has certain frameworks designed with Object 
+Oriented Principles in mind it is not written in C++. For further
+understanding on why C++ is still not used please see the following link:
+{uri-lkml-programming-religion}[{uri-lkml-programming-religion}^]
+
+And on a lighter note ...
+
+[quote, Linus Torvalds, 19 Jan 2004]
+____
+In fact, in Linux we did try C++ once already, back in 1992.
+
+It sucks. Trust me - writing kernel code in C++ is a BLOODY STUPID IDEA.
+
+The fact is, C++ compilers are not trustworthy. They were even worse in 
+1992, but some fundamental facts haven't changed:
+
+ - the whole C++ exception handling thing is fundamentally broken. It's 
+   _especially_ broken for kernels.
+ - any compiler or language that likes to hide things like memory
+   allocations behind your back just isn't a good choice for a kernel.
+ - you can write object-oriented code (useful for filesystems etc) in C, 
+   _without_ the crap that is C++.
+
+In general, I'd say that anybody who designs his kernel modules for C++ is 
+either 
+ (a) looking for problems
+ (b) a C++ bigot that can't see what he is writing is really just C anyway
+ (c) was given an assignment in CS class to do so.
+
+Feel free to make up (d).
+____
+

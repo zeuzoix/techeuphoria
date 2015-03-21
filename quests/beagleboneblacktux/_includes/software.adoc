@@ -1,0 +1,58 @@
+:uri-ubuntu: http://www.ubuntu.com/
+:uri-oracle-virtualbox: https://www.virtualbox.org/
+:uri-vmware: http://www.vmware.com
+:uri-git-scm: http://git-scm.com/
+
+== Software
+
+=== Ubuntu
+
+To work with an embedded system you need a work station on which you can
+perform the various tasks that are required in the development life cycle.
+These tasks include:
+
+. Editing your build scripts and source code
+. Cross-compiling your source code for the embedded target
+. Transferring or accessing the cross-compiled application and libraries
+to or from the embedded target 
+. Collecting debug information from the target
+. Communicating with the target remotely using its interfaces like
+serial, USB, network, etc..
+
+In this document we use the popular Debian based Linux operating system,
+{uri-ubuntu}[Ubuntu] as our work station for all the tasks listed above.
+Ubuntu can be easily downloaded and installed on any PC or laptop. 
+
+[IMPORTANT]
+.Do not use a virtual machine runnning Ubuntu as your workstation 
+====
+This document uses Ubuntu 14.04 running on a HP laptop. Use of a similar
+environment through a virtual machine runnning on {uri-vmware}[VMWare^] or
+{uri-oracle-virtualbox}[Oracle VirtualBox^] is
+not recommended.
+====
+
+=== GIT
+
+The source code management tool used by the Linux kernel community is 
+{uri-git-scm}[GIT^]. To use GIT we need to install the packages required
+on our work station using the Advanced Packaging Tool(APT) using a 
+command line terminal.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install git gitk git-email
+----
+
+Once the packages are successfully installed we will need to configure GIT with
+some basic information about our name and email address
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com
+----
+
+Further infomation about GIT can be obtained at: +
+{uri-git-scm}[{uri-git-scm}^].
+

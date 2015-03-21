@@ -1,0 +1,8 @@
+== No C Library
+
+The Linux Kernel is a single program which has its own routines to perform
+common functions. It does not use any user space library like stdlib, rather
+it has equivalent functions that enable it to achieve the same results.
+
+In place of the standard C functions like printf(), memset(), malloc() there
+are functions like printk(), memset(),kmalloc() in the source code.

@@ -1,0 +1,108 @@
+:uri-kernel-org: https://www.kernel.org/
+:uri-linux-mtd-org: http://www.linux-mtd.infradead.org/index.html
+:uri-linux-mtd-git: git://git.infradead.org/linux-mtd.git
+:uri-linux-mips-org: http://www.linux-mips.org/wiki/Main_Page
+:uri-linux-mips-git: git://git.linux-mips.org/pub/scm/ralf/linux.git
+:uri-linux-usb-org: http://www.linux-usb.org/
+:uri-linux-usb-git: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git
+
+== Offical and Unofficial Kernel Sources
+
+The official source of the Linux Kernel is available at: +
+{uri-kernel-org}[{uri-kernel-org}^]
+
+The sources present in this website do not represent the entire spectrum of
+features and development that is taking place. Since the kernel is logically
+divided into sub-systems, each sub-system is maintained by a designated
+individual who has been involved with the sub-system and is trusted by Linus.
+So when the merge window opens these individuals who are termed as "maintainers"
+send pull requests to Linus to take in the patches from their repositories for
+merging with the mainline kernel tree. In some cases if the subsystem is large
+it may be divided into smaller subsystems which are managed by individuals
+designated as "sub-maintainers".
+
+The official development repository for some sub-systems are given below:
+
+. MTD +
+*Website:* {uri-linux-mtd-org}[{uri-linux-mtd-org}^] +
+*GIT:* {uri-linux-mtd-git}
+
+. MIPS +
+*Website:* {uri-linux-mips-org}[{uri-linux-mips-org}^] +
+*GIT:* {uri-linux-mips-git}
+
+. USB +
+*Website:* {uri-linux-usb-org}[{uri-linux-usb-org}^] +
+*GIT:* {uri-linux-usb-git}
+
+=== Cloning the Linux Tree With GIT
+
+Now that GIT is present in the workstation we can get the main development tree
+of the Linux kernel as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+And if you're in a corporarte environment or if your firewall blocks out the 
+network port for _git_ you can use _http_ instead as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+----
+
+The whole process should take a while so you can go for a small coffee break
+and come back. Comparitively using _git_ is recommended as it is faster than
+_http_
+
+If you happen to have a copy of the Linux GIT repository all you have to do
+is pull in the latest changes
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout master
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git pull
+----
+
+Once you have the Linux GIT repository you can pull the latest changes by 
+by running _git pull_.
+
+=== Using Stable Releases
+
+Typically when we are developing a project we reuse multiple projects to build
+our application on top of. Similarly since we will be learing about Embedded
+Linux we cannot use the tip of the tree as it is the latest but not the stablest
+version of the kernel. 
+
+With GIT we don't have to clone the whole repository all over again. Instead we
+can add a reference to a remote tree to our existing clone and fetch all the
+commits which are unique in that repository. As the *_stable_* release is
+derived from the *_mainline_* tree we can add a remote to our repository as
+follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v # <1>
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git # <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git remote -v
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
+origin	git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
+stable	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch) # <3>
+stable	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)
+----
+<1> _git remote -v_ lists the remotes. By default the git repository from which the repository was cloned will be the main remote
+<2> _git remote add_ adds a new remote with the name stable
+<3> _git remote -v_ lists the new added remote
+
+The last part is fetching the unique commits in the *_stable_* remote. This
+command should take a while.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git fetch stable
+----

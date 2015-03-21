@@ -1,0 +1,28 @@
+:uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 
+:uri-lxr-free-electrions: http://lxr.free-electrons.com
+
+== Browsing The Sources
+
+One of the most common tasks required by any developer is the ability to browse
+a project and search for:
+
+. A specific symbol such as a function name or variable name
+. The calling function of a function
+. The function definition using a function call point
+. An include file in the project from its declaration in source code
+. A pattern of text
+
+=== Cscope
+
+One such tool is Cscope which allows us to browse the Linux source code with ease
+from editors like vim, emacs and also independently using only cscope.
+
+=== LXR
+
+This is a generic indexing tool and code browser which is available as a web
+service. It supports both C and C++ and it makes it easy to search for 
+declarations, definitions  and symbols. A good examples of LXR with the Linux
+Kernel in action is through the {uri-lxr-free-electrions}[Free Electrons LXR Site^]
+and further information abouit LXR can be obtained from its
+{uri-sourceforge-lxr}[sourceforge page^].
+

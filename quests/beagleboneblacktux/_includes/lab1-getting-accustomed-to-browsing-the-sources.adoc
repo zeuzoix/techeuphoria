@@ -1,0 +1,200 @@
+:uri-lxr-free-electrions-ident-search: http://lxr.free-electrons.com/ident
+:uri-lxr-free-electrions-free-text-search: http://lxr.free-electrons.com/search
+
+== LAB 1 : Getting Accustomed To Browsing The Sources
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Create a branch based on a remote tree to explore a particular stable kernel
+version (from the stable kernel tree).
+. Explore the sources in search for files, function headers or other kinds of
+information. . .
+. Browse the kernel sources with tools like cscope and LXR.
+====
+
+=== Creating A Branch To A Particular Stable Kernel Version
+
+In order to get the list of branches on our stable remote tree we have to
+enter the Linux Kernel source tree and use the _git branch_ command as
+follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cd ~/git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a
+* master	#<1>
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+  remotes/stable/linux-2.6.11.y		#<2>
+  remotes/stable/linux-2.6.12.y
+.
+.
+  remotes/stable/linux-3.9.y
+  remotes/stable/master
+----
+<1> Our source code is currently pointing to the master branch
+<2> Remote stable branch remotes/stable/linux-2.6.11.y
+
+We will be working with the 3.13 stable branch and so we will use the remote
+branch *_remotes/stable/linux-3.13.y_* from the list of branches displayed.
+
+Before we do anything let us check the version of our *_master_* branch using
+the top level Makefile in the source code. Using _vim_ or your favourite editor
+or head examine the first few lines of the Makefile
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile 
+VERSION = 3
+PATCHLEVEL = 18
+SUBLEVEL = 0
+EXTRAVERSION = -rc4
+NAME = Diseased Newt
+.
+.
+----
+
+We can see the version of our _master_ branch is at 3.18.0 -rc4 and the name
+of the release is "Diseased Newt". Now let us create a local branch starting
+from the stable remote branch of 3.13.y. The following command uses 
+_git checkout_ to checkout the stable remote branch _stable/linux-3.13.y_ as
+a local branch with the name _3.13.y_.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git checkout -b 3.13.y stable/linux-3.13.y	# <1>
+Checking out files: 100% (27044/27044), done.
+Branch 3.13.y set up to track remote branch linux-3.13.y from stable.
+Switched to a new branch '3.13.y'	# <2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git branch -a	# <3>
+* 3.13.y	# <4>
+  master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+.
+.
+----
+<1> Command to checkout the stable remote branch as a local branch
+<2> The switch to the new branch takes place successfully
+<3> We list all the branches again
+<4> The git repository now points to the _3.13.y_ local branch
+
+Once again let us examine the first few lines of the top level Makefile. We can
+now see the version is at 3.13.11 and the name of the release is
+"One Giant Leap for Frogkind". So we have successfully managed to create a 
+branch pointing to a stable release of the Linux Kernel source code.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ head Makefile 
+VERSION = 3
+PATCHLEVEL = 13
+SUBLEVEL = 11
+EXTRAVERSION =
+NAME = One Giant Leap for Frogkind
+.
+.
+----
+
+=== Searching Tools
+
+There are several tools that can be used to browse the kernel code and search.
+We will demonstrate the commands used with examples taken from the labs.
+
+==== Using Find
+
+The _find_ utility can be used to search for a specific file name. The only
+catch being the name or pattern of the file needs to be known. For instance 
+say you want to locate the logo of Linux in the source code. 
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ find . -name "*.gif" -o -name "*.jpg" -o -name "*.png" -type f 
+./Documentation/logo.gif
+----
+
+We use popular file formats to locate pictures in the source code and
+coincidentally there is one file in the _Documentation_ directory with the
+name _logo.gif_.
+
+==== Using Git-Grep
+
+The _git-grep_ command can be used to search within a git project. For instance
+if we want to search for the name of the maintainer of MVNETA network driver we
+would use it as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep MVNETA		<1>
+MAINTAINERS:MARVELL MVNETA ETHERNET DRIVER 			<2>
+arch/arm/configs/mvebu_defconfig:CONFIG_MVNETA=y
+drivers/net/ethernet/marvell/Kconfig:     This driver is used by the MV643XX_ETH and MVNETA drivers.
+drivers/net/ethernet/marvell/Kconfig:config MVNETA
+.
+.
+.
+----
+<1> We search for MVNETA with _git grep_
+<2> We get the maintainers as MARVELL for MVNETA ETHERNET DRIVER
+
+To get line numbers for the references of the regex being searched we have
+to set the environment for git. This can be done locally (--local) specific
+to the git project or globally(--global) for all git projects on the workstation.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git config --local grep.lineNumber true		<1>
+----
+<1> Enabling line numbers in the search in my local linux git clone
+
+It is possible to search in a specific branch of the project with
+_git-grep_. For instance let us try to find the _platform_device_register_
+function in all header files in the linux project in the branch 
+_remotes/stable/linux-3.7.y_
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-3.7.y -- '*.h' 	<1>
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:99:     return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:123:    return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-common.h:140:    platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:arch/arm/mach-ux500/devices-db8500.h:26:     return platform_device_register_resndata(parent, "nmk-ske-keypad", -1,
+remotes/stable/linux-3.7.y:arch/arm/plat-mxc/include/mach/devices-common.h:31:  return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:43:extern int platform_device_register(struct platform_device *);		<2>	
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:69:extern struct platform_device *platform_device_register_full(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:73: * platform_device_register_resndata - add a platform-level device with
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:86:static inline struct platform_device *platform_device_register_resndata(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:102: return platform_device_register_full(&pdevinfo);
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:106: * platform_device_register_simple - add a platform-level device and its resources
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:127:static inline struct platform_device *platform_device_register_simple(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:131: return platform_device_register_resndata(NULL, name, id,
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:136: * platform_device_register_data - add a platform-level device with platform-specific data
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:151:static inline struct platform_device *platform_device_register_data(
+remotes/stable/linux-3.7.y:include/linux/platform_device.h:155: return platform_device_register_resndata(parent, name, id,
+----
+<1> Expression searches for _platform_device_register_ declaration in _remotes/stable/linux-3.7.y_
+<2> The function is declared on line 43 in _include/linux/platform_device.h_ in the branch _linux-3.7.y_
+
+If we compare it to one of the older stable branches of _remotes/stable/linux-2.6.11.y_
+we get fewer header files with reference to the function name.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/git/linux$ git grep -e platform_device_register remotes/stable/linux-2.6.11.y -- '*.h'	<1>
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:54:/* Update all memory resources by paddr, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/asm-ppc/ppc_sys.h:58:/* Get platform_data pointer out of platform device, call before platform_device_register */
+remotes/stable/linux-2.6.11.y:include/linux/device.h:380:extern int platform_device_register(struct platform_device *);			<2>
+remotes/stable/linux-2.6.11.y:include/linux/device.h:392:extern struct platform_device *platform_device_register_simple(char *, unsigned int, struct resource *, unsigned int);
+----
+<1> Expression searches for _platform_device_register_ declaration in _remotes/stable/linux-2.6.11.y_
+<2> The function is declared on line 380 in _include/linux/platform_device.h_ in the branch _linux-2.6.11.y_
+
+==== Using Linux Cross Reference
+
+We can make use of an automated tool like Linux Cross Reference or
+LXR as well:
+
+. Identifier search: {uri-lxr-free-electrions-ident-search}[{uri-lxr-free-electrions-ident-search}^]
+. Free text search: {uri-lxr-free-electrions-free-text-search}[{uri-lxr-free-electrions-free-text-search}]

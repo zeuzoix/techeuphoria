@@ -1,0 +1,23 @@
+== Portability
+
+One of the Linux Kernel key features is portability and hardware support.
+It supports a wide variety of architectures and to achieve this the source
+code should be portable across architectures. The architecture specific code is
+all located in the _arch/_ directory. The remaining code in all the other
+directories has to be portable across all architectures.
+
+To achieve portability there are hardware abstraction API for specific
+features:
+
+. Endianess
+- cpu_to_be32()
+- cpu_to_le32()
+- be32_to_cpu()
+- le32_to_cpu()
+. I/O Memory Access
+. Memory barriers 
+. DMA API to flush and invalidate caches
+
+Since the Linux Kernel is designed to run on any processor the use of floating
+point expressions is not allowed. As an example consider the most popular embedded
+architecture i.e. ARM, it does not have a floating point unit. 

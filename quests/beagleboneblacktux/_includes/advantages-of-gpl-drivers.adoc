@@ -1,0 +1,16 @@
+== Advantages Of GPL Drivers
+
+. It is possible to reuse software from other GPL drivers to write a new GPL
+driver
+
+. A GPL driver has more contributors, testers, reviewers and maintainers
+thereby making it more robust.
+
+. Once the driver is accepted it is easily shipped and distributed by
+others who are using the Linux Kernel.
+
+. A pre-compiled driver will always have to catch up with the latest kernel
+devlopments leaving users of the driver at a loss as they can't upgrade
+their kernel with ease in order to use the latest source with new features
+
+. Making a driver GPL compliant avoids any potential legal hastles

@@ -1,0 +1,8 @@
+:uri-beagleboard: http://beagleboard.org/
+
+== About BeagleBoard
+{uri-beagleboard}[BeagleBoard.org Foundation^] is a non-profit corporation which
+promotes open source software and open hardware. It was started by enthusiasts
+from TI with the aim of providing a powerful platform to design embedded solutions.
+The BeagleBone Black is their fourth board till date which offers a lot of 
+possibilities in a small credit card size form factor.

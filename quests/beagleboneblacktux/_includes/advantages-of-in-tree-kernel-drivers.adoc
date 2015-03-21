@@ -1,0 +1,10 @@
+== Advantages Of In-Tree Kernel Drivers
+
+. Acceptance of a driver into the mainline kernel is a step that must be
+done by developers who have developed a GPL compatible driver.
+
+. This allows the developer to release the ownership of maintaining the
+kernel driver to the community. This reduces the cost of maintainence.
+
+. The source of the kernel driver is easily accessible by anyone, as the
+kernel code is widely published.
