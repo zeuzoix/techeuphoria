@@ -151,6 +151,17 @@ TechEuphoria
 <li><a href="#kernel-command-line">22.6. Kernel Command Line</a></li>
 </ul>
 </li>
+<li><a href="#lab-2-setting-up-the-beaglebone-black-board">23. LAB 2 : Setting Up The Beaglebone Black Board</a>
+<ul class="sectlevel2">
+<li><a href="#getting-comfortable-with-the-board">23.1. Getting Comfortable With The Board</a>
+<ul class="sectlevel3">
+<li><a href="#connectors-leds-and-switches">23.1.1. Connectors, LEDs and Switches</a></li>
+<li><a href="#system-key-components">23.1.2. System Key Components</a></li>
+</ul>
+</li>
+<li><a href="#downloading-the-technical-documentation">23.2. Downloading The Technical Documentation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2298,6 +2309,177 @@ an environment variable like <em>bootargs</em> in the case of U-Boot.</p>
 <p>console = for the destination of the kernel messages</p>
 </li>
 </ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-2-setting-up-the-beaglebone-black-board"><a class="anchor" href="#lab-2-setting-up-the-beaglebone-black-board"></a>23. LAB 2 : Setting Up The Beaglebone Black Board</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session taken from the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Access the board through the serial line.</p>
+</li>
+<li>
+<p>Configure the U-boot bootloader to download files onto the board using trivial
+file transfer protocol (tftp)</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="getting-comfortable-with-the-board"><a class="anchor" href="#getting-comfortable-with-the-board"></a>23.1. Getting Comfortable With The Board</h3>
+<div class="paragraph">
+<p>At this point we have to get familiar with our board. It is good to go through
+the features of the board given in section 4.0 of the
+<a href="docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Reference Manual</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="connectors-leds-and-switches"><a class="anchor" href="#connectors-leds-and-switches"></a>23.1.1. Connectors, LEDs and Switches</h4>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-CONN_REVA5A" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/CONN_REVA5A.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/CONN_REVA5A.jpg" alt="CONN REVA5A" width="640" height="480"></a>
+</div>
+<div class="title">Beagle Bone Black Connectors, LEDs and Switches</div>
+</div>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">5V DC Power Connector</dt>
+<dd>
+<p>The main DC input which accepts 5V power. Suitable for
+more power hungry applications.</p>
+</dd>
+<dt class="hdlist1">Power Down Button Switch</dt>
+<dd>
+<p>Signals to the processor to initiate the power down
+sequence. It is used to power down the board.</p>
+</dd>
+<dt class="hdlist1">Boot Button Switch</dt>
+<dd>
+<p>Force the a boot from the microSD card by removing and
+reapplying power to the board.</p>
+</dd>
+<dt class="hdlist1">Reset Button Switch</dt>
+<dd>
+<p>Reset the processor.</p>
+</dd>
+<dt class="hdlist1">USB Client Connector</dt>
+<dd>
+<p>Mini USB port at the bottom of the board. It can be
+used to power the board and setup a network connection.</p>
+</dd>
+<dt class="hdlist1">10/100 Ethernet Connector</dt>
+<dd>
+<p>The LAN interface.</p>
+</dd>
+<dt class="hdlist1">Debug Serial Header Connector</dt>
+<dd>
+<p>The header interface for the serial port.</p>
+</dd>
+<dt class="hdlist1">MicroSD Slot Connector</dt>
+<dd>
+<p>Slot at the bottom of the board to insert a micro SD
+card.</p>
+</dd>
+<dt class="hdlist1">MicroHDMI Slot Connector</dt>
+<dd>
+<p>Slot at the bottom of the board to insert a micro
+HDMI cable to interface to a display.</p>
+</dd>
+<dt class="hdlist1">USB Host Connector</dt>
+<dd>
+<p>This can be used to connect a USB device like keyboard,
+mouse, BT dongle, WiFi dongle, etc..</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="system-key-components"><a class="anchor" href="#system-key-components"></a>23.1.2. System Key Components</h4>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-COMP_A5A" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/COMP_A5A.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/COMP_A5A.jpg" alt="COMP A5A" width="640" height="480"></a>
+</div>
+<div class="title">BeagleBone Black system key components</div>
+</div>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Sitara Processor</dt>
+<dd>
+<p>ARM architecture OMAP System On Chip(SOC) from
+Texas Instruments. This is XAM3359AZCZ100 for revision A5A to A6A and
+XAM3359AZCZ100 for revision B and above. Only the A4 revision boards had the
+AM3352 processor.</p>
+</dd>
+<dt class="hdlist1">512MB DDR3 RAM</dt>
+<dd>
+<p>Micron 512MB DDR3L or Kingston 512MB DDR3 Dual Data Rate RAM.</p>
+</dd>
+<dt class="hdlist1">TPS65217C PMIC</dt>
+<dd>
+<p>It is the power management IC which supplies the power rails
+to the different components on board.</p>
+</dd>
+<dt class="hdlist1">SMSC Ethernet PHY</dt>
+<dd>
+<p>The physical interface to the ethernet network.</p>
+</dd>
+<dt class="hdlist1">Micron eMMC</dt>
+<dd>
+<p>This was 2GB till revision B and changed to 4GB in revision C.</p>
+</dd>
+<dt class="hdlist1">HDMI Framer</dt>
+<dd>
+<p>Provides the HDMI control for and HDMI or DVI-D display with
+adaptor.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="downloading-the-technical-documentation"><a class="anchor" href="#downloading-the-technical-documentation"></a>23.2. Downloading The Technical Documentation</h3>
+<div class="paragraph">
+<p>Design is not possible without documentation, so we download the documents
+which will help us in the lab sessions. The following are needed:</p>
+</div>
+<div class="paragraph">
+<p>Tht System Reference Manual describes the details about the design of the
+board and is available on this site at: <a href="docs/BBB_SRM.pdf" target="_blank">link:docs/BBB_SRM.pdf</a><br>
+The latest document should be available at: <a href="https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true" target="_blank">https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true</a>.</p>
+</div>
+<div class="paragraph">
+<p>The datasheet of the TI AM335x SoCs is useful to see the PIN assignments
+later when we want to configure the <em>pinmux</em> settings and is available on this
+site at: <a href="docs/am3359.pdf" target="_blank">link:docs/am3359.pdf</a><br>
+The original link is at the TI website at: <a href="http://www.ti.com/lit/ds/symlink/am3359.pdf" target="_blank">http://www.ti.com/lit/ds/symlink/am3359.pdf</a></p>
+</div>
+<div class="paragraph">
+<p>The last document is the Technical Reference Manual(TRM) of the TI AM335x SoCs.
+At over 4000 pages it describes the internal IP design of the chip. It is available
+at: <a href="docs/spruh73i.pdf" target="_blank">link:docs/spruh73i.pdf</a>.<br>
+The same document can be retrieved from the TI website at :
+<a href="http://www.ti.com/product/am3359" target="_blank">http://www.ti.com/product/am3359</a></p>
 </div>
 </div>
 </div>
