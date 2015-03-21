@@ -1,0 +1,96 @@
+:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
+:link-beagleboneblack-srm: https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true
+:link-am3359-datasheet-pdf: link:docs/am3359.pdf
+:link-am3359-datasheet: http://www.ti.com/lit/ds/symlink/am3359.pdf
+:link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
+:link-am3358-technical-reference-manual: http://www.ti.com/product/am3359
+
+== LAB 2 : Setting Up The Beaglebone Black Board
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Access the board through the serial line. 
+. Configure the U-boot bootloader to download files onto the board using trivial
+file transfer protocol (tftp)
+====
+
+=== Getting Comfortable With The Board
+
+At this point we have to get familiar with our board. It is good to go through
+the features of the board given in section 4.0 of the
+{link-beagleboneblack-srm-pdf}[BeagleBone Black System Reference Manual^].
+
+==== Connectors, LEDs and Switches
+
+====
+[[beagleboneblacktux-CONN_REVA5A]]
+.Beagle Bone Black Connectors, LEDs and Switches
+image::CONN_REVA5A.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/CONN_REVA5A.jpg]
+====
+
+5V DC Power Connector:: The main DC input which accepts 5V power. Suitable for
+more power hungry applications.
+Power Down Button Switch:: Signals to the processor to initiate the power down
+sequence. It is used to power down the board.
+Boot Button Switch:: Force the a boot from the microSD card by removing and
+reapplying power to the board.
+Reset Button Switch:: Reset the processor.
+USB Client Connector:: Mini USB port at the bottom of the board. It can be
+used to power the board and setup a network connection.
+10/100 Ethernet Connector:: The LAN interface.
+Debug Serial Header Connector:: The header interface for the serial port.
+MicroSD Slot Connector:: Slot at the bottom of the board to insert a micro SD
+card.
+MicroHDMI Slot Connector:: Slot at the bottom of the board to insert a micro
+HDMI cable to interface to a display.
+USB Host Connector:: This can be used to connect a USB device like keyboard,
+mouse, BT dongle, WiFi dongle, etc..
+
+==== System Key Components
+
+====
+[[beagleboneblacktux-COMP_A5A]]
+.BeagleBone Black system key components
+image::COMP_A5A.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/COMP_A5A.jpg]
+====
+
+Sitara Processor:: ARM architecture OMAP System On Chip(SOC) from
+Texas Instruments. This is XAM3359AZCZ100 for revision A5A to A6A and
+XAM3359AZCZ100 for revision B and above. Only the A4 revision boards had the
+AM3352 processor.
+512MB DDR3 RAM:: Micron 512MB DDR3L or Kingston 512MB DDR3 Dual Data Rate RAM.
+TPS65217C PMIC:: It is the power management IC which supplies the power rails
+to the different components on board.
+SMSC Ethernet PHY:: The physical interface to the ethernet network.
+Micron eMMC:: This was 2GB till revision B and changed to 4GB in revision C.
+HDMI Framer:: Provides the HDMI control for and HDMI or DVI-D display with
+adaptor.
+
+=== Downloading The Technical Documentation
+
+Design is not possible without documentation, so we download the documents
+which will help us in the lab sessions. The following are needed:
+
+
+Tht System Reference Manual describes the details about the design of the
+board and is available on this site at: {link-beagleboneblack-srm-pdf}[{link-beagleboneblack-srm-pdf}^] +
+The latest document should be available at: {link-beagleboneblack-srm}[{link-beagleboneblack-srm}^].
+ 
+
+The datasheet of the TI AM335x SoCs is useful to see the PIN assignments
+later when we want to configure the _pinmux_ settings and is available on this
+site at: {link-am3359-datasheet-pdf}[{link-am3359-datasheet-pdf}^] +
+The original link is at the TI website at: {link-am3359-datasheet}[{link-am3359-datasheet}^]
+
+The last document is the Technical Reference Manual(TRM) of the TI AM335x SoCs.
+At over 4000 pages it describes the internal IP design of the chip. It is available
+at: {link-am3358-technical-reference-manual-pdf}[{link-am3358-technical-reference-manual-pdf}^]. +
+The same document can be retrieved from the TI website at :
+{link-am3358-technical-reference-manual}[{link-am3358-technical-reference-manual}^]
+  
+
+
+
+
+
