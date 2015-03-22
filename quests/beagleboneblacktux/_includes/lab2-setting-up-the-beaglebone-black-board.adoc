@@ -1,15 +1,19 @@
 :link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
-:link-beagleboneblack-srm: https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true
+:uri-beagleboneblack-srm: https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true
 :link-am3359-datasheet-pdf: link:docs/am3359.pdf
-:link-am3359-datasheet: http://www.ti.com/lit/ds/symlink/am3359.pdf
+:uri-am3359-datasheet: http://www.ti.com/lit/ds/symlink/am3359.pdf
 :link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
-:link-am3358-technical-reference-manual: http://www.ti.com/product/am3359
+:uri-am3358-technical-reference-manual: http://www.ti.com/product/am3359
+:link-fe-linux-kernel-labs-tar-xz: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
 
 == LAB 2 : Setting Up The Beaglebone Black Board
 
 [NOTE]
 .This is a hands on session taken from the Free Electrons labs with the following objectives
 ====
+. Getting familiar with the BeagleBone Black board
+. Knowing what technical documentation is available
+. Installing the lab data from Free Electrons
 . Access the board through the serial line. 
 . Configure the U-boot bootloader to download files onto the board using trivial
 file transfer protocol (tftp)
@@ -74,23 +78,117 @@ which will help us in the lab sessions. The following are needed:
 
 
 Tht System Reference Manual describes the details about the design of the
-board and is available on this site at: {link-beagleboneblack-srm-pdf}[{link-beagleboneblack-srm-pdf}^] +
-The latest document should be available at: {link-beagleboneblack-srm}[{link-beagleboneblack-srm}^].
+board and is available on this site {link-beagleboneblack-srm-pdf}[here^] +
+The latest document should be available at: {uri-beagleboneblack-srm}[{uri-beagleboneblack-srm}^].
  
 
 The datasheet of the TI AM335x SoCs is useful to see the PIN assignments
 later when we want to configure the _pinmux_ settings and is available on this
-site at: {link-am3359-datasheet-pdf}[{link-am3359-datasheet-pdf}^] +
-The original link is at the TI website at: {link-am3359-datasheet}[{link-am3359-datasheet}^]
+site {link-am3359-datasheet-pdf}[here^] +
+The original link is at the TI website at: {uri-am3359-datasheet}[{uri-am3359-datasheet}^]
 
 The last document is the Technical Reference Manual(TRM) of the TI AM335x SoCs.
 At over 4000 pages it describes the internal IP design of the chip. It is available
-at: {link-am3358-technical-reference-manual-pdf}[{link-am3358-technical-reference-manual-pdf}^]. +
+{link-am3358-technical-reference-manual-pdf}[here^]. +
 The same document can be retrieved from the TI website at :
-{link-am3358-technical-reference-manual}[{link-am3358-technical-reference-manual}^]
+{uri-am3358-technical-reference-manual}[{uri-am3358-technical-reference-manual}^]
   
+=== Installing The Free Electrons Lab Data
 
+We will be using the lab data available from Free Electrons to setup our
+BeagleBone Black. First make sure the lab data is downloaded. The lab data which
+was available at the time of writing this journal is
+{link-fe-linux-kernel-labs-tar-xz}[here^].
 
+We'll have to uncompress the file with *sudo* permissions and change the
+permissions of the resulting folder. The prime reason being that the package
+contains system device node files for the NFS root filesystem:
 
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo tar xvJf linux-kernel-labs.tar.xz 	<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+linux-kernel-labs/
+linux-kernel-labs/src/
+linux-kernel-labs/src/patches/
+.
+.
+.
+linux-kernel-labs/modules/nfsroot/sbin/route
+linux-kernel-labs/modules/nfsroot/sbin/runlevel
+linux-kernel-labs/git/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo chown -R conrad:conrad linux-kernel-labs	<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ ls -l
+total 7756
+drwxrwxr-x 6 conrad conrad    4096 Mar 22 17:38 linux-kernel-labs	<3>
+-rw-rw-r-- 1 conrad conrad 7931316 Mar 22 18:57 linux-kernel-labs.tar.xz
+-rw-rw-r-- 1 conrad conrad      87 Mar 22 18:55 Readme.txt
+----
+<1> Command to untar and decompress the package
+<2> Command to change the owner and group to the user name in this case _conrad_
+<3> Listing of the directory shows the owner and group has been set appropriately
 
+The xz extension of the package indicates that it requires XZ compression utility
+which if not available on your system can be upgraded as follows:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install xz-utils
+----
+
+=== Making A Bootable MicroSD Card
+
+Now we deviate slightly from the Free Electrons lab slides and first
+prepare our board as per the instructions provided in the
+_linux-kernel-labs/bootloader/beaglebone-black/README.txt_ file. The
+bootable micro-SD card will automatically format the on board eMMC
+device.
+
+Take the microSD card and insert it into a microSD adapter like the
+one shown in the image below:
+
+====
+[[beagleboneblacktux-microsd-adaptor-sd]]
+.Micro SD card adapter
+image::sdcard-microsd-adaptor-sd.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-microsd-adaptor-sd.jpg]
+====
+ 
+This memory card reader/adapter should be inserted into the SD card
+slot available. If your system has a micro SD card slot then please
+use that directly. On checking the kernel logs with _dmesg_ we should
+be able to identify the card detected in the system. If a micro SD
+card slot is available then the system should register it as a 
+_/dev/mmcblk0_ whereas in this case with a memory card reader we see
+it as _/dev/sdb_. The following shows the kernel logs:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ dmesg
+.
+.
+.
+[127595.272118] usb 1-2: new high-speed USB device number 6 using ehci-pci
+[127595.405640] usb 1-2: New USB device found, idVendor=058f, idProduct=6366
+[127595.405650] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[127595.405658] usb 1-2: Product: Mass Storage Device
+[127595.405665] usb 1-2: Manufacturer: Generic
+[127595.405671] usb 1-2: SerialNumber: 058F63666433
+[127595.406226] usb-storage 1-2:1.0: USB Mass Storage device detected
+[127595.407830] scsi9 : usb-storage 1-2:1.0
+[127596.532963] scsi 9:0:0:0: Direct-Access     Multiple Card  Reader     1.00 PQ: 0 ANSI: 0
+[127596.533754] sd 9:0:0:0: Attached scsi generic sg1 type 0
+[127598.192274] sd 9:0:0:0: [sdb] 7744512 512-byte logical blocks: (3.96 GB/3.69 GiB) <1>
+[127598.193263] sd 9:0:0:0: [sdb] Write Protect is off
+[127598.193269] sd 9:0:0:0: [sdb] Mode Sense: 03 00 00 00
+[127598.194256] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.194259] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+[127598.199023] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.199028] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ ls -l /dev/sdb 	<2>
+brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb
+----
+<1> We see the device attached as sdb
+<2> The device node has been created successfully as /dev/sdb
 

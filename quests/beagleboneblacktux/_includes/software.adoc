@@ -2,6 +2,10 @@
 :uri-oracle-virtualbox: https://www.virtualbox.org/
 :uri-vmware: http://www.vmware.com
 :uri-git-scm: http://git-scm.com/
+:uri-free-electrons-kernel-trianing: http://free-electrons.com/training/kernel/
+:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
+:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
+:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
 
 == Software
 
@@ -55,4 +59,21 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conr
 
 Further infomation about GIT can be obtained at: +
 {uri-git-scm}[{uri-git-scm}^].
+
+=== Free Electrons
+
+Since we are going through the training material provided by Free Electrons
+we'll need to download their slides and lab data from their website link: +
+{uri-free-electrons-kernel-trianing}[{uri-free-electrons-kernel-trianing}^]
+
+As Free Electrons continues to improve on their training material, this journal
+will be based on the version available at the time of its writing:
+
+. {link-free-electrons-kernel-slides}[Slides^]
+. {link-free-electrons-kernel-labs}[Labs^]
+. {link-free-electrons-kernel-lab-data}[Lab Data^]
+
+:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
+:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
+:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
 
