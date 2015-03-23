@@ -192,3 +192,203 @@ brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb
 <1> We see the device attached as sdb
 <2> The device node has been created successfully as /dev/sdb
 
+We will have to first partition the micro SD card using the _sfdisk_ utility
+which is part of the _util-linux_ APT package.
+This tool helps us to list the partitions of a device, check the sizes of the
+partitions, check the partitions on a device and re-partition a device. We must
+*be extra careful* when we use such a tool as it could also cause damage to our
+workstation system if we select the wrong device file unintentionally.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo sfdisk --in-order --Linux --unit M /dev/sdb << EOF		<1>
+> 1,48,0xE,*
+> ,,,-
+> EOF
+Checking that no-one is using this disk right now ...
+BLKRRPART: Device or resource busy						<2>
+
+This disk is currently in use - repartitioning is probably a bad idea.
+Umount all file systems, and swapoff all swap partitions on this disk.
+Use the --no-reread flag to suppress this check.
+Use the --force flag to overrule all checks.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount		<3>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2) <4>
+----
+<1> The command to re-partition the _/devsdb_ device with _sfdisk_. The options
+_--in-order_ indicates that the partitions are in order in the input. _--Linux_
+tells sfdisk to ignore all warnings irrelevant for Linux.
+<2> The device is apparently busy.
+<3> We do a _mount_ to check if it is mounted
+<4> We see that a partition is mounted in our Workstation at /media/conrad/boot
+
+If the micro-SD card is already partitioned and formated it may be auto mounted
+by our work station. We will have to un-mount all the partitions before we can
+proceed.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo umount /media/conrad/boot 	<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount		<2>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+----
+<1> We have to unmount the _/dev/sdb1_ from the mount point i.e. _/media/conrad/boot_
+<2> We check to see if anything else is mounted again
+
+Again we attempt to repartition the micro SD card 
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo sfdisk --in-order --Linux --unit M /dev/sdb << EOF	
+1,48,0xE,*
+,,,-
+EOF											<1>
+Checking that no-one is using this disk right now ...					<2>
+OK
+
+Disk /dev/sdb: 1023 cylinders, 122 heads, 62 sectors/track
+Old situation:										<3>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+New situation:										<4>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+Successfully wrote the new partition table
+
+Re-reading the partition table ...
+BLKRRPART: Device or resource busy
+The command to re-read the partition table failed.
+Run partprobe(8), kpartx(8) or reboot your system now,
+before using mkfs
+If you created or changed a DOS partition, /dev/foo7, say, then use dd(1)
+to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1
+(See fdisk(8).)
+----
+<1> The _sfdisk_ utility is invoked supplying the information about the partitions
+<2> _sfdisk_ checking to see that no one is using the disk
+<3> The old partition map is displayed first. *This will vary based on the history
+of the micro-SD card*
+<4> The new partition map is displayed. The first partition is a W95 FAT16 one
+which is 48 MB. This is the first line of input to sfdisk. The remaining has
+been converted to a Linux partition.
+
+We will have to format the first partition of the disk using the _mkfs.vfat_
+partition.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo mkfs.vfat -F 16 /dev/sdb1 -n boot	<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+mkfs.fat 3.0.26 (2014-03-07)
+mkfs.fat: warning - lowercase labels might not work properly with DOS or Windows
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ echo $?			<2>
+0
+----
+<1> _mkfs.vfat_ is run on the partition _/dev/sdb1_. The label of the partition
+is set to _boot_ with the -n option and the -F option specifies the type of
+file allocation tables used (12, 16 or 32 bit).
+<2> Checks the return value of the command
+
+We now remove and re-insert the microSD card into the system to see if it gets
+detected and automatically mounted. It does and we see that Ubuntu
+opens up the directory located in _/media/conrad/boot_.
+
+====
+[[beagleboneblacktux-media-boot-automounted]]
+.The first partition _/dev/sdb1_ has been automounted successfully at _/media/conrad/boot_
+image::beagleboneblacktux-media-boot-automounted.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-media-boot-automounted.png]
+====
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount	<1>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2)	<2>
+----
+<1> We use _mount_ to check explicitly what's there in the system
+<2> Our partition has been mounted at _/media/conrad/boot_
+
+We will finally have to copy the files from the lab data folder to this partition
+and un mount the device.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/bootloader/beaglebone-black$ cp am335x-boneblack.dtb MLO MBR u-boot.img MLO.final u-boot.img.final uEnv.txt uImage /media/conrad/boot/		<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/bootloader/beaglebone-black$ umount /media/conrad/boot	<2>
+----
+<1> Copying the necessary files from the Free Electrons lab data folder which we unpacked earlier
+<2> Unmounting the mounted partition
+
+We can now safely eject or remove the microSD card from the work station.
+
+
+
+
