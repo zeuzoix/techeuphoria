@@ -67,6 +67,7 @@ TechEuphoria
 <ul class="sectlevel2">
 <li><a href="#ubuntu">5.1. Ubuntu</a></li>
 <li><a href="#git">5.2. GIT</a></li>
+<li><a href="#free-electrons">5.3. Free Electrons</a></li>
 </ul>
 </li>
 </ul>
@@ -160,6 +161,8 @@ TechEuphoria
 </ul>
 </li>
 <li><a href="#downloading-the-technical-documentation">23.2. Downloading The Technical Documentation</a></li>
+<li><a href="#installing-the-free-electrons-lab-data">23.3. Installing The Free Electrons Lab Data</a></li>
+<li><a href="#making-a-bootable-microsd-card">23.4. Making A Bootable MicroSD Card</a></li>
 </ul>
 </li>
 </ul>
@@ -385,6 +388,31 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conr
 <div class="paragraph">
 <p>Further infomation about GIT can be obtained at:<br>
 <a href="http://git-scm.com/" target="_blank">http://git-scm.com/</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="free-electrons"><a class="anchor" href="#free-electrons"></a>5.3. Free Electrons</h3>
+<div class="paragraph">
+<p>Since we are going through the training material provided by Free Electrons
+we&#8217;ll need to download their slides and lab data from their website link:<br>
+<a href="http://free-electrons.com/training/kernel/" target="_blank">http://free-electrons.com/training/kernel/</a></p>
+</div>
+<div class="paragraph">
+<p>As Free Electrons continues to improve on their training material, this journal
+will be based on the version available at the time of its writing:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="free_electrons_linux_kernel/linux-kernel-slides.pdf" target="_blank">Slides</a></p>
+</li>
+<li>
+<p><a href="free_electrons_linux_kernel/linux-kernel-labs.pdf" target="_blank">Labs</a></p>
+</li>
+<li>
+<p><a href="free_electrons_linux_kernel/linux-kernel-labs.tar.xz" target="_blank">Lab Data</a></p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -2327,6 +2355,15 @@ an environment variable like <em>bootargs</em> in the case of U-Boot.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
+<p>Getting familiar with the BeagleBone Black board</p>
+</li>
+<li>
+<p>Knowing what technical documentation is available</p>
+</li>
+<li>
+<p>Installing the lab data from Free Electrons</p>
+</li>
+<li>
 <p>Access the board through the serial line.</p>
 </li>
 <li>
@@ -2465,21 +2502,435 @@ which will help us in the lab sessions. The following are needed:</p>
 </div>
 <div class="paragraph">
 <p>Tht System Reference Manual describes the details about the design of the
-board and is available on this site at: <a href="docs/BBB_SRM.pdf" target="_blank">link:docs/BBB_SRM.pdf</a><br>
+board and is available on this site <a href="docs/BBB_SRM.pdf" target="_blank">here</a><br>
 The latest document should be available at: <a href="https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true" target="_blank">https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true</a>.</p>
 </div>
 <div class="paragraph">
 <p>The datasheet of the TI AM335x SoCs is useful to see the PIN assignments
 later when we want to configure the <em>pinmux</em> settings and is available on this
-site at: <a href="docs/am3359.pdf" target="_blank">link:docs/am3359.pdf</a><br>
+site <a href="docs/am3359.pdf" target="_blank">here</a><br>
 The original link is at the TI website at: <a href="http://www.ti.com/lit/ds/symlink/am3359.pdf" target="_blank">http://www.ti.com/lit/ds/symlink/am3359.pdf</a></p>
 </div>
 <div class="paragraph">
 <p>The last document is the Technical Reference Manual(TRM) of the TI AM335x SoCs.
 At over 4000 pages it describes the internal IP design of the chip. It is available
-at: <a href="docs/spruh73i.pdf" target="_blank">link:docs/spruh73i.pdf</a>.<br>
+<a href="docs/spruh73i.pdf" target="_blank">here</a>.<br>
 The same document can be retrieved from the TI website at :
 <a href="http://www.ti.com/product/am3359" target="_blank">http://www.ti.com/product/am3359</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-the-free-electrons-lab-data"><a class="anchor" href="#installing-the-free-electrons-lab-data"></a>23.3. Installing The Free Electrons Lab Data</h3>
+<div class="paragraph">
+<p>We will be using the lab data available from Free Electrons to setup our
+BeagleBone Black. First make sure the lab data is downloaded. The lab data which
+was available at the time of writing this journal is
+<a href="free_electrons_linux_kernel/linux-kernel-labs.tar.xz" target="_blank">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll have to uncompress the file with <strong>sudo</strong> permissions and change the
+permissions of the resulting folder. The prime reason being that the package
+contains system device node files for the NFS root filesystem:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo tar xvJf linux-kernel-labs.tar.xz         <i class="conum" data-value="1"></i><b>(1)</b>
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+linux-kernel-labs/
+linux-kernel-labs/src/
+linux-kernel-labs/src/patches/
+.
+.
+.
+linux-kernel-labs/modules/nfsroot/sbin/route
+linux-kernel-labs/modules/nfsroot/sbin/runlevel
+linux-kernel-labs/git/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo chown -R conrad:conrad linux-kernel-labs        <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ ls -l
+total 7756
+drwxrwxr-x 6 conrad conrad    4096 Mar 22 17:38 linux-kernel-labs        <i class="conum" data-value="3"></i><b>(3)</b>
+-rw-rw-r-- 1 conrad conrad 7931316 Mar 22 18:57 linux-kernel-labs.tar.xz
+-rw-rw-r-- 1 conrad conrad      87 Mar 22 18:55 Readme.txt</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Command to untar and decompress the package</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Command to change the owner and group to the user name in this case <em>conrad</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Listing of the directory shows the owner and group has been set appropriately</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The xz extension of the package indicates that it requires XZ compression utility
+which if not available on your system can be upgraded as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install xz-utils</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="making-a-bootable-microsd-card"><a class="anchor" href="#making-a-bootable-microsd-card"></a>23.4. Making A Bootable MicroSD Card</h3>
+<div class="paragraph">
+<p>Now we deviate slightly from the Free Electrons lab slides and first
+prepare our board as per the instructions provided in the
+<em>linux-kernel-labs/bootloader/beaglebone-black/README.txt</em> file. The
+bootable micro-SD card will automatically format the on board eMMC
+device.</p>
+</div>
+<div class="paragraph">
+<p>Take the microSD card and insert it into a microSD adapter like the
+one shown in the image below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-microsd-adaptor-sd" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/sdcard-microsd-adaptor-sd.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-microsd-adaptor-sd.jpg" alt="sdcard microsd adaptor sd" width="640" height="480"></a>
+</div>
+<div class="title">Micro SD card adapter</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This memory card reader/adapter should be inserted into the SD card
+slot available. If your system has a micro SD card slot then please
+use that directly. On checking the kernel logs with <em>dmesg</em> we should
+be able to identify the card detected in the system. If a micro SD
+card slot is available then the system should register it as a
+<em>/dev/mmcblk0</em> whereas in this case with a memory card reader we see
+it as <em>/dev/sdb</em>. The following shows the kernel logs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ dmesg
+.
+.
+.
+[127595.272118] usb 1-2: new high-speed USB device number 6 using ehci-pci
+[127595.405640] usb 1-2: New USB device found, idVendor=058f, idProduct=6366
+[127595.405650] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[127595.405658] usb 1-2: Product: Mass Storage Device
+[127595.405665] usb 1-2: Manufacturer: Generic
+[127595.405671] usb 1-2: SerialNumber: 058F63666433
+[127595.406226] usb-storage 1-2:1.0: USB Mass Storage device detected
+[127595.407830] scsi9 : usb-storage 1-2:1.0
+[127596.532963] scsi 9:0:0:0: Direct-Access     Multiple Card  Reader     1.00 PQ: 0 ANSI: 0
+[127596.533754] sd 9:0:0:0: Attached scsi generic sg1 type 0
+[127598.192274] sd 9:0:0:0: [sdb] 7744512 512-byte logical blocks: (3.96 GB/3.69 GiB) <i class="conum" data-value="1"></i><b>(1)</b>
+[127598.193263] sd 9:0:0:0: [sdb] Write Protect is off
+[127598.193269] sd 9:0:0:0: [sdb] Mode Sense: 03 00 00 00
+[127598.194256] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.194259] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+[127598.199023] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.199028] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ ls -l /dev/sdb         <i class="conum" data-value="2"></i><b>(2)</b>
+brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We see the device attached as sdb</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device node has been created successfully as /dev/sdb</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will have to first partition the micro SD card using the <em>sfdisk</em> utility
+which is part of the <em>util-linux</em> APT package.
+This tool helps us to list the partitions of a device, check the sizes of the
+partitions, check the partitions on a device and re-partition a device. We must
+<strong>be extra careful</strong> when we use such a tool as it could also cause damage to our
+workstation system if we select the wrong device file unintentionally.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo sfdisk --in-order --Linux --unit M /dev/sdb &lt;&lt; EOF                <i class="conum" data-value="1"></i><b>(1)</b>
+&gt; 1,48,0xE,*
+&gt; ,,,-
+&gt; EOF
+Checking that no-one is using this disk right now ...
+BLKRRPART: Device or resource busy                                                <i class="conum" data-value="2"></i><b>(2)</b>
+
+This disk is currently in use - repartitioning is probably a bad idea.
+Umount all file systems, and swapoff all swap partitions on this disk.
+Use the --no-reread flag to suppress this check.
+Use the --force flag to overrule all checks.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount                <i class="conum" data-value="3"></i><b>(3)</b>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2) <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The command to re-partition the <em>/devsdb</em> device with <em>sfdisk</em>. The options
+<em>--in-order</em> indicates that the partitions are in order in the input. <em>--Linux</em>
+tells sfdisk to ignore all warnings irrelevant for Linux.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device is apparently busy.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We do a <em>mount</em> to check if it is mounted</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>We see that a partition is mounted in our Workstation at /media/conrad/boot</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the micro-SD card is already partitioned and formated it may be auto mounted
+by our work station. We will have to un-mount all the partitions before we can
+proceed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo umount /media/conrad/boot         <i class="conum" data-value="1"></i><b>(1)</b>
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount                <i class="conum" data-value="2"></i><b>(2)</b>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We have to unmount the <em>/dev/sdb1</em> from the mount point i.e. <em>/media/conrad/boot</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We check to see if anything else is mounted again</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Again we attempt to repartition the micro SD card</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo sfdisk --in-order --Linux --unit M /dev/sdb &lt;&lt; EOF
+1,48,0xE,*
+,,,-
+EOF                                                                                        <i class="conum" data-value="1"></i><b>(1)</b>
+Checking that no-one is using this disk right now ...                                        <i class="conum" data-value="2"></i><b>(2)</b>
+OK
+
+Disk /dev/sdb: 1023 cylinders, 122 heads, 62 sectors/track
+Old situation:                                                                                <i class="conum" data-value="3"></i><b>(3)</b>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+New situation:                                                                                <i class="conum" data-value="4"></i><b>(4)</b>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+Successfully wrote the new partition table
+
+Re-reading the partition table ...
+BLKRRPART: Device or resource busy
+The command to re-read the partition table failed.
+Run partprobe(8), kpartx(8) or reboot your system now,
+before using mkfs
+If you created or changed a DOS partition, /dev/foo7, say, then use dd(1)
+to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1
+(See fdisk(8).)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>sfdisk</em> utility is invoked supplying the information about the partitions</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>sfdisk</em> checking to see that no one is using the disk</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The old partition map is displayed first. <strong>This will vary based on the history
+of the micro-SD card</strong></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The new partition map is displayed. The first partition is a W95 FAT16 one
+which is 48 MB. This is the first line of input to sfdisk. The remaining has
+been converted to a Linux partition.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will have to format the first partition of the disk using the <em>mkfs.vfat</em>
+partition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo mkfs.vfat -F 16 /dev/sdb1 -n boot        <i class="conum" data-value="1"></i><b>(1)</b>
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+mkfs.fat 3.0.26 (2014-03-07)
+mkfs.fat: warning - lowercase labels might not work properly with DOS or Windows
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ echo $?                        <i class="conum" data-value="2"></i><b>(2)</b>
+0</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>mkfs.vfat</em> is run on the partition <em>/dev/sdb1</em>. The label of the partition
+is set to <em>boot</em> with the -n option and the -F option specifies the type of
+file allocation tables used (12, 16 or 32 bit).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Checks the return value of the command</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We now remove and re-insert the microSD card into the system to see if it gets
+detected and automatically mounted. It does and we see that Ubuntu
+opens up the directory located in <em>/media/conrad/boot</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-media-boot-automounted" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-media-boot-automounted.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-media-boot-automounted.png" alt="beagleboneblacktux media boot automounted" width="640" height="480"></a>
+</div>
+<div class="title">The first partition <em>/dev/sdb1</em> has been automounted successfully at <em>/media/conrad/boot</em></div>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ mount        <i class="conum" data-value="1"></i><b>(1)</b>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2)        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We use <em>mount</em> to check explicitly what&#8217;s there in the system</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Our partition has been mounted at <em>/media/conrad/boot</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will finally have to copy the files from the lab data folder to this partition
+and un mount the device.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/bootloader/beaglebone-black$ cp am335x-boneblack.dtb MLO MBR u-boot.img MLO.final u-boot.img.final uEnv.txt uImage /media/conrad/boot/                <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/bootloader/beaglebone-black$ umount /media/conrad/boot        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Copying the necessary files from the Free Electrons lab data folder which we unpacked earlier</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Unmounting the mounted partition</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can now safely eject or remove the microSD card from the work station.</p>
 </div>
 </div>
 </div>
