@@ -464,6 +464,91 @@ _linux-kernel-labs/bootloader/beaglebone-black/README.txt_. The
 procedure given here has been taken from that document. There's a section
 on "Fixing issues (if any)" which might help.
 
+=== Setting Up Serial Communication With The Board
+	
+The debug serial header connector has been descibed in the 
+"<<Getting Comfortable With The Board>> section and should be easy to locat
+ with the labelled image in that section.
+
+It would be good to read the section on the debug serial header given in the
+{link-am3358-technical-reference-manual-pdf}[Technical Reference Manual^].
 
 
+
+
+[source,bash]
+----
+[60269.932101] usb 6-1: new full-speed USB device number 2 using uhci_hcd
+[60270.125794] usb 6-1: New USB device found, idVendor=0403, idProduct=6001
+[60270.125804] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[60270.125812] usb 6-1: Product: FT232R USB UART
+[60270.125819] usb 6-1: Manufacturer: FTDI
+[60270.125825] usb 6-1: SerialNumber: A602I2CN
+[60270.212583] usbcore: registered new interface driver usbserial
+[60270.212599] usbcore: registered new interface driver usbserial_generic
+[60270.212611] usbserial: USB Serial support registered for generic
+[60270.230288] usbcore: registered new interface driver ftdi_sio
+[60270.230305] usbserial: USB Serial support registered for FTDI USB Serial Device
+[60270.230972] ftdi_sio 6-1:1.0: FTDI USB Serial Device converter detected
+[60270.231033] usb 6-1: Detected FT232RL
+[60270.231036] usb 6-1: Number of endpoints 2
+[60270.231039] usb 6-1: Endpoint 1 MaxPacketSize 64
+[60270.231041] usb 6-1: Endpoint 2 MaxPacketSize 64
+[60270.231043] usb 6-1: Setting MaxPacketSize 64
+[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0
+----
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        : 
+omap is        : 
+emap is        : crcrlf,delbs,
+
+Terminal ready
+
+U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Using default environment
+
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+U-Boot#     version
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
+GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913
+U-Boot# env default -f -a
+## Resetting to default environment
+U-Boot# saveenv 
+Saving Environment to MMC...
+Writing to redundant MMC(1)... done
+U-Boot# 
+----
 
