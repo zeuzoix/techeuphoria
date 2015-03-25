@@ -5,6 +5,9 @@
 :link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
 :uri-am3358-technical-reference-manual: http://www.ti.com/product/am3359
 :link-fe-linux-kernel-labs-tar-xz: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+:link-elinux-bbb-serial-ftdi: http://elinux.org/Beagleboard:BeagleBone_Black_Serial
+:link-rhydolabz-home-page: http://www.rhydolabz.com/index.php
+:link-rhydolabz-ftdi-usb-to-serial-converter: http://www.rhydolabz.com/index.php?main_page=product_info&cPath=80&products_id=1090
 
 == LAB 2 : Setting Up The Beaglebone Black Board
 
@@ -467,17 +470,84 @@ on "Fixing issues (if any)" which might help.
 === Setting Up Serial Communication With The Board
 	
 The debug serial header connector has been descibed in the 
-"<<Getting Comfortable With The Board>> section and should be easy to locat
- with the labelled image in that section.
-
-It would be good to read the section on the debug serial header given in the
+<<Getting Comfortable With The Board>> section and should be easy to locate
+ with the labelled image in that section. It is a 1x6 header. Serial
+capability is provided by UART0 of the processor. It would be good to read
+the section on the debug serial header given in the
 {link-am3358-technical-reference-manual-pdf}[Technical Reference Manual^].
 
+The only two signals available are TX and RX on the connector and the levels
+on these signals is 3.3V. A FTDI USB to serial cable is recommended as this
+serves to provide a serial port to PCs/Laptops making use of the available
+USB port. The FTDI chip translates the USB data to serial and vice versa. There
+are several provided in the elinux.org website link at: +
+{link-elinux-bbb-serial-ftdi}[{link-elinux-bbb-serial-ftdi}^].
 
+==== Rhydolabz FTDI USB To Serial Breakout Board
 
+In this journal a breakout board was purchased from
+{link-rhydolabz-home-page}[Rhydolabz^]. There are several boards available but
+one without a 1x6 connector was chosen. All the signals of the FTDI can be
+exposed by soldering a bergstrip pin-out for advanced users but for our use
+case GND, RX and TX are provided with an easy to access 4 pin connector. The
+board is also capable of outputing both 5V and 3.3V. This is controlled by
+soldering the 3.3V leads at the back of the breakout board. The board can be
+picked up from: +
+{link-rhydolabz-ftdi-usb-to-serial-converter}[{link-rhydolabz-ftdi-usb-to-serial-converter}^]
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-usb-serial-breakout-board]]
+.Rhydolabz breakout board with mini USB cable
+image::rhydolabz-ftdi-usb-to-serial-interface-module.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/rhydolabz-ftdi-usb-to-serial-interface-module.jpg]
+====
+
+==== Connecting The Breakout Board
+
+The FTDI breakout board comes with a Grove 4 pin Female jumper to 4 pin
+conversion cable. Each of the cables can be connected to female connectors
+to be slotted into the serial debug header pins. We need only the GND, RXD
+and TXD signals from the board. Before connecting the board signals make
+sure the 3.3V leads are shorted at the bottom of the board. The board from
+Rhydolabz comes with the 5V lead shorted and must be converted for the Beagle
+Bone Black.
+
+. Connect the GND cable of the FTDI breakout board to pin 1 of the serial header.
+. Next connect RXD of the FTDI breakout board to pin 5 which is the TX of the serial debug header.
+. Finally connect TXD of the board to pin 4 which is the RX of the serial debug header.
+
+It is always good to understand the specifications of the connectors whenever
+interfacing electronic circuits. In this case we know that the BeagleBone Black
+takes 3.3V from the System Reference Manual. If a different cable is to be used
+check and see if its connector is compatible with the header. The figure below
+shows the setup where GND is the orange cable on the right, next RXD is the
+brown cable followed by the TXD which is the red cable.
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection]]
+.Rhydolabz breakout board serial connection to BeagleBone Black 1x6 header
+image::beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg]
+====
+
+Once the connections are in place between the BeagleBone Black serial debug
+header and the FTDI cable or breakout board then connect the USB cable to the
+breakout board. The picture shows that the board lights up.
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection]]
+.Rhydolabz breakout board mini USB connection
+image::beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg]
+====
+
+The linux kernel running on the workstation should register the new USB
+device connected. We can probe the kernel logs to see if there is any activity
+using dmesg.
 
 [source,bash]
 ----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ dmesg
+.
+.
+.
 [60269.932101] usb 6-1: new full-speed USB device number 2 using uhci_hcd
 [60270.125794] usb 6-1: New USB device found, idVendor=0403, idProduct=6001
 [60270.125804] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
@@ -495,12 +565,47 @@ It would be good to read the section on the debug serial header given in the
 [60270.231039] usb 6-1: Endpoint 1 MaxPacketSize 64
 [60270.231041] usb 6-1: Endpoint 2 MaxPacketSize 64
 [60270.231043] usb 6-1: Setting MaxPacketSize 64
-[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0
+[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ ls -l /dev/ttyUSB0 
+crw-rw---- 1 root dialout 188, 0 Mar 25 22:28 /dev/ttyUSB0	<2>
 ----
+<1> The device has been recognized as a tty device and is named ttyUSB0
+<2> A device node _/dev/ttyUSB0_ is created in the root filesystem
+
+==== Accessing The Serial Port With _Picocom_
+
+We can now access the serial port with a terminal application like picocom.
+This can be installed as follows:
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo apt-get install picocom	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo adduser $USER dialout	<2>
+----
+<1> Installing _picocom_ with _apt-get_
+<2> Adding $USER to the dialout group to use _picocom_ without sudo. $USER is set to the username i.e conrad in the above case.
+
+We can now start _picocom_ and connect it to the _/dev/ttyUSB0_ device which
+was created earlier. The baud rate is specified with the -b option. The
+default serial port settings for the board are:
+
+. Baud 115,200
+. Bits 8
+. Parity N
+. Stop Bits 1
+. Handshake None
+
+After starting the _picocom_ application we should be able to see the serial
+port is opened and the settings should be the default settings. If they are
+not then try to get the settings by providing options to picocom. Once we get
+the desired settings we can apply power to the connected BeagleBone Black. At
+this point we will boot up the board for the first time and should see the
+serial logs of the bootloader U-Boot. The boot process can be interrupted by
+hitting any key on the keyboard and allowing us to configure the U-Boot 
+environment.
 
 [source,bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 <1>
 picocom v1.7
 
 port is        : /dev/ttyUSB0
@@ -519,9 +624,9 @@ imap is        :
 omap is        : 
 emap is        : crcrlf,delbs,
 
-Terminal ready
+Terminal ready	<2>
 
-U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)
+U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)	<3>
 reading args
 spl: error reading image args, err - -1
 reading u-boot.img
@@ -538,12 +643,27 @@ Using default environment
 
 Net:   <ethaddr> not set. Validating first E-fuse MAC
 cpsw, usb_ether
-Hit any key to stop autoboot:  0 
-U-Boot#     version
+Hit any key to stop autoboot:  0 	<4>
+U-Boot#
+----
+<1> We run the _picocom_ application setting the baud rate to 115200 and choosing the device as _/dev/ttyUSB0_
+<2> _picocom_ shows that the terminal is ready after printing the serial port settings
+<3> On application of power to the BeagleBone Black this is the first print from U-Boot
+<4> We can interrupt U-boot before it tries to boot the kernel by hitting any key
 
-U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+[source,bash]
+----
+U-Boot#     version	<1>
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)		<2>
 arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
 GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913
+----
+<1> _version_ checks the version of U-Boot in the system 
+<2> Our version has to be 2013.10 to save the U-Boot environment to the eMMC storage
+
+[source,bash]
+----
 U-Boot# env default -f -a
 ## Resetting to default environment
 U-Boot# saveenv 
