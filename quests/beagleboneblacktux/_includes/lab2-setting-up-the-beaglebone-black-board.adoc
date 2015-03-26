@@ -704,7 +704,39 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get ins
 Now we will connect an ethernet cable between our workstation and the BeagleBone
 Black ethernet connector. If the workstation does not have any more connections
 then we will have to use a USB ethernet adapter. In this case we have an unused
-connection so we will connect the cable to that as shown.
+connection so we will connect the cable as shown.
 
+====
+[[beagleboneblacktux-ethernet-connection]]
+.BeagleBone Black connected to ethernet cable
+image::beagleboneblacktux-ethernet-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-connection.jpg]
+====
 
+We next have to configure the network interface on the workstation side. Click
+on the network manager tasklet on the desktop and select _Edit Connections_.
 
+====
+[[beagleboneblacktux-ethernet-screenshot-edit-connections]]
+.Screen shot of _Edit Connections_ selected in the network manager tasklet
+image::beagleboneblacktux-ethernet-screenshot-edit-connections.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-edit-connections.png]
+====
+
+Click on the Add button on the left and then _Create.._ an ethernet connection.
+
+====
+[[beagleboneblacktux-ethernet-screenshot-add-new-connection]]
+.Screen shot of adding a new ethernet conneciton
+image::beagleboneblacktux-ethernet-screenshot-add-new-connection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-add-new-connection.png]
+====
+
+Edit the new ethernet connection by changing its name to _BBB_. Change the
+IPV4 settings by selecting the method as manual. And finally add the static
+address as 192.168.0.1 and netmask as 255.255.255.0. There's no need to add
+a gateway but if the cursor is in the textbox enter 0.0.0.0. Save the
+settings and the interface is set up on the workstation.
+
+====
+[[beagleboneblacktux-ethernet-screenshot-edit-new-connection]]
+.Screen shot of editing IPV4 settings of the new ethernet connection
+image::beagleboneblacktux-ethernet-screenshot-edit-new-connection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png]
+====
