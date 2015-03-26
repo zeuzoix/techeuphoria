@@ -646,10 +646,19 @@ cpsw, usb_ether
 Hit any key to stop autoboot:  0 	<4>
 U-Boot#
 ----
-<1> We run the _picocom_ application setting the baud rate to 115200 and choosing the device as _/dev/ttyUSB0_
-<2> _picocom_ shows that the terminal is ready after printing the serial port settings
-<3> On application of power to the BeagleBone Black this is the first print from U-Boot
-<4> We can interrupt U-boot before it tries to boot the kernel by hitting any key
+<1> We run the _picocom_ application setting the baud rate to 115200 and
+choosing the device as _/dev/ttyUSB0_
+<2> _picocom_ shows that the terminal is ready after printing the serial
+port settings
+<3> On application of power to the BeagleBone Black this is the first
+print from U-Boot
+<4> We can interrupt U-boot before it tries to boot the kernel by hitting
+any key
+
+==== Setting Default Environment Variables For U-Boot
+
+We need to make sure the version of the U-Boot running is 2013.10. We use the
+command _version_ to get the information.
 
 [source,bash]
 ----
@@ -662,13 +671,40 @@ GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913
 <1> _version_ checks the version of U-Boot in the system 
 <2> Our version has to be 2013.10 to save the U-Boot environment to the eMMC storage
 
+Finally we reset the settings of the U-Boot environment to its default values using
+the command _env default -f -a_ as shown below. Finally _saveenv_ is used to save
+the environment settings whenever we want to retain it across reboots.
+
 [source,bash]
 ----
-U-Boot# env default -f -a
+U-Boot# env default -f -a		<1>
 ## Resetting to default environment
-U-Boot# saveenv 
-Saving Environment to MMC...
+U-Boot# saveenv 			<2>
+Saving Environment to MMC...		<3>
 Writing to redundant MMC(1)... done
 U-Boot# 
 ----
+<1> Resetting the environment variables to a default value
+<2> Saving the environment values
+<3> The environment values are saved to the eMMC device
+
+=== Setting Up Ethernet Communication With The Board
+
+We will now need to setup the board in such a way so as to allow us to download
+files to its system memory using U-Boot. To do this we will use Trivial File
+Transfer Protocol (TFTP) through an ethernet cable. Our board will be the TFTP
+client and we will configure our Ubuntu work station to act as a TFTP server.
+TFTP can be installed as shown below using APT.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install tftpd-hpa
+----
+
+Now we will connect an ethernet cable between our workstation and the BeagleBone
+Black ethernet connector. If the workstation does not have any more connections
+then we will have to use a USB ethernet adapter. In this case we have an unused
+connection so we will connect the cable to that as shown.
+
+
 
