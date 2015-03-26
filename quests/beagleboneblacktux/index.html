@@ -162,7 +162,28 @@ TechEuphoria
 </li>
 <li><a href="#downloading-the-technical-documentation">23.2. Downloading The Technical Documentation</a></li>
 <li><a href="#installing-the-free-electrons-lab-data">23.3. Installing The Free Electrons Lab Data</a></li>
-<li><a href="#making-a-bootable-microsd-card">23.4. Making A Bootable MicroSD Card</a></li>
+<li><a href="#making-a-bootable-microsd-card">23.4. Making A Bootable MicroSD Card</a>
+<ul class="sectlevel3">
+<li><a href="#source-for-binaries">23.4.1. Source For Binaries</a></li>
+</ul>
+</li>
+<li><a href="#reflashing-the-emmc-with-the-micro-sd-card">23.5. Reflashing The eMMC With The micro-SD Card</a>
+<ul class="sectlevel3">
+<li><a href="#insert-the-micro-sd-card">23.5.1. Insert The micro-SD Card</a></li>
+<li><a href="#pressing-the-boot-switch">23.5.2. Pressing The Boot Switch</a></li>
+<li><a href="#applying-power">23.5.3. Applying Power</a></li>
+<li><a href="#troubleshooting">23.5.4. Troubleshooting</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-serial-communication-with-the-board">23.6. Setting Up Serial Communication With The Board</a>
+<ul class="sectlevel3">
+<li><a href="#rhydolabz-ftdi-usb-to-serial-breakout-board">23.6.1. Rhydolabz FTDI USB To Serial Breakout Board</a></li>
+<li><a href="#connecting-the-breakout-board">23.6.2. Connecting The Breakout Board</a></li>
+<li><a href="#accessing-the-serial-port-with-em-picocom-em">23.6.3. Accessing The Serial Port With <em>Picocom</em></a></li>
+<li><a href="#setting-default-environment-variables-for-u-boot">23.6.4. Setting Default Environment Variables For U-Boot</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-ethernet-communication-with-the-board">23.7. Setting Up Ethernet Communication With The Board</a></li>
 </ul>
 </li>
 </ul>
@@ -2409,7 +2430,7 @@ sequence. It is used to power down the board.</p>
 </dd>
 <dt class="hdlist1">Boot Button Switch</dt>
 <dd>
-<p>Force the a boot from the microSD card by removing and
+<p>Force the a boot from the micro-SD card by removing and
 reapplying power to the board.</p>
 </dd>
 <dt class="hdlist1">Reset Button Switch</dt>
@@ -2431,13 +2452,13 @@ used to power the board and setup a network connection.</p>
 </dd>
 <dt class="hdlist1">MicroSD Slot Connector</dt>
 <dd>
-<p>Slot at the bottom of the board to insert a micro SD
+<p>Slot at the bottom of the board to insert a micro-SD
 card.</p>
 </dd>
 <dt class="hdlist1">MicroHDMI Slot Connector</dt>
 <dd>
-<p>Slot at the bottom of the board to insert a micro
-HDMI cable to interface to a display.</p>
+<p>Slot at the bottom of the board to insert a
+micro-HDMI cable to interface to a display.</p>
 </dd>
 <dt class="hdlist1">USB Host Connector</dt>
 <dd>
@@ -2591,8 +2612,8 @@ bootable micro-SD card will automatically format the on board eMMC
 device.</p>
 </div>
 <div class="paragraph">
-<p>Take the microSD card and insert it into a microSD adapter like the
-one shown in the image below:</p>
+<p>Take the micro-SD card and insert it into a micro-SD adapter/reader
+like the one shown in the image below:</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -2606,9 +2627,9 @@ one shown in the image below:</p>
 </div>
 <div class="paragraph">
 <p>This memory card reader/adapter should be inserted into the SD card
-slot available. If your system has a micro SD card slot then please
+slot available. If your system has a micro-SD card slot then please
 use that directly. On checking the kernel logs with <em>dmesg</em> we should
-be able to identify the card detected in the system. If a micro SD
+be able to identify the card detected in the system. If a micro-SD
 card slot is available then the system should register it as a
 <em>/dev/mmcblk0</em> whereas in this case with a memory card reader we see
 it as <em>/dev/sdb</em>. The following shows the kernel logs:</p>
@@ -2653,7 +2674,7 @@ brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb</code></pre>
 </table>
 </div>
 <div class="paragraph">
-<p>We will have to first partition the micro SD card using the <em>sfdisk</em> utility
+<p>We will have to first partition the micro-SD card using the <em>sfdisk</em> utility
 which is part of the <em>util-linux</em> APT package.
 This tool helps us to list the partitions of a device, check the sizes of the
 partitions, check the partitions on a device and re-partition a device. We must
@@ -2763,7 +2784,7 @@ gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=con
 </table>
 </div>
 <div class="paragraph">
-<p>Again we attempt to repartition the micro SD card</p>
+<p>Again we attempt to repartition the micro-SD card</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2856,7 +2877,7 @@ file allocation tables used (12, 16 or 32 bit).</td>
 </table>
 </div>
 <div class="paragraph">
-<p>We now remove and re-insert the microSD card into the system to see if it gets
+<p>We now remove and re-insert the micro-SD card into the system to see if it gets
 detected and automatically mounted. It does and we see that Ubuntu
 opens up the directory located in <em>/media/conrad/boot</em>.</p>
 </div>
@@ -2929,8 +2950,698 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs
 </tr>
 </table>
 </div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-media-boot-automounted" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-bootable-microSD-contents.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-bootable-microSD-contents.png" alt="beagleboneblacktux bootable microSD contents" width="640" height="480"></a>
+</div>
+<div class="title">The contents of the bootable micro-SD card</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
-<p>We can now safely eject or remove the microSD card from the work station.</p>
+<p>We can now safely eject or remove the micro-SD card from the work station.</p>
+</div>
+<div class="sect3">
+<h4 id="source-for-binaries"><a class="anchor" href="#source-for-binaries"></a>23.4.1. Source For Binaries</h4>
+<div class="paragraph">
+<p>The binaries that are copied can be built from source however we&#8217;re not
+going to do that for now. Instructions to build them are given in the
+<em>linux-kernel-labs/bootloader/beaglebone-black/README.txt</em> of the lab data
+downloaded.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reflashing-the-emmc-with-the-micro-sd-card"><a class="anchor" href="#reflashing-the-emmc-with-the-micro-sd-card"></a>23.5. Reflashing The eMMC With The micro-SD Card</h3>
+<div class="paragraph">
+<p>The bootable micro-SD card will now be used to reflash the eMMC device to get
+it ready for the lab session. The process is short but the steps maybe a bit
+confusing so follow the pictures to nail it down correctly.</p>
+</div>
+<div class="sect3">
+<h4 id="insert-the-micro-sd-card"><a class="anchor" href="#insert-the-micro-sd-card"></a>23.5.1. Insert The micro-SD Card</h4>
+<div class="paragraph">
+<p>This step is self-explanatory. The bootable micro-SD card has to be inserted
+into the micro-SD card slot on the BeagleBone Black board. The micro-SD card
+has 8 contacts with a golden hue which are at the bottom of the card. The
+picture below shows the top of the micro-SD card which is placed in the slot.
+All that is left is to press it into the slot until a click is felt.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-microsd-in-slot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-microsd-in-slot.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-microsd-in-slot.jpg" alt="beagleboneblacktux microsd in slot" width="640" height="480"></a>
+</div>
+<div class="title">The micro-SD card is placed in the slot waiting to be fully inserted</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="pressing-the-boot-switch"><a class="anchor" href="#pressing-the-boot-switch"></a>23.5.2. Pressing The Boot Switch</h4>
+<div class="paragraph">
+<p>After inserting the micro-SD card we have to press the boot switch which is
+located near the micro-SD card slot as shown in the picture below. Also note
+that the micro-SD card has been inserted properly into its slot.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-boot-switch" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-boot-switch.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-boot-switch.jpg" alt="beagleboneblacktux boot switch" width="640" height="480"></a>
+</div>
+<div class="title">The boot switch located near the micro-SD card slot</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-boot-switch-pressed" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-boot-switch-pressed.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-boot-switch-pressed.jpg" alt="beagleboneblacktux boot switch pressed" width="640" height="480"></a>
+</div>
+<div class="title">The boot switch has to be pressed before applying power</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="applying-power"><a class="anchor" href="#applying-power"></a>23.5.3. Applying Power</h4>
+<div class="paragraph">
+<p>The last step is to apply power i.e. either through the USB connector or
+power connector. Make sure your power supply is built for 5V 1A output
+before inserting it into the power supply connector. You can depress the
+boot switch after 1 second after applying power. On applying power the
+leds will start blinking. The entire reflashing process takes about 20 to
+30 seconds. At the end of the process all 4 leds will be on as shown:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-all-leds-on-successful-reflash" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-all-leds-on-successful-reflash.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-all-leds-on-successful-reflash.jpg" alt="beagleboneblacktux all leds on successful reflash" width="640" height="480"></a>
+</div>
+<div class="title">The reflash operation was successful as all 4 leds are on after 20s</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>23.5.4. Troubleshooting</h4>
+<div class="paragraph">
+<p>In case there is an issue with the process and the 4 leds do not light up
+after a minute then try again. If it still fails then go through the steps
+given in the lab data folder i.e.
+<em>linux-kernel-labs/bootloader/beaglebone-black/README.txt</em>. The
+procedure given here has been taken from that document. There&#8217;s a section
+on "Fixing issues (if any)" which might help.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-serial-communication-with-the-board"><a class="anchor" href="#setting-up-serial-communication-with-the-board"></a>23.6. Setting Up Serial Communication With The Board</h3>
+<div class="paragraph">
+<p>The debug serial header connector has been descibed in the
+<a href="#getting-comfortable-with-the-board">Getting Comfortable With The Board</a> section and should be easy to locate
+ with the labelled image in that section. It is a 1x6 header. Serial
+capability is provided by UART0 of the processor. It would be good to read
+the section on the debug serial header given in the
+<a href="docs/spruh73i.pdf" target="_blank">Technical Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The only two signals available are TX and RX on the connector and the levels
+on these signals is 3.3V. A FTDI USB to serial cable is recommended as this
+serves to provide a serial port to PCs/Laptops making use of the available
+USB port. The FTDI chip translates the USB data to serial and vice versa. There
+are several provided in the elinux.org website link at:<br>
+<a href="http://elinux.org/Beagleboard:BeagleBone_Black_Serial" target="_blank">http://elinux.org/Beagleboard:BeagleBone_Black_Serial</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="rhydolabz-ftdi-usb-to-serial-breakout-board"><a class="anchor" href="#rhydolabz-ftdi-usb-to-serial-breakout-board"></a>23.6.1. Rhydolabz FTDI USB To Serial Breakout Board</h4>
+<div class="paragraph">
+<p>In this journal a breakout board was purchased from
+<a href="http://www.rhydolabz.com/index.php" target="_blank">Rhydolabz</a>. There are several boards available but
+one without a 1x6 connector was chosen. All the signals of the FTDI can be
+exposed by soldering a bergstrip pin-out for advanced users but for our use
+case GND, RX and TX are provided with an easy to access 4 pin connector. The
+board is also capable of outputing both 5V and 3.3V. This is controlled by
+soldering the 3.3V leads at the back of the breakout board. The board can be
+picked up from:<br>
+<a href="http://www.rhydolabz.com/index.php?main_page=product_info&cPath=80&products_id=1090" target="_blank">http://www.rhydolabz.com/index.php?main_page=product_info&cPath=80&products_id=1090</a></p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-usb-serial-breakout-board" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/rhydolabz-ftdi-usb-to-serial-interface-module.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/rhydolabz-ftdi-usb-to-serial-interface-module.jpg" alt="rhydolabz ftdi usb to serial interface module" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board with mini USB cable</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="connecting-the-breakout-board"><a class="anchor" href="#connecting-the-breakout-board"></a>23.6.2. Connecting The Breakout Board</h4>
+<div class="paragraph">
+<p>The FTDI breakout board comes with a Grove 4 pin Female jumper to 4 pin
+conversion cable. Each of the cables can be connected to female connectors
+to be slotted into the serial debug header pins. We need only the GND, RXD
+and TXD signals from the board. Before connecting the board signals make
+sure the 3.3V leads are shorted at the bottom of the board. The board from
+Rhydolabz comes with the 5V lead shorted and must be converted for the Beagle
+Bone Black.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Connect the GND cable of the FTDI breakout board to pin 1 of the serial header.</p>
+</li>
+<li>
+<p>Next connect RXD of the FTDI breakout board to pin 5 which is the TX of the serial debug header.</p>
+</li>
+<li>
+<p>Finally connect TXD of the board to pin 4 which is the RX of the serial debug header.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is always good to understand the specifications of the connectors whenever
+interfacing electronic circuits. In this case we know that the BeagleBone Black
+takes 3.3V from the System Reference Manual. If a different cable is to be used
+check and see if its connector is compatible with the header. The figure below
+shows the setup where GND is the orange cable on the right, next RXD is the
+brown cable followed by the TXD which is the red cable.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg" alt="beagleboneblacktux rhydolabz ftdi serial debug connection" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board serial connection to BeagleBone Black 1x6 header</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the connections are in place between the BeagleBone Black serial debug
+header and the FTDI cable or breakout board then connect the USB cable to the
+breakout board. The picture shows that the board lights up.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg" alt="beagleboneblacktux rhydolabz ftdi mini usb connection" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board mini USB connection</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The linux kernel running on the workstation should register the new USB
+device connected. We can probe the kernel logs to see if there is any activity
+using dmesg.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ dmesg
+.
+.
+.
+[60269.932101] usb 6-1: new full-speed USB device number 2 using uhci_hcd
+[60270.125794] usb 6-1: New USB device found, idVendor=0403, idProduct=6001
+[60270.125804] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[60270.125812] usb 6-1: Product: FT232R USB UART
+[60270.125819] usb 6-1: Manufacturer: FTDI
+[60270.125825] usb 6-1: SerialNumber: A602I2CN
+[60270.212583] usbcore: registered new interface driver usbserial
+[60270.212599] usbcore: registered new interface driver usbserial_generic
+[60270.212611] usbserial: USB Serial support registered for generic
+[60270.230288] usbcore: registered new interface driver ftdi_sio
+[60270.230305] usbserial: USB Serial support registered for FTDI USB Serial Device
+[60270.230972] ftdi_sio 6-1:1.0: FTDI USB Serial Device converter detected
+[60270.231033] usb 6-1: Detected FT232RL
+[60270.231036] usb 6-1: Number of endpoints 2
+[60270.231039] usb 6-1: Endpoint 1 MaxPacketSize 64
+[60270.231041] usb 6-1: Endpoint 2 MaxPacketSize 64
+[60270.231043] usb 6-1: Setting MaxPacketSize 64
+[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ ls -l /dev/ttyUSB0
+crw-rw---- 1 root dialout 188, 0 Mar 25 22:28 /dev/ttyUSB0        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The device has been recognized as a tty device and is named ttyUSB0</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A device node <em>/dev/ttyUSB0</em> is created in the root filesystem</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="accessing-the-serial-port-with-em-picocom-em"><a class="anchor" href="#accessing-the-serial-port-with-em-picocom-em"></a>23.6.3. Accessing The Serial Port With <em>Picocom</em></h4>
+<div class="paragraph">
+<p>We can now access the serial port with a terminal application like picocom.
+This can be installed as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo apt-get install picocom        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo adduser $USER dialout        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Installing <em>picocom</em> with <em>apt-get</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Adding $USER to the dialout group to use <em>picocom</em> without sudo. $USER is set to the username i.e conrad in the above case.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can now start <em>picocom</em> and connect it to the <em>/dev/ttyUSB0</em> device which
+was created earlier. The baud rate is specified with the -b option. The
+default serial port settings for the board are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Baud 115,200</p>
+</li>
+<li>
+<p>Bits 8</p>
+</li>
+<li>
+<p>Parity N</p>
+</li>
+<li>
+<p>Stop Bits 1</p>
+</li>
+<li>
+<p>Handshake None</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After starting the <em>picocom</em> application we should be able to see the serial
+port is opened and the settings should be the default settings. If they are
+not then try to get the settings by providing options to picocom. Once we get
+the desired settings we can apply power to the connected BeagleBone Black. At
+this point we will boot up the board for the first time and should see the
+serial logs of the bootloader U-Boot. The boot process can be interrupted by
+hitting any key on the keyboard and allowing us to configure the U-Boot
+environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 <i class="conum" data-value="1"></i><b>(1)</b>
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        :
+omap is        :
+emap is        : crcrlf,delbs,
+
+Terminal ready        <i class="conum" data-value="2"></i><b>(2)</b>
+ 
+U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)        <i class="conum" data-value="3"></i><b>(3)</b>
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Using default environment
+
+Net:   &lt;ethaddr&gt; not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0         <i class="conum" data-value="4"></i><b>(4)</b>
+U-Boot#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We run the <em>picocom</em> application setting the baud rate to 115200 and
+choosing the device as <em>/dev/ttyUSB0</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>picocom</em> shows that the terminal is ready after printing the serial
+port settings</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>On application of power to the BeagleBone Black this is the first
+print from U-Boot</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>We can interrupt U-boot before it tries to boot the kernel by hitting
+any key</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="setting-default-environment-variables-for-u-boot"><a class="anchor" href="#setting-default-environment-variables-for-u-boot"></a>23.6.4. Setting Default Environment Variables For U-Boot</h4>
+<div class="paragraph">
+<p>We need to make sure the version of the U-Boot running is 2013.10. We use the
+command <em>version</em> to get the information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot#     version        <i class="conum" data-value="1"></i><b>(1)</b>
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)                <i class="conum" data-value="2"></i><b>(2)</b>
+arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
+GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>version</em> checks the version of U-Boot in the system</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Our version has to be 2013.10 to save the U-Boot environment to the eMMC storage</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally we reset the settings of the U-Boot environment to its default values using
+the command <em>env default -f -a</em> as shown below. Finally <em>saveenv</em> is used to save
+the environment settings whenever we want to retain it across reboots.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# env default -f -a                <i class="conum" data-value="1"></i><b>(1)</b>
+## Resetting to default environment
+U-Boot# saveenv                         <i class="conum" data-value="2"></i><b>(2)</b>
+Saving Environment to MMC...                <i class="conum" data-value="3"></i><b>(3)</b>
+Writing to redundant MMC(1)... done
+U-Boot#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Resetting the environment variables to a default value</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Saving the environment values</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The environment values are saved to the eMMC device</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-ethernet-communication-with-the-board"><a class="anchor" href="#setting-up-ethernet-communication-with-the-board"></a>23.7. Setting Up Ethernet Communication With The Board</h3>
+<div class="paragraph">
+<p>We will now need to setup the board in such a way so as to allow us to download
+files to its system memory using U-Boot. To do this we will use Trivial File
+Transfer Protocol (TFTP) through an ethernet cable. Our board will be the TFTP
+client and we will configure our Ubuntu work station to act as a TFTP server.
+TFTP can be installed as shown below using APT.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install tftpd-hpa</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we will connect an ethernet cable between our workstation and the BeagleBone
+Black ethernet connector. If the workstation does not have any more connections
+then we will have to use a USB ethernet adapter. In this case we have an unused
+connection so we will connect the cable as shown.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-ethernet-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-connection.jpg" alt="beagleboneblacktux ethernet connection" width="640" height="480"></a>
+</div>
+<div class="title">BeagleBone Black connected to ethernet cable</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We next have to configure the network interface on the workstation side. Click
+on the network manager tasklet on the desktop and select <em>Edit Connections</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-edit-connections" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-ethernet-screenshot-edit-connections.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-edit-connections.png" alt="beagleboneblacktux ethernet screenshot edit connections" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of <em>Edit Connections</em> selected in the network manager tasklet</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Click on the Add button on the left and then <em>Create..</em> an ethernet connection.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-add-new-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-ethernet-screenshot-add-new-connection.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-add-new-connection.png" alt="beagleboneblacktux ethernet screenshot add new connection" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of adding a new ethernet conneciton</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Edit the new ethernet connection by changing its name to <em>BBB</em>. Change the
+IPV4 settings by selecting the method as manual. And finally add the static
+address as 192.168.0.1 and netmask as 255.255.255.0. There&#8217;s no need to add
+a gateway but if the cursor is in the textbox enter 0.0.0.0. Save the
+settings and the interface is set up on the workstation.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-edit-new-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png" alt="beagleboneblacktux ethernet screenshot edit new connection" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of editing IPV4 settings of the new ethernet connection</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that we have our workstation ethernet interface configured we can setup
+networking on U-Boot&#8217;s side. We can print the environment to check what the
+variables are set to by running <em>printenv</em> which will give out the values
+of all the variables in the U-Boot environment. In our case with the default
+environment values we see that the IP address and TFTP server IP is not set.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot#
+U-Boot# printenv        <i class="conum" data-value="1"></i><b>(1)</b>
+arch=arm
+baudrate=115200
+board=am335x
+board_name=A335BNLT
+board_rev=00A6
+.
+.
+.
+stderr=serial
+stdin=serial
+stdout=serial
+usbnet_devaddr=90:59:af:49:c8:ef
+vendor=ti
+ver=U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+Environment size: 3471/131067 bytes
+U-Boot# printenv ipaddr                <i class="conum" data-value="2"></i><b>(2)</b>
+## Error: &quot;ipaddr&quot; not defined
+U-Boot# printenv serverip        <i class="conum" data-value="3"></i><b>(3)</b>
+## Error: &quot;serverip&quot; not defined</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Print all the environment variables</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Print value of the IP address</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Print value of TFTP server IP</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will set the server IP to the static IP we assigned to our ethernet
+interface on our workstation and IP address to a different value as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# setenv ipaddr 192.168.0.100        <i class="conum" data-value="1"></i><b>(1)</b>
+U-Boot# printenv ipaddr
+ipaddr=192.168.0.100
+U-Boot# setenv serverip 192.168.0.1        <i class="conum" data-value="2"></i><b>(2)</b>
+U-Boot# printenv serverip
+serverip=192.168.0.1
+U-Boot# saveenv                                <i class="conum" data-value="3"></i><b>(3)</b>
+Saving Environment to MMC...
+Writing to MMC(1)... done</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Setting the IP address to 192.168.0.100</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Setting the server IP to the workstation ethernet interface IP</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Saving the environment variables</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The next step is to test the connection by creating a file called testfile.txt
+in <em>/var/lib/tftpboot/</em>. We will attempt to download the file through the
+<em>tftp</em> command in U-Boot.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# tftp 0x81000000 testfile.txt        <i class="conum" data-value="1"></i><b>(1)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'testfile.txt'.
+Load address: 0x81000000
+Loading: T T T T T T T T
+Abort                <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The tftp command takes a memory address in our BBB system and the file name
+as parameters.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We abort the command with CTRL-C after a while as nothing seems to be happening.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This may happen if the tftp service has not been started properly. So we can restart
+the service using the following command on the workstation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service tftpd-hpa restart
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 12562</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now when we try the <em>tftp</em> command again in the U-Boot command prompt we are
+able to successfully download the file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# tftp 0x81000000 testfile.txt
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'testfile.txt'.
+Load address: 0x81000000
+Loading: #
+         6.8 KiB/s
+done
+Bytes transferred = 23 (17 hex)                <i class="conum" data-value="1"></i><b>(1)</b>
+U-Boot# md 0x81000000                        <i class="conum" data-value="2"></i><b>(2)</b>
+81000000: 67616542 6f42656c 4220656e 6b63616c    BeagleBone Black
+81000010: 61776120 fa0a2179 3477dfe5 36c5771d     away!....w4.w.6
+81000020: ddfddd53 acb6fdf7 bff3df47 8df4e90d    S.......G.......
+81000030: 51bbd157 4bbfd90f 5f723ff2 ae63b73f    W..Q...K.?r_?.c.
+81000040: e777dbbd ff1f5774 d43f27c9 bcefd75d    ..w.tW...'?.]...
+81000050: fdb7eff5 fd7ff7bd 6c7e5ebc df50576c    .........^~llWP.
+81000060: f6fdad24 e24de9dd fdaf3f3f 97cfffbe    $.....M.??......
+81000070: fec7fc3d fbed8ff7 bfdd7bbe 57df759c    =........{...u.W
+81000080: 7fbbd68d 3cb2b137 a71377cf 1754bdff    ....7..&lt;.w....T.
+81000090: ef4cf775 bbee4a85 fe75553d f137bfec    u.L..J..=Uu...7.
+810000a0: f9997e33 f5f77735 df4cbffb dd7d4d49    3~..5w....L.IM}.
+810000b0: f077f636 b5e5d555 5c7fb5f7 d7f69374    6.w.U......\t...
+810000c0: f27f9d5f f1d4fd65 74a5db11 b5b6734d    _...e......tMs..
+810000d0: 77d75f6f 3ef5757e d327f1d7 91255fd7    o_.w~u.&gt;..'.._%.
+810000e0: f5c47f7f fe5d77fe 445ebfdd ed78dbbf    .....w]...^D..x.
+810000f0: 7fb36aff 4fffe7bf d7bd7f5f 9fdffe6d    .j.....O_...m...
+U-Boot#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The file was successfully transferred this time.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We read the contents of the load address at 0x81000000 and see
+"BeagleBone Black away!" as expected.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We have successfully setup U-Boot to download the kernel.</p>
 </div>
 </div>
 </div>
