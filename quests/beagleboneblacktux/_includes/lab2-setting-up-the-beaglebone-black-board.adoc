@@ -740,3 +740,126 @@ settings and the interface is set up on the workstation.
 .Screen shot of editing IPV4 settings of the new ethernet connection
 image::beagleboneblacktux-ethernet-screenshot-edit-new-connection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png]
 ====
+
+Now that we have our workstation ethernet interface configured we can setup
+networking on U-Boot's side. We can print the environment to check what the
+variables are set to by running _printenv_ which will give out the values
+of all the variables in the U-Boot environment. In our case with the default
+environment values we see that the IP address and TFTP server IP is not set.
+
+[source, bash]
+----
+U-Boot# 
+U-Boot# printenv	<1>
+arch=arm
+baudrate=115200
+board=am335x
+board_name=A335BNLT
+board_rev=00A6
+.
+.
+.
+stderr=serial
+stdin=serial
+stdout=serial
+usbnet_devaddr=90:59:af:49:c8:ef
+vendor=ti
+ver=U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+Environment size: 3471/131067 bytes
+U-Boot# printenv ipaddr		<2>
+## Error: "ipaddr" not defined
+U-Boot# printenv serverip	<3>
+## Error: "serverip" not defined
+----
+<1> Print all the environment variables
+<2> Print value of the IP address 
+<3> Print value of TFTP server IP
+
+We will set the server IP to the static IP we assigned to our ethernet
+interface on our workstation and IP address to a different value as
+follows:
+
+[source, bash]
+----
+U-Boot# setenv ipaddr 192.168.0.100	<1>
+U-Boot# printenv ipaddr
+ipaddr=192.168.0.100
+U-Boot# setenv serverip 192.168.0.1	<2>
+U-Boot# printenv serverip
+serverip=192.168.0.1
+U-Boot# saveenv				<3>
+Saving Environment to MMC...
+Writing to MMC(1)... done
+----
+<1> Setting the IP address to 192.168.0.100
+<2> Setting the server IP to the workstation ethernet interface IP
+<3> Saving the environment variables
+
+The next step is to test the connection by creating a file called testfile.txt
+in _/var/lib/tftpboot/_. We will attempt to download the file through the
+_tftp_ command in U-Boot.
+
+[source, bash]
+----
+U-Boot# tftp 0x81000000 testfile.txt	<1>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'testfile.txt'.
+Load address: 0x81000000
+Loading: T T T T T T T T 
+Abort		<2>
+----
+<1> The tftp command takes a memory address in our BBB system and the file name
+as parameters.
+<2> We abort the command with CTRL-C after a while as nothing seems to be happening.
+
+This may happen if the tftp service has not been started properly. So we can restart
+the service using the following command on the workstation.
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service tftpd-hpa restart
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 12562
+----
+
+Now when we try the _tftp_ command again in the U-Boot command prompt we are
+able to successfully download the file.
+
+[source, bash]
+----
+U-Boot# tftp 0x81000000 testfile.txt
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'testfile.txt'.
+Load address: 0x81000000
+Loading: #
+	 6.8 KiB/s
+done
+Bytes transferred = 23 (17 hex)		<1>
+U-Boot# md 0x81000000			<2>
+81000000: 67616542 6f42656c 4220656e 6b63616c    BeagleBone Black
+81000010: 61776120 fa0a2179 3477dfe5 36c5771d     away!....w4.w.6
+81000020: ddfddd53 acb6fdf7 bff3df47 8df4e90d    S.......G.......
+81000030: 51bbd157 4bbfd90f 5f723ff2 ae63b73f    W..Q...K.?r_?.c.
+81000040: e777dbbd ff1f5774 d43f27c9 bcefd75d    ..w.tW...'?.]...
+81000050: fdb7eff5 fd7ff7bd 6c7e5ebc df50576c    .........^~llWP.
+81000060: f6fdad24 e24de9dd fdaf3f3f 97cfffbe    $.....M.??......
+81000070: fec7fc3d fbed8ff7 bfdd7bbe 57df759c    =........{...u.W
+81000080: 7fbbd68d 3cb2b137 a71377cf 1754bdff    ....7..<.w....T.
+81000090: ef4cf775 bbee4a85 fe75553d f137bfec    u.L..J..=Uu...7.
+810000a0: f9997e33 f5f77735 df4cbffb dd7d4d49    3~..5w....L.IM}.
+810000b0: f077f636 b5e5d555 5c7fb5f7 d7f69374    6.w.U......\t...
+810000c0: f27f9d5f f1d4fd65 74a5db11 b5b6734d    _...e......tMs..
+810000d0: 77d75f6f 3ef5757e d327f1d7 91255fd7    o_.w~u.>..'.._%.
+810000e0: f5c47f7f fe5d77fe 445ebfdd ed78dbbf    .....w]...^D..x.
+810000f0: 7fb36aff 4fffe7bf d7bd7f5f 9fdffe6d    .j.....O_...m...
+U-Boot# 
+----
+<1> The file was successfully transferred this time.
+<2> We read the contents of the load address at 0x81000000 and see
+"BeagleBone Black away!" as expected.
+
+We have successfully setup U-Boot to download the kernel. 
