@@ -125,3 +125,5 @@ include::{includedir}/kernel-installation.adoc[]
 include::{includedir}/cross-compiling-the-kernel.adoc[]
 
 include::{includedir}/lab2-setting-up-the-beaglebone-black-board.adoc[]
+
+include::{includedir}/lab3-cross-compile-kernel-and-boot-from-workstation.adoc[]

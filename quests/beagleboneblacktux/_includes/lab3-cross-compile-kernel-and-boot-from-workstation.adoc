@@ -1,0 +1,137 @@
+== LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Cross-compile the Linux kernel for the ARM platform
+. Boot the cross-compiled kernel with a NFS root filesystem, using the workstation as a NFS
+server
+====
+
+=== Enabling Networking To Speed Up Embedded Development
+
+In the previous lab we enabled network connectivity between the board and
+workstation by configuring the U-Boot environment appropriately. This
+enables us to build our binaries on the workstation and test it on the
+board without having to flash the board which saves time as well
+as prolongs the life of the eMMC device or micro-SD card. We will also
+enable a NFS type of root filesystem which will allow us to test
+cross-compiled modules on board. 
+
+////
+[ditaa, lab-setup-implementation]
+----
+ /----------------------------\                /--------------\
+ |                            |                |              |
+ |  Development Workstation   | <------------> |    Target    |
+ |/home/<user>/.../nfsroot/   |                |    /root/    |
+ |                            |                |    directory |
+ \-------------+--------------/                \-------^------/ 
+               |                                       |
+               +---------------------------------------+
+                                 NFS Export
+----
+////
+
+
+=== Installing The Prerequisites
+
+We will need to install a couple of packages before we can proceed with the lab.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ sudo apt-get install libqt4-dev g++ u-boot-tools	<1>
+.
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ sudo apt-get install gcc-arm-linux-gnueabi	<2>
+.
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ dpkg -L gcc-arm-linux-gnueabi			<3>
+/.
+/usr
+/usr/bin
+/usr/share
+/usr/share/doc
+/usr/share/man
+/usr/share/man/man1
+/usr/bin/arm-linux-gnueabi-gcc
+/usr/bin/arm-linux-gnueabi-gcov
+/usr/share/doc/gcc-arm-linux-gnueabi
+/usr/share/man/man1/arm-linux-gnueabi-gcov.1.gz
+/usr/share/man/man1/arm-linux-gnueabi-gcc.1.gz
+----
+<1> libtqy4-dev, g++ are required for _make xconfig_. u-boot-tools are required
+for mkuimage
+<2> gcc-arm-linux-gnueabi is the cross compiler toolchain from Linaro
+<3> Path and name of the cross-compiler can be determined by examining the
+cross-compiler installed.
+
+
+=== Configuring The Kernel
+
+We start with configuring the kernel source code with a default configuration.
+Since our board has a processor(AM335x) which belongs to the OMAP2 family we
+will use a default configuration file for that board i.e. omap2plus_defconfig.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find arch/arm/configs/ -iname '*omap*'
+arch/arm/configs/omap2plus_defconfig	<1>
+arch/arm/configs/omap1_defconfig
+arch/arm/configs/da8xx_omapl_defconfig
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- omap2plus_defconfig	<2>
+#
+# configuration written to .config
+#
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
+----
+<1> The default configuration for omap2 boards
+<2> Setting the default configuration to omap2dplus_defconfig
+
+Now configure the kernel to use a NFS root filesystem. This can be done with
+any of the configuration targets i.e. menuconfig, nconfig, gconfig or xconfig.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- menuconfig
+scripts/kconfig/mconf Kconfig
+.
+.
+----
+
+To identify the configuration option for NFS root filesystem search for
+_CONFIG_ROOT_NFS_ once the menuconfig screen appears.
+
+====
+[[beagleboneblacktux-search-config-root-nfs-screenshot]]
+.Searching for CONFIG_ROOT_NFS
+image::beagleboneblacktux-search-config-root-nfs-screenshot.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-search-config-root-nfs-screenshot.png]
+====
+
+We see that CONFIG_ROOT_NFS can be reached through *"File systems"* and
+*"Network File Systems"*
+====
+[[beagleboneblacktux-found-config-root-nfs-screenshot]]
+.CONFIG_ROOT_NFS is under File systems and Network File Systems
+image::beagleboneblacktux-found-config-root-nfs-screenshot.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-found-config-root-nfs-screenshot.png]
+====
+
+====
+[[beagleboneblacktux-config-root-nfs-filesystems-select]]
+.We select File systems
+image::beagleboneblacktux-config-root-nfs-filesystems-select.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-config-root-nfs-filesystems-select.png]
+====
+
+====
+[[beagleboneblacktux-config-root-nfs-network-file-systems-select]]
+.We select Network File Systems
+image::beagleboneblacktux-config-root-nfs-network-file-systems-select.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-config-root-nfs-network-file-systems-select.png]
+====
+
+====
+[[beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select]]
+.We select Root file system on NFS
+image::beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png]
+====
