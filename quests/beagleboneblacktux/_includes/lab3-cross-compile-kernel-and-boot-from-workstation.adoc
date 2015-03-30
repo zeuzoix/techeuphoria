@@ -135,3 +135,80 @@ image::beagleboneblacktux-config-root-nfs-network-file-systems-select.png[width=
 .We select Root file system on NFS
 image::beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png]
 ====
+
+=== Cross-compiling The Kernel
+
+Now it is time to cross-compile the kernel after we have configured it
+correctly. We will first do a clean on the source code to make sure we're
+compiling fresh
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- clean
+  CLEAN   .
+  CLEAN   arch/arm/kernel
+  CLEAN   drivers/eisa
+  CLEAN   drivers/gpu/drm/radeon
+  CLEAN   drivers/net/wan
+  CLEAN   drivers/scsi/aic7xxx
+  CLEAN   drivers/scsi
+  CLEAN   drivers/tty/vt
+  CLEAN   drivers/video/logo
+  CLEAN   firmware
+  CLEAN   kernel/debug/kdb
+  CLEAN   kernel
+  CLEAN   lib/raid6
+  CLEAN   lib
+  CLEAN   security/apparmor
+  CLEAN   security/selinux
+  CLEAN   usr
+  CLEAN   arch/arm/boot/compressed
+  CLEAN   arch/arm/boot/dts
+  CLEAN   arch/arm/boot
+  CLEAN   .tmp_versions
+----
+
+We compile the source code by invoking make with no target and by passing
+ARCH as arm and CROSS_COMPILE as _arm-linux-gnueabi-_. The compilation
+process may take a while. 
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-		<1>
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  HOSTCC  scripts/basic/fixdep
+make[1]: `include/generated/mach-types.h' is up to date.
+  CC      kernel/bounds.s
+.
+.
+.
+  CC      sound/soc/omap/snd-soc-omap3pandora.mod.o
+  LD [M]  sound/soc/omap/snd-soc-omap3pandora.ko
+  CC      sound/soc/snd-soc-core.mod.o
+  LD [M]  sound/soc/snd-soc-core.ko
+  CC      sound/soundcore.mod.o
+  LD [M]  sound/soundcore.ko
+  CC      sound/usb/snd-usb-audio.mod.o
+  LD [M]  sound/usb/snd-usb-audio.ko
+  CC      sound/usb/snd-usbmidi-lib.mod.o
+  LD [M]  sound/usb/snd-usbmidi-lib.ko
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ ls -l arch/arm/boot/
+total 12828
+drwxrwxr-x 2 conrad conrad    4096 Nov 12 23:07 bootp
+drwxrwxr-x 2 conrad conrad    4096 Mar 30 21:28 compressed
+drwxrwxr-x 4 conrad conrad   36864 Mar 30 21:28 dts
+-rwxrwxr-x 1 conrad conrad 8843712 Mar 30 21:28 Image
+-rw-rw-r-- 1 conrad conrad    1648 Oct 19  2013 install.sh
+-rw-rw-r-- 1 conrad conrad    3148 Oct 19  2013 Makefile
+-rwxrwxr-x 1 conrad conrad 4229384 Mar 30 21:28 zImage					<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ file arch/arm/boot/zImage 
+arch/arm/boot/zImage: Linux kernel ARM boot executable zImage (little-endian)		<3>
+----
+<1> The cross-compilation command in the kernel source directory
+<2> The zImage generated after cross-compilation
+<3> We check the type of file of zImage using the _file_ command
+
+
