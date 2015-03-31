@@ -142,6 +142,8 @@ Now it is time to cross-compile the kernel after we have configured it
 correctly. We will first do a clean on the source code to make sure we're
 compiling fresh
 
+==== Clean The Sources
+
 [source, bash]
 ----
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- clean
@@ -171,6 +173,8 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPI
 We compile the source code by invoking make with no target and by passing
 ARCH as arm and CROSS_COMPILE as _arm-linux-gnueabi-_. The compilation
 process may take a while. 
+
+==== Build zImage
 
 [source, bash]
 ----
@@ -210,5 +214,58 @@ arch/arm/boot/zImage: Linux kernel ARM boot executable zImage (little-endian)		<
 <1> The cross-compilation command in the kernel source directory
 <2> The zImage generated after cross-compilation
 <3> We check the type of file of zImage using the _file_ command
+
+==== Build uImage
+
+In order to boot the kernel image with U-Boot we need to convert it into
+a special format called _uImage_. The kernel Makefile has a target that can do
+this and which uses _mkimage_ tool found in the u-boot-tools package. The file
+will contain the zImage kernel and information about load address of the
+kernel. The load address will vary based on the platform for the BeagleBone
+Black board it is 0x80008000.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make LOADADDR=0x80008000 uImage		<1>
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CHK     kernel/config_data.h
+  Kernel: arch/arm/boot/Image is ready
+  Kernel: arch/arm/boot/zImage is ready
+  UIMAGE  arch/arm/boot/uImage
+Image Name:   Linux-3.13.11
+Created:      Tue Mar 31 21:50:14 2015
+Image Type:   ARM Linux Kernel Image (uncompressed)
+Data Size:    4229384 Bytes = 4130.26 kB = 4.03 MB
+Load Address: 80008000
+Entry Point:  80008000
+  Image arch/arm/boot/uImage is ready				<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+----
+<1> Invoking the uImage target with LOADADDR set to 0x80008000
+<2> The image is located at _arch/arm/boot/uImage_
+
+==== Generate The Device Tree Binaries
+
+We also need to generate the Device Tree Binaries (DTBs)
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make dtbs
+----
+
+==== Copy To TFTP Server Home Directory
+
+Finally we can copy the _uImage_ and the _am335x-boneblack.dtb_ files to the
+TFTP server home directory i.e. _/var/lib/tftpboot_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/dts/am335x-boneblack.dtb /var/lib/tftpboot/.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/uImage /var/lib/tftpboot/.
+----
 
 
