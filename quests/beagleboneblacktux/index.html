@@ -186,6 +186,33 @@ TechEuphoria
 <li><a href="#setting-up-ethernet-communication-with-the-board">23.7. Setting Up Ethernet Communication With The Board</a></li>
 </ul>
 </li>
+<li><a href="#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation">24. LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation</a>
+<ul class="sectlevel2">
+<li><a href="#enabling-networking-to-speed-up-embedded-development">24.1. Enabling Networking To Speed Up Embedded Development</a></li>
+<li><a href="#installing-the-prerequisites">24.2. Installing The Prerequisites</a></li>
+<li><a href="#configuring-the-kernel-2">24.3. Configuring The Kernel</a></li>
+<li><a href="#cross-compiling-the-kernel-2">24.4. Cross-compiling The Kernel</a>
+<ul class="sectlevel3">
+<li><a href="#clean-the-sources">24.4.1. Clean The Sources</a></li>
+<li><a href="#build-zimage">24.4.2. Build zImage</a></li>
+<li><a href="#build-uimage">24.4.3. Build uImage</a></li>
+<li><a href="#generate-the-device-tree-binaries">24.4.4. Generate The Device Tree Binaries</a></li>
+<li><a href="#copy-to-tftp-server-home-directory">24.4.5. Copy To TFTP Server Home Directory</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-the-nfs-server">24.5. Setting Up The NFS Server</a></li>
+<li><a href="#boot-the-system">24.6. Boot The System</a>
+<ul class="sectlevel3">
+<li><a href="#setting-the-em-bootargs-em">24.6.1. Setting The <em>bootargs</em></a></li>
+<li><a href="#explanation-of-the-bootargs">24.6.2. Explanation Of The Bootargs</a></li>
+<li><a href="#download-the-kernel-image-and-device-tree-binary">24.6.3. Download The Kernel Image And Device Tree Binary</a></li>
+<li><a href="#boot-the-kernel">24.6.4. Boot The Kernel</a></li>
+<li><a href="#automating-the-boot-system">24.6.5. Automating The Boot System</a></li>
+<li><a href="#halting-the-sytem-and-disconnecting-picocom">24.6.6. Halting The Sytem And Disconnecting Picocom</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -3642,6 +3669,745 @@ U-Boot#</code></pre>
 </div>
 <div class="paragraph">
 <p>We have successfully setup U-Boot to download the kernel.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation"><a class="anchor" href="#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation"></a>24. LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session taken from the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Cross-compile the Linux kernel for the ARM platform</p>
+</li>
+<li>
+<p>Boot the cross-compiled kernel with a NFS root filesystem, using the workstation as a NFS
+server</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="enabling-networking-to-speed-up-embedded-development"><a class="anchor" href="#enabling-networking-to-speed-up-embedded-development"></a>24.1. Enabling Networking To Speed Up Embedded Development</h3>
+<div class="paragraph">
+<p>In the previous lab we enabled network connectivity between the board and
+workstation by configuring the U-Boot environment appropriately. This
+enables us to build our binaries on the workstation and test it on the
+board without having to flash the board which saves time as well
+as prolongs the life of the eMMC device or micro-SD card. We will also
+enable a NFS type of root filesystem which will allow us to test
+cross-compiled modules on board.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-the-prerequisites"><a class="anchor" href="#installing-the-prerequisites"></a>24.2. Installing The Prerequisites</h3>
+<div class="paragraph">
+<p>We will need to install a couple of packages before we can proceed with the lab.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ sudo apt-get install libqt4-dev g++ u-boot-tools        <i class="conum" data-value="1"></i><b>(1)</b>
+.
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ sudo apt-get install gcc-arm-linux-gnueabi        <i class="conum" data-value="2"></i><b>(2)</b>
+.
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/src$ dpkg -L gcc-arm-linux-gnueabi                        <i class="conum" data-value="3"></i><b>(3)</b>
+/.
+/usr
+/usr/bin
+/usr/share
+/usr/share/doc
+/usr/share/man
+/usr/share/man/man1
+/usr/bin/arm-linux-gnueabi-gcc
+/usr/bin/arm-linux-gnueabi-gcov
+/usr/share/doc/gcc-arm-linux-gnueabi
+/usr/share/man/man1/arm-linux-gnueabi-gcov.1.gz
+/usr/share/man/man1/arm-linux-gnueabi-gcc.1.gz</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>libtqy4-dev, g++ are required for <em>make xconfig</em>. u-boot-tools are required
+for mkuimage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>gcc-arm-linux-gnueabi is the cross compiler toolchain from Linaro</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Path and name of the cross-compiler can be determined by examining the
+cross-compiler installed.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-kernel-2"><a class="anchor" href="#configuring-the-kernel-2"></a>24.3. Configuring The Kernel</h3>
+<div class="paragraph">
+<p>We start with configuring the kernel source code with a default configuration.
+Since our board has a processor(AM335x) which belongs to the OMAP2 family we
+will use a default configuration file for that board i.e. omap2plus_defconfig.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find arch/arm/configs/ -iname '*omap*'
+arch/arm/configs/omap2plus_defconfig        <i class="conum" data-value="1"></i><b>(1)</b>
+arch/arm/configs/omap1_defconfig
+arch/arm/configs/da8xx_omapl_defconfig
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- omap2plus_defconfig        <i class="conum" data-value="2"></i><b>(2)</b>
+#
+# configuration written to .config
+#
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The default configuration for omap2 boards</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Setting the default configuration to omap2dplus_defconfig</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now configure the kernel to use a NFS root filesystem. This can be done with
+any of the configuration targets i.e. menuconfig, nconfig, gconfig or xconfig.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- menuconfig
+scripts/kconfig/mconf Kconfig
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To identify the configuration option for NFS root filesystem search for
+<em>CONFIG_ROOT_NFS</em> once the menuconfig screen appears.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-search-config-root-nfs-screenshot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-search-config-root-nfs-screenshot.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-search-config-root-nfs-screenshot.png" alt="beagleboneblacktux search config root nfs screenshot" width="640" height="480"></a>
+</div>
+<div class="title">Searching for CONFIG_ROOT_NFS</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We see that CONFIG_ROOT_NFS can be reached through <strong>"File systems"</strong> and
+<strong>"Network File Systems"</strong></p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-found-config-root-nfs-screenshot" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-found-config-root-nfs-screenshot.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-found-config-root-nfs-screenshot.png" alt="beagleboneblacktux found config root nfs screenshot" width="640" height="480"></a>
+</div>
+<div class="title">CONFIG_ROOT_NFS is under File systems and Network File Systems</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-config-root-nfs-filesystems-select" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-config-root-nfs-filesystems-select.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-config-root-nfs-filesystems-select.png" alt="beagleboneblacktux config root nfs filesystems select" width="640" height="480"></a>
+</div>
+<div class="title">We select File systems</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-config-root-nfs-network-file-systems-select" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-config-root-nfs-network-file-systems-select.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-config-root-nfs-network-file-systems-select.png" alt="beagleboneblacktux config root nfs network file systems select" width="640" height="480"></a>
+</div>
+<div class="title">We select Network File Systems</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-config-root-nfs-root-file-system-on-nfs-select.png" alt="beagleboneblacktux config root nfs root file system on nfs select" width="640" height="480"></a>
+</div>
+<div class="title">We select Root file system on NFS</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cross-compiling-the-kernel-2"><a class="anchor" href="#cross-compiling-the-kernel-2"></a>24.4. Cross-compiling The Kernel</h3>
+<div class="paragraph">
+<p>Now it is time to cross-compile the kernel after we have configured it
+correctly. We will first do a clean on the source code to make sure we&#8217;re
+compiling fresh</p>
+</div>
+<div class="sect3">
+<h4 id="clean-the-sources"><a class="anchor" href="#clean-the-sources"></a>24.4.1. Clean The Sources</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- clean
+  CLEAN   .
+  CLEAN   arch/arm/kernel
+  CLEAN   drivers/eisa
+  CLEAN   drivers/gpu/drm/radeon
+  CLEAN   drivers/net/wan
+  CLEAN   drivers/scsi/aic7xxx
+  CLEAN   drivers/scsi
+  CLEAN   drivers/tty/vt
+  CLEAN   drivers/video/logo
+  CLEAN   firmware
+  CLEAN   kernel/debug/kdb
+  CLEAN   kernel
+  CLEAN   lib/raid6
+  CLEAN   lib
+  CLEAN   security/apparmor
+  CLEAN   security/selinux
+  CLEAN   usr
+  CLEAN   arch/arm/boot/compressed
+  CLEAN   arch/arm/boot/dts
+  CLEAN   arch/arm/boot
+  CLEAN   .tmp_versions</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We compile the source code by invoking make with no target and by passing
+ARCH as <em>arm</em> and CROSS_COMPILE as <em>arm-linux-gnueabi-</em>. The compilation
+process may take a while.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="build-zimage"><a class="anchor" href="#build-zimage"></a>24.4.2. Build zImage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-                <i class="conum" data-value="1"></i><b>(1)</b>
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  HOSTCC  scripts/basic/fixdep
+make[1]: `include/generated/mach-types.h' is up to date.
+  CC      kernel/bounds.s
+.
+.
+.
+  CC      sound/soc/omap/snd-soc-omap3pandora.mod.o
+  LD [M]  sound/soc/omap/snd-soc-omap3pandora.ko
+  CC      sound/soc/snd-soc-core.mod.o
+  LD [M]  sound/soc/snd-soc-core.ko
+  CC      sound/soundcore.mod.o
+  LD [M]  sound/soundcore.ko
+  CC      sound/usb/snd-usb-audio.mod.o
+  LD [M]  sound/usb/snd-usb-audio.ko
+  CC      sound/usb/snd-usbmidi-lib.mod.o
+  LD [M]  sound/usb/snd-usbmidi-lib.ko
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ ls -l arch/arm/boot/
+total 12828
+drwxrwxr-x 2 conrad conrad    4096 Nov 12 23:07 bootp
+drwxrwxr-x 2 conrad conrad    4096 Mar 30 21:28 compressed
+drwxrwxr-x 4 conrad conrad   36864 Mar 30 21:28 dts
+-rwxrwxr-x 1 conrad conrad 8843712 Mar 30 21:28 Image
+-rw-rw-r-- 1 conrad conrad    1648 Oct 19  2013 install.sh
+-rw-rw-r-- 1 conrad conrad    3148 Oct 19  2013 Makefile
+-rwxrwxr-x 1 conrad conrad 4229384 Mar 30 21:28 zImage                                        <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ file arch/arm/boot/zImage
+arch/arm/boot/zImage: Linux kernel ARM boot executable zImage (little-endian)                <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The cross-compilation command in the kernel source directory</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The zImage generated after cross-compilation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We check the type of file of zImage using the <em>file</em> command</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="build-uimage"><a class="anchor" href="#build-uimage"></a>24.4.3. Build uImage</h4>
+<div class="paragraph">
+<p>In order to boot the kernel image with U-Boot we need to convert it into
+a special format called <em>uImage</em>. The kernel Makefile has a target that can do
+this and which uses <em>mkimage</em> tool found in the u-boot-tools package. The file
+will contain the zImage kernel and information about load address of the
+kernel. The load address will vary based on the platform for the BeagleBone
+Black board it is 0x80008000.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make LOADADDR=0x80008000 uImage                <i class="conum" data-value="1"></i><b>(1)</b>
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CHK     kernel/config_data.h
+  Kernel: arch/arm/boot/Image is ready
+  Kernel: arch/arm/boot/zImage is ready
+  UIMAGE  arch/arm/boot/uImage
+Image Name:   Linux-3.13.11
+Created:      Tue Mar 31 21:50:14 2015
+Image Type:   ARM Linux Kernel Image (uncompressed)
+Data Size:    4229384 Bytes = 4130.26 kB = 4.03 MB
+Load Address: 80008000
+Entry Point:  80008000
+  Image arch/arm/boot/uImage is ready                                <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Invoking the uImage target with LOADADDR set to 0x80008000</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The image is located at <em>arch/arm/boot/uImage</em></td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="generate-the-device-tree-binaries"><a class="anchor" href="#generate-the-device-tree-binaries"></a>24.4.4. Generate The Device Tree Binaries</h4>
+<div class="paragraph">
+<p>We also need to generate the Device Tree Binaries (DTBs)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make dtbs</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="copy-to-tftp-server-home-directory"><a class="anchor" href="#copy-to-tftp-server-home-directory"></a>24.4.5. Copy To TFTP Server Home Directory</h4>
+<div class="paragraph">
+<p>Finally we can copy the <em>uImage</em> and the <em>am335x-boneblack.dtb</em> files to the
+TFTP server home directory i.e. <em>/var/lib/tftpboot</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/dts/am335x-boneblack.dtb /var/lib/tftpboot/.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/uImage /var/lib/tftpboot/.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-the-nfs-server"><a class="anchor" href="#setting-up-the-nfs-server"></a>24.5. Setting Up The NFS Server</h3>
+<div class="paragraph">
+<p>We will now need to setup our workstation as a NFS server. This will require
+installation of the <em>nfs-kernel-server</em> package.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install nfs-kernel-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once installed we need to edit the <em>/etc/exports</em> file to configure the server
+to allow a NFS client to connect to it and mount a directory. In this case
+we want to configure the NFS server in such a way so as to allow our
+BeagleBone Black platform to mount the root filesystem which is there in our
+workstation lab data directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports
+# /etc/exports: the access control list for filesystems which may be exported
+#                to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)        <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>After editing the file we cat its contents</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The directory of nfsroot is exported to IP 192.168.0.100 which is our BBB IP</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally before we boot make sure to restart the NFS server as shown below. If
+there are any errors then the server will refuse to start and error logs will
+appear. The <em>/etc/exports</em> file must be revisited and the syntax of the line
+must be inspected and corrected. Fix the errors and ensure the NFS server
+restarts before proceeding.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service nfs-kernel-server restart
+ * Stopping NFS kernel daemon                                 [ OK ]
+ * Unexporting directories for NFS kernel daemon...     [ OK ]
+ * Exporting directories for NFS kernel daemon...       [ OK ]
+ * Starting NFS kernel daemon                           [ OK ]
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="boot-the-system"><a class="anchor" href="#boot-the-system"></a>24.6. Boot The System</h3>
+<div class="paragraph">
+<p>We will now proceed to boot the system. Make sure the BeagleBone Black is
+connected to the USB to serial connector correctly as was described in
+Lab2. Also make sure your etherned cable is connected between the board
+and your workstation. On powering up the board interrupt the boot sequence
+so that we have access to the U-Boot console.</p>
+</div>
+<div class="sect3">
+<h4 id="setting-the-em-bootargs-em"><a class="anchor" href="#setting-the-em-bootargs-em"></a>24.6.1. Setting The <em>bootargs</em></h4>
+<div class="paragraph">
+<p>We will now change the <em>bootargs</em> environment variable to instruct it to
+boot the root filesystem from a NFS server and also we will pass the
+consoled that it is to use. These are standard kernel parameters which
+can change the way the kernel boots the system.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Net:   cpsw, usb_ether
+Hit any key to stop autoboot:  0
+U-Boot#
+U-Boot# setenv bootargs root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot        <i class="conum" data-value="1"></i><b>(1)</b>
+U-Boot# printenv bootargs
+bootargs=root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot
+U-Boot#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We use setenv to fix the <em>bootargs</em>.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="explanation-of-the-bootargs"><a class="anchor" href="#explanation-of-the-bootargs"></a>24.6.2. Explanation Of The Bootargs</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">root=/dev/nfs</dt>
+<dd>
+<p>We set the root filesystem device as /dev/nfs to indicate that
+NFS is to be used.
+rw::The root filesystem should be mounted with read and write capabilities</p>
+</dd>
+<dt class="hdlist1">ip=192.168.0.100</dt>
+<dd>
+<p>The IP of the BeagleBone Black board should be 192.168.0.100
+before mounting the NFS root filesystem</p>
+</dd>
+<dt class="hdlist1">console=ttyO0</dt>
+<dd>
+<p>The console to be used is serial port 0. The character before
+the 0 is 'O' as in "OMAP".</p>
+</dd>
+<dt class="hdlist1">nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot</dt>
+<dd>
+<p>The
+NFS root filesystem server IP and path of the directory. This is similar to
+the workstation settings. The IP is the workstation ethernet static IP and
+the path is the same as that in the <em>/etc/exports</em>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="download-the-kernel-image-and-device-tree-binary"><a class="anchor" href="#download-the-kernel-image-and-device-tree-binary"></a>24.6.3. Download The Kernel Image And Device Tree Binary</h4>
+<div class="paragraph">
+<p>The first step is to download the <em>uImage</em> via <em>tftp</em>. Before downloading it
+is good to restart the TFTP server on the workstation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service tftpd-hpa restart
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 4204
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next on the U-Boot console we can download the uImage as we learnt in the previous lab.
+We download it to address 0x81000000.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# tftp 0x81000000 uImage                                <i class="conum" data-value="1"></i><b>(1)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'uImage'.
+Load address: 0x81000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #############################
+         1.3 MiB/s
+done
+Bytes transferred = 4229448 (408948 hex)                <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Command to download <em>uImage</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>4229448 bytes successfully transferred.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next we download the device tree binary for the BeagleBone Black board to
+address 0x82000000</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# tftp 0x82000000 am335x-boneblack.dtb                 <i class="conum" data-value="1"></i><b>(1)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.dtb'.
+Load address: 0x82000000
+Loading: ##
+         485.4 KiB/s
+done
+Bytes transferred = 17911 (45f7 hex)                        <i class="conum" data-value="2"></i><b>(2)</b>
+U-Boot#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Command to download <em>am335x-boneblack.dtb</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>17911 bytes successfully transferred.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="boot-the-kernel"><a class="anchor" href="#boot-the-kernel"></a>24.6.4. Boot The Kernel</h4>
+<div class="paragraph">
+<p>Finally we can boot the kernel from the U-Boot prompt passing the address
+of the <em>uImage</em> and the address of the device tree binary. The complete log
+file is available <a href="_includes/lab3-kernel-boot.adoc" target="_blank">here</a>. The credentials for the
+login prompt are username as <em>root</em> and no password.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"><i class="conum" data-value="1"></i><b>(1)</b>
+U-Boot# bootm 0x81000000 - 0x82000000
+## Booting kernel from Legacy Image at 81000000 ...
+   Image Name:   Linux-3.13.11
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4229384 Bytes = 4 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Loading Kernel Image ... OK
+   Using Device Tree in place at 82000000, end 820075f6
+
+Starting kernel ...
+.
+.
+<i class="conum" data-value="2"></i><b>(2)</b>
+[    5.028652] libphy: 4a101000.mdio:00 - Link is Up - 100/Full
+[    5.068073] IP-Config: Guessing netmask 255.255.255.0
+[    5.073695] IP-Config: Complete:
+[    5.077074]      device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+[    5.088130]      host=192.168.0.100, domain=, nis-domain=(none)
+[    5.094313]      bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+[    5.120355] VFS: Mounted root (nfs filesystem) on device 0:13.
+[    5.142936] devtmpfs: mounted
+[    5.146640] Freeing unused kernel memory: 384K (c0771000 - c07d1000)
+Starting logging: OK
+Initializing random number generator... [    5.795678] random: dd urandom read with 56 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot
+buildroot login: root
+#
+#
+#
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Successfully starting the kernel</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The NFS root filesystem has been successfully mounted giving us access to a root terminal.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If at all the kernel fails to mount the NFS root filesystem take a look
+at the <em>/var/log/syslog</em> file.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="automating-the-boot-system"><a class="anchor" href="#automating-the-boot-system"></a>24.6.5. Automating The Boot System</h4>
+<div class="paragraph">
+<p>It is cumbersome to repeat the sequence of U-Boot commands at the console
+everytime we want to boot our system. We can automate the boot process by
+changing the <em>bootcmd</em> environment variable of U-Boot. Before doing so we
+can save the older value of <em>bootcmd</em> in another variable of our choice.
+Reset the board by pressing the "Reset" switch. Interrupt the U-Boot
+autoprompt sequence to gain access to the U-Boot terminal.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot# printenv bootcmd        <i class="conum" data-value="1"></i><b>(1)</b>
+bootcmd=run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;
+U-Boot#
+U-Boot# setenv bootcmd_orig 'run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;'        <i class="conum" data-value="2"></i><b>(2)</b>
+U-Boot# printenv bootcmd_orig
+bootcmd_orig=run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;
+U-Boot#
+U-Boot# setenv bootcmd 'tftp 0x81000000 uImage; tftp 0x82000000 am335x-boneblack.dtb; bootm 0x81000000 - 0x82000000'        <i class="conum" data-value="3"></i><b>(3)</b>
+U-Boot# printenv bootcmd
+bootcmd=tftp 0x81000000 uImage; tftp 0x82000000 am335x-boneblack.dtb; bootm 0x81000000 - 0x82000000
+U-Boot# saveenv                        <i class="conum" data-value="4"></i><b>(4)</b>
+Saving Environment to MMC...
+Writing to MMC(1)... done</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Checking the value of <em>bootcmd</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Note the use of single quotes for the value of the command</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Setting the new value of <em>bootcmd</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Saving the environment changes</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <em>bootcmd</em> can be changed based on requirements. It can also be changed to
+boot the <em>uImage</em> from the eMMC flash if it is stored there. As a last step
+power cycle the board to check if the system boots up as was done previously.
+If there is an issue in the boot sequence then review the <em>bootcmd</em> carefully.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="halting-the-sytem-and-disconnecting-picocom"><a class="anchor" href="#halting-the-sytem-and-disconnecting-picocom"></a>24.6.6. Halting The Sytem And Disconnecting Picocom</h4>
+<div class="paragraph">
+<p>We have to remember that the BeagleBone Black is a development board which
+may not be as robust as other products. To be on the safer side it is good
+to shutdown the system correctly. To shutdown the system we can issue the
+<em>halt</em> command in the terminal.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">buildroot login: root
+#
+#
+# halt                                        <i class="conum" data-value="1"></i><b>(1)</b>
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system halt
+[  202.908940] reboot: System halted        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>On issuing <em>halt</em> wait for the system to shutdown</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The last log received</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally <em>picocom</em> can be disengaged carefully by keying the
+"espace character" which by default is "C-a" and then by hitting
+"x".</p>
+</div>
 </div>
 </div>
 </div>
