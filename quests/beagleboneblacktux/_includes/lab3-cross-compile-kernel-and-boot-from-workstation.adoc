@@ -1,3 +1,4 @@
+:link-lab3-kernel-boot: link:_includes/lab3-kernel-boot.adoc
 == LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation
 
 [NOTE]
@@ -171,7 +172,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPI
 ----
 
 We compile the source code by invoking make with no target and by passing
-ARCH as arm and CROSS_COMPILE as _arm-linux-gnueabi-_. The compilation
+ARCH as _arm_ and CROSS_COMPILE as _arm-linux-gnueabi-_. The compilation
 process may take a while. 
 
 ==== Build zImage
@@ -267,5 +268,240 @@ TFTP server home directory i.e. _/var/lib/tftpboot_.
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/dts/am335x-boneblack.dtb /var/lib/tftpboot/.
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp arch/arm/boot/uImage /var/lib/tftpboot/.
 ----
+
+=== Setting Up The NFS Server
+
+We will now need to setup our workstation as a NFS server. This will require
+installation of the _nfs-kernel-server_ package.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install nfs-kernel-server
+----
+
+Once installed we need to edit the _/etc/exports_ file to configure the server
+to allow a NFS client to connect to it and mount a directory. In this case
+we want to configure the NFS server in such a way so as to allow our
+BeagleBone Black platform to mount the root filesystem which is there in our
+workstation lab data directory.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports 
+# /etc/exports: the access control list for filesystems which may be exported
+#		to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)	<1>
+----
+<1> After editing the file we cat its contents
+<2> The directory of nfsroot is exported to IP 192.168.0.100 which is our BBB IP
+
+Finally before we boot make sure to restart the NFS server as shown below. If
+there are any errors then the server will refuse to start and error logs will
+appear. The _/etc/exports_ file must be revisited and the syntax of the line
+must be inspected and corrected. Fix the errors and ensure the NFS server
+restarts before proceeding.
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service nfs-kernel-server restart
+ * Stopping NFS kernel daemon 				[ OK ] 
+ * Unexporting directories for NFS kernel daemon...     [ OK ] 
+ * Exporting directories for NFS kernel daemon...       [ OK ] 
+ * Starting NFS kernel daemon                           [ OK ] 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ 
+----
+
+=== Boot The System
+
+We will now proceed to boot the system. Make sure the BeagleBone Black is
+connected to the USB to serial connector correctly as was described in
+Lab2. Also make sure your etherned cable is connected between the board
+and your workstation. On powering up the board interrupt the boot sequence
+so that we have access to the U-Boot console.
+
+==== Setting The _bootargs_
+
+We will now change the _bootargs_ environment variable to instruct it to
+boot the root filesystem from a NFS server and also we will pass the
+consoled that it is to use. These are standard kernel parameters which
+can change the way the kernel boots the system.
+
+[source, bash]
+----
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Net:   cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+U-Boot# 
+U-Boot# setenv bootargs root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot	<1>
+U-Boot# printenv bootargs
+bootargs=root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot
+U-Boot# 
+----
+<1> We use setenv to fix the _bootargs_.
+
+==== Explanation Of The Bootargs
+
+root=/dev/nfs:: We set the root filesystem device as /dev/nfs to indicate that
+NFS is to be used.
+rw::The root filesystem should be mounted with read and write capabilities
+ip=192.168.0.100:: The IP of the BeagleBone Black board should be 192.168.0.100
+before mounting the NFS root filesystem
+console=ttyO0:: The console to be used is serial port 0. The character before
+the 0 is 'O' as in "OMAP".
+nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot:: The
+NFS root filesystem server IP and path of the directory. This is similar to
+the workstation settings. The IP is the workstation ethernet static IP and
+the path is the same as that in the _/etc/exports_.
+
+==== Download The Kernel Image And Device Tree Binary
+
+The first step is to download the _uImage_ via _tftp_. Before downloading it
+is good to restart the TFTP server on the workstation.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service tftpd-hpa restart
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 4204
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ 
+----
+
+Next on the U-Boot console we can download the uImage as we learnt in the previous lab.
+We download it to address 0x81000000.
+
+[source, bash]
+----
+U-Boot# tftp 0x81000000 uImage				<1>  
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'uImage'.
+Load address: 0x81000000
+Loading: #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #############################
+	 1.3 MiB/s
+done
+Bytes transferred = 4229448 (408948 hex)		<2>
+----
+<1> Command to download _uImage_
+<2> 4229448 bytes successfully transferred.
+
+Next we download the device tree binary for the BeagleBone Black board to 
+address 0x82000000
+
+[source, bash]
+----
+U-Boot# tftp 0x82000000 am335x-boneblack.dtb 		<1>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.dtb'.
+Load address: 0x82000000
+Loading: ##
+	 485.4 KiB/s
+done
+Bytes transferred = 17911 (45f7 hex)			<2>
+U-Boot# 
+----
+<1> Command to download _am335x-boneblack.dtb_
+<2> 17911 bytes successfully transferred.
+
+==== Boot The Kernel
+
+Finally we can boot the kernel from the U-Boot prompt passing the address
+of the _uImage_ and the address of the device tree binary. The complete log
+file is available {link-lab3-kernel-boot}[here^]. The credentials for the
+login prompt are username as _root_ and no password.
+
+[source, bash]
+----
+<1>
+include::lab3-kernel-boot.adoc[tags=bootm_start]
+.
+.
+<2>
+include::lab3-kernel-boot.adoc[tags=nfs_mount_start]
+----
+<1> Successfully starting the kernel
+<2> The NFS root filesystem has been successfully mounted giving us access to a root terminal.
+
+If at all the kernel fails to mount the NFS root filesystem take a look
+at the _/var/log/syslog_ file.
+
+==== Automating The Boot System
+
+It is cumbersome to repeat the sequence of U-Boot commands at the console
+everytime we want to boot our system. We can automate the boot process by
+changing the _bootcmd_ environment variable of U-Boot. Before doing so we
+can save the older value of _bootcmd_ in another variable of our choice.
+Reset the board by pressing the "Reset" switch. Interrupt the U-Boot
+autoprompt sequence to gain access to the U-Boot terminal.
+
+[source, bash]
+----
+U-Boot# printenv bootcmd	<1>
+bootcmd=run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;
+U-Boot# 
+U-Boot# setenv bootcmd_orig 'run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;'	<2>
+U-Boot# printenv bootcmd_orig 
+bootcmd_orig=run findfdt; run mmcboot;setenv mmcdev 1; setenv bootpart 1:2; run mmcboot;run nandboot;
+U-Boot# 
+U-Boot# setenv bootcmd 'tftp 0x81000000 uImage; tftp 0x82000000 am335x-boneblack.dtb; bootm 0x81000000 - 0x82000000'	<3>
+U-Boot# printenv bootcmd
+bootcmd=tftp 0x81000000 uImage; tftp 0x82000000 am335x-boneblack.dtb; bootm 0x81000000 - 0x82000000
+U-Boot# saveenv			<4>
+Saving Environment to MMC...
+Writing to MMC(1)... done
+----
+<1> Checking the value of _bootcmd_
+<2> Note the use of single quotes for the value of the command
+<3> Setting the new value of _bootcmd_
+<4> Saving the environment changes
+
+The _bootcmd_ can be changed based on requirements. It can also be changed to
+boot the _uImage_ from the eMMC flash if it is stored there. As a last step
+power cycle the board to check if the system boots up as was done previously.
+If there is an issue in the boot sequence then review the _bootcmd_ carefully.
+
+==== Halting The Sytem And Disconnecting Picocom
+
+We have to remember that the BeagleBone Black is a development board which
+may not be as robust as other products. To be on the safer side it is good
+to shutdown the system correctly. To shutdown the system we can issue the
+_halt_ command in the terminal.
+
+[source, bash]
+----
+buildroot login: root
+# 
+# 
+# halt					<1>
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system halt
+[  202.908940] reboot: System halted	<2>
+----
+<1> On issuing _halt_ wait for the system to shutdown
+<2> The last log received
+
+Finally _picocom_ can be disengaged carefully by keying the
+"espace character" which by default is "C-a" and then by hitting
+"x".
 
 
