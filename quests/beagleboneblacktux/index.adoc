@@ -127,3 +127,13 @@ include::{includedir}/cross-compiling-the-kernel.adoc[]
 include::{includedir}/lab2-setting-up-the-beaglebone-black-board.adoc[]
 
 include::{includedir}/lab3-cross-compile-kernel-and-boot-from-workstation.adoc[]
+
+= Linux Kernel Modules
+
+[partintro]
+--
+This section covers details about Linux Kernel modules. Some features of the
+kernel can be loaded as modules after it boots up. We will understand what a
+module is and when it is used. We will also write, compile and test our very
+own kernel module.
+--
