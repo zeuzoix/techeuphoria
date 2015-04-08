@@ -1,0 +1,57 @@
+== Kernel Module Dependencies
+
+Kernel modules cannot be loaded if the modules they depend on have not been
+loaded into the kernel. To check the module dependencies of a particular
+module, read the module information using _modinfo_.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo mac80211	<1>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211	<2>
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686 
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)
+----
+<1> We use _modinfo_ to check the information about _mac80211_
+<2> We see the dependency is module _cfg80211_
+
+The utility _modinfo_ can be also given the full path file name of a kernel
+module if it is not loaded into the system
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko	<1>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686 
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ 
+----
+<1> We give the full path file name of the kernel module
+
+The kernel module dependencies are described in the
+_/lib/modules/<kernel-version>/modules.dep_ file which is generated when
+running the _make modules_install_ command. 
+
