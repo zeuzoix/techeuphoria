@@ -215,6 +215,12 @@ TechEuphoria
 </li>
 </ul>
 </li>
+<li><a href="#linux-kernel-modules">Linux Kernel Modules</a>
+<ul class="sectlevel1">
+<li><a href="#when-kernel-modules-are-used">25. When Kernel Modules Are Used</a></li>
+<li><a href="#kernel-module-dependencies">26. Kernel Module Dependencies</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="admonitionblock note">
@@ -4050,7 +4056,7 @@ workstation lab data directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports                 <i class="conum" data-value="1"></i><b>(1)</b>
 # /etc/exports: the access control list for filesystems which may be exported
 #                to NFS clients.  See exports(5).
 #
@@ -4061,7 +4067,7 @@ workstation lab data directory.</p>
 # /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
 # /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
 #
-/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)        <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -4409,6 +4415,140 @@ Requesting system halt
 "x".</p>
 </div>
 </div>
+</div>
+</div>
+</div>
+<h1 id="linux-kernel-modules" class="sect0"><a class="anchor" href="#linux-kernel-modules"></a>Linux Kernel Modules</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This section covers details about Linux Kernel modules. Some features of the
+kernel can be loaded as modules after it boots up. We will understand what a
+module is and when it is used. We will also write, compile and test our very
+own kernel module.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="when-kernel-modules-are-used"><a class="anchor" href="#when-kernel-modules-are-used"></a>25. When Kernel Modules Are Used</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the <a href="#configuring-features-as-modules">Configuring Features As Modules</a>
+section we learnt about Kernel modules and how we can configure certain
+features of the kernel source code to be compiled as separate binaries
+that can be loaded into the kernel after it boots up. These modules can
+also exist independent of the kernel source code in another source path
+and can be compiled with the headers of the kernel so long as the API
+used in the module are compatible with the kernel source code.</p>
+</div>
+<div class="paragraph">
+<p>We use kernel modules when:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We are interested in developing a feature of the kernel independently.
+This allows us to make changes to the module source code, load and test it
+without having to reboot the kernel. If the source code were a part of the
+kernel source code we would have to reboot the kernel everytime we wanted
+to test the code.</p>
+</li>
+<li>
+<p>We want to minimize the size of the kernel image. In most cases if the
+system is a general purpose system then the drivers and features required
+by certain applications do not have to be present in the kernel from boot.
+They can be loaded on demand. In embedded systems the kernel is sometimes
+stored on a limited storage device like NAND flash on a partition. The
+size of the partition of the kernel will depend on the size of the kernel
+used for the applications of that system.</p>
+</li>
+<li>
+<p>We want to minimize the boot time to improve system responsiveness after
+a reboot. If features that are not required immediately after boot are part
+of the kernel then their initialization will be add to the boot time. We
+can delay their initialization using kernel modules.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kernel-module-dependencies"><a class="anchor" href="#kernel-module-dependencies"></a>26. Kernel Module Dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kernel modules cannot be loaded if the modules they depend on have not been
+loaded into the kernel. To check the module dependencies of a particular
+module, read the module information using <em>modinfo</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo mac80211        <i class="conum" data-value="1"></i><b>(1)</b>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211        <i class="conum" data-value="2"></i><b>(2)</b>
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We use <em>modinfo</em> to check the information about <em>mac80211</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We see the dependency is module <em>cfg80211</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The utility <em>modinfo</em> can be also given the full path file name of a kernel
+module if it is not loaded into the system</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko        <i class="conum" data-value="1"></i><b>(1)</b>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We give the full path file name of the kernel module</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The kernel module dependencies are described in the
+<em>/lib/modules/&lt;kernel-version&gt;/modules.dep</em> file which is generated when
+running the <em>make modules_install</em> command.</p>
 </div>
 </div>
 </div>
