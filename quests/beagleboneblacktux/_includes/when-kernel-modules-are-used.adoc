@@ -1,0 +1,30 @@
+== When Kernel Modules Are Used
+
+In the <<configuring-features-as-modules,Configuring Features As Modules>>
+section we learnt about Kernel modules and how we can configure certain
+features of the kernel source code to be compiled as separate binaries
+that can be loaded into the kernel after it boots up. These modules can
+also exist independent of the kernel source code in another source path
+and can be compiled with the headers of the kernel so long as the API
+used in the module are compatible with the kernel source code.
+
+We use kernel modules when:
+
+. We are interested in developing a feature of the kernel independently.
+This allows us to make changes to the module source code, load and test it
+without having to reboot the kernel. If the source code were a part of the
+kernel source code we would have to reboot the kernel everytime we wanted
+to test the code.
+
+. We want to minimize the size of the kernel image. In most cases if the
+system is a general purpose system then the drivers and features required
+by certain applications do not have to be present in the kernel from boot.
+They can be loaded on demand. In embedded systems the kernel is sometimes
+stored on a limited storage device like NAND flash on a partition. The
+size of the partition of the kernel will depend on the size of the kernel
+used for the applications of that system. 
+
+. We want to minimize the boot time to improve system responsiveness after
+a reboot. If features that are not required immediately after boot are part
+of the kernel then their initialization will be add to the boot time. We
+can delay their initialization using kernel modules.

@@ -137,3 +137,5 @@ kernel can be loaded as modules after it boots up. We will understand what a
 module is and when it is used. We will also write, compile and test our very
 own kernel module.
 --
+
+include::{includedir}/when-kernel-modules-are-used.adoc[]
