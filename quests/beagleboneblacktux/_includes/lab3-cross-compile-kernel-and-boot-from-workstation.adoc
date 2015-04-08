@@ -287,7 +287,7 @@ workstation lab data directory.
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports 		<1>
 # /etc/exports: the access control list for filesystems which may be exported
 #		to NFS clients.  See exports(5).
 #
@@ -298,7 +298,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports
 # /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
 # /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
 #
-/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)	<1>
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)	<2>
 ----
 <1> After editing the file we cat its contents
 <2> The directory of nfsroot is exported to IP 192.168.0.100 which is our BBB IP
