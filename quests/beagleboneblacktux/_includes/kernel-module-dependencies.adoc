@@ -2,7 +2,10 @@
 
 Kernel modules cannot be loaded if the modules they depend on have not been
 loaded into the kernel. To check the module dependencies of a particular
-module, read the module information using _modinfo_.
+module, read the module information using _modinfo_. Apart from other useful
+information about the Kernel module _modinfo_ will also give a list of
+dependencies in the _depends_ field. We will check the module dependency
+for one of the kernel modules in our workstation as an example.
 
 [source,bash]
 ----
