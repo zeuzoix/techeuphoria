@@ -217,8 +217,11 @@ TechEuphoria
 </li>
 <li><a href="#linux-kernel-modules">Linux Kernel Modules</a>
 <ul class="sectlevel1">
-<li><a href="#when-kernel-modules-are-used">25. When Kernel Modules Are Used</a></li>
-<li><a href="#kernel-module-dependencies">26. Kernel Module Dependencies</a></li>
+<li><a href="#when-do-we-use-kernel-modules">25. When Do We Use Kernel Modules</a></li>
+<li><a href="#determining-kernel-module-dependencies">26. Determining Kernel Module Dependencies</a></li>
+<li><a href="#inserting-kernel-modules">27. Inserting Kernel Modules</a></li>
+<li><a href="#removing-kernel-modules">28. Removing Kernel Modules</a></li>
+<li><a href="#passing-parameters-to-modules">29. Passing Parameters To Modules</a></li>
 </ul>
 </li>
 </ul>
@@ -4430,7 +4433,7 @@ own kernel module.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="when-kernel-modules-are-used"><a class="anchor" href="#when-kernel-modules-are-used"></a>25. When Kernel Modules Are Used</h2>
+<h2 id="when-do-we-use-kernel-modules"><a class="anchor" href="#when-do-we-use-kernel-modules"></a>25. When Do We Use Kernel Modules</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In the <a href="#configuring-features-as-modules">Configuring Features As Modules</a>
@@ -4473,12 +4476,15 @@ can delay their initialization using kernel modules.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="kernel-module-dependencies"><a class="anchor" href="#kernel-module-dependencies"></a>26. Kernel Module Dependencies</h2>
+<h2 id="determining-kernel-module-dependencies"><a class="anchor" href="#determining-kernel-module-dependencies"></a>26. Determining Kernel Module Dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Kernel modules cannot be loaded if the modules they depend on have not been
 loaded into the kernel. To check the module dependencies of a particular
-module, read the module information using <em>modinfo</em>.</p>
+module, read the module information using <em>modinfo</em>. Apart from other useful
+information about the Kernel module <em>modinfo</em> will also give a list of
+dependencies in the <em>depends</em> field. We will check the module dependency
+for one of the kernel modules in our workstation as an example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4549,6 +4555,185 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$</code></pre>
 <p>The kernel module dependencies are described in the
 <em>/lib/modules/&lt;kernel-version&gt;/modules.dep</em> file which is generated when
 running the <em>make modules_install</em> command.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="inserting-kernel-modules"><a class="anchor" href="#inserting-kernel-modules"></a>27. Inserting Kernel Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To insert a module into the kernel we have to use the <em>insmod</em> command.
+As a kernel module has the ability to affect the running kernel it requires
+administrative privileges in order to insert the module. The full path
+of the kernel module must be given e.g. <em>sudo insmod &lt;module_path&gt;.ko</em></p>
+</div>
+<div class="paragraph">
+<p>It may so happen that the kernel module may refuse to load and <em>insmod</em>
+will exit without giving sufficient details. In such a case we can inspect
+the kernel logs using <em>dmesg</em> to understand what is failing.</p>
+</div>
+<div class="paragraph">
+<p>Another method of inserting the module is to use <em>modprobe</em>. With this
+method all dependent modules are also loaded into the kernel before
+loading the module required. To do this <em>modprobe</em> determines the dependency
+tree of the module and loads them in order. The dependent modules are
+searched in the <em>/lib/modules/&lt;version&gt;/</em>. Based on the module name
+the corresponding object file name is searched.</p>
+</div>
+<div class="paragraph">
+<p>To list the modules which are inserted into the kernel we can use the
+<em>lsmod</em> utility. Another way is to <em>cat</em> the contents of <em>/proc/modules</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="removing-kernel-modules"><a class="anchor" href="#removing-kernel-modules"></a>28. Removing Kernel Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can remove a module which has been inserted and is live as part of the kernel
+if no other process or kernel module is using it. To do this we have to use the
+<em>rmmod</em> utility with administrator privileges e.g. <em>sudo rmmod &lt;module name&gt;</em>.</p>
+</div>
+<div class="paragraph">
+<p>Another way of removing the kernel module is with <em>modprobe</em> e.g.
+<em>modprobe -r &lt;module name&gt;</em>. This will attempt to remove the module and all the
+dependent modules which are no longer needed after removing the module.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="passing-parameters-to-modules"><a class="anchor" href="#passing-parameters-to-modules"></a>29. Passing Parameters To Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A kernel module can take parameters before loading it so as to change
+its behavior during execution. The parameters of a kernel module can
+be determined with the <em>modinfo</em> utility.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo mac80211        <i class="conum" data-value="1"></i><b>(1)</b>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)        <i class="conum" data-value="2"></i><b>(2)</b>
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)                <i class="conum" data-value="3"></i><b>(3)</b>
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)        <i class="conum" data-value="4"></i><b>(4)</b>
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)        <i class="conum" data-value="5"></i><b>(5)</b>
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)        <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We use <em>modinfo</em> to check the information about <em>mac80211</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Parameter max_nullfunc_tries indicated with the <em>parm</em> field.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Parameter max_probe_tries indicated with the <em>parm</em> field.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Parameter beacon_loss_count indicated with the <em>parm</em> field.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Parameter probe_wait_ms indicated with the <em>parm</em> field.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Parameter ieee80211_default_rc_algo indicated with the <em>parm</em> field.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>There are several ways of passing parameters to the kernel module:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Through insmod:<br>
+<em>sudo insmod ./snd-intel8x0m index=-2</em></p>
+</li>
+<li>
+<p>Through modprobe by setting parameters in <em>/etc/modprobe.conf</em> or any file
+in <em>/etc/modprobe.d/</em> as follows:<br>
+<em>options snd-intel8x0m index=-2</em></p>
+</li>
+<li>
+<p>Through the kernel command line, when the driver is built as part of the
+kernel:<br>
+<em>snd-intel8x0m index=-2</em></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><em>snd-intel8x0m</em> is the kernel module name</p>
+</li>
+<li>
+<p><em>index</em> is the parameter</p>
+</li>
+<li>
+<p><em>-2</em> is the value</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To check the current values of modules already loaded in the kernel check the
+<em>/sys/module/&lt;name&gt;/parameters</em> directory. Each file in it represents a parameter
+and its content is the value of that parameter for the running module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ ls /sys/module/snd/parameters/
+cards_limit  debug  major  slots                                                <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/cards_limit
+1                                                                                <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/debug
+1                                                                                <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/major
+116                                                                                <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/slots
+(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null)                                                <i class="conum" data-value="5"></i><b>(5)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Listing the parameters <em>cards_limit, debug, major, slots</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Checking the values passed to the parameter <em>card_limit</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Checking the values passed to the parameter <em>debug</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Checking the values passed to the parameter <em>major</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Checking the values passed to the parameter <em>slots</em></td>
+</tr>
+</table>
 </div>
 </div>
 </div>
