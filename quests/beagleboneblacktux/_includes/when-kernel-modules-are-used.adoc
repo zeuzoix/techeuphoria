@@ -1,4 +1,4 @@
-== When Kernel Modules Are Used
+== When Do We Use Kernel Modules
 
 In the <<configuring-features-as-modules,Configuring Features As Modules>>
 section we learnt about Kernel modules and how we can configure certain
