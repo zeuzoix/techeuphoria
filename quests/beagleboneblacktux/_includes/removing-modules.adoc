@@ -1,0 +1,9 @@
+== Removing Kernel Modules
+
+We can remove a module which has been inserted and is live as part of the kernel
+if no other process or kernel module is using it. To do this we have to use the
+_rmmod_ utility with administrator privileges e.g. _sudo rmmod <module name>_.
+
+Another way of removing the kernel module is with _modprobe_ e.g.
+_modprobe -r <module name>_. This will attempt to remove the module and all the
+dependent modules which are no longer needed after removing the module.
