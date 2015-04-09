@@ -1,0 +1,20 @@
+== Inserting Kernel Modules
+
+To insert a module into the kernel we have to use the _insmod_ command.
+As a kernel module has the ability to affect the running kernel it requires
+administrative privileges in order to insert the module. The full path
+of the kernel module must be given e.g. _sudo insmod <module_path>.ko_
+
+It may so happen that the kernel module may refuse to load and _insmod_
+will exit without giving sufficient details. In such a case we can inspect
+the kernel logs using _dmesg_ to understand what is failing.
+
+Another method of inserting the module is to use _modprobe_. With this
+method all dependent modules are also loaded into the kernel before
+loading the module required. To do this _modprobe_ determines the dependency
+tree of the module and loads them in order. The dependent modules are
+searched in the _/lib/modules/<version>/_. Based on the module name
+the corresponding object file name is searched.
+
+To list the modules which are inserted into the kernel we can use the
+_lsmod_ utility. Another way is to _cat_ the contents of _/proc/modules_.

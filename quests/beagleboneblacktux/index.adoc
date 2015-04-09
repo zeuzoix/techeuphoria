@@ -141,3 +141,5 @@ own kernel module.
 include::{includedir}/when-kernel-modules-are-used.adoc[]
 
 include::{includedir}/kernel-module-dependencies.adoc[]
+
+include::{includedir}/inserting-modules.adoc[]
