@@ -1,4 +1,4 @@
-== Kernel Module Dependencies
+== Determining Kernel Module Dependencies
 
 Kernel modules cannot be loaded if the modules they depend on have not been
 loaded into the kernel. To check the module dependencies of a particular
