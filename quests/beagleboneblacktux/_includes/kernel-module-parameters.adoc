@@ -1,0 +1,69 @@
+== Passing Parameters To Modules
+
+A kernel module can take parameters before loading it so as to change
+its behavior during execution. The parameters of a kernel module can
+be determined with the _modinfo_ utility.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ modinfo mac80211	<1>
+filename:       /lib/modules/3.13.0-45-generic/kernel/net/mac80211/mac80211.ko
+license:        GPL
+description:    IEEE 802.11 subsystem
+srcversion:     385697223F8285F67C93A06
+depends:        cfg80211
+intree:         Y
+vermagic:       3.13.0-45-generic SMP mod_unload modversions 686 
+signer:         Magrathea: Glacier signing key
+sig_key:        36:89:BF:48:AF:50:2C:BA:FE:71:E5:C2:5D:6C:55:34:0B:7F:13:FF
+sig_hashalgo:   sha512
+parm:           max_nullfunc_tries:Maximum nullfunc tx tries before disconnecting (reason 4). (int)	<2>
+parm:           max_probe_tries:Maximum probe tries before disconnecting (reason 4). (int)		<3>
+parm:           beacon_loss_count:Number of beacon intervals before we decide beacon was lost. (int)	<4>
+parm:           probe_wait_ms:Maximum time(ms) to wait for probe response before disconnecting (reason 4). (int)	<5>
+parm:           ieee80211_default_rc_algo:Default rate control algorithm for mac80211 to use (charp)	<6>
+----
+<1> We use _modinfo_ to check the information about _mac80211_
+<2> Parameter max_nullfunc_tries indicated with the _parm_ field. 
+<3> Parameter max_probe_tries indicated with the _parm_ field.
+<4> Parameter beacon_loss_count indicated with the _parm_ field.
+<5> Parameter probe_wait_ms indicated with the _parm_ field.
+<6> Parameter ieee80211_default_rc_algo indicated with the _parm_ field.
+
+There are several ways of passing parameters to the kernel module:
+
+. Through insmod: +
+_sudo insmod ./snd-intel8x0m index=-2_
+. Through modprobe by setting parameters in _/etc/modprobe.conf_ or any file
+in _/etc/modprobe.d/_ as follows: +
+_options snd-intel8x0m index=-2_
+. Through the kernel command line, when the driver is built as part of the
+kernel: +
+_snd-intel8x0m index=-2_ 
+.. _snd-intel8x0m_ is the kernel module name
+.. _index_ is the parameter
+.. _-2_ is the value
+
+To check the current values of modules already loaded in the kernel check the
+_/sys/module/<name>/parameters_ directory. Each file in it represents a parameter
+and its content is the value of that parameter for the running module.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ ls /sys/module/snd/parameters/
+cards_limit  debug  major  slots						<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/cards_limit 
+1										<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/debug 
+1										<3>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/major 
+116										<4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ cat /sys/module/snd/parameters/slots 
+(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null),(null)						<5>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ 
+----
+<1> Listing the parameters _cards_limit, debug, major, slots_
+<2> Checking the values passed to the parameter _card_limit_
+<3> Checking the values passed to the parameter _debug_
+<4> Checking the values passed to the parameter _major_
+<5> Checking the values passed to the parameter _slots_
