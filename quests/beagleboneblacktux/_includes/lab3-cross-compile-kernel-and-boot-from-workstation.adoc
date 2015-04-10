@@ -1,3 +1,6 @@
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
 :link-lab3-kernel-boot: link:_includes/lab3-kernel-boot.adoc
 == LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation
 
@@ -19,21 +22,26 @@ as prolongs the life of the eMMC device or micro-SD card. We will also
 enable a NFS type of root filesystem which will allow us to test
 cross-compiled modules on board. 
 
+====
+[[lab-setup-implementation]]
+.Lab setup implementation
+image::lab-setup-implementation.png[width="640", height="480", align="center", link={awestruct-imagesdir}/lab-setup-implementation.png]
+====
 ////
 [ditaa, lab-setup-implementation]
 ----
- /----------------------------\                /--------------\
- |                            |                |              |
- |  Development Workstation   | <------------> |    Target    |
- |/home/<user>/.../nfsroot/   |                |    /root/    |
- |                            |                |    directory |
- \-------------+--------------/                \-------^------/ 
+ /-----------------------------\               /---------------\
+ |                             |               |               |
+ |  Development Workstation    |<------------->|    Target     |
+ |  /home/$USER/.../nfsroot/   |               |    /root/     |
+ |                             |               |    directory  |
+ \-------------+---------------/               \---------------/ 
+               |                                       ^
                |                                       |
                +---------------------------------------+
                                  NFS Export
 ----
 ////
-
 
 === Installing The Prerequisites
 
