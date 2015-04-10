@@ -222,6 +222,11 @@ TechEuphoria
 <li><a href="#inserting-kernel-modules">27. Inserting Kernel Modules</a></li>
 <li><a href="#removing-kernel-modules">28. Removing Kernel Modules</a></li>
 <li><a href="#passing-parameters-to-modules">29. Passing Parameters To Modules</a></li>
+<li><a href="#developing-kernel-modules">30. Developing Kernel Modules</a>
+<ul class="sectlevel2">
+<li><a href="#symbols-exported-to-modules">30.1. Symbols Exported To Modules</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -4734,6 +4739,120 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$</code></pre>
 <td>Checking the values passed to the parameter <em>slots</em></td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-kernel-modules"><a class="anchor" href="#developing-kernel-modules"></a>30. Developing Kernel Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will first take a look at a sample source code of a Linux kernel module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+<i class="conum" data-value="1"></i><b>(1)</b>
+
+static int __init sample_module_init(void)        <i class="conum" data-value="2"></i><b>(2)</b>
+{
+        pr_alert(&quot;Wassup!\n&quot;);
+        return 0;
+}
+
+static void __exit sample_module_exit(void)        <i class="conum" data-value="4"></i><b>(4)</b>
+{
+        pr_alert(&quot;Cya Later!\n&quot;);
+}
+
+module_init(sample_module_init);                <i class="conum" data-value="3"></i><b>(3)</b>
+module_exit(sample_module_exit);                <i class="conum" data-value="5"></i><b>(5)</b>
+
+MODULE_LICENSE(&quot;GPL&quot;);
+MODULE_DESCRIPTION(&quot;Sample Module&quot;);
+MODULE_AUTHOR(&quot;Newbie&quot;);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Only headers specific to the Linux kernel, no access to the standard C
+library</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Defining an initialization function, returns an int to indicate the
+status of the initialization when <em>insmod</em> is used to load the module.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The macro <em>module_init</em> is used to register the initialization
+function for the module.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Defining a  cleanup function for the module.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The macro <em>module_exit</em> is used to register the cleanup function for
+the module.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Metadata for the module defining the license type, description and
+the author.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The source code is in C but it has some special symbols which are not
+used in user space application programming:<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">__init</dt>
+<dd>
+<p>This indicates that the module initializaiton function
+<em>sample_module_init</em> can be removed after initialization. The function is called
+only once when the module starts up and thereafter is not used. This optimizes
+the memory usage of the kernel.</p>
+</dd>
+<dt class="hdlist1">__exit</dt>
+<dd>
+<p>This indicates that the function is discarded if the module is
+compiled statically into the kernel or if module unloading is disabled. Its
+primary use is for loadable kernel modules.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>It should be noted that the name of the initialization and cleanup
+functions can be anything however the module name is often used to form
+the functions (&lt;modulename&gt;_init()/&lt;modulename_exit()).</p>
+</div>
+<div class="sect2">
+<h3 id="symbols-exported-to-modules"><a class="anchor" href="#symbols-exported-to-modules"></a>30.1. Symbols Exported To Modules</h3>
+<div class="paragraph">
+<p>A kernel module can use functions and variables defined in other parts of the Linux
+kernel source code so long as they are exported. There are two macros
+that are used to export the symbol names that can be used by other modules:<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">EXPORT_SYMBOL(symbolname)</dt>
+<dd>
+<p>Exports a function or variable to all modules</p>
+</dd>
+<dt class="hdlist1">EXPORT_SYMBOL_GPL(symbolname)</dt>
+<dd>
+<p>Exports a function or variable to only GPL
+modules</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
