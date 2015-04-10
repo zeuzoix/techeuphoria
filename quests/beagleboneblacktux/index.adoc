@@ -147,3 +147,5 @@ include::{includedir}/inserting-modules.adoc[]
 include::{includedir}/removing-modules.adoc[]
 
 include::{includedir}/kernel-module-parameters.adoc[]
+
+include::{includedir}/developing-kernel-modules.adoc[]
