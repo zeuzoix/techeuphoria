@@ -57,3 +57,12 @@ It should be noted that the name of the initialization and cleanup
 functions can be anything however the module name is often used to form
 the functions (<modulename>_init()/<modulename_exit()).
 
+=== Symbols Exported To Modules
+
+A kernel module can use functions and variables defined in other parts of the Linux
+kernel source code so long as they are exported. There are two macros
+that are used to export the symbol names that can be used by other modules: +
+
+EXPORT_SYMBOL(symbolname):: Exports a function or variable to all modules
+EXPORT_SYMBOL_GPL(symbolname):: Exports a function or variable to only GPL
+modules
