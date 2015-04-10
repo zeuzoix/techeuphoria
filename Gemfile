@@ -40,7 +40,7 @@ gem 'tilt', '~> 2.0.0'
 gem 'git', '~> 1.2.6'
 gem 'coderay'
 gem 'rjb'
-gem 'asciidoctor-diagram'
+gem 'asciidoctor-diagram', '~> 1.2.0.pre'
 gem 'erubis', '~> 2.7.0'
 
 # FIXME
