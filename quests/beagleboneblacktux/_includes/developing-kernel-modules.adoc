@@ -1,1 +1,59 @@
 == Developing Kernel Modules
+
+We will first take a look at a sample source code of a Linux kernel module.
+
+[source, bash]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+<1>
+
+static int __init sample_module_init(void)	<2>
+{
+	pr_alert("Wassup!\n");
+	return 0;
+}
+
+static void __exit sample_module_exit(void)	<4>
+{
+	pr_alert("Cya Later!\n");
+}
+	
+module_init(sample_module_init);		<3>
+module_exit(sample_module_exit);		<5>
+	
+MODULE_LICENSE("GPL");				
+MODULE_DESCRIPTION("Sample Module");
+MODULE_AUTHOR("Newbie");
+<6>
+----
+<1> Only headers specific to the Linux kernel, no access to the standard C
+library
+<2> Defining an initialization function, returns an int to indicate the
+status of the initialization when _insmod_ is used to load the module.
+<3> The macro _module_init_ is used to register the initialization
+function for the module.
+<4> Defining a  cleanup function for the module.
+<5> The macro _module_exit_ is used to register the cleanup function for
+the module.
+<6> Metadata for the module defining the license type, description and
+the author.
+
+
+The source code is in C but it has some special symbols which are not
+used in user space application programming: +
+
+__init:: This indicates that the module initializaiton function
+_sample_module_init_ can be removed after initialization. The function is called
+only once when the module starts up and thereafter is not used. This optimizes
+the memory usage of the kernel.
+
+__exit:: This indicates that the function is discarded if the module is
+compiled statically into the kernel or if module unloading is disabled. Its
+primary use is for loadable kernel modules.
+
+It should be noted that the name of the initialization and cleanup
+functions can be anything however the module name is often used to form
+the functions (<modulename>_init()/<modulename_exit()).
+
