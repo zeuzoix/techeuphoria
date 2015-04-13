@@ -1,0 +1,31 @@
+= Porting RT Preempt To Kernel 3.18 For BeagleBone Black
+Conrad Gomes
+2015-04-13
+:awestruct-tags: [linux, kernel, beagleboneblack, rtlinux]
+:excerpt: The RT-Preempt patch converts Linux into a fully preemptible kernel. In this post we'll apply the patch to 3.18 version of the kernel for the BeagleBone Black
+:awestruct-excerpt: {excerpt}
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+:rt-linux-wiki: https://rt.wiki.kernel.org
+:robertcnelson-website: http://www.rcn-ee.com/
+
+
+{excerpt}
+
+== Cloning The BeagleBone Black Kernel
+
+We will need to clone the kernel repository from
+{robertcnelson-website}[Robert Nelson's^] github account. The repository
+is located at https://github.com/zeuzoix/bb-kernel.git[https://github.com/zeuzoix/bb-kernel.git^]
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone https://github.com/zeuzoix/bb-kernel.git
+----
+
+We will then checkout the branch we're interested in and name the branch am33x-v3.18-vanila.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ git checkout -b am33x-v3.18-vanila remotes/origin/am33x-v3.18
+----
