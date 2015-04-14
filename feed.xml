@@ -5,13 +5,963 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-14T19:47:32+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3/</id>
+<title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</title>
+<updated>2015-04-14T19:47:32+05:30</updated>
+<published>2015-04-13T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="kernel"></category>
+<category term="beagleboneblack"></category>
+<category term="rtlinux"></category>
+<summary>
+
+
+
+The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we&#8217;ll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson&#8217;s bb-kernel tree.
+
+
+
+
+Cloning The BeagleBone Black Kernel
+
+
+We will need to clone the kernel repository from
+Robert Nelson&#8217;s github account. The repository
+is located at https://github.com/zeuzoix/bb-kernel.git
+
+
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone https://github.com/zeuzoix/bb-kernel.git
+
+
+
+We will then checkout the branch we&#8217;re interested in and name the branch am33x-v3.18-vanila.
+
+
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ git checkout -b am33x-v3.18-vanila remotes/origin/am33x-v3.18
+
+
+
+
+
+Understanding The Build Process
+
+
+The repository contains a set of scripts to build a known working kernel for
+ARM devices. The directory structure of the am33x-v3.18 branch is shown below:
+
+
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ cd...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we’ll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson’s bb-kernel tree.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;cloning-the-beaglebone-black-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#cloning-the-beaglebone-black-kernel&quot;&gt;&lt;/a&gt;Cloning The BeagleBone Black Kernel&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will need to clone the kernel repository from
+&lt;a href=&quot;http://www.rcn-ee.com/&quot; target=&quot;_blank&quot;&gt;Robert Nelson’s&lt;/a&gt; github account. The repository
+is located at &lt;a href=&quot;https://github.com/zeuzoix/bb-kernel.git&quot; target=&quot;_blank&quot;&gt;https://github.com/zeuzoix/bb-kernel.git&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone https://github.com/zeuzoix/bb-kernel.git&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will then checkout the branch we’re interested in and name the branch am33x-v3.18-vanila.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ git checkout -b am33x-v3.18-vanila remotes/origin/am33x-v3.18&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;understanding-the-build-process&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#understanding-the-build-process&quot;&gt;&lt;/a&gt;Understanding The Build Process&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The repository contains a set of scripts to build a known working kernel for
+ARM devices. The directory structure of the am33x-v3.18 branch is shown below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ cd bb-kernel/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ls -l
+total 100
+drwxrwxr-x 3 conrad conrad  4096 Apr 13 12:35 3rdparty
+-rwxrwxr-x 1 conrad conrad  5932 Apr 13 12:35 build_deb.sh
+-rwxrwxr-x 1 conrad conrad  8028 Apr 13 12:35 build_kernel.sh
+-rw-rw-r-- 1 conrad conrad  1111 Apr 13 12:35 LICENSE
+drwxrwxr-x 8 conrad conrad  4096 Apr 13 12:35 patches
+-rw-rw-r-- 1 conrad conrad 20860 Apr 13 12:35 patch.sh
+-rw-rw-r-- 1 conrad conrad  1006 Apr 13 12:35 README                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+drwxrwxr-x 2 conrad conrad  4096 Apr 13 12:35 repo_maintenance
+drwxrwxr-x 2 conrad conrad  4096 Apr 13 15:12 scripts
+-rwxrwxr-x 1 conrad conrad  9584 Apr 13 12:35 sgx_build_modules.sh
+-rwxrwxr-x 1 conrad conrad  9586 Apr 13 12:35 sgx_create_package.sh
+-rw-rw-r-- 1 conrad conrad  1454 Apr 13 12:35 system.sh.sample
+drwxrwxr-x 2 conrad conrad  4096 Apr 14 10:29 tools
+-rw-rw-r-- 1 conrad conrad   724 Apr 13 12:35 version.sh
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Readme with instructions on how to run the build&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To understand the build process we have to go through the &lt;em&gt;README&lt;/em&gt; file.
+We also skim through the &lt;em&gt;build_kernel.sh&lt;/em&gt; script to get an idea of what
+will happen when we run it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;setting-em-linux_git-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#setting-em-linux_git-em&quot;&gt;&lt;/a&gt;Setting &lt;em&gt;LINUX_GIT&lt;/em&gt;
+&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will set the &lt;em&gt;LINUX_GIT&lt;/em&gt; variable in &lt;em&gt;system.sh&lt;/em&gt; based on the following
+instructions from the &lt;em&gt;README&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you’ve already cloned torvalds tree and would like to save some hard drive
+space, just modify the LINUX_GIT variable in system.sh to point to your current
+git clone directory.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will first copy the &lt;em&gt;system.sh.sample&lt;/em&gt; file as &lt;em&gt;system.sh&lt;/em&gt; file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cp -v system.sh.sample system.sh
+‘system.sh.sample’ -&amp;gt; ‘system.sh’&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then open &lt;em&gt;system.sh&lt;/em&gt; and uncomment the &lt;em&gt;LINUX_GIT&lt;/em&gt; variable and replace the value with
+the full path of the locally cloned tree.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cat system.sh
+#!/bin/sh
+#copy as &quot;system.sh&quot; and tweak for your system
+
+ARCH=$(uname -m)
+.
+.
+.
+###OPTIONAL: LINUX_GIT: specify location of locally cloned git tree.
+#
+LINUX_GIT=/home/conrad/Git/linux                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+.
+.
+.
+###ADVANCED: AUTO_BUILD: Easier integration with Jenkins/Buildbot/etc..
+#
+#AUTO_BUILD=1&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;We’ve uncommented &lt;em&gt;LINUX_GIT&lt;/em&gt; and subsituted with our cloned path i.e.
+/home/conrad/Git/linux&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;setting-em-cc-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#setting-em-cc-em&quot;&gt;&lt;/a&gt;Setting &lt;em&gt;CC&lt;/em&gt;
+&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To prevent a download of a gcc cross compiler from Linaro we subsitute the
+value of the &lt;em&gt;CC&lt;/em&gt; variable in &lt;em&gt;system.sh&lt;/em&gt; with our installed cross-compiler
+which was installed using the APT utility. If it is not installed there’s
+no need to set &lt;em&gt;CC&lt;/em&gt; as the script will do it for us.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ dpkg -L gcc-arm-linux-gnueabi
+/.
+/usr
+/usr/bin
+/usr/share
+/usr/share/doc
+/usr/share/man
+/usr/share/man/man1
+/usr/bin/arm-linux-gnueabi-gcc                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+/usr/bin/arm-linux-gnueabi-gcov
+/usr/share/doc/gcc-arm-linux-gnueabi
+/usr/share/man/man1/arm-linux-gnueabi-gcov.1.gz
+/usr/share/man/man1/arm-linux-gnueabi-gcc.1.gz&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;This path is required for &lt;em&gt;CC&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cat system.sh
+.
+.
+###REQUIRED:
+
+#ARM GCC CROSS Compiler:
+#if CC is not set, a known working linaro based gcc compiler will be downloaded and utilized.
+CC=/usr/bin/arm-linux-gnueabi-                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+#CC=&amp;lt;enter full path&amp;gt;/bin/arm-none-eabi-
+#CC=&amp;lt;enter full path&amp;gt;/bin/arm-linux-gnueabi-
+#CC=&amp;lt;enter full path&amp;gt;/bin/arm-linux-gnueabihf-
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Our subsitutuion of &lt;em&gt;CC&lt;/em&gt; with &lt;em&gt;/usr/bin/arm-linux-gnueabi-&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;missing-dependencies&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#missing-dependencies&quot;&gt;&lt;/a&gt;Missing Dependencies&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once the &lt;em&gt;system.sh&lt;/em&gt; is configured its time to give the &lt;em&gt;build_kernel.sh&lt;/em&gt;
+a whirl and see what happens. The script initially checks to see if everything
+it needs in the system are in order. It looks like the script has found
+something with my system.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./build_kernel.sh
++ Detected build host [Ubuntu 14.04.2 LTS]
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+Debian/Ubuntu/Mint: missing dependencies, please install:
+-----------------------------
+sudo apt-get update
+sudo apt-get install device-tree-compiler lzma lzop                         &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+-----------------------------
+* Failed dependency check
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Dependencies that could be mssing&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The instructions to fix the dependencies are given so we follow it through.
+First with the the system update.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ sudo apt-get update                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+Ign http://dl.google.com stable InRelease
+Get:1 http://dl.google.com stable Release.gpg [198 B]
+Get:2 http://dl.google.com stable Release [1,347 B]
+Get:3 http://dl.google.com stable/main i386 Packages [724 B]
+.
+.
+.
+Ign http://lk.archive.ubuntu.com trusty/restricted Translation-en_US
+Ign http://lk.archive.ubuntu.com trusty/universe Translation-en_US
+Fetched 2,392 kB in 30s (78.5 kB/s)
+Reading package lists... Done&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Doing a system update&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The second step is to install the missing dependencies i.e.
+&lt;em&gt;device-tree-compiler&lt;/em&gt;, &lt;em&gt;lzma&lt;/em&gt; and &lt;em&gt;lzop&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ sudo apt-get install device-tree-compiler lzma lzop        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.13.0-36 linux-headers-3.13.0-36-generic
+  linux-image-3.13.0-36-generic linux-image-extra-3.13.0-36-generic
+Use 'apt-get autoremove' to remove them.
+The following NEW packages will be installed:
+  device-tree-compiler lzma lzop
+0 upgraded, 3 newly installed, 0 to remove and 257 not upgraded.
+Need to get 454 kB of archives.
+After this operation, 797 kB of additional disk space will be used.
+Get:1 http://lk.archive.ubuntu.com/ubuntu/ trusty/main lzma i386 9.22-2ubuntu2 [53.6 kB]
+Get:2 http://lk.archive.ubuntu.com/ubuntu/ trusty/universe lzop i386 1.03-3 [43.6 kB]
+Get:3 http://lk.archive.ubuntu.com/ubuntu/ trusty/main device-tree-compiler i386 1.4.0+dfsg-1 [357 kB]
+Fetched 454 kB in 6s (70.3 kB/s)
+Selecting previously unselected package lzma.
+(Reading database ... 532551 files and directories currently installed.)
+Preparing to unpack .../lzma_9.22-2ubuntu2_i386.deb ...
+Unpacking lzma (9.22-2ubuntu2) ...
+Selecting previously unselected package lzop.
+Preparing to unpack .../archives/lzop_1.03-3_i386.deb ...
+Unpacking lzop (1.03-3) ...
+Selecting previously unselected package device-tree-compiler.
+Preparing to unpack .../device-tree-compiler_1.4.0+dfsg-1_i386.deb ...
+Unpacking device-tree-compiler (1.4.0+dfsg-1) ...
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Processing triggers for doc-base (0.10.5) ...
+Processing 2 added doc-base files...
+Setting up lzma (9.22-2ubuntu2) ...                &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+update-alternatives: using /usr/bin/lzmp to provide /usr/bin/lzma (lzma) in auto mode
+Setting up lzop (1.03-3) ...                                &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+Setting up device-tree-compiler (1.4.0+dfsg-1) ...        &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Command to install the dependencies&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Setting up &lt;em&gt;lzma&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Setting up &lt;em&gt;lsop&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Setting up device-tree-compiler&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;building-the-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#building-the-kernel&quot;&gt;&lt;/a&gt;Building The Kernel&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After the missing dependencies are fixed we re-run the &lt;em&gt;build_kernel.sh&lt;/em&gt; script.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./build_kernel.sh
++ Detected build host [Ubuntu 14.04.2 LTS]                                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+-----------------------------
+scripts/gcc: Using: arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-12ubuntu1) 4.7.3
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------------------------
+CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-                                        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+-----------------------------
+scripts/git: Debug: LINUX_GIT is setup as: [/home/conrad/Git/linux].
+scripts/git: [url=git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+url=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git]
+.
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Host detected correctly by the &lt;em&gt;build_kernel.sh&lt;/em&gt; script&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Set the &lt;em&gt;CROSS_COMPILE&lt;/em&gt; as per our &lt;em&gt;CC&lt;/em&gt; variable modifications in &lt;em&gt;system.sh&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Withing a few minutes the kernel configuration &lt;em&gt;menuconfig&lt;/em&gt; screen is pulled up.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;rt-preempt-vanilla-linux-kernel-menuconfig&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/rt-preempt-vanilla-linux-kernel-menuconfig.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/rt-preempt-vanilla-linux-kernel-menuconfig.png&quot; alt=&quot;rt preempt vanilla linux kernel menuconfig&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. The &lt;em&gt;menuconfig&lt;/em&gt; configuration screen for the 3.18 vanilla kernel&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For now we exit the configuration without any modifications to check and see if
+the kernel builds correctly. The execution of the script will take time based
+on the number of cores present on the workstation. The following shows the build
+successfully completed after saving the configuration in the previous step.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;.
+.
+.
+‘arch/arm/boot/zImage’ -&amp;gt; ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-bone1.zImage’
+‘.config’ -&amp;gt; ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-bone1’
+-rwxrwxr-x 1 conrad conrad 6.5M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1.zImage        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 14 12:34 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-dtbs.tar.gz        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-bone1]        &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+-----------------------------
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The zImage built&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The device tree binaries archive&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Version of the kernel that was built&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;testing-the-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#testing-the-kernel&quot;&gt;&lt;/a&gt;Testing The Kernel&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The setup being used is similar to the Lab instructions at the links
+below.&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-2-setting-up-the-beaglebone-black-board&quot; target=&quot;_blank&quot;&gt;LAB 2 : Setting Up The Beaglebone Black Board&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation&quot; target=&quot;_blank&quot;&gt;LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;open-serial-port-with-em-picocom-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#open-serial-port-with-em-picocom-em&quot;&gt;&lt;/a&gt;Open Serial Port With &lt;em&gt;picocom&lt;/em&gt;
+&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now we connect the serial USB-FTDI cable and start &lt;em&gt;picocom&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ picocom -b 115200 /dev/ttyUSB0
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        :
+omap is        :
+emap is        : crcrlf,delbs,
+
+Terminal ready&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;power-up-and-interrupt-u-boot&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#power-up-and-interrupt-u-boot&quot;&gt;&lt;/a&gt;Power Up And Interrupt U-Boot&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let’s connect the power cable and interrupt the boot loader.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Net:   cpsw, usb_ether
+Hit any key to stop autoboot:  0
+U-Boot#
+U-Boot# version
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
+GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913
+U-Boot# help bootz
+bootz - boot Linux zImage image from memory        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+
+Usage:
+bootz [addr [initrd[:size]] [fdt]]
+    - boot Linux zImage stored in memory
+        The argument 'initrd' is optional and specifies the address
+        of the initrd in memory. The optional argument ':size' allows
+        specifying the size of RAW initrd.
+        When booting a Linux kernel which requires a flat device-tree
+        a third argument is required which is the address of the
+        device-tree blob. To boot that kernel without an initrd image,
+        use a '-' for the second argument. If you do not pass a third
+        a bd_info struct will be passed instead
+
+U-Boot#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;We check the version used is 2013.10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Our U-Boot version supports &lt;em&gt;bootz&lt;/em&gt; so we should be able to boot the
+zImage&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;download-the-zimage&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#download-the-zimage&quot;&gt;&lt;/a&gt;Download The zImage&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To test the kernel we will place the built zImage in the tftpboot folder:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo cp -a 3.18.5-bone1.zImage /var/lib/tftpboot/
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First make sure the TFTP service is restarted&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo service tftpd-hpa restart
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 5082
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then download the zImage using tftpboot to address 0x81000000&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;U-Boot# printenv ipaddr
+ipaddr=192.168.0.100                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+U-Boot# printenv serverip
+serverip=192.168.0.1                &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+U-Boot#
+U-Boot# tftp 0x81000000 3.18.5-bone1.zImage        &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-bone1.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #######
+         1.3 MiB/s
+done
+Bytes transferred = 6779136 (677100 hex)        &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The board’s IP is set to &lt;em&gt;192.168.0.100&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The server i.e. our workstation IP is set to &lt;em&gt;192.168.0.1&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;We issue the &lt;em&gt;tftpboot&lt;/em&gt; command&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The &lt;em&gt;3.18.5-bone1.zImage&lt;/em&gt; has been downloaded successfully&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;download-the-device-tree-binary&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#download-the-device-tree-binary&quot;&gt;&lt;/a&gt;Download The Device Tree Binary&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Additionally we need to download a device tree binary for the BeagleBone
+Black. The possible device tree binaries were built and stored in the
+archive in the deploy folder. We extract the archive and save the
+&lt;em&gt;am335x-boneblack.dtb&lt;/em&gt; file to the TFTP server folder&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ mkdir temp                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ cd temp/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ ls
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ tar xvzf ../3.18.5-bone1-dtbs.tar.gz         &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+am335x-base0033.dtb
+am335x-bone-4dcape-43.dtb
+am335x-bone-4dcape-43t.dtb
+am335x-bone-4dcape-70.dtb
+am335x-bone-4dcape-70t.dtb
+am335x-bone-audio-reva.dtb
+.
+.
+.
+
+map3-thunder.dtb
+omap3-zoom3.dtb
+omap3430-sdp.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ sudo cp -a am335x-boneblack.dtb /var/lib/tftpboot/am335x-boneblack.3.18.5-bone1.dtb        &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ rm -Rf temp/        &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Make a temporary directory&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Extract the archive file in the temporary directory&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Copy the &lt;em&gt;am335x-boneblack.dtb&lt;/em&gt; device tree binary to the TFTP download
+folder as &lt;em&gt;am335x-boneblack.3.18.5-bone1.dtb&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Remove the temporary directory&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now download the device tree binary to the board using tftpboot to address
+0x82000000.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;U-Boot# tftp 0x82000000 am335x-boneblack.3.18.5-bone1.dtb        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+         1.2 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+U-Boot#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Downloading &lt;em&gt;am335x-boneblack.3.18.5-bone1.dtb&lt;/em&gt; to 0x82000000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The device tree binary has been downloaded&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;booting-the-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#booting-the-kernel&quot;&gt;&lt;/a&gt;Booting The Kernel&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Our U-Boot environment has been configured with the following bootargs for
+the kernel:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;U-Boot# printenv bootargs
+bootargs=root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot
+U-Boot#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We check to see if our kernel has been configured with NFS root filesystem
+settings.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ grep -ri &quot;_NFS&quot; config-3.18.5-bone1
+CONFIG_NFS_FS=y                                                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+CONFIG_NFS_V2=y
+CONFIG_NFS_V3=y
+CONFIG_NFS_V3_ACL=y
+CONFIG_NFS_V4=y
+CONFIG_NFS_SWAP=y
+CONFIG_NFS_V4_1=y
+CONFIG_NFS_V4_2=y
+CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN=&quot;kernel.org&quot;
+# CONFIG_NFS_V4_1_MIGRATION is not set
+CONFIG_NFS_V4_SECURITY_LABEL=y
+CONFIG_ROOT_NFS=y                                        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+# CONFIG_NFS_USE_LEGACY_DNS is not set
+CONFIG_NFS_USE_KERNEL_DNS=y
+CONFIG_NFS_DEBUG=y
+CONFIG_NFSD=m
+CONFIG_NFSD_V2_ACL=y
+CONFIG_NFSD_V3=y
+CONFIG_NFSD_V3_ACL=y
+CONFIG_NFSD_V4=y
+# CONFIG_NFSD_V4_SECURITY_LABEL is not set
+# CONFIG_NFSD_FAULT_INJECTION is not set
+CONFIG_NFS_ACL_SUPPORT=y
+CONFIG_NFS_COMMON=y
+CONFIG_NCPFS_NFS_NS=y
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;NFS filesystem support is present&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;NFS Root filesystem  is present&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now issue the boot command with &lt;em&gt;bootz&lt;/em&gt; specifying the kernel address
+and the device tree binary address which were downloaded with &lt;em&gt;tftpboot&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;U-Boot# bootz 0x81000000 - 0x82000000                        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Kernel image @ 0x81000000 [ 0x000000 - 0x677100 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 3.18.5-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #1 Tue Apr 14 12:30:08 IST 2015
+[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d
+.
+.
+.
+[    7.045937] VFS: Mounted root (nfs filesystem) on device 0:14.
+[    7.052337] devtmpfs: mounted
+[    7.055911] Freeing unused kernel memory: 448K (c092c000 - c099c000)
+Starting logging: OK
+Initializing random number generator... [    7.397510] random: dd urandom read with 77 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot                &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+buildroot login: root
+# uname -a
+Linux buildroot 3.18.5-bone1 #1 Tue Apr 14 12:30:08 IST 2015 armv7l GNU/Linux        &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;We issue the &lt;em&gt;bootz&lt;/em&gt; command specifying addresses of the kernel and device
+tree binary&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The NFS root filesystem is successfully booted&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;We confirm the version of the kernel as 3.18.5-bone1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-10T20:55:30+05:30</updated>
 <published>2015-02-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
 <author>
@@ -409,7 +1359,7 @@ drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-10T20:55:30+05:30</updated>
 <published>2015-01-28T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
 <author>
@@ -1997,7 +2947,7 @@ next step which is configuration of the BSP.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-10T20:55:30+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -2379,7 +3329,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-10T20:55:30+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -2693,7 +3643,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2015-04-10T19:30:12+05:30</updated>
+<updated>2015-04-10T20:55:30+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -3161,111 +4111,6 @@ article is useful in understanding more about the design:&lt;br&gt;
 in one header file. This shows that the open source movement when done right
 gives you the best solution possible over time:&lt;br&gt;
 &lt;a href=&quot;http://lxr.free-electrons.com/source/include/linux/list.h&quot; target=&quot;_blank&quot;&gt;http://lxr.free-electrons.com/source/include/linux/list.h&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/</id>
-<title>I2C/TWI with AVR Data Transfer</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2013-09-07T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="electronics"></category>
-<category term="productization"></category>
-<category term="i2c"></category>
-<summary>
-
-We now take a look at the TWI/I2C API responsible for data transfer. The header file
-twi.h has the prototype. We&#8217;ll take a look at the arguments and
-their description now:
-
-
-
-TWI_RET_E twi_send_recv_buffer(
-                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
-                           TWI_MODE_E e_mode);
-
-
-
-The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:
-
-
-
-typedef struct _TWI_SEND_RECV_BUFFER_PARAMS_X
-{
-  ...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We now take a look at the TWI/I2C API responsible for data transfer. The header file
-&lt;a href=&quot;https://github.com/zeuzoix/sardine/blob/master/twi.h&quot;&gt;twi.h&lt;/a&gt; has the prototype. We&amp;#8217;ll take a look at the arguments and
-their description now:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;TWI_RET_E twi_send_recv_buffer(
-                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
-                           TWI_MODE_E e_mode);&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; _TWI_SEND_RECV_BUFFER_PARAMS_X
-{
-   uint8_t uc_dev_addr;
-   uint8_t uc_dev_id;
-   uint8_t *puc_reg_addr;
-   uint32_t ui_reg_addr_sz;
-   uint8_t *puc_data;
-   uint32_t ui_data_sz;
-
-}TWI_SEND_RECV_BUFFER_PARAMS_X;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Where&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;uc_dev_addr&lt;/strong&gt; is the higher nibble of the I2C slave device address&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;uc_dev_id&lt;/strong&gt; is the lower nibble of the I2C slave device address. It is used where the slave address can be configured&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;puc_reg_addr&lt;/strong&gt; is the pointer to the buffer holding the register address of the slave device.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ui_reg_addr_sz&lt;/strong&gt; is the size of the buffer with the register address.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;puc_data&lt;/strong&gt; is the pointer to the data buffer&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ui_data_sz&lt;/strong&gt; is the size of the data buffer.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The second argument is an enumeration which indicates if a send or receive operation is to be done&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;typedef&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;enum&lt;/span&gt; _TWI_STATE_MODE_E
-{
-   eTWI_MODE_READ = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;,
-   eTWI_MODE_WRITE,
-   eTWI_MODE_INVALID
-
-}TWI_MODE_E;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 </content>
 </entry>

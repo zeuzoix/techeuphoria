@@ -49,6 +49,101 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/">I2C/TWI with AVR Data Transfer</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-09-07T00:00:00+00:00">
+September  7, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>We now take a look at the TWI/I2C API responsible for data transfer. The header file
+<a href="https://github.com/zeuzoix/sardine/blob/master/twi.h">twi.h</a> has the prototype. We&#8217;ll take a look at the arguments and
+their description now:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">TWI_RET_E twi_send_recv_buffer(
+                           TWI_SEND_RECV_BUFFER_PARAMS_X *px_send_buffer_params,
+                           TWI_MODE_E e_mode);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first argument is a pointer to TWI_SEND_RECV_BUFFER_PARAMS_X defined as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">struct</span> _TWI_SEND_RECV_BUFFER_PARAMS_X
+{
+   uint8_t uc_dev_addr;
+   uint8_t uc_dev_id;
+   uint8_t *puc_reg_addr;
+   uint32_t ui_reg_addr_sz;
+   uint8_t *puc_data;
+   uint32_t ui_data_sz;
+
+}TWI_SEND_RECV_BUFFER_PARAMS_X;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>uc_dev_addr</strong> is the higher nibble of the I2C slave device address</p>
+</li>
+<li>
+<p><strong>uc_dev_id</strong> is the lower nibble of the I2C slave device address. It is used where the slave address can be configured</p>
+</li>
+<li>
+<p><strong>puc_reg_addr</strong> is the pointer to the buffer holding the register address of the slave device.</p>
+</li>
+<li>
+<p><strong>ui_reg_addr_sz</strong> is the size of the buffer with the register address.</p>
+</li>
+<li>
+<p><strong>puc_data</strong> is the pointer to the data buffer</p>
+</li>
+<li>
+<p><strong>ui_data_sz</strong> is the size of the data buffer.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The second argument is an enumeration which indicates if a send or receive operation is to be done</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">typedef</span> <span style="color:#080;font-weight:bold">enum</span> _TWI_STATE_MODE_E
+{
+   eTWI_MODE_READ = <span style="color:#00D">0</span>,
+   eTWI_MODE_WRITE,
+   eTWI_MODE_INVALID
+
+}TWI_MODE_E;</code></pre>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/productization/">productization</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/08/31/i2c-twi-with-avr-register-initialization/">I2C/TWI with AVR Register Initialization</a>
 </h1>
 <h4>
@@ -1031,57 +1126,6 @@ to be built.</p>
 <footer class="post-footer">
 <div class="tags"><i class="label icon-tags"></i>
 <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/01/22/linux-kernel-modules/">Linux Kernel Modules</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-01-22T00:00:00+00:00">
-January 22, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="paragraph">
-<p>A unique feature of the Linux Kernel is its ability to allow injection of code while it is running. This piece of code is called a kernel module.</p>
-</div>
-<div class="paragraph">
-<p>The traditional approach employed by operating system designers was to add the
-code to the source code of the OS and build the OS as a single binary that can
-be booted by the boot-loader.</p>
-</div>
-<div class="paragraph">
-<p>The kernel module can be inserted and removed at any time during the execution
-of the kernel giving Linux Kernel developers the flexibility to test their
-modules before making them a part of the mainline Kernel source code.</p>
-</div>
-<div class="paragraph">
-<p>The process of building a stand-alone kernel module or integrating the kernel
-module with the source code of the Linux Kernel is simplified through the
-makefile of the kernel module. The source code of the kernel module remains
-the same irrespective of how it is built.</p>
-</div>
-<div class="paragraph">
-<p>Information on kernel module programming can be obtained from:<br>
-<a href="http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html" target="_blank">http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html</a></p>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/design/">design</a>
-, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
 , <a href="/techeuphoria/posts/tag/linux/">linux</a>
 , <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
 </footer>
