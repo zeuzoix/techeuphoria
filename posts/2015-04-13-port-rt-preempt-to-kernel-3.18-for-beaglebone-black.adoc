@@ -1,14 +1,18 @@
-= Porting RT Preempt To Kernel 3.18 For BeagleBone Black
+= Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1
 Conrad Gomes
 2015-04-13
 :awestruct-tags: [linux, kernel, beagleboneblack, rtlinux]
-:excerpt: The RT-Preempt patch converts Linux into a fully preemptible kernel. In this post we'll apply the patch to 3.18 version of the kernel for the BeagleBone Black
+:excerpt: The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we'll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson's bb-kernel tree.
 :awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
 :rt-linux-wiki: https://rt.wiki.kernel.org
 :robertcnelson-website: http://www.rcn-ee.com/
-
+:beagleboneblacktux-lab3: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation
+:beagleboneblacktux-lab2: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-2-setting-up-the-beaglebone-black-board
 
 {excerpt}
 
@@ -29,3 +33,570 @@ We will then checkout the branch we're interested in and name the branch am33x-v
 ----
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ git checkout -b am33x-v3.18-vanila remotes/origin/am33x-v3.18
 ----
+
+== Understanding The Build Process
+
+The repository contains a set of scripts to build a known working kernel for
+ARM devices. The directory structure of the am33x-v3.18 branch is shown below:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ cd bb-kernel/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ls -l
+total 100
+drwxrwxr-x 3 conrad conrad  4096 Apr 13 12:35 3rdparty
+-rwxrwxr-x 1 conrad conrad  5932 Apr 13 12:35 build_deb.sh
+-rwxrwxr-x 1 conrad conrad  8028 Apr 13 12:35 build_kernel.sh
+-rw-rw-r-- 1 conrad conrad  1111 Apr 13 12:35 LICENSE
+drwxrwxr-x 8 conrad conrad  4096 Apr 13 12:35 patches
+-rw-rw-r-- 1 conrad conrad 20860 Apr 13 12:35 patch.sh
+-rw-rw-r-- 1 conrad conrad  1006 Apr 13 12:35 README			<1>
+drwxrwxr-x 2 conrad conrad  4096 Apr 13 12:35 repo_maintenance
+drwxrwxr-x 2 conrad conrad  4096 Apr 13 15:12 scripts
+-rwxrwxr-x 1 conrad conrad  9584 Apr 13 12:35 sgx_build_modules.sh
+-rwxrwxr-x 1 conrad conrad  9586 Apr 13 12:35 sgx_create_package.sh
+-rw-rw-r-- 1 conrad conrad  1454 Apr 13 12:35 system.sh.sample
+drwxrwxr-x 2 conrad conrad  4096 Apr 14 10:29 tools
+-rw-rw-r-- 1 conrad conrad   724 Apr 13 12:35 version.sh
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ 
+----
+<1> Readme with instructions on how to run the build
+
+To understand the build process we have to go through the _README_ file.
+We also skim through the _build_kernel.sh_ script to get an idea of what
+will happen when we run it.
+
+=== Setting _LINUX_GIT_
+
+We will set the _LINUX_GIT_ variable in _system.sh_ based on the following
+instructions from the _README_.
+____
+If you've already cloned torvalds tree and would like to save some hard drive
+space, just modify the LINUX_GIT variable in system.sh to point to your current
+git clone directory.
+____
+
+We will first copy the _system.sh.sample_ file as _system.sh_ file.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cp -v system.sh.sample system.sh
+‘system.sh.sample’ -> ‘system.sh’
+----
+
+Then open _system.sh_ and uncomment the _LINUX_GIT_ variable and replace the value with
+the full path of the locally cloned tree.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cat system.sh
+#!/bin/sh
+#copy as "system.sh" and tweak for your system
+
+ARCH=$(uname -m)
+.
+.
+.
+###OPTIONAL: LINUX_GIT: specify location of locally cloned git tree.
+#
+LINUX_GIT=/home/conrad/Git/linux			<1>
+.
+.
+.
+###ADVANCED: AUTO_BUILD: Easier integration with Jenkins/Buildbot/etc..
+#
+#AUTO_BUILD=1
+----
+<1> We've uncommented _LINUX_GIT_ and subsituted with our cloned path i.e.
+/home/conrad/Git/linux
+
+=== Setting _CC_
+
+To prevent a download of a gcc cross compiler from Linaro we subsitute the
+value of the _CC_ variable in _system.sh_ with our installed cross-compiler
+which was installed using the APT utility. If it is not installed there's
+no need to set _CC_ as the script will do it for us. 
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ dpkg -L gcc-arm-linux-gnueabi                        
+/.
+/usr
+/usr/bin
+/usr/share
+/usr/share/doc
+/usr/share/man
+/usr/share/man/man1
+/usr/bin/arm-linux-gnueabi-gcc			<1>
+/usr/bin/arm-linux-gnueabi-gcov
+/usr/share/doc/gcc-arm-linux-gnueabi
+/usr/share/man/man1/arm-linux-gnueabi-gcov.1.gz
+/usr/share/man/man1/arm-linux-gnueabi-gcc.1.gz
+----
+<1> This path is required for _CC_
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ cat system.sh
+.
+.
+###REQUIRED:
+
+#ARM GCC CROSS Compiler:
+#if CC is not set, a known working linaro based gcc compiler will be downloaded and utilized.
+CC=/usr/bin/arm-linux-gnueabi-			<1>
+#CC=<enter full path>/bin/arm-none-eabi-
+#CC=<enter full path>/bin/arm-linux-gnueabi-
+#CC=<enter full path>/bin/arm-linux-gnueabihf-
+.
+.
+----
+<1> Our subsitutuion of _CC_ with _/usr/bin/arm-linux-gnueabi-_
+
+=== Missing Dependencies
+
+Once the _system.sh_ is configured its time to give the _build_kernel.sh_ 
+a whirl and see what happens. The script initially checks to see if everything
+it needs in the system are in order. It looks like the script has found
+something with my system.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./build_kernel.sh 
++ Detected build host [Ubuntu 14.04.2 LTS]
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+Debian/Ubuntu/Mint: missing dependencies, please install:
+-----------------------------
+sudo apt-get update
+sudo apt-get install device-tree-compiler lzma lzop 			<1>
+-----------------------------
+* Failed dependency check
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ 
+----
+<1> Dependencies that could be mssing
+
+The instructions to fix the dependencies are given so we follow it through.
+First with the the system update.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ sudo apt-get update		<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+Ign http://dl.google.com stable InRelease
+Get:1 http://dl.google.com stable Release.gpg [198 B]                          
+Get:2 http://dl.google.com stable Release [1,347 B]                            
+Get:3 http://dl.google.com stable/main i386 Packages [724 B]
+.
+.
+.
+Ign http://lk.archive.ubuntu.com trusty/restricted Translation-en_US           
+Ign http://lk.archive.ubuntu.com trusty/universe Translation-en_US             
+Fetched 2,392 kB in 30s (78.5 kB/s)                                            
+Reading package lists... Done
+----
+<1> Doing a system update
+
+The second step is to install the missing dependencies i.e.
+_device-tree-compiler_, _lzma_ and _lzop_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ sudo apt-get install device-tree-compiler lzma lzop	<1>
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.13.0-36 linux-headers-3.13.0-36-generic
+  linux-image-3.13.0-36-generic linux-image-extra-3.13.0-36-generic
+Use 'apt-get autoremove' to remove them.
+The following NEW packages will be installed:
+  device-tree-compiler lzma lzop
+0 upgraded, 3 newly installed, 0 to remove and 257 not upgraded.
+Need to get 454 kB of archives.
+After this operation, 797 kB of additional disk space will be used.
+Get:1 http://lk.archive.ubuntu.com/ubuntu/ trusty/main lzma i386 9.22-2ubuntu2 [53.6 kB]
+Get:2 http://lk.archive.ubuntu.com/ubuntu/ trusty/universe lzop i386 1.03-3 [43.6 kB]
+Get:3 http://lk.archive.ubuntu.com/ubuntu/ trusty/main device-tree-compiler i386 1.4.0+dfsg-1 [357 kB]
+Fetched 454 kB in 6s (70.3 kB/s)                                               
+Selecting previously unselected package lzma.
+(Reading database ... 532551 files and directories currently installed.)
+Preparing to unpack .../lzma_9.22-2ubuntu2_i386.deb ...
+Unpacking lzma (9.22-2ubuntu2) ...
+Selecting previously unselected package lzop.
+Preparing to unpack .../archives/lzop_1.03-3_i386.deb ...
+Unpacking lzop (1.03-3) ...
+Selecting previously unselected package device-tree-compiler.
+Preparing to unpack .../device-tree-compiler_1.4.0+dfsg-1_i386.deb ...
+Unpacking device-tree-compiler (1.4.0+dfsg-1) ...
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Processing triggers for doc-base (0.10.5) ...
+Processing 2 added doc-base files...
+Setting up lzma (9.22-2ubuntu2) ...		<2>
+update-alternatives: using /usr/bin/lzmp to provide /usr/bin/lzma (lzma) in auto mode
+Setting up lzop (1.03-3) ...				<3>
+Setting up device-tree-compiler (1.4.0+dfsg-1) ...	<4>
+----
+<1> Command to install the dependencies
+<2> Setting up _lzma_
+<3> Setting up _lsop_
+<4> Setting up device-tree-compiler
+
+=== Building The Kernel
+
+After the missing dependencies are fixed we re-run the _build_kernel.sh_ script.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./build_kernel.sh 
++ Detected build host [Ubuntu 14.04.2 LTS]					<1>
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+-----------------------------
+scripts/gcc: Using: arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-12ubuntu1) 4.7.3
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------------------------
+CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-					<2>
+-----------------------------
+scripts/git: Debug: LINUX_GIT is setup as: [/home/conrad/Git/linux].
+scripts/git: [url=git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+url=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git]
+.
+.
+.
+----
+<1> Host detected correctly by the _build_kernel.sh_ script
+<2> Set the _CROSS_COMPILE_ as per our _CC_ variable modifications in _system.sh_
+
+Withing a few minutes the kernel configuration _menuconfig_ screen is pulled up.
+====
+[[rt-preempt-vanilla-linux-kernel-menuconfig]]
+.The _menuconfig_ configuration screen for the 3.18 vanilla kernel
+image::rt-preempt-vanilla-linux-kernel-menuconfig.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-vanilla-linux-kernel-menuconfig.png]
+====
+
+For now we exit the configuration without any modifications to check and see if
+the kernel builds correctly. The execution of the script will take time based
+on the number of cores present on the workstation. The following shows the build
+successfully completed after saving the configuration in the previous step.
+
+[source, bash]
+----
+.
+.
+.
+‘arch/arm/boot/zImage’ -> ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-bone1.zImage’
+‘.config’ -> ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-bone1’
+-rwxrwxr-x 1 conrad conrad 6.5M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1.zImage	<1>
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 14 12:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 14 12:34 /home/conrad/Git/bb-kernel/deploy/3.18.5-bone1-dtbs.tar.gz	<2>
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-bone1]	<3>
+-----------------------------
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ 
+----
+<1> The zImage built
+<2> The device tree binaries archive
+<3> Version of the kernel that was built
+
+=== Testing The Kernel
+
+The setup being used is similar to the Lab instructions at the links
+below. +
+
+. {beagleboneblacktux-lab2}[LAB 2 : Setting Up The Beaglebone Black Board^]
+. {beagleboneblacktux-lab3}[LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation^]
+
+
+==== Open Serial Port With _picocom_
+
+Now we connect the serial USB-FTDI cable and start _picocom_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ picocom -b 115200 /dev/ttyUSB0 
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        : 
+omap is        : 
+emap is        : crcrlf,delbs,
+
+Terminal ready
+----
+
+==== Power Up And Interrupt U-Boot
+
+Let's connect the power cable and interrupt the boot loader.
+
+[source, bash]
+----
+U-Boot SPL 2013.10 (Nov 28 2013 - 06:36:11)
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Net:   cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+U-Boot# 
+U-Boot# version
+
+U-Boot 2013.10 (Nov 28 2013 - 06:36:11)		<1>
+arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
+GNU ld (GNU Binutils for Ubuntu) 2.23.52.20130913
+U-Boot# help bootz
+bootz - boot Linux zImage image from memory	<2>
+
+Usage:
+bootz [addr [initrd[:size]] [fdt]]
+    - boot Linux zImage stored in memory
+	The argument 'initrd' is optional and specifies the address
+	of the initrd in memory. The optional argument ':size' allows
+	specifying the size of RAW initrd.
+	When booting a Linux kernel which requires a flat device-tree
+	a third argument is required which is the address of the
+	device-tree blob. To boot that kernel without an initrd image,
+	use a '-' for the second argument. If you do not pass a third
+	a bd_info struct will be passed instead
+
+U-Boot# 
+----
+<1> We check the version used is 2013.10
+<2> Our U-Boot version supports _bootz_ so we should be able to boot the
+zImage
+
+==== Download The zImage
+
+To test the kernel we will place the built zImage in the tftpboot folder:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo cp -a 3.18.5-bone1.zImage /var/lib/tftpboot/
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ 
+----
+
+First make sure the TFTP service is restarted
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo service tftpd-hpa restart
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+tftpd-hpa stop/waiting
+tftpd-hpa start/running, process 5082
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ 
+----
+
+Then download the zImage using tftpboot to address 0x81000000
+
+[source, bash]
+----
+U-Boot# printenv ipaddr 
+ipaddr=192.168.0.100		<1>
+U-Boot# printenv serverip 
+serverip=192.168.0.1		<2>
+U-Boot#
+U-Boot# tftp 0x81000000 3.18.5-bone1.zImage	<3>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-bone1.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #######
+	 1.3 MiB/s
+done
+Bytes transferred = 6779136 (677100 hex)	<4>
+----
+<1> The board's IP is set to _192.168.0.100_
+<2> The server i.e. our workstation IP is set to _192.168.0.1_
+<3> We issue the _tftpboot_ command
+<4> The _3.18.5-bone1.zImage_ has been downloaded successfully
+
+==== Download The Device Tree Binary
+
+Additionally we need to download a device tree binary for the BeagleBone
+Black. The possible device tree binaries were built and stored in the
+archive in the deploy folder. We extract the archive and save the
+_am335x-boneblack.dtb_ file to the TFTP server folder
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ mkdir temp		<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ cd temp/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ ls
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ tar xvzf ../3.18.5-bone1-dtbs.tar.gz 	<2>
+am335x-base0033.dtb
+am335x-bone-4dcape-43.dtb
+am335x-bone-4dcape-43t.dtb
+am335x-bone-4dcape-70.dtb
+am335x-bone-4dcape-70t.dtb
+am335x-bone-audio-reva.dtb
+.
+.
+.
+
+map3-thunder.dtb
+omap3-zoom3.dtb
+omap3430-sdp.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ sudo cp -a am335x-boneblack.dtb /var/lib/tftpboot/am335x-boneblack.3.18.5-bone1.dtb	<3>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ rm -Rf temp/	<4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$
+----
+<1> Make a temporary directory
+<2> Extract the archive file in the temporary directory
+<3> Copy the _am335x-boneblack.dtb_ device tree binary to the TFTP download
+folder as _am335x-boneblack.3.18.5-bone1.dtb_
+<4> Remove the temporary directory
+
+Now download the device tree binary to the board using tftpboot to address
+0x82000000.
+
+[source, bash]
+----
+U-Boot# tftp 0x82000000 am335x-boneblack.3.18.5-bone1.dtb	<1>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+	 1.2 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)	<2>
+U-Boot# 
+----
+<1> Downloading _am335x-boneblack.3.18.5-bone1.dtb_ to 0x82000000
+<2> The device tree binary has been downloaded
+
+==== Booting The Kernel
+
+Our U-Boot environment has been configured with the following bootargs for
+the kernel:
+[source, bash]
+----
+U-Boot# printenv bootargs 
+bootargs=root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot
+U-Boot# 
+----
+
+We check to see if our kernel has been configured with NFS root filesystem
+settings.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ grep -ri "_NFS" config-3.18.5-bone1 
+CONFIG_NFS_FS=y						<1>
+CONFIG_NFS_V2=y
+CONFIG_NFS_V3=y
+CONFIG_NFS_V3_ACL=y
+CONFIG_NFS_V4=y
+CONFIG_NFS_SWAP=y
+CONFIG_NFS_V4_1=y
+CONFIG_NFS_V4_2=y
+CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN="kernel.org"
+# CONFIG_NFS_V4_1_MIGRATION is not set
+CONFIG_NFS_V4_SECURITY_LABEL=y
+CONFIG_ROOT_NFS=y					<2>
+# CONFIG_NFS_USE_LEGACY_DNS is not set
+CONFIG_NFS_USE_KERNEL_DNS=y
+CONFIG_NFS_DEBUG=y
+CONFIG_NFSD=m
+CONFIG_NFSD_V2_ACL=y
+CONFIG_NFSD_V3=y
+CONFIG_NFSD_V3_ACL=y
+CONFIG_NFSD_V4=y
+# CONFIG_NFSD_V4_SECURITY_LABEL is not set
+# CONFIG_NFSD_FAULT_INJECTION is not set
+CONFIG_NFS_ACL_SUPPORT=y
+CONFIG_NFS_COMMON=y
+CONFIG_NCPFS_NFS_NS=y
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ 
+----
+<1> NFS filesystem support is present
+<2> NFS Root filesystem  is present
+
+Now issue the boot command with _bootz_ specifying the kernel address
+and the device tree binary address which were downloaded with _tftpboot_.
+
+[source, bash]
+----
+U-Boot# bootz 0x81000000 - 0x82000000			<1>
+Kernel image @ 0x81000000 [ 0x000000 - 0x677100 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 3.18.5-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #1 Tue Apr 14 12:30:08 IST 2015
+[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d
+.
+.
+.
+[    7.045937] VFS: Mounted root (nfs filesystem) on device 0:14.
+[    7.052337] devtmpfs: mounted
+[    7.055911] Freeing unused kernel memory: 448K (c092c000 - c099c000)
+Starting logging: OK
+Initializing random number generator... [    7.397510] random: dd urandom read with 77 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot		<2>
+buildroot login: root
+# uname -a
+Linux buildroot 3.18.5-bone1 #1 Tue Apr 14 12:30:08 IST 2015 armv7l GNU/Linux	<3>
+----
+<1> We issue the _bootz_ command specifying addresses of the kernel and device
+tree binary
+<2> The NFS root filesystem is successfully booted
+<3> We confirm the version of the kernel as 3.18.5-bone1
