@@ -1,6 +1,6 @@
 = Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2
 Conrad Gomes
-2015-04-13
+2015-04-15
 :awestruct-tags: [linux, kernel, beagleboneblack, rtlinux]
 :excerpt: In the second part we will take a look and see how to apply the RT-Preempt patches to the 3.18 kernel for BeagleBone Black.
 :awestruct-excerpt: {excerpt}
@@ -10,8 +10,225 @@ endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
 :rt-linux-wiki: https://rt.wiki.kernel.org
+:rt-preempt-howto: https://rt.wiki.kernel.org/index.php/RT_PREEMPT_HOWTO
+:rt-linux-faqs: https://rt.wiki.kernel.org/index.php/Frequently_Asked_Questions 
+:rt-patches-location: https://www.kernel.org/pub/linux/kernel/projects/rt/
 :robertcnelson-website: http://www.rcn-ee.com/
+:kernel-org-link: http://kernel.org/
+:digi-key-eewiki-link: https://eewiki.net/dashboard.action
+:digi-key-eewiki-bbb-comments-link: https://eewiki.net/display/linuxonarm/BeagleBone+Black+Comments
+:digi-key-link: http://www.digikey.com
 :next-part:
 :prev-part: http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/
 
-{excerpt} This is a continuation of the previous post 
+{excerpt} This is a continuation of a previous {prev-part}[post^] where we built
+the 3.18 version and tested it on the BeagleBone Black.
+
+== RT Preempt Information
+
+Well the instructions to apply the patches is given in the
+{rt-linux-wiki}[Real-Time Linux Wiki^]. It would be advisable to first go
+through the {rt-linux-faqs}[FAQs^] section and get a general understanding
+on RT Linux.
+
+To apply the patches we go through the {rt-preempt-howto}[RT Preempt Howto^]
+which describes the general procedure. In the document the patches are applied
+on top of the vanilla kernel sources taken from
+{kernel-org-link}[{kernel-org-link}. However we will have to apply the patches
+on top of {robertcnelson-website}[Robert Nelson's^] bb-kernel sources for
+version 3.18 which we used in the {prev-part}[previous post^].
+
+== Locating The Correct Patches
+
+After going through the {rt-preempt-howto}[RT Preempt Howto^], it becomes clear
+that there are different patches for different versions of the kernel source at: +
+
+{rt-patches-location}[{rt-patches-location}^]
+
+====
+[[rt-preempt-patches]]
+.The patches for each kernel
+image::rt-preempt-patches.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-patches.png]
+====
+
+We cannot randomly apply any of the patches to our kernel source tree. We have
+to find the RT-Preempt patch version which fits the kernel verison we are using.
+
+The exact version of our kernel can be determined from the Makefile in the kernel
+tree. As shown below our version is *3.18.5*.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ head Makefile 
+VERSION = 3
+PATCHLEVEL = 18
+SUBLEVEL = 5
+EXTRAVERSION =
+NAME = Diseased Newt
+
+# *DOCUMENTATION*
+# To see a list of typical targets execute "make help"
+# More info can be located in ./README
+# Comments in this file are targeted only to the developer, do not
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ 
+----
+
+When we check the patches available in the _3.18_ folder of the
+rt-preempt patches location we see the latest version is at *3.18.11*.
+
+====
+[[rt-preempt-patches-3point18]]
+.The latest patches for 3.18 kernel
+image::rt-preempt-patches-3point18.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-patches-3point18.png]
+====
+
+There is a mismatch we cannot use the 3.18.11 patches as our source
+code is of version 3.18.5. We take a look at the older patches in the
+_older_ directory. The oldest version available is *3.18.7*.
+
+====
+[[rt-preempt-patches-3point18-older]]
+.The latest patches for 3.18 kernel
+image::rt-preempt-patches-3point18-older.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-patches-3point18-older.png]
+====
+
+== Searching For A Solution
+
+At this point we have to search for a solution as it looks like the rt-preempt
+patches are not compatible with the 3.18.5 kernel. After a bit of online browsing
+an answer was found on the {digi-key-eewiki-link}[wiki^] maintained by the
+aplication engineers at {digi-key-link}[Digi-Key Corporation^] in the comments
+page for BeagleBone Black:
+
+{digi-key-eewiki-bbb-comments-link}[{digi-key-eewiki-bbb-comments-link}^]
+
+[quote, John S. Rhoades]
+____
+I got the 3.18.5-bone1 kernel working with hard real time! I simply applied the
+nearest available RT patch (patch-3.18.7-rt1.patch.xz), and by golly the patch
+had no rejects and only 4 "offset x lines" messages! And the updated kernel
+compiled cleanly and working right away! I really really didn't expect that.
+
+I didn't bother to investigate the "offset" cases, since 3 of them were for
+other architectures, and the other was for raid5.c, which is a module that
+I don't need.
+____
+
+== Downloading And Applying The Patches
+
+We will not download the patch used by John i.e. patch-3.18.7-rt1.patch.xz
+instead we will download the latest real-time patch for 3.18.7 i.e.
+_patch-3.18.7-rt2.patch.gz_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Wget$ wget https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/older/patch-3.18.7-rt2.patch.gz		<1>
+--2015-04-15 12:52:34--  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/older/patch-3.18.7-rt2.patch.gz
+Resolving www.kernel.org (www.kernel.org)... 149.20.4.69, 198.145.20.140, 199.204.44.194, ...
+Connecting to www.kernel.org (www.kernel.org)|149.20.4.69|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 183993 (180K) [application/x-gzip]
+Saving to: ‘patch-3.18.7-rt2.patch.gz’
+
+100%[=============================================================================================================================================================================================================================>] 183,993     88.2KB/s   in 2.0s   
+
+2015-04-15 12:52:37 (88.2 KB/s) - ‘patch-3.18.7-rt2.patch.gz’ saved [183993/183993]
+----
+<1> Downloading the patch with _wget_
+
+Now we will apply the patch on top of our _KERNEL_ as follows:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Wget$ cd ~/Git/bb-kernel/KERNEL/		<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ zcat ~/Wget/patch-3.18.7-rt2.patch.gz | patch -p1	<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ zcat ~/Wget/patch-3.18.7-rt2.patch.gz | patch -p1
+patching file Documentation/hwlat_detector.txt
+patching file Documentation/sysrq.txt
+.
+.
+patching file arch/s390/mm/fault.c
+Hunk #1 succeeded at 429 (offset -6 lines).	<3>
+.
+.
+patching file arch/sh/mm/fault.c
+Hunk #1 succeeded at 438 (offset -2 lines).	<4>
+.
+.
+patching file arch/x86/mm/fault.c
+Hunk #1 succeeded at 1133 (offset 5 lines).	<5>
+.
+.
+patching file drivers/md/raid5.c
+Hunk #3 succeeded at 5704 (offset -5 lines).	<6>
+.
+.
+patching file net/sched/sch_generic.c
+patching file scripts/mkcompile_h
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ 
+----
+<1> Change to the 3.18 kernel tree which we built in the previous part
+<2> Apply the patch without uncompressing before applying it
+<3> Ignoring as for s390
+<4> Ignoring as for sh
+<5> Ignoring as for x86
+<6> Raid not required
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
