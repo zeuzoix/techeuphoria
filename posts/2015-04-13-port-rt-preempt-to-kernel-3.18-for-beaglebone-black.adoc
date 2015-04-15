@@ -14,7 +14,9 @@ endif::[]
 :beagleboneblacktux-lab3: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation
 :beagleboneblacktux-lab2: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-2-setting-up-the-beaglebone-black-board
 
-{excerpt}
+{excerpt} It is important to make sure that the kernel base on which we will
+be basing our patches works first before we go on to test the realtime preemptible
+kernel.
 
 == Cloning The BeagleBone Black Kernel
 
@@ -600,3 +602,9 @@ Linux buildroot 3.18.5-bone1 #1 Tue Apr 14 12:30:08 IST 2015 armv7l GNU/Linux	<3
 tree binary
 <2> The NFS root filesystem is successfully booted
 <3> We confirm the version of the kernel as 3.18.5-bone1
+
+== Conclusion
+
+We were able to successfully build and test the 3.18 kernel from Robert Nelson's
+bb-kernel branch. This is important as it gives us the confidence to proceed with
+applying the rt-preempt patches.
