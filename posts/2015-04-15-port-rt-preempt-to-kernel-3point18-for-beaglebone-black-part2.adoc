@@ -174,47 +174,168 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$
 <5> Ignoring as for x86
 <6> Raid not required
 
+== Rebuilding After Patching
 
+So now that the patches have been applied we will see if it has broken
+our build by rebuilding the kernel as follows:
 
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./tools/rebuild.sh 
++ Detected build host [Ubuntu 14.04.2 LTS]
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+-----------------------------
+scripts/gcc: Using: arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-12ubuntu1) 4.7.3
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------------------------
+CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+scripts/kconfig/mconf Kconfig
+.
+.
+.
+----
 
+Again we're shown the _menuconfig_ screen. Just exit and save the configuration
+and let the build proceed. The build completes successfully outputing the built
+binaries and archives on the console as was seen in the previous part when we
+built the vanilla kernel.
 
+[source, bash]
+----
+.
+.
+.
+‘arch/arm/boot/zImage’ -> ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage’	<1>
+‘.config’ -> ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-rt2-bone1’
+-rwxrwxr-x 1 conrad conrad 6.5M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-rt2-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-rt2-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-rt2-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-dtbs.tar.gz	<2>
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-rt2-bone1]	<3>
+-----------------------------
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ 
+----
+<1> The zImage built 
+<2> The device tree binaries archive
+<3> Version of the kernel that was built which is _3.18.5-rt2-bone1_
 
+=== Testing The Patched Kernel
 
+We will follow the same steps as the part 1 section, "Testing The Kernel"
+and copy the _3.18.5-rt2-bone1.zImage_ binary and the device tree binary to
+the TFTP server folder to be downloaded and booted through U-Boot.
 
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo cp 3.18.5-rt2-bone1.zImage /var/lib/tftpboot/
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ mkdir temp	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ cd temp/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ tar xvzf ../3.18.5-rt2-bone1-dtbs.tar.gz 	<2>
+am335x-base0033.dtb
+am335x-bone-4dcape-43.dtb
+.
+.
+omap3-zoom3.dtb
+omap3430-sdp.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ sudo cp -a am335x-boneblack.dtb /var/lib/tftpboot/am335x-boneblack.3.18.5-rt2-bone1.dtb	<3>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ cd ..
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ rm -Rf temp/		<4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ 
+----
+<1> Make a temporary directory
+<2> Extract the archive file in the temporary directory
+<3> Copy the _am335x-boneblack.dtb_ device tree binary to the TFTP download
+folder as _am335x-boneblack.3.18.5-rt2-bone1.dtb_
+<4> Remove the temporary directory
 
+==== Booting The Patched Kernel
 
+We now boot the kernel _3.18.5-rt2-bone1.zImage_ along with the device
+tree binary to see if it loads properly. We also print the version information
+to make sure it gives the right string.
 
+[source, bash]
+----
+.
+.
+U-Boot# tftpboot 0x81000000 3.18.5-rt2-bone1.zImage			<1>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-rt2-bone1.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 ########
+	 1.3 MiB/s
+done
+Bytes transferred = 6783096 (678078 hex)
+U-Boot# tftpboot 0x82000000 am335x-boneblack.3.18.5-rt2-bone1.dtb	<2>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-rt2-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+	 1.2 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)
+U-Boot# bootz 0x81000000 - 0x82000000					<3>
+Kernel image @ 0x81000000 [ 0x000000 - 0x678078 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
 
+Starting kernel ...
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+.
+.
+Welcome to Buildroot
+buildroot login: root
+# 
+# 
+# uname -a
+Linux buildroot 3.18.5-rt2-bone1 #2 Wed Apr 15 18:30:15 IST 2015 armv7l GNU/Linux	<4>
+# [   36.134860] random: nonblocking pool is initialized
+# halt 1				<5>
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system halt
+[  773.768416] musb-hdrc musb-hdrc.1.auto: remove, state 4
+[  773.773932] usb usb1: USB disconnect, device number 1
+[  773.779789] musb-hdrc musb-hdrc.1.auto: USB bus 1 deregistered
+[  773.786629] reboot: System halted
+----
+<1> Downloading _3.18.5-rt2-bone1.zImage_
+<2> Downloading _am335x-boneblack.3.18.5-rt2-bone1.dtb_
+<3> Booting the zImage
+<4> The string _3.18.5-rt2-bone1_ indicates the kernel version
+<5> Properly halting the system
 
 
 
