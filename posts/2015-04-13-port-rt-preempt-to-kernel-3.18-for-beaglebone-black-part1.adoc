@@ -14,9 +14,9 @@ endif::[]
 :beagleboneblacktux-lab3: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-3-cross-compiling-the-kernel-and-booting-it-from-the-workstation
 :beagleboneblacktux-lab2: http://zeuzoix.github.io/techeuphoria/quests/beagleboneblacktux/#lab-2-setting-up-the-beaglebone-black-board
 
-{excerpt} It is important to make sure that the kernel base on which we will
-be basing our patches works first before we go on to test the realtime preemptible
-kernel.
+{excerpt} It is important to make sure that the kernel source code on which we
+will be applying our patches does not have any problems before we go on to
+build and test the realtime preemptible kernel.
 
 == Cloning The BeagleBone Black Kernel
 
