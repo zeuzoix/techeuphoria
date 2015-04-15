@@ -12,6 +12,6 @@ endif::[]
 :rt-linux-wiki: https://rt.wiki.kernel.org
 :robertcnelson-website: http://www.rcn-ee.com/
 :next-part:
-:prev-part: http://zeuzoix.github.io/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/
+:prev-part: http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/
 
 {excerpt} This is a continuation of the previous post 
