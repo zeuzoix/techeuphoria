@@ -1,6 +1,6 @@
 = Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1
 Conrad Gomes
-2015-04-13
+2015-04-14
 :awestruct-tags: [linux, kernel, beagleboneblack, rtlinux]
 :excerpt: The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we'll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson's bb-kernel tree.
 :awestruct-excerpt: {excerpt}
