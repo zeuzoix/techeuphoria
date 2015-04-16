@@ -12,6 +12,7 @@ Awestruct::Extensions::Pipeline.new do
   extension Awestruct::Extensions::TagCloud.new( :posts, '/posts/tags/index.html', :layout=>:base, :title=>'Blog Tags' )
   extension Awestruct::Extensions::Indexifier.new()
   extension Awestruct::Extensions::Atomizer.new( :posts, 'feed.xml', :num_entries => 10)
+  extension Awestruct::Extensions::Disqus.new
 
   # extension Awestruct::Extensions::Indexifier.new
   # Indexifier *must* come before Atomizer

@@ -43,3 +43,7 @@ profiles:
     deploy:
       host: github_pages
       branch: gh-pages
+
+disqus: zeuzoix-techblog
+disqus_generate_id: true
+disqus_developer: true

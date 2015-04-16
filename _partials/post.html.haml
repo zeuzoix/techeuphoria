@@ -19,6 +19,10 @@
         %a.small.secondary.button{:href=>post_url} Read more...
     -else
       =page.post.content
+      %hr
+      - if site.disqus && !site.disqus_developer
+        #comments
+          =page.post.disqus_comments
   %footer.post-footer
     - if page.post.tags
       .tags<
