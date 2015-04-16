@@ -12,6 +12,7 @@ endif::[]
 :rt-linux-wiki: https://rt.wiki.kernel.org
 :rt-preempt-howto: https://rt.wiki.kernel.org/index.php/RT_PREEMPT_HOWTO
 :rt-linux-faqs: https://rt.wiki.kernel.org/index.php/Frequently_Asked_Questions 
+:rt-linux-faqs-configuring: https://rt.wiki.kernel.org/index.php/Frequently_Asked_Questions#Configuring.2Fcompiling_CONFIG_PREEMPT_RT
 :rt-patches-location: https://www.kernel.org/pub/linux/kernel/projects/rt/
 :robertcnelson-website: http://www.rcn-ee.com/
 :kernel-org-link: http://kernel.org/
@@ -26,7 +27,7 @@ the 3.18 version and tested it on the BeagleBone Black.
 
 == RT Preempt Information
 
-Well the instructions to apply the patches is given in the
+The instructions to apply the patches are given in the
 {rt-linux-wiki}[Real-Time Linux Wiki^]. It would be advisable to first go
 through the {rt-linux-faqs}[FAQs^] section and get a general understanding
 on RT Linux.
@@ -34,7 +35,7 @@ on RT Linux.
 To apply the patches we go through the {rt-preempt-howto}[RT Preempt Howto^]
 which describes the general procedure. In the document the patches are applied
 on top of the vanilla kernel sources taken from
-{kernel-org-link}[{kernel-org-link}. However we will have to apply the patches
+{kernel-org-link}[{kernel-org-link}^]. However we will have to apply the patches
 on top of {robertcnelson-website}[Robert Nelson's^] bb-kernel sources for
 version 3.18 which we used in the {prev-part}[previous post^].
 
@@ -47,7 +48,7 @@ that there are different patches for different versions of the kernel source at:
 
 ====
 [[rt-preempt-patches]]
-.The patches for each kernel
+.The patches for each kernel version
 image::rt-preempt-patches.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-patches.png]
 ====
 
@@ -82,7 +83,7 @@ rt-preempt patches location we see the latest version is at *3.18.11*.
 image::rt-preempt-patches-3point18.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-patches-3point18.png]
 ====
 
-There is a mismatch we cannot use the 3.18.11 patches as our source
+There is a mismatch, we cannot use the 3.18.11 patches as our source
 code is of version 3.18.5. We take a look at the older patches in the
 _older_ directory. The oldest version available is *3.18.7*.
 
@@ -233,7 +234,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$
 <2> The device tree binaries archive
 <3> Version of the kernel that was built which is _3.18.5-rt2-bone1_
 
-=== Testing The Patched Kernel
+== Testing The Patched Kernel
 
 We will follow the same steps as the part 1 section, "Testing The Kernel"
 and copy the _3.18.5-rt2-bone1.zImage_ binary and the device tree binary to
@@ -265,7 +266,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$
 folder as _am335x-boneblack.3.18.5-rt2-bone1.dtb_
 <4> Remove the temporary directory
 
-==== Booting The Patched Kernel
+=== Booting The Patched Kernel
 
 We now boot the kernel _3.18.5-rt2-bone1.zImage_ along with the device
 tree binary to see if it loads properly. We also print the version information
@@ -337,19 +338,187 @@ Requesting system halt
 <4> The string _3.18.5-rt2-bone1_ indicates the kernel version
 <5> Properly halting the system
 
+The patched kernel boots well so now we have the confidence to enable
+full real-time support.
 
+== Configuring Full Real-Time Support 
 
+We will have to run the _./tools/rebuild.sh_ script again to allow us
+to configure the full real-time support for the kernel. There are two
+options we will have to enable. We refer to the section,
+{rt-linux-faqs-configuring}[Configuring/compiling CONFIG_PREEMPT_RT^]
+and enable _CONFIG_PREEMPT_RT_FULL (=y)_ and _CONFIG_HIGH_RES_TIMERS (=y)_.
 
+On executing the _./tools/rebuild.sh_ script we will again get the
+_menuconfig_ screen. This time we have to enable the above values.
+First we search for _CONFIG_PREEMPT_RT_FULL_ (Hit the '/' key on the
+menuconfig screen).
 
+====
+[[rt-preempt-menuconfig-search-config-preempt-rt-full]]
+.Searching for _CONFIG_PREEMPT_RT_FULL_
+image::rt-preempt-menuconfig-search-config-preempt-rt-full.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-preempt-rt-full.png]
+====
 
+====
+[[rt-preempt-menuconfig-search-config-preempt-rt-full-1]]
+.Search results for _CONFIG_PREEMPT_RT_FULL_. It is located at -> Kernel Features -> Preemptible Kernel 
+image::rt-preempt-menuconfig-search-config-preempt-rt-full-1.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-preempt-rt-full-1.png]
+====
 
+====
+[[rt-preempt-menuconfig-search-config-preempt-rt-full-4]]
+.Enabling Fully Preemptible Kernel(RT) 
+image::rt-preempt-menuconfig-search-config-preempt-rt-full-4.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-preempt-rt-full-4.png]
+====
 
+Secondly we search for _CONFIG_HIGH_RES_TIMERS_.
 
+====
+[[rt-preempt-menuconfig-search-config-high-res-timers]]
+.Searching for _CONFIG_HIGH_RES_TIMERS_
+image::rt-preempt-menuconfig-search-config-high-res-timers.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-high-res-timers.png]
+====
 
+====
+[[rt-preempt-menuconfig-search-config-high-res-timers-1]]
+.Search results for _CONFIG_HIGH_RES_TIMERS_. It is located at -> General setup -> Timers subsystem
+image::rt-preempt-menuconfig-search-config-high-res-timers-1.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-high-res-timers-1.png]
+====
 
+====
+[[rt-preempt-menuconfig-search-config-high-res-timers-4]]
+.The CONFIG_HIGH_RES_TIMERS is enabled
+image::rt-preempt-menuconfig-search-config-high-res-timers-4.png[width="640", height="480", align="center", link={awestruct-imagesdir}/rt-preempt-menuconfig-search-config-high-res-timers-4.png]
+====
 
+After saving and exiting the _menuconfig_ screen the build will proceed.
+The build is successful and we get similar results as the previous build
+in terms of output logs from the build script.
 
+[source, bash]
+----
+.
+.
+.
+  LD [M]  sound/usb/misc/snd-ua101.ko
+  LD [M]  sound/usb/snd-usb-audio.ko
+  LD [M]  sound/usb/snd-usbmidi-lib.ko
+-----------------------------
+make -j2 ARCH=arm LOCALVERSION=-bone1 CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- dtbs
+-----------------------------
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+‘arch/arm/boot/zImage’ -> ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage’
+‘.config’ -> ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-rt2-bone1’
+-rwxrwxr-x 1 conrad conrad 6.7M Apr 15 21:57 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage	<1>
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-rt2-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-rt2-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-rt2-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-dtbs.tar.gz	<2>
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-rt2-bone1]		<3>
+-----------------------------
+----
+<1> The full real-time zImage is built 
+<2> The device tree binaries archive. This should ideally be the same everytime
+unless we modify the device tree source files.
+<3> Version of the kernel that was built which is _3.18.5-rt2-bone1_
 
+== Booting The RT-Preempt Kernel
 
+To test the kernel we copy the _3.18.5-rt2-bone1.zImage_ to the TFTP server
+folder with a slightly different name i.e. 3.18.5-rt2-bone1.rt.zImage in
+order to differentiate it from our previous image built without RT-Preempt
+support. The rest of the steps are similar to our previous kernel load.
 
+[source, bash]
+----
+.
+.
+.
 
+U-Boot# tftpboot 0x81000000 3.18.5-rt2-bone1.rt.zImage			<1>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-rt2-bone1.rt.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 ######################
+	 1.3 MiB/s
+done
+Bytes transferred = 6991248 (6aad90 hex)
+U-Boot# tftpboot 0x82000000 am335x-boneblack.3.18.5-rt2-bone1.dtb	<2>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-rt2-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+	 1.1 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)
+U-Boot# bootz 0x81000000 - 0x82000000					<3>
+Kernel image @ 0x81000000 [ 0x000000 - 0x6aad90 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 3.18.5-rt2-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015
+[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d
+.
+.
+.
+[    7.370106] Freeing unused kernel memory: 452K (c0977000 - c09e8000)
+Starting logging: OK
+Initializing random number generator... [    7.890589] random: dd urandom read with 67 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot
+buildroot login: root
+# 
+# [  206.655634] random: nonblocking pool is initialized
+# dmesg | grep -ri "preempt"
+[    0.000000] Linux version 3.18.5-rt2-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015
+[    0.000000] Preemptible hierarchical RCU implementation.
+# uname -a
+Linux buildroot 3.18.5-rt2-bone1 #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015 armv7l GNU/Linux	<4>
+----
+<1> Downloading _3.18.5-rt2-bone1.rt.zImage_
+<2> Downloading _am335x-boneblack.3.18.5-rt2-bone1.dtb_
+<3> Booting the zImage
+<4> The PREEMPT RT differentiates this kernel string version from the previous one.
+
+== Conclusion
+
+We were successfully able to port RT-Preempt to the 3.18 kernel from Robert Nelson's
+bb-kernel branch and boot the fully real-time kernel. We can now carry out tests with
+this kernel and benchmark its performance.
