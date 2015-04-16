@@ -1,6 +1,6 @@
 = Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2
 Conrad Gomes
-2015-04-15
+2015-04-16
 :awestruct-tags: [linux, kernel, beagleboneblack, rtlinux]
 :excerpt: In the second part we will take a look and see how to apply the RT-Preempt patches to the 3.18 kernel for BeagleBone Black.
 :awestruct-excerpt: {excerpt}
