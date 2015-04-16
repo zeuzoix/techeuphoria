@@ -39,6 +39,9 @@ profiles:
     base_url: http://zeuzoix.github.io/techeuphoria
     ctx_path: /techeuphoria
     disqus_developer: false
+    google_analytics_account: UA-61553633-1
+    google_analytics:
+      account: UA-61553633-1
     asciidoctor:
       :attributes:
         base_url: http://zeuzoix.github.io/techeuphoria

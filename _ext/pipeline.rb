@@ -5,6 +5,7 @@ require 'awestruct_ext'
 
 Awestruct::Extensions::Pipeline.new do
   helper Awestruct::Extensions::Partial
+  helper Awestruct::Extensions::GoogleAnalytics
   extension Awestruct::Extensions::Posts.new('/posts')
   extension Awestruct::Extensions::Paginator.new(:posts, '/index', :page_name => 'posts/page/', :per_page => 27)
   extension Awestruct::Extensions::Paginator.new( :posts, '/blog', :page_name => 'posts/page/', :per_page => 10)
