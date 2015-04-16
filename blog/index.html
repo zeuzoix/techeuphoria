@@ -49,7 +49,740 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
-<a href="/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3/">Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</a>
+<a href="/techeuphoria/posts/2015/04/15/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/">Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2015-04-15T00:00:00+00:00">
+April 15, 2015
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the second part we will take a look and see how to apply the RT-Preempt patches to the 3.18 kernel for BeagleBone Black. This is a continuation of a previous <a href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" target="_blank">post</a> where we built
+the 3.18 version and tested it on the BeagleBone Black.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rt-preempt-information"><a class="anchor" href="#rt-preempt-information"></a>RT Preempt Information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The instructions to apply the patches are given in the
+<a href="https://rt.wiki.kernel.org" target="_blank">Real-Time Linux Wiki</a>. It would be advisable to first go
+through the <a href="https://rt.wiki.kernel.org/index.php/Frequently_Asked_Questions" target="_blank">FAQs</a> section and get a general understanding
+on RT Linux.</p>
+</div>
+<div class="paragraph">
+<p>To apply the patches we go through the <a href="https://rt.wiki.kernel.org/index.php/RT_PREEMPT_HOWTO" target="_blank">RT Preempt Howto</a>
+which describes the general procedure. In the document the patches are applied
+on top of the vanilla kernel sources taken from
+<a href="http://kernel.org/" target="_blank">http://kernel.org/</a>. However we will have to apply the patches
+on top of <a href="http://www.rcn-ee.com/" target="_blank">Robert Nelson&#8217;s</a> bb-kernel sources for
+version 3.18 which we used in the <a href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" target="_blank">previous post</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="locating-the-correct-patches"><a class="anchor" href="#locating-the-correct-patches"></a>Locating The Correct Patches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After going through the <a href="https://rt.wiki.kernel.org/index.php/RT_PREEMPT_HOWTO" target="_blank">RT Preempt Howto</a>, it becomes clear
+that there are different patches for different versions of the kernel source at:<br></p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.kernel.org/pub/linux/kernel/projects/rt/" target="_blank">https://www.kernel.org/pub/linux/kernel/projects/rt/</a></p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-patches" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-patches.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-patches.png" alt="rt preempt patches" width="640" height="480"></a>
+</div>
+<div class="title">Figure 1. The patches for each kernel version</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We cannot randomly apply any of the patches to our kernel source tree. We have
+to find the RT-Preempt patch version which fits the kernel verison we are using.</p>
+</div>
+<div class="paragraph">
+<p>The exact version of our kernel can be determined from the Makefile in the kernel
+tree. As shown below our version is <strong>3.18.5</strong>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ head Makefile
+VERSION = 3
+PATCHLEVEL = 18
+SUBLEVEL = 5
+EXTRAVERSION =
+NAME = Diseased Newt
+
+# *DOCUMENTATION*
+# To see a list of typical targets execute &quot;make help&quot;
+# More info can be located in ./README
+# Comments in this file are targeted only to the developer, do not
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we check the patches available in the <em>3.18</em> folder of the
+rt-preempt patches location we see the latest version is at <strong>3.18.11</strong>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-patches-3point18" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-patches-3point18.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-patches-3point18.png" alt="rt preempt patches 3point18" width="640" height="480"></a>
+</div>
+<div class="title">Figure 2. The latest patches for 3.18 kernel</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>There is a mismatch, we cannot use the 3.18.11 patches as our source
+code is of version 3.18.5. We take a look at the older patches in the
+<em>older</em> directory. The oldest version available is <strong>3.18.7</strong>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-patches-3point18-older" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-patches-3point18-older.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-patches-3point18-older.png" alt="rt preempt patches 3point18 older" width="640" height="480"></a>
+</div>
+<div class="title">Figure 3. The latest patches for 3.18 kernel</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="searching-for-a-solution"><a class="anchor" href="#searching-for-a-solution"></a>Searching For A Solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>At this point we have to search for a solution as it looks like the rt-preempt
+patches are not compatible with the 3.18.5 kernel. After a bit of online browsing
+an answer was found on the <a href="https://eewiki.net/dashboard.action" target="_blank">wiki</a> maintained by the
+aplication engineers at <a href="http://www.digikey.com" target="_blank">Digi-Key Corporation</a> in the comments
+page for BeagleBone Black:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://eewiki.net/display/linuxonarm/BeagleBone+Black+Comments" target="_blank">https://eewiki.net/display/linuxonarm/BeagleBone+Black+Comments</a></p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>I got the 3.18.5-bone1 kernel working with hard real time! I simply applied the
+nearest available RT patch (patch-3.18.7-rt1.patch.xz), and by golly the patch
+had no rejects and only 4 "offset x lines" messages! And the updated kernel
+compiled cleanly and working right away! I really really didn&#8217;t expect that.</p>
+</div>
+<div class="paragraph">
+<p>I didn&#8217;t bother to investigate the "offset" cases, since 3 of them were for
+other architectures, and the other was for raid5.c, which is a module that
+I don&#8217;t need.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; John S. Rhoades
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="downloading-and-applying-the-patches"><a class="anchor" href="#downloading-and-applying-the-patches"></a>Downloading And Applying The Patches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will not download the patch used by John i.e. patch-3.18.7-rt1.patch.xz
+instead we will download the latest real-time patch for 3.18.7 i.e.
+<em>patch-3.18.7-rt2.patch.gz</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Wget$ wget https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/older/patch-3.18.7-rt2.patch.gz                <i class="conum" data-value="1"></i><b>(1)</b>
+--2015-04-15 12:52:34--  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/older/patch-3.18.7-rt2.patch.gz
+Resolving www.kernel.org (www.kernel.org)... 149.20.4.69, 198.145.20.140, 199.204.44.194, ...
+Connecting to www.kernel.org (www.kernel.org)|149.20.4.69|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 183993 (180K) [application/x-gzip]
+Saving to: ‘patch-3.18.7-rt2.patch.gz’
+
+100%[=============================================================================================================================================================================================================================&gt;] 183,993     88.2KB/s   in 2.0s
+
+2015-04-15 12:52:37 (88.2 KB/s) - ‘patch-3.18.7-rt2.patch.gz’ saved [183993/183993]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Downloading the patch with <em>wget</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now we will apply the patch on top of our <em>KERNEL</em> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Wget$ cd ~/Git/bb-kernel/KERNEL/                <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ zcat ~/Wget/patch-3.18.7-rt2.patch.gz | patch -p1        <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$ zcat ~/Wget/patch-3.18.7-rt2.patch.gz | patch -p1
+patching file Documentation/hwlat_detector.txt
+patching file Documentation/sysrq.txt
+.
+.
+patching file arch/s390/mm/fault.c
+Hunk #1 succeeded at 429 (offset -6 lines).        <i class="conum" data-value="3"></i><b>(3)</b>
+.
+.
+patching file arch/sh/mm/fault.c
+Hunk #1 succeeded at 438 (offset -2 lines).        <i class="conum" data-value="4"></i><b>(4)</b>
+.
+.
+patching file arch/x86/mm/fault.c
+Hunk #1 succeeded at 1133 (offset 5 lines).        <i class="conum" data-value="5"></i><b>(5)</b>
+.
+.
+patching file drivers/md/raid5.c
+Hunk #3 succeeded at 5704 (offset -5 lines).        <i class="conum" data-value="6"></i><b>(6)</b>
+.
+.
+patching file net/sched/sch_generic.c
+patching file scripts/mkcompile_h
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/KERNEL$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Change to the 3.18 kernel tree which we built in the previous part</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Apply the patch without uncompressing before applying it</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Ignoring as for s390</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Ignoring as for sh</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Ignoring as for x86</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Raid not required</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rebuilding-after-patching"><a class="anchor" href="#rebuilding-after-patching"></a>Rebuilding After Patching</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So now that the patches have been applied we will see if it has broken
+our build by rebuilding the kernel as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$ ./tools/rebuild.sh
++ Detected build host [Ubuntu 14.04.2 LTS]
++ host: [i686]
++ git HEAD commit: [496f173e9148f4662257a6023435b429cfa5e69e]
+-----------------------------
+scripts/gcc: Using: arm-linux-gnueabi-gcc (Ubuntu/Linaro 4.7.3-12ubuntu1) 4.7.3
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------------------------
+CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+scripts/kconfig/mconf Kconfig
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again we&#8217;re shown the <em>menuconfig</em> screen. Just exit and save the configuration
+and let the build proceed. The build completes successfully outputing the built
+binaries and archives on the console as was seen in the previous part when we
+built the vanilla kernel.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+.
+‘arch/arm/boot/zImage’ -&gt; ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage’        <i class="conum" data-value="1"></i><b>(1)</b>
+‘.config’ -&gt; ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-rt2-bone1’
+-rwxrwxr-x 1 conrad conrad 6.5M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-rt2-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-rt2-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-rt2-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 15 18:33 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-dtbs.tar.gz        <i class="conum" data-value="2"></i><b>(2)</b>
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-rt2-bone1]        <i class="conum" data-value="3"></i><b>(3)</b>
+-----------------------------
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The zImage built</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device tree binaries archive</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Version of the kernel that was built which is <em>3.18.5-rt2-bone1</em></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-patched-kernel"><a class="anchor" href="#testing-the-patched-kernel"></a>Testing The Patched Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will follow the same steps as the part 1 section, "Testing The Kernel"
+and copy the <em>3.18.5-rt2-bone1.zImage</em> binary and the device tree binary to
+the TFTP server folder to be downloaded and booted through U-Boot.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ sudo cp 3.18.5-rt2-bone1.zImage /var/lib/tftpboot/
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ mkdir temp        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ cd temp/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ tar xvzf ../3.18.5-rt2-bone1-dtbs.tar.gz         <i class="conum" data-value="2"></i><b>(2)</b>
+am335x-base0033.dtb
+am335x-bone-4dcape-43.dtb
+.
+.
+omap3-zoom3.dtb
+omap3430-sdp.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ sudo cp -a am335x-boneblack.dtb /var/lib/tftpboot/am335x-boneblack.3.18.5-rt2-bone1.dtb        <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy/temp$ cd ..
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$ rm -Rf temp/                <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/bb-kernel/deploy$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Make a temporary directory</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Extract the archive file in the temporary directory</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Copy the <em>am335x-boneblack.dtb</em> device tree binary to the TFTP download
+folder as <em>am335x-boneblack.3.18.5-rt2-bone1.dtb</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Remove the temporary directory</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="booting-the-patched-kernel"><a class="anchor" href="#booting-the-patched-kernel"></a>Booting The Patched Kernel</h3>
+<div class="paragraph">
+<p>We now boot the kernel <em>3.18.5-rt2-bone1.zImage</em> along with the device
+tree binary to see if it loads properly. We also print the version information
+to make sure it gives the right string.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+U-Boot# tftpboot 0x81000000 3.18.5-rt2-bone1.zImage                        <i class="conum" data-value="1"></i><b>(1)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-rt2-bone1.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         ########
+         1.3 MiB/s
+done
+Bytes transferred = 6783096 (678078 hex)
+U-Boot# tftpboot 0x82000000 am335x-boneblack.3.18.5-rt2-bone1.dtb        <i class="conum" data-value="2"></i><b>(2)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-rt2-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+         1.2 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)
+U-Boot# bootz 0x81000000 - 0x82000000                                        <i class="conum" data-value="3"></i><b>(3)</b>
+Kernel image @ 0x81000000 [ 0x000000 - 0x678078 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+.
+.
+Welcome to Buildroot
+buildroot login: root
+#
+#
+# uname -a
+Linux buildroot 3.18.5-rt2-bone1 #2 Wed Apr 15 18:30:15 IST 2015 armv7l GNU/Linux        <i class="conum" data-value="4"></i><b>(4)</b>
+# [   36.134860] random: nonblocking pool is initialized
+# halt 1                                <i class="conum" data-value="5"></i><b>(5)</b>
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system halt
+[  773.768416] musb-hdrc musb-hdrc.1.auto: remove, state 4
+[  773.773932] usb usb1: USB disconnect, device number 1
+[  773.779789] musb-hdrc musb-hdrc.1.auto: USB bus 1 deregistered
+[  773.786629] reboot: System halted</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Downloading <em>3.18.5-rt2-bone1.zImage</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Downloading <em>am335x-boneblack.3.18.5-rt2-bone1.dtb</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Booting the zImage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The string <em>3.18.5-rt2-bone1</em> indicates the kernel version</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Properly halting the system</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The patched kernel boots well so now we have the confidence to enable
+full real-time support.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-full-real-time-support"><a class="anchor" href="#configuring-full-real-time-support"></a>Configuring Full Real-Time Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will have to run the <em>./tools/rebuild.sh</em> script again to allow us
+to configure the full real-time support for the kernel. There are two
+options we will have to enable. We refer to the section,
+<a href="https://rt.wiki.kernel.org/index.php/Frequently_Asked_Questions#Configuring.2Fcompiling_CONFIG_PREEMPT_RT" target="_blank">Configuring/compiling CONFIG_PREEMPT_RT</a>
+and enable <em>CONFIG_PREEMPT_RT_FULL (=y)</em> and <em>CONFIG_HIGH_RES_TIMERS (=y)</em>.</p>
+</div>
+<div class="paragraph">
+<p>On executing the <em>./tools/rebuild.sh</em> script we will again get the
+<em>menuconfig</em> screen. This time we have to enable the above values.
+First we search for <em>CONFIG_PREEMPT_RT_FULL</em> (Hit the '/' key on the
+menuconfig screen).</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-preempt-rt-full" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-preempt-rt-full.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-preempt-rt-full.png" alt="rt preempt menuconfig search config preempt rt full" width="640" height="480"></a>
+</div>
+<div class="title">Figure 4. Searching for <em>CONFIG_PREEMPT_RT_FULL</em></div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-preempt-rt-full-1" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-preempt-rt-full-1.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-preempt-rt-full-1.png" alt="rt preempt menuconfig search config preempt rt full 1" width="640" height="480"></a>
+</div>
+<div class="title">Figure 5. Search results for <em>CONFIG_PREEMPT_RT_FULL</em>. It is located at &#8594; Kernel Features &#8594; Preemptible Kernel</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-preempt-rt-full-4" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-preempt-rt-full-4.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-preempt-rt-full-4.png" alt="rt preempt menuconfig search config preempt rt full 4" width="640" height="480"></a>
+</div>
+<div class="title">Figure 6. Enabling Fully Preemptible Kernel(RT)</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Secondly we search for <em>CONFIG_HIGH_RES_TIMERS</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-high-res-timers" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-high-res-timers.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-high-res-timers.png" alt="rt preempt menuconfig search config high res timers" width="640" height="480"></a>
+</div>
+<div class="title">Figure 7. Searching for <em>CONFIG_HIGH_RES_TIMERS</em></div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-high-res-timers-1" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-high-res-timers-1.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-high-res-timers-1.png" alt="rt preempt menuconfig search config high res timers 1" width="640" height="480"></a>
+</div>
+<div class="title">Figure 8. Search results for <em>CONFIG_HIGH_RES_TIMERS</em>. It is located at &#8594; General setup &#8594; Timers subsystem</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="rt-preempt-menuconfig-search-config-high-res-timers-4" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/rt-preempt-menuconfig-search-config-high-res-timers-4.png"><img src="http://zeuzoix.github.io/techeuphoria/images/rt-preempt-menuconfig-search-config-high-res-timers-4.png" alt="rt preempt menuconfig search config high res timers 4" width="640" height="480"></a>
+</div>
+<div class="title">Figure 9. The CONFIG_HIGH_RES_TIMERS is enabled</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>After saving and exiting the <em>menuconfig</em> screen the build will proceed.
+The build is successful and we get similar results as the previous build
+in terms of output logs from the build script.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+.
+  LD [M]  sound/usb/misc/snd-ua101.ko
+  LD [M]  sound/usb/snd-usb-audio.ko
+  LD [M]  sound/usb/snd-usbmidi-lib.ko
+-----------------------------
+make -j2 ARCH=arm LOCALVERSION=-bone1 CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- dtbs
+-----------------------------
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+‘arch/arm/boot/zImage’ -&gt; ‘/home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage’
+‘.config’ -&gt; ‘/home/conrad/Git/bb-kernel/deploy/config-3.18.5-rt2-bone1’
+-rwxrwxr-x 1 conrad conrad 6.7M Apr 15 21:57 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1.zImage        <i class="conum" data-value="1"></i><b>(1)</b>
+-----------------------------
+Building modules archive...
+Compressing 3.18.5-rt2-bone1-modules.tar.gz...
+-rw-rw-r-- 1 conrad conrad 18M Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.18.5-rt2-bone1-firmware.tar.gz...
+-rw-rw-r-- 1 conrad conrad 1.2M Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+Compressing 3.18.5-rt2-bone1-dtbs.tar.gz...
+-rw-rw-r-- 1 conrad conrad 952K Apr 15 21:58 /home/conrad/Git/bb-kernel/deploy/3.18.5-rt2-bone1-dtbs.tar.gz        <i class="conum" data-value="2"></i><b>(2)</b>
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.18.5-rt2-bone1]                <i class="conum" data-value="3"></i><b>(3)</b>
+-----------------------------</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The full real-time zImage is built</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device tree binaries archive. This should ideally be the same everytime
+unless we modify the device tree source files.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Version of the kernel that was built which is <em>3.18.5-rt2-bone1</em></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="booting-the-rt-preempt-kernel"><a class="anchor" href="#booting-the-rt-preempt-kernel"></a>Booting The RT-Preempt Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To test the kernel we copy the <em>3.18.5-rt2-bone1.zImage</em> to the TFTP server
+folder with a slightly different name i.e. 3.18.5-rt2-bone1.rt.zImage in
+order to differentiate it from our previous image built without RT-Preempt
+support. The rest of the steps are similar to our previous kernel load.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+.
+
+U-Boot# tftpboot 0x81000000 3.18.5-rt2-bone1.rt.zImage                        <i class="conum" data-value="1"></i><b>(1)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename '3.18.5-rt2-bone1.rt.zImage'.
+Load address: 0x81000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         ######################
+         1.3 MiB/s
+done
+Bytes transferred = 6991248 (6aad90 hex)
+U-Boot# tftpboot 0x82000000 am335x-boneblack.3.18.5-rt2-bone1.dtb        <i class="conum" data-value="2"></i><b>(2)</b>
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.100
+Filename 'am335x-boneblack.3.18.5-rt2-bone1.dtb'.
+Load address: 0x82000000
+Loading: #####
+         1.1 MiB/s
+done
+Bytes transferred = 65155 (fe83 hex)
+U-Boot# bootz 0x81000000 - 0x82000000                                        <i class="conum" data-value="3"></i><b>(3)</b>
+Kernel image @ 0x81000000 [ 0x000000 - 0x6aad90 ]
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Using Device Tree in place at 82000000, end 82012e82
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 3.18.5-rt2-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015
+[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d
+.
+.
+.
+[    7.370106] Freeing unused kernel memory: 452K (c0977000 - c09e8000)
+Starting logging: OK
+Initializing random number generator... [    7.890589] random: dd urandom read with 67 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot
+buildroot login: root
+#
+# [  206.655634] random: nonblocking pool is initialized
+# dmesg | grep -ri &quot;preempt&quot;
+[    0.000000] Linux version 3.18.5-rt2-bone1 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015
+[    0.000000] Preemptible hierarchical RCU implementation.
+# uname -a
+Linux buildroot 3.18.5-rt2-bone1 #3 PREEMPT RT Wed Apr 15 21:54:59 IST 2015 armv7l GNU/Linux        <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Downloading <em>3.18.5-rt2-bone1.rt.zImage</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Downloading <em>am335x-boneblack.3.18.5-rt2-bone1.dtb</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Booting the zImage</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The PREEMPT RT differentiates this kernel string version from the previous one.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusion"><a class="anchor" href="#conclusion"></a>Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We were successfully able to port RT-Preempt to the 3.18 kernel from Robert Nelson&#8217;s
+bb-kernel branch and boot the fully real-time kernel. We can now carry out tests with
+this kernel and benchmark its performance.</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+, <a href="/techeuphoria/posts/tag/beagleboneblack/">beagleboneblack</a>
+, <a href="/techeuphoria/posts/tag/rtlinux/">rtlinux</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2015/04/13/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/">Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</a>
 </h1>
 <h4>
 <em>by</em>
@@ -66,7 +799,9 @@ April 13, 2015
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we&#8217;ll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson&#8217;s bb-kernel tree.</p>
+<p>The RT-Preempt patch converts Linux into a fully preemptible kernel. In the first part we&#8217;ll build the 3.18 version of the kernel for the BeagleBone Black using Robert Nelson&#8217;s bb-kernel tree. It is important to make sure that the kernel source code on which we
+will be applying our patches does not have any problems before we go on to
+build and test the realtime preemptible kernel.</p>
 </div>
 </div>
 </div>
@@ -865,6 +1600,16 @@ tree binary</td>
 </table>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusion"><a class="anchor" href="#conclusion"></a>Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We were able to successfully build and test the 3.18 kernel from Robert Nelson&#8217;s
+bb-kernel branch. This is important as it gives us the confidence to proceed with
+applying the rt-preempt patches.</p>
 </div>
 </div>
 </div>
@@ -3720,45 +4465,6 @@ nice description of the different types of caches:</p>
 , <a href="/techeuphoria/posts/tag/cache/">cache</a>
 , <a href="/techeuphoria/posts/tag/arm/">arm</a>
 , <a href="/techeuphoria/posts/tag/cortex/">cortex</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/12/06/linux-linked-lists/">Linux Linked Lists</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-12-06T00:00:00+00:00">
-December  6, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="paragraph">
-<p>The linux kernel has a very peculiar implementation of the linked lists data
-structure. The linked list is actually a circular linked list. The following
-article is useful in understanding more about the design:<br>
-<a href="http://kernelnewbies.org/FAQ/LinkedLists" target="_blank">http://kernelnewbies.org/FAQ/LinkedLists</a></p>
-</div>
-<div class="paragraph">
-<p>What&#8217;s interesting is that the entire implementation is conveniently located
-in one header file. This shows that the open source movement when done right
-gives you the best solution possible over time:<br>
-<a href="http://lxr.free-electrons.com/source/include/linux/list.h" target="_blank">http://lxr.free-electrons.com/source/include/linux/list.h</a></p>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/programming/">programming</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/c/">c</a></div>
 </footer>
 <hr>
 </article>

@@ -49,6 +49,45 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/12/06/linux-linked-lists/">Linux Linked Lists</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-12-06T00:00:00+00:00">
+December  6, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>The linux kernel has a very peculiar implementation of the linked lists data
+structure. The linked list is actually a circular linked list. The following
+article is useful in understanding more about the design:<br>
+<a href="http://kernelnewbies.org/FAQ/LinkedLists" target="_blank">http://kernelnewbies.org/FAQ/LinkedLists</a></p>
+</div>
+<div class="paragraph">
+<p>What&#8217;s interesting is that the entire implementation is conveniently located
+in one header file. This shows that the open source movement when done right
+gives you the best solution possible over time:<br>
+<a href="http://lxr.free-electrons.com/source/include/linux/list.h" target="_blank">http://lxr.free-electrons.com/source/include/linux/list.h</a></p>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/programming/">programming</a>
+, <a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/c/">c</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/09/07/i2c-twi-with-avr-data-transfer/">I2C/TWI with AVR Data Transfer</a>
 </h1>
 <h4>
@@ -1007,127 +1046,6 @@ and slave modes</p>
 , <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
 , <a href="/techeuphoria/posts/tag/twi/">twi</a>
 , <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2013/02/03/kernel-module-makefiles/">Kernel Module Makefiles</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2013-02-03T00:00:00+00:00">
-February  3, 2013
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="paragraph">
-<p>You&#8217;ve got your kernel module code ready and you want to build it. The following is a simple kernel module makefile which will help you
-do this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="makefile"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>obj-m += hello-1.o
-
-all:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules <i class="conum" data-value="1"></i><b>(1)</b>
-
-clean:
-        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean <i class="conum" data-value="2"></i><b>(2)</b></pre></td>
-</tr></table></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>modules is the target to build the kernel module</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>clean is the target to clean the kernel module</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The above makefile will fail if used directly please replace the spaces
-at lines 4 and 7 with TABS or please download the following from here
-<a href="https://docs.google.com/file/d/0B2qMThwa-F02dlBiaTl1dktTUWc/edit?usp=sharing" target="_blank">makefile1</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>In this explanation there are two makefiles which I will be referring to.
-The first is the one shown above and the second is the main kernel makefile
-which is located in the kernel source directory.</p>
-</div>
-<div class="paragraph">
-<p>When you compile the kernel the make process assembles a list of kernel
-drirvers and modules that are to be compiled as loadable kernel modules
-defined by obj-m.</p>
-</div>
-<div class="paragraph">
-<p>In our example above we indicate that we want to create a kernel module out
-of the hello-1.o object file which is eventually built from our hello-1.c
-source code.</p>
-</div>
-<div class="paragraph">
-<p>There are two targets for the makefile i.e. all and clean. They invoke the
-<em>'modules'</em> and <em>'clean'</em> targets of the main kernel makefile.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s understand the option switches.</p>
-</div>
-<div class="paragraph">
-<p>The <em>-C</em> option switches the make command to the kernel source directory.
-Basically this is the directory of the source code used to build the kernel
-image with the main kernel makefile. Here <em>$(shell uname -r)</em> is a convenient
-way of specifying the name of the live kernel being run when the make
-command is executed.</p>
-</div>
-<div class="paragraph">
-<p>The <em>M</em> option tells the main kernel makefile to go to the present working
-directory and read the makefile present there. This is a way of telling
-the main kernel makefile to read the the makefile shown above. This enables
-the main kernel makefile to add the <em>hello-1.o</em> object to its list of modules
-to be built.</p>
-</div>
-<div class="paragraph">
-<p>Here <em>$(PWD)</em> is a convenient way of specifying the present working directory.</p>
-</div>
-<div class="paragraph">
-<p>More information is available at:<br>
-<a href="http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html" target="_blank">http://www.tldp.org/LDP/lkmpg/2.6/html/x181.html</a></p>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/kernel/">kernel</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/programming/">programming</a></div>
 </footer>
 <hr>
 </article>
