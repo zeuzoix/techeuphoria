@@ -5,13 +5,13 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2015-04-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/" rel="alternate" type="text/html" />
 <author>
@@ -827,7 +827,7 @@ this kernel and benchmark its performance.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2015-04-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" rel="alternate" type="text/html" />
 <author>
@@ -1774,7 +1774,7 @@ applying the rt-preempt patches.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2015-02-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
 <author>
@@ -2172,7 +2172,7 @@ drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2015-01-28T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
 <author>
@@ -3760,7 +3760,7 @@ next step which is configuration of the BSP.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -4142,7 +4142,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -4456,7 +4456,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2015-04-16T16:06:13+05:30</updated>
+<updated>2015-04-20T09:47:22+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
