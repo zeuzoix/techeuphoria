@@ -5,13 +5,589 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-21T11:28:59+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/</id>
+<title>Benchmarking RT Preempt Kernel 3.18 On BeagleBone Black</title>
+<updated>2015-04-21T11:28:59+05:30</updated>
+<published>2015-04-21T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="kernel"></category>
+<category term="beagleboneblack"></category>
+<category term="rtlinux"></category>
+<summary>
+
+
+
+In this post we will run the cyclictest utility and benchmark the RT Preempt Kernel on BeagleBone Black We need to check the realtime performance of the RT Preempt kernel against
+the vanilla kernel. To do this we will run the cyclictest utility and measure the
+performance.
+
+
+
+
+Clone The rt-tests Sources
+
+
+First clone the source code
+
+
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git
+Cloning into 'rt-tests'...
+remote: Counting objects: 2830, done.
+remote: Total 2830 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (2830/2830), 512.57 KiB | 164.00 KiB/s, done.
+Resolving deltas: 100% (1692/1692), done.
+Checking connectivity... done.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$
+
+
+
+
+
+Cross-Compiling The rt-tests Sources
+
+
+Cross-compile the rt-tests by passing the CC as arm-linux-gnueabi-gcc.
+
+
+
+
+
+
+
+
+Do not use CROSS_COMPILE
+
+The cyclictest wiki...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this post we will run the cyclictest utility and benchmark the RT Preempt Kernel on BeagleBone Black We need to check the realtime performance of the RT Preempt kernel against
+the vanilla kernel. To do this we will run the &lt;a href=&quot;https://rt.wiki.kernel.org/index.php/Cyclictest&quot; target=&quot;_blank&quot;&gt;cyclictest&lt;/a&gt; utility and measure the
+performance.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;clone-the-em-rt-tests-em-sources&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#clone-the-em-rt-tests-em-sources&quot;&gt;&lt;/a&gt;Clone The &lt;em&gt;rt-tests&lt;/em&gt; Sources&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First clone the source code&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git
+Cloning into 'rt-tests'...
+remote: Counting objects: 2830, done.
+remote: Total 2830 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (2830/2830), 512.57 KiB | 164.00 KiB/s, done.
+Resolving deltas: 100% (1692/1692), done.
+Checking connectivity... done.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;cross-compiling-the-em-rt-tests-em-sources&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#cross-compiling-the-em-rt-tests-em-sources&quot;&gt;&lt;/a&gt;Cross-Compiling The &lt;em&gt;rt-tests&lt;/em&gt; Sources&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cross-compile the rt-tests by passing the CC as arm-linux-gnueabi-gcc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock important&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-important&quot; title=&quot;Important&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;Do not use CROSS_COMPILE&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The cyclictest wiki states that CROSS_COMPILE is to be used in order to
+cross-compile the sources. However this is not honored by the Makefile
+and will lead to a build of x86 binaries instead of ARM binaries. Use
+CC instead and it should work.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ make CC=arm-linux-gnueabi-gcc clean                &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+for F in cyclictest pi_stress pip_stress pmqtest rt-migrate-test signaltest ptsematest sigwaittest svsematest sendme hackbench *.o .depend *.*~ *.orig *.rej rt-tests.spec *.d *.a  ChangeLog; do find -type f -name $F | xargs rm -f; done
+rm -f hwlatdetect
+rm -f tags
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ make CC=arm-linux-gnueabi-gcc all                &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/cyclictest/cyclictest.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+In file included from src/cyclictest/cyclictest.c:39:0:
+src/cyclictest/rt_numa.h: In function ‘numa_on_and_available’:
+src/cyclictest/rt_numa.h:259:2: warning: implicit declaration of function ‘numa_available’ [-Wimplicit-function-declaration]
+src/cyclictest/cyclictest.c: In function ‘tracemark’:
+src/cyclictest/cyclictest.c:433:7: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+src/cyclictest/cyclictest.c: In function ‘tracing’:
+src/cyclictest/cyclictest.c:446:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+src/cyclictest/cyclictest.c:456:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-utils.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/error.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-get_cpu.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-sched.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+ar rcs librttest.a rt-utils.o error.o rt-get_cpu.o rt-sched.o
+arm-linux-gnueabi-gcc -Wall -Wno-nonnull -O2  -o cyclictest cyclictest.o librttest.a -lrt -lpthread -lrttest -L.
+.
+.
+.
+ln -s src/hwlatdetect/hwlatdetect.py hwlatdetect
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ file cyclictest                                                                &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+cyclictest: ELF 32-bit LSB  executable, ARM, EABI5 version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=f849bb56948e70e80282318453629a15d4eb4844, not stripped
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ cp cyclictest ~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/bin/.        &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Cleaning the source code&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Cross-compiling all&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The &lt;em&gt;file&lt;/em&gt; command shows it has been cross-compiled&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Copy the cyclictest to the NFS root filesystem folder&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally we boot up the board and test if we’re able to print the version of
+&lt;em&gt;cyclictest&lt;/em&gt; with the &quot;-h&quot; option.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# cyclictest --help
+cyclictest V 0.91        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+Usage:
+cyclictest &amp;lt;options&amp;gt;
+.
+.
+.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Version is 0.91&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;different-configurations-of-the-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#different-configurations-of-the-kernel&quot;&gt;&lt;/a&gt;Different Configurations Of The Kernel&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will be evaluating for different versions of the RT Preempt 3.18 kernel
+for BeagleBone Black. The instructions to port RT Preempt to the BeagleBone
+Black kernel are given in the following posts:&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/[http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/^]&lt;/div&gt;
+&lt;p&gt;We create four different builds with different preemption configuraitons
+to compare the real-time behavior of the kernels. To change the configuration
+we go to Kernel Features --→ Preemption Model and select the type of
+preemption required.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;no-forced-preemption&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#no-forced-preemption&quot;&gt;&lt;/a&gt;No Forced Preemption&lt;/h3&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;benchmark-rt-no-forced-preemption&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/benchmark-rt-no-forced-preemption.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-no-forced-preemption.png&quot; alt=&quot;benchmark rt no forced preemption&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. Preemption model for no forced preemption&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;preemptible-kernel-low-latency-desktop&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#preemptible-kernel-low-latency-desktop&quot;&gt;&lt;/a&gt;Preemptible Kernel (Low-Latency Desktop)&lt;/h3&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;benchmark-rt-preemptible-kernel-low-latency&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/benchmark-rt-preemptible-kernel-low-latency.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-preemptible-kernel-low-latency.png&quot; alt=&quot;benchmark rt preemptible kernel low latency&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 2. Preemption model for preemptible kernel (low latency desktop)&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;preemptible-kernel-basic-rt&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#preemptible-kernel-basic-rt&quot;&gt;&lt;/a&gt;Preemptible Kernel (Basic RT)&lt;/h3&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;benchmark-rt-preemptible-kernel-basic-rt&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/benchmark-rt-preemptible-kernel-basic-rt.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-preemptible-kernel-basic-rt.png&quot; alt=&quot;benchmark rt preemptible kernel basic rt&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 3. Preemption model for basic rt preemptible kernel&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;fully-preemptible-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#fully-preemptible-kernel&quot;&gt;&lt;/a&gt;Fully Preemptible Kernel&lt;/h3&gt;
+&lt;div class=&quot;exampleblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div id=&quot;benchmark-rt-fully-preemptible-kernel&quot; class=&quot;imageblock&quot; style=&quot;text-align: center&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;../../../../../images/benchmark-rt-fully-preemptible-kernel.png&quot;&gt;&lt;img src=&quot;http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-fully-preemptible-kernel.png&quot; alt=&quot;benchmark rt fully preemptible kernel&quot; width=&quot;640&quot; height=&quot;480&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 4. Preemption model for fully preemptible kernel&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;torturing-the-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#torturing-the-kernel&quot;&gt;&lt;/a&gt;Torturing The Kernel&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We’ll follow the steps given in the following link to benchmark the various kernels:&lt;br&gt;
+&lt;a href=&quot;http://erlerobotics.gitbooks.io/erle-robotics-erle-brain-a-linux-brain-for-drones/content/en/software/kernel.html&quot; target=&quot;_blank&quot;&gt;http://erlerobotics.gitbooks.io/erle-robotics-erle-brain-a-linux-brain-for-drones/content/en/software/kernel.html&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First we run &lt;em&gt;stress&lt;/em&gt; in the background to spawn 64 CPU intensive tasks,
+64 input/ouput tasks and 2 tasks spinning on malloc/free.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M &amp;amp;
+# stress: info: [220] dispatching hogs: 64 cpu, 64 io, 2 vm, 0 hdd        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+
+#
+# ps
+PID   USER     COMMAND
+    1 root     init
+    2 root     [kthreadd]
+    3 root     [ksoftirqd/0]
+.
+.
+.
+  220 root     stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M                &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+  221 root     stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M
+.
+.
+.
+  351 root     ps
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;Running &lt;em&gt;stress&lt;/em&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The tasks spawned by &lt;em&gt;stress&lt;/em&gt; are listed using the &lt;em&gt;ps&lt;/em&gt; command&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The load gradually increases and we wait until it is greater than
+100 as shown below. We use &lt;em&gt;uptime&lt;/em&gt; to measure the load on the system. It gives
+the system load averages for the past 1, 5 and 15 minutes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;System load averages is the average number of processes that are either in a
+runnable or uninterruptable state. A process in a runnable state is either
+using the CPU or waiting to use the CPU. A process in uninterruptable state
+is waiting for some I/O access, eg waiting for disk.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# uptime
+ 00:52:19 up 45 min,  load average: 28.94, 6.42, 2.44
+# uptime
+ 00:52:24 up 45 min,  load average: 37.03, 8.47, 3.12
+# uptime
+ 00:52:26 up 45 min,  load average: 37.03, 8.47, 3.12
+# uptime
+ 00:52:28 up 45 min,  load average: 44.55, 10.51, 3.81
+# uptime
+ 00:52:30 up 45 min,  load average: 44.55, 10.51, 3.81
+# uptime
+ 00:52:41 up 46 min,  load average: 57.69, 14.44, 5.16
+#
+# uptime
+ 00:56:54 up 50 min,  load average: 128.98, 80.81, 35.15        &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+# uptime
+ 01:03:24 up 56 min,  load average: 130.07, 116.68, 67.69        &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The load crosses 128 which indicates that on average the 130(64 + 64 + 2) tasks are created&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;
+&lt;/td&gt;
+&lt;td&gt;The load after 3 minutes has increased to ~130 and the 5 minute load has also increased to 67.69&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;running-em-cyclictest-em&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#running-em-cyclictest-em&quot;&gt;&lt;/a&gt;Running &lt;em&gt;cyclictest&lt;/em&gt;
+&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After the system has been &quot;stressed&quot; out we can run the &lt;em&gt;cyclictest&lt;/em&gt; to measure
+the latencies(us). This will give us the realtime performance of the kernels.
+We will now compare the results of the different kernels.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;no-forced-preemption-2&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#no-forced-preemption-2&quot;&gt;&lt;/a&gt;No Forced Preemption&lt;/h3&gt;
+&lt;div class=&quot;dlist&quot;&gt;
+&lt;dl&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Min&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;15 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Avg&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;36 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Max&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;2235 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.62 100.00 48.77 131/180 279
+
+T: 0 (  283) P:80 I:10000 C:  10000 Min:     15 Act:   31 Avg:   36 Max:    2235
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;preemptible-low-latency-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#preemptible-low-latency-kernel&quot;&gt;&lt;/a&gt;Preemptible Low Latency Kernel&lt;/h3&gt;
+&lt;div class=&quot;dlist&quot;&gt;
+&lt;dl&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Min&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;19 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Avg&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;32 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Max&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;233 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.61 95.66 45.16 131/186 248
+
+T: 0 (  247) P:80 I:10000 C:  10000 Min:     19 Act:   32 Avg:   32 Max:     233
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;preemptible-basic-rt-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#preemptible-basic-rt-kernel&quot;&gt;&lt;/a&gt;Preemptible Basic RT Kernel&lt;/h3&gt;
+&lt;div class=&quot;dlist&quot;&gt;
+&lt;dl&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Min&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;19 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Avg&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;34 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Max&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;183 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.78 98.49 47.44 132/202 260
+
+T: 0 (  260) P:80 I:10000 C:  10000 Min:     19 Act:   36 Avg:   34 Max:     183
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;fully-preemptible-rt-kernel&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#fully-preemptible-rt-kernel&quot;&gt;&lt;/a&gt;Fully Preemptible RT Kernel&lt;/h3&gt;
+&lt;div class=&quot;dlist&quot;&gt;
+&lt;dl&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Min&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;14 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Avg&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;26 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class=&quot;hdlist1&quot;&gt;Max&lt;/dt&gt;
+&lt;dd&gt;
+&lt;p&gt;43 us&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;# cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.74 111.39 60.19 68/205 269
+
+T: 0 (  268) P:80 I:10000 C:  10000 Min:     14 Act:   26 Avg:   26 Max:      43
+#&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;summary-of-tests&quot;&gt;
+&lt;a class=&quot;anchor&quot; href=&quot;#summary-of-tests&quot;&gt;&lt;/a&gt;Summary Of Tests&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We see that the minimum, average and maximum latencies are lowest for the
+fully preemptible RT Kernel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;table class=&quot;tableblock frame-all grid-all spread&quot;&gt;
+&lt;colgroup&gt;
+&lt;col style=&quot;width: 25%;&quot;&gt;
+&lt;col style=&quot;width: 25%;&quot;&gt;
+&lt;col style=&quot;width: 25%;&quot;&gt;
+&lt;col style=&quot;width: 25%;&quot;&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Kernel Type&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Min (us)&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Avg (us)&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Max(us)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;No Forced Preemption&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;15&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;36&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2235&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Preemptible Low Latency Kernel&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;19&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;32&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;233&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Preemptible Basic RT Kernel&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;19&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;34&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;183&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Fully Preemptible RT Kernel&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;26&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;43&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The compiled kernels, configuration files, generated device tree binaries, modules
+and firmware are available &lt;a href=&quot;https://github.com/zeuzoix/compiled-binaries/tree/master/benchmark-rt-kernels&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2015-04-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/" rel="alternate" type="text/html" />
 <author>
@@ -827,7 +1403,7 @@ this kernel and benchmark its performance.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2015-04-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" rel="alternate" type="text/html" />
 <author>
@@ -1774,7 +2350,7 @@ applying the rt-preempt patches.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2015-02-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
 <author>
@@ -2172,7 +2748,7 @@ drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2015-01-28T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
 <author>
@@ -3760,7 +4336,7 @@ next step which is configuration of the BSP.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -4142,7 +4718,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -4456,7 +5032,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2015-04-20T09:47:22+05:30</updated>
+<updated>2015-04-20T09:56:59+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -4806,83 +5382,6 @@ MODULE_LICENSE(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;
 MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;zeuzoix&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);
 MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/</id>
-<title>Caches</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2014-01-15T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/15/caches/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="processors"></category>
-<category term="programming"></category>
-<category term="cache"></category>
-<category term="arm"></category>
-<category term="cortex"></category>
-<summary>
-
-Let&#8217;s talk about the cache and its requirement in a computing system. The word
-cache is derived from the french word cacher which means to hide.
-
-
-In a nutshell it&#8217;s a memory subsystem which improves the speed of execution of
-a thread by providing faster access to instructions and data based on their
-temporal and spacial characteristics in the program.
-
-
-With memory there&#8217;s typically a trade off between space and time. If speed is
-required then the storage capacity of the memory reduces particularly because
-the cost of the memory goes up with speed.
-
-
-So system designers often incorporate a cache in between the processor and main
-memory which...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Let&amp;#8217;s talk about the cache and its requirement in a computing system. The word
-cache is derived from the french word cacher which means to &lt;em&gt;hide&lt;/em&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In a nutshell it&amp;#8217;s a memory subsystem which improves the speed of execution of
-a thread by providing faster access to instructions and data based on their
-temporal and spacial characteristics in the program.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;With memory there&amp;#8217;s typically a trade off between space and time. If speed is
-required then the storage capacity of the memory reduces particularly because
-the cost of the memory goes up with speed.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;So system designers often incorporate a cache in between the processor and main
-memory which can significantly improve the speed at which memory access occurs.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The cache can be of different levels typically most processors these days have
-an inbuilt cache termed as L1 which is the smallest memory device in the
-hierarchy of memory in the system. Some processors like ARM Cortex&amp;#8217;s A series
-have an in built L2 cache also.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;There are several popular designs for caches. The following videos give a very
-nice description of the different types of caches:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/bTj0vFs8ndI&quot; target=&quot;_blank&quot;&gt;Direct Mapped Cache&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/YAz0qJf05ko&quot; target=&quot;_blank&quot;&gt;Associative Cache&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://youtu.be/ReKzEGLlGfk&quot; target=&quot;_blank&quot;&gt;Set Associative Cache&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
 &lt;/div&gt;
 </content>
 </entry>

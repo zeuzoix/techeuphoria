@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/">Benchmarking RT Preempt Kernel 3.18 On BeagleBone Black</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2015-04-21T00:00:00+00:00">
+April 21, 2015
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this post we will run the cyclictest utility and benchmark the RT Preempt Kernel on BeagleBone Black We need to check the realtime performance of the RT Preempt kernel against
+the vanilla kernel. To do this we will run the <a href="https://rt.wiki.kernel.org/index.php/Cyclictest" target="_blank">cyclictest</a> utility and measure the
+performance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="clone-the-em-rt-tests-em-sources"><a class="anchor" href="#clone-the-em-rt-tests-em-sources"></a>Clone The <em>rt-tests</em> Sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First clone the source code</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git
+Cloning into 'rt-tests'...
+remote: Counting objects: 2830, done.
+remote: Total 2830 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (2830/2830), 512.57 KiB | 164.00 KiB/s, done.
+Resolving deltas: 100% (1692/1692), done.
+Checking connectivity... done.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cross-compiling-the-em-rt-tests-em-sources"><a class="anchor" href="#cross-compiling-the-em-rt-tests-em-sources"></a>Cross-Compiling The <em>rt-tests</em> Sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Cross-compile the rt-tests by passing the CC as arm-linux-gnueabi-gcc.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">Do not use CROSS_COMPILE</div>
+<div class="paragraph">
+<p>The cyclictest wiki states that CROSS_COMPILE is to be used in order to
+cross-compile the sources. However this is not honored by the Makefile
+and will lead to a build of x86 binaries instead of ARM binaries. Use
+CC instead and it should work.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ make CC=arm-linux-gnueabi-gcc clean                <i class="conum" data-value="1"></i><b>(1)</b>
+for F in cyclictest pi_stress pip_stress pmqtest rt-migrate-test signaltest ptsematest sigwaittest svsematest sendme hackbench *.o .depend *.*~ *.orig *.rej rt-tests.spec *.d *.a  ChangeLog; do find -type f -name $F | xargs rm -f; done
+rm -f hwlatdetect
+rm -f tags
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ make CC=arm-linux-gnueabi-gcc all                <i class="conum" data-value="2"></i><b>(2)</b>
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/cyclictest/cyclictest.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+In file included from src/cyclictest/cyclictest.c:39:0:
+src/cyclictest/rt_numa.h: In function ‘numa_on_and_available’:
+src/cyclictest/rt_numa.h:259:2: warning: implicit declaration of function ‘numa_available’ [-Wimplicit-function-declaration]
+src/cyclictest/cyclictest.c: In function ‘tracemark’:
+src/cyclictest/cyclictest.c:433:7: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+src/cyclictest/cyclictest.c: In function ‘tracing’:
+src/cyclictest/cyclictest.c:446:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+src/cyclictest/cyclictest.c:456:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-utils.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/error.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-get_cpu.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+arm-linux-gnueabi-gcc -D VERSION_STRING=0.91 -c src/lib/rt-sched.c -Wall -Wno-nonnull -O2 -D_GNU_SOURCE -Isrc/include
+ar rcs librttest.a rt-utils.o error.o rt-get_cpu.o rt-sched.o
+arm-linux-gnueabi-gcc -Wall -Wno-nonnull -O2  -o cyclictest cyclictest.o librttest.a -lrt -lpthread -lrttest -L.
+.
+.
+.
+ln -s src/hwlatdetect/hwlatdetect.py hwlatdetect
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ file cyclictest                                                                <i class="conum" data-value="3"></i><b>(3)</b>
+cyclictest: ELF 32-bit LSB  executable, ARM, EABI5 version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=f849bb56948e70e80282318453629a15d4eb4844, not stripped
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ cp cyclictest ~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/bin/.        <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Cleaning the source code</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Cross-compiling all</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <em>file</em> command shows it has been cross-compiled</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Copy the cyclictest to the NFS root filesystem folder</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally we boot up the board and test if we&#8217;re able to print the version of
+<em>cyclictest</em> with the "-h" option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cyclictest --help
+cyclictest V 0.91        <i class="conum" data-value="1"></i><b>(1)</b>
+Usage:
+cyclictest &lt;options&gt;
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Version is 0.91</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="different-configurations-of-the-kernel"><a class="anchor" href="#different-configurations-of-the-kernel"></a>Different Configurations Of The Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will be evaluating for different versions of the RT Preempt 3.18 kernel
+for BeagleBone Black. The instructions to port RT Preempt to the BeagleBone
+Black kernel are given in the following posts:<br></p>
+</div>
+<div class="paragraph">
+<div class="title">http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/[http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/^]</div>
+<p>We create four different builds with different preemption configuraitons
+to compare the real-time behavior of the kernels. To change the configuration
+we go to Kernel Features --&#8594; Preemption Model and select the type of
+preemption required.</p>
+</div>
+<div class="sect2">
+<h3 id="no-forced-preemption"><a class="anchor" href="#no-forced-preemption"></a>No Forced Preemption</h3>
+<div class="exampleblock">
+<div class="content">
+<div id="benchmark-rt-no-forced-preemption" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/benchmark-rt-no-forced-preemption.png"><img src="http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-no-forced-preemption.png" alt="benchmark rt no forced preemption" width="640" height="480"></a>
+</div>
+<div class="title">Figure 1. Preemption model for no forced preemption</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="preemptible-kernel-low-latency-desktop"><a class="anchor" href="#preemptible-kernel-low-latency-desktop"></a>Preemptible Kernel (Low-Latency Desktop)</h3>
+<div class="exampleblock">
+<div class="content">
+<div id="benchmark-rt-preemptible-kernel-low-latency" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/benchmark-rt-preemptible-kernel-low-latency.png"><img src="http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-preemptible-kernel-low-latency.png" alt="benchmark rt preemptible kernel low latency" width="640" height="480"></a>
+</div>
+<div class="title">Figure 2. Preemption model for preemptible kernel (low latency desktop)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="preemptible-kernel-basic-rt"><a class="anchor" href="#preemptible-kernel-basic-rt"></a>Preemptible Kernel (Basic RT)</h3>
+<div class="exampleblock">
+<div class="content">
+<div id="benchmark-rt-preemptible-kernel-basic-rt" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/benchmark-rt-preemptible-kernel-basic-rt.png"><img src="http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-preemptible-kernel-basic-rt.png" alt="benchmark rt preemptible kernel basic rt" width="640" height="480"></a>
+</div>
+<div class="title">Figure 3. Preemption model for basic rt preemptible kernel</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="fully-preemptible-kernel"><a class="anchor" href="#fully-preemptible-kernel"></a>Fully Preemptible Kernel</h3>
+<div class="exampleblock">
+<div class="content">
+<div id="benchmark-rt-fully-preemptible-kernel" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/benchmark-rt-fully-preemptible-kernel.png"><img src="http://zeuzoix.github.io/techeuphoria/images/benchmark-rt-fully-preemptible-kernel.png" alt="benchmark rt fully preemptible kernel" width="640" height="480"></a>
+</div>
+<div class="title">Figure 4. Preemption model for fully preemptible kernel</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="torturing-the-kernel"><a class="anchor" href="#torturing-the-kernel"></a>Torturing The Kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll follow the steps given in the following link to benchmark the various kernels:<br>
+<a href="http://erlerobotics.gitbooks.io/erle-robotics-erle-brain-a-linux-brain-for-drones/content/en/software/kernel.html" target="_blank">http://erlerobotics.gitbooks.io/erle-robotics-erle-brain-a-linux-brain-for-drones/content/en/software/kernel.html</a></p>
+</div>
+<div class="paragraph">
+<p>First we run <em>stress</em> in the background to spawn 64 CPU intensive tasks,
+64 input/ouput tasks and 2 tasks spinning on malloc/free.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M &amp;
+# stress: info: [220] dispatching hogs: 64 cpu, 64 io, 2 vm, 0 hdd        <i class="conum" data-value="1"></i><b>(1)</b>
+
+#
+# ps
+PID   USER     COMMAND
+    1 root     init
+    2 root     [kthreadd]
+    3 root     [ksoftirqd/0]
+.
+.
+.
+  220 root     stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M                <i class="conum" data-value="2"></i><b>(2)</b>
+  221 root     stress --cpu 64 --io 64 --vm 2 --vm-bytes 128M
+.
+.
+.
+  351 root     ps
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Running <em>stress</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The tasks spawned by <em>stress</em> are listed using the <em>ps</em> command</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The load gradually increases and we wait until it is greater than
+100 as shown below. We use <em>uptime</em> to measure the load on the system. It gives
+the system load averages for the past 1, 5 and 15 minutes.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>System load averages is the average number of processes that are either in a
+runnable or uninterruptable state. A process in a runnable state is either
+using the CPU or waiting to use the CPU. A process in uninterruptable state
+is waiting for some I/O access, eg waiting for disk.</p>
+</div>
+</blockquote>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># uptime
+ 00:52:19 up 45 min,  load average: 28.94, 6.42, 2.44
+# uptime
+ 00:52:24 up 45 min,  load average: 37.03, 8.47, 3.12
+# uptime
+ 00:52:26 up 45 min,  load average: 37.03, 8.47, 3.12
+# uptime
+ 00:52:28 up 45 min,  load average: 44.55, 10.51, 3.81
+# uptime
+ 00:52:30 up 45 min,  load average: 44.55, 10.51, 3.81
+# uptime
+ 00:52:41 up 46 min,  load average: 57.69, 14.44, 5.16
+#
+# uptime
+ 00:56:54 up 50 min,  load average: 128.98, 80.81, 35.15        <i class="conum" data-value="1"></i><b>(1)</b>
+# uptime
+ 01:03:24 up 56 min,  load average: 130.07, 116.68, 67.69        <i class="conum" data-value="2"></i><b>(2)</b>
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The load crosses 128 which indicates that on average the 130(64 + 64 + 2) tasks are created</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The load after 3 minutes has increased to ~130 and the 5 minute load has also increased to 67.69</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-em-cyclictest-em"><a class="anchor" href="#running-em-cyclictest-em"></a>Running <em>cyclictest</em></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After the system has been "stressed" out we can run the <em>cyclictest</em> to measure
+the latencies(us). This will give us the realtime performance of the kernels.
+We will now compare the results of the different kernels.</p>
+</div>
+<div class="sect2">
+<h3 id="no-forced-preemption-2"><a class="anchor" href="#no-forced-preemption-2"></a>No Forced Preemption</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Min</dt>
+<dd>
+<p>15 us</p>
+</dd>
+<dt class="hdlist1">Avg</dt>
+<dd>
+<p>36 us</p>
+</dd>
+<dt class="hdlist1">Max</dt>
+<dd>
+<p>2235 us</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.62 100.00 48.77 131/180 279
+
+T: 0 (  283) P:80 I:10000 C:  10000 Min:     15 Act:   31 Avg:   36 Max:    2235
+#</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="preemptible-low-latency-kernel"><a class="anchor" href="#preemptible-low-latency-kernel"></a>Preemptible Low Latency Kernel</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Min</dt>
+<dd>
+<p>19 us</p>
+</dd>
+<dt class="hdlist1">Avg</dt>
+<dd>
+<p>32 us</p>
+</dd>
+<dt class="hdlist1">Max</dt>
+<dd>
+<p>233 us</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.61 95.66 45.16 131/186 248
+
+T: 0 (  247) P:80 I:10000 C:  10000 Min:     19 Act:   32 Avg:   32 Max:     233
+#</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="preemptible-basic-rt-kernel"><a class="anchor" href="#preemptible-basic-rt-kernel"></a>Preemptible Basic RT Kernel</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Min</dt>
+<dd>
+<p>19 us</p>
+</dd>
+<dt class="hdlist1">Avg</dt>
+<dd>
+<p>34 us</p>
+</dd>
+<dt class="hdlist1">Max</dt>
+<dd>
+<p>183 us</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.78 98.49 47.44 132/202 260
+
+T: 0 (  260) P:80 I:10000 C:  10000 Min:     19 Act:   36 Avg:   34 Max:     183
+#</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="fully-preemptible-rt-kernel"><a class="anchor" href="#fully-preemptible-rt-kernel"></a>Fully Preemptible RT Kernel</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Min</dt>
+<dd>
+<p>14 us</p>
+</dd>
+<dt class="hdlist1">Avg</dt>
+<dd>
+<p>26 us</p>
+</dd>
+<dt class="hdlist1">Max</dt>
+<dd>
+<p>43 us</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cyclictest -t1 -p 80 -n -i 10000 -l 10000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 130.74 111.39 60.19 68/205 269
+
+T: 0 (  268) P:80 I:10000 C:  10000 Min:     14 Act:   26 Avg:   26 Max:      43
+#</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="summary-of-tests"><a class="anchor" href="#summary-of-tests"></a>Summary Of Tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We see that the minimum, average and maximum latencies are lowest for the
+fully preemptible RT Kernel.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Kernel Type</th>
+<th class="tableblock halign-left valign-top">Min (us)</th>
+<th class="tableblock halign-left valign-top">Avg (us)</th>
+<th class="tableblock halign-left valign-top">Max(us)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No Forced Preemption</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2235</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preemptible Low Latency Kernel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">19</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">233</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preemptible Basic RT Kernel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">19</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">183</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully Preemptible RT Kernel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">26</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">43</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The compiled kernels, configuration files, generated device tree binaries, modules
+and firmware are available <a href="https://github.com/zeuzoix/compiled-binaries/tree/master/benchmark-rt-kernels" target="_blank">here</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/kernel/">kernel</a>
+, <a href="/techeuphoria/posts/tag/beagleboneblack/">beagleboneblack</a>
+, <a href="/techeuphoria/posts/tag/rtlinux/">rtlinux</a></div>
+</footer>
+<hr>
+<div id="comments">
+
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            var disqus_shortname = 'zeuzoix-techblog';
+            var disqus_url = "http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/";
+            var disqus_developer = null;
+            var disqus_identifier = "24c7f1aae9e53308be2620ab0661b3d840f28ca4";
+            (function() {
+              var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
+              dsq.src = "http://zeuzoix-techblog.disqus.com/embed.js";
+              (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=zeuzoix-techblog">comments powered by Disqus.</a></noscript>
+          
+</div>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2015
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-61553633-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</body>
+</html>

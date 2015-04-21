@@ -49,6 +49,82 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2013/05/12/an-introduction-to-i2c/">An Introduction To I2C</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2013-05-12T00:00:00+00:00">
+May 12, 2013
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div class="paragraph">
+<p>I2C is a serial data bus used to interface low speed peripherals developed by Phillips. Data sheets of other semi-conductor companies refer to their I2C
+like interface as the Two Wire Interface.</p>
+</div>
+<div class="paragraph">
+<p>I2C has two lines SDA and SCL. SDA is used for data input or output on the I2C
+interface. SCL is the clock interface and is used to synchronize the data
+communication on the SDA line.The device initiating and terminating the
+transmission is called the master. The master controls the SCL clock signal.</p>
+</div>
+<div class="paragraph">
+<p>There is only one master active during data communication on the bus however
+it does not mean the bus has to have only one master. The I2C protocol can
+support multiple masters and multiple slaves. In fact multiple masters can
+co-exist if they support an arbitration mechanism.</p>
+</div>
+<div class="paragraph">
+<p>Typically when a master initiates a transfer it will also sense the line in
+order to detect if another master is transmitting at the same time. The
+arbitration mechanism will force one master to hold back on the transmission.
+The master can wait and try again once the line is free or immediately switch
+to slave mode if the application requires the device to act in both master
+and slave modes</p>
+</div>
+<div class="paragraph">
+<p>More information at :<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://en.wikipedia.org/wiki/I2C" target="_blank">http://en.wikipedia.org/wiki/I2C</a></p>
+</li>
+<li>
+<p><a href="http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html" target="_blank">http://www.esacademy.com/en/library/technical-articles-and-documents/miscellaneous/i2c-bus.html</a></p>
+</li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="I2C" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../../../../../images/I2C.svg"><img src="http://zeuzoix.github.io/techeuphoria/images/I2C.svg" alt="I2C" width="640" height="480"></a>
+</div>
+<div class="title">Figure 1. Diagram showing an I2C configuration</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/electronics/">electronics</a>
+, <a href="/techeuphoria/posts/tag/protocols/">protocols</a>
+, <a href="/techeuphoria/posts/tag/i2c/">i2c</a>
+, <a href="/techeuphoria/posts/tag/twi/">twi</a>
+, <a href="/techeuphoria/posts/tag/bus/">bus</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2013/02/03/kernel-module-makefiles/">Kernel Module Makefiles</a>
 </h1>
 <h4>
