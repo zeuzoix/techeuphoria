@@ -13,6 +13,7 @@ endif::[]
 :port-rt-preempt-part2: http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/
 :erlerobotics-torturing-link: http://erlerobotics.gitbooks.io/erle-robotics-erle-brain-a-linux-brain-for-drones/content/en/software/kernel.html
 :cyclictest-wiki-link: https://rt.wiki.kernel.org/index.php/Cyclictest
+:benchmark-rt-kernels: https://github.com/zeuzoix/compiled-binaries/tree/master/benchmark-rt-kernels
 
 {excerpt} We need to check the realtime performance of the RT Preempt kernel against
 the vanilla kernel. To do this we will run the {cyclictest-wiki-link}[cyclictest^] utility and measure the
@@ -83,8 +84,8 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/rt-tests$ cp cyclictest ~/fe-ker
 ----
 <1> Cleaning the source code
 <2> Cross-compiling all
-<4> The _file_ command shows it has been cross-compiled
-<5> Copy the cyclictest to the NFS root filesystem folder
+<3> The _file_ command shows it has been cross-compiled
+<4> Copy the cyclictest to the NFS root filesystem folder
 
 Finally we boot up the board and test if we're able to print the version of
 _cyclictest_ with the "-h" option.
@@ -206,7 +207,7 @@ _____
 # uptime
  00:56:54 up 50 min,  load average: 128.98, 80.81, 35.15	<1>
 # uptime
- 01:03:24 up 56 min,  load average: 130.07, 116.68, 67.69
+ 01:03:24 up 56 min,  load average: 130.07, 116.68, 67.69	<2>
 # 
 ----
 <1> The load crosses 128 which indicates that on average the 130(64 + 64 + 2) tasks are created
@@ -282,3 +283,39 @@ policy: fifo: loadavg: 130.74 111.39 60.19 68/205 269
 T: 0 (  268) P:80 I:10000 C:  10000 Min:     14 Act:   26 Avg:   26 Max:      43
 # 
 ----
+
+== Summary Of Tests
+
+We see that the minimum, average and maximum latencies are lowest for the
+fully preemptible RT Kernel.
+
+[cols="4*", options="header"]
+|===
+|Kernel Type
+|Min (us)
+|Avg (us)
+|Max(us) 
+
+|No Forced Preemption
+|15
+|36
+|2235 
+
+|Preemptible Low Latency Kernel
+|19
+|32
+|233 
+
+|Preemptible Basic RT Kernel
+|19
+|34
+|183
+
+|Fully Preemptible RT Kernel
+|14
+|26
+|43
+|===
+
+The compiled kernels, configuration files, generated device tree binaries, modules
+and firmware are available {benchmark-rt-kernels}[here^].
