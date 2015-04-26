@@ -1,3 +1,6 @@
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
 == Developing Kernel Modules
 
 We will first take a look at a sample source code of a Linux kernel module.
@@ -66,3 +69,65 @@ that are used to export the symbol names that can be used by other modules: +
 EXPORT_SYMBOL(symbolname):: Exports a function or variable to all modules
 EXPORT_SYMBOL_GPL(symbolname):: Exports a function or variable to only GPL
 modules
+
+====
+[[symbols-exported-to-modules]]
+.Symbols exported to modules
+image::symbols-exported-to-modules.png[width="640", height="480", align="center", link={awestruct-imagesdir}/symbols-exported-to-modules.png]
+====
+
+////
+[ditaa, symbols-exported-to-modules]
+----
+                                                /---------------------------------------\        											
+                                                |              GPL Module 1             |
+                                                |                                       |
+                                                |    /----------------------------\     |
+                                                |    |                            |     |
+                                                |    |       void func4(){...}    |     |
+                                                |    |  EXPORT_SYMBOL_GPL(func4); |     |
+                                                |    |                            |     |
+  /---------------------------------------\     |    \----------------------------/     |
+  |                Kernel                 |     |                                       |
+  |                                       |     |    /----------\      /----------\     |
+  |    /----------------------------\     |     |    |          |      |          |     |
+  |    |                            |     |     |    | func1(); |      |    NOK   |     |
+  |    |       void func1(){...}    |     |     |    | func2(); |      |    OK    |     |
+  |    |                            |     |     |    | func3(); |      |    OK    |     |
+  |    |       void func2(){...}    |     |     |    | func4(); |      |    OK    |     |
+  |    |   EXPORT_SYMBOL(func2);    |     |     |    |          |      |          |     |
+  |    |                            |     |     |    \----------/      \----------/     |
+  |    |       void func3(){...}    |     |     |                                       |
+  |    |  EXPORT_SYMBOL_GPL(func2); |     |     \---------------------------------------/
+  |    |                            |     |
+  |    \----------------------------/     |     /---------------------------------------\        											
+  |                                       |     |              GPL Module 2             |
+  |    /----------\      /----------\     |     |                                       |
+  |    |          |      |          |     |     |    /----------\      /----------\     |
+  |    | func1(); |      |    OK    |     |     |    |          |      |          |     |
+  |    | func2(); |      |    OK    |     |     |    | func1(); |      |    NOK   |     |
+  |    | func3(); |      |    OK    |     |     |    | func2(); |      |    OK    |     |
+  |    | func4(); |      |    NOK   |     |     |    | func3(); |      |    OK    |     |
+  |    |          |      |          |     |     |    | func4(); |      |    OK    |     |
+  |    \----------/      \----------/     |     |    |          |      |          |     |
+  |                                       |     |    \----------/      \----------/     |
+  \---------------------------------------/     |                                       |
+                                                \---------------------------------------/
+
+                                                /---------------------------------------\        											
+                                                |              Non-GPL Module           |
+                                                |                                       |
+                                                |    /----------\      /----------\     |
+                                                |    |          |      |          |     |
+                                                |    | func1(); |      |    NOK   |     |
+                                                |    | func2(); |      |    OK    |     |
+                                                |    | func3(); |      |    NOK   |     |
+                                                |    | func4(); |      |    NOK   |     |
+                                                |    |          |      |          |     |
+                                                |    \----------/      \----------/     |
+                                                |                                       |
+                                                \---------------------------------------/
+
+
+----
+////
