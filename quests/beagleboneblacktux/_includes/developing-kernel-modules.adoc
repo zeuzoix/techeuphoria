@@ -5,7 +5,7 @@ endif::[]
 
 We will first take a look at a sample source code of a Linux kernel module.
 
-[source, bash]
+[source, C]
 ----
 #include <linux/init.h>
 #include <linux/module.h>
@@ -98,7 +98,7 @@ image::symbols-exported-to-modules.png[width="640", height="480", align="center"
   |    |   EXPORT_SYMBOL(func2);    |     |     |    |          |      |          |     |
   |    |                            |     |     |    \----------/      \----------/     |
   |    |       void func3(){...}    |     |     |                                       |
-  |    |  EXPORT_SYMBOL_GPL(func2); |     |     \---------------------------------------/
+  |    |  EXPORT_SYMBOL_GPL(func3); |     |     \---------------------------------------/
   |    |                            |     |
   |    \----------------------------/     |     /---------------------------------------\        											
   |                                       |     |              GPL Module 2             |
@@ -131,3 +131,66 @@ image::symbols-exported-to-modules.png[width="640", height="480", align="center"
 
 ----
 ////
+
+The diagram illustrates the difference between exporting a symbol with
+_EXPORT_SYMBOL_ versus _EXPORT_SYMBOL_GPL_. Symbols exported by
+_EXPORT_SYMBOL_GPL_(func3, func4) can be used by only GPL modules whereas
+symbols exported by _EXPORT_SYMBOL_ can be used by both GPL and Non-GPL
+modules. A module gets it's license from the _MODULE_LICENSE_ macro added
+in it's source code along with the other metadata.
+
+[source, C]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+
+static int __init sample_module_init(void)
+.
+.
+.
+MODULE_LICENSE("GPL");				<1>
+MODULE_DESCRIPTION("Sample Module");
+MODULE_AUTHOR("Newbie");
+----
+<1> Module license is GPL
+
+The kernel can only use symbols defined in its source code. It cannot
+use symbols exported by _modules_ even if they are GPL licensed modules.
+Symbols exported with _EXPORT_SYMBOL_GPL_ can be used only by GPL licensed
+modules. Symbols exported with _EXPORT_SYMBOL_ can be used by GPL and Non-GPL
+licensed modules
+
+=== About Module Licenses
+
+The _MODULE_LICENSE_ is used to define the license of the module. It is used
+to restrict the functions that a module can use if it is not a GPL licensed
+module. GPL licensed modules have access to all exported symbols whereas
+Non-GPL licensed modules can only access symbols exported with _EXPORT_SYMBOL_.
+
+Another use for module licenses is to identify issues comming from proprietary
+modules. Typically kernel developers do not fix issues coming from proprietary
+modules or drivers which cause kernel crashes and OOPSes.
+
+[source, C]
+----
+#ifndef __LICENSE_H
+#define __LICENSE_H
+
+static inline int license_is_gpl_compatible(const char *license)
+{
+        return (strcmp(license, "GPL") == 0
+                || strcmp(license, "GPL v2") == 0
+                || strcmp(license, "GPL and additional rights") == 0
+                || strcmp(license, "Dual BSD/GPL") == 0
+                || strcmp(license, "Dual MIT/GPL") == 0
+                || strcmp(license, "Dual MPL/GPL") == 0);
+}
+
+#endif
+----
+
+GPL compatible licenses are defined in the _include/linux/license.h_ file as
+shown above. These include GPL, GPL v2, GPL and additional rights, Dual BSD/GPL,
+Dual MIT/GPL or Dual MPL/GPL. All other licenses are considered as proprietary.
+
