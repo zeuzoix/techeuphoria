@@ -194,3 +194,103 @@ GPL compatible licenses are defined in the _include/linux/license.h_ file as
 shown above. These include GPL, GPL v2, GPL and additional rights, Dual BSD/GPL,
 Dual MIT/GPL or Dual MPL/GPL. All other licenses are considered as proprietary.
 
+=== Compiling Modules Out Of Tree
+
+The source code is maintained separately outside the kernel source code.
+It is easier to modify the source code, however adapting the module source
+code to changes in the kernel API means that the maintainer has the onus
+of keeping it upto date with the changing kernel. One disadvantage is that
+the module cannot be built statically with the kernel.
+
+When compiled out of tree the Makefile does not have _KERNELRELEASE_ defined
+and therefore KDIR is set to the path to either: +
+* Full kernel directory
+* Kernel Headers Directory
+
+The kernel Makefile is invoked as _KDIR_ is set and the rule for target _all_
+will change to the _KDIR_ first and call the corresponding Makefile in that
+path. Additionally _$PWD_ is passed as an argument value in _M_ to the kernel
+Makefile. The double $$ is required to pass $PWD as the value to _M_.
+
+The kernel Makefile knows that it has to compile a module and because there
+is a value for _M_ it can locate where the module Makefile is present. This
+time the kernel Makefile calls the module Makefile and the value of
+_KERNELRELEASE_ is defined. The kernel uses the definition of _obj-m_ to
+identify the module to be compiled which in our case is _wassup.o_. In this
+way the module Makefile given below is invoked twice, the first time  from the
+module directory and second time by the kernel Makefile.
+
+[source, makefile]
+----
+ifneq ($(KERNELRELEASE),)
+obj-m := wassup.o
+else
+KDIR := /path/to/kernel/sources
+
+all:
+	$(MAKE) -C $(KDIR) M=$$PWD
+endif
+----
+
+The kernel directory variable in the makefile must be configured as there
+will be differences between different configurations of the kernel. The
+module compiled against a specific version will only load in that kernel
+version. If there is a mismatch then _insmod/modprobe_ will crib with an
+output _"Invalid module format"_.
+
+=== Compiling Modules Inside Of The  Kernel Tree
+
+The source code is integrated inside the kernel source code. It can be
+integrated with the configuration and compilation process of the kernel.
+The module can be built statically with the kernel source code.
+
+To add a new driver or module to the kernel source tree we have to place
+the source file in the appropriate source directory. For example we'll
+take a look at the _USB serial navman_ driver. The source code for the
+driver/module should be present in a single file. If the driver is
+really big then it should have its own directory. The source file 
+for the _navman_ driver is in _drivers/usb/serial/navman.c_
+
+To configure the kernel to include a module or driver we need to add
+information in the _drivers/usb/serial/Kconfig_ file in the same directory.
+The snippet below shows that the navman driver has a kernel option type of
+_tristate_ which means it can be enabled, disabled or configured as a module.
+
+[source, bash]
+----
+.
+.
+config USB_SERIAL_NAVMAN
+        tristate "USB Navman GPS device"
+        help
+          To compile this driver as a module, choose M here: the
+          module will be called navman.
+.
+.
+----
+
+Next we take a look at the _drivers/usb/serial/Makefile_ which has
+a line based on the _drivers/usb/serial/Kconfig_ setting. The name
+of the configuration field _CONFIG_USB_SERIAL_NAVMAN_ is derived
+from the KConfig settings. The value of _CONFIG_USB_SERIAL_NAVMAN_
+will be based on the configuration applied upon invoking
+_make menuconfig_. After configuring the kernel and enabling th
+module/driver we can build it by running _make_.
+
+[source, makefile]
+----
+.
+.
+obj-$(CONFIG_USB_SERIAL_MOS7840)                += mos7840.o
+obj-$(CONFIG_USB_SERIAL_NAVMAN)                 += navman.o
+obj-$(CONFIG_USB_SERIAL_OMNINET)                += omninet.o
+.
+.
+----
+
+Further information about the Kernel build process and incorporating
+newer files to the source can be obtained at: +
+_Documentation/kbuild_
+
+
+
