@@ -225,6 +225,9 @@ TechEuphoria
 <li><a href="#developing-kernel-modules">30. Developing Kernel Modules</a>
 <ul class="sectlevel2">
 <li><a href="#symbols-exported-to-modules">30.1. Symbols Exported To Modules</a></li>
+<li><a href="#about-module-licenses">30.2. About Module Licenses</a></li>
+<li><a href="#compiling-modules-out-of-tree">30.3. Compiling Modules Out Of Tree</a></li>
+<li><a href="#compiling-modules-inside-of-the-kernel-tree">30.4. Compiling Modules Inside Of The  Kernel Tree</a></li>
 </ul>
 </li>
 </ul>
@@ -4760,28 +4763,28 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">#include &lt;linux/init.h&gt;
-#include &lt;linux/module.h&gt;
-#include &lt;linux/kernel.h&gt;
+<pre class="CodeRay highlight"><code data-lang="C"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
 <i class="conum" data-value="1"></i><b>(1)</b>
 
-static int __init sample_module_init(void)        <i class="conum" data-value="2"></i><b>(2)</b>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init sample_module_init(<span style="color:#088;font-weight:bold">void</span>)        <i class="conum" data-value="2"></i><b>(2)</b>
 {
-        pr_alert(&quot;Wassup!\n&quot;);
-        return 0;
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Wassup!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
 }
 
-static void __exit sample_module_exit(void)        <i class="conum" data-value="4"></i><b>(4)</b>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit sample_module_exit(<span style="color:#088;font-weight:bold">void</span>)        <i class="conum" data-value="4"></i><b>(4)</b>
 {
-        pr_alert(&quot;Cya Later!\n&quot;);
+        pr_alert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Cya Later!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
 }
 
 module_init(sample_module_init);                <i class="conum" data-value="3"></i><b>(3)</b>
 module_exit(sample_module_exit);                <i class="conum" data-value="5"></i><b>(5)</b>
 
-MODULE_LICENSE(&quot;GPL&quot;);
-MODULE_DESCRIPTION(&quot;Sample Module&quot;);
-MODULE_AUTHOR(&quot;Newbie&quot;);</code></pre>
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);
+MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Sample Module</span><span style="color:#710">&quot;</span></span>);
+MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Newbie</span><span style="color:#710">&quot;</span></span>);</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -4862,6 +4865,219 @@ that are used to export the symbol names that can be used by other modules:<br><
 modules</p>
 </dd>
 </dl>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="symbols-exported-to-modules" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="images/symbols-exported-to-modules.png"><img src="http://zeuzoix.github.io/techeuphoria/images/symbols-exported-to-modules.png" alt="symbols exported to modules" width="640" height="480"></a>
+</div>
+<div class="title">Symbols exported to modules</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The diagram illustrates the difference between exporting a symbol with
+<em>EXPORT_SYMBOL</em> versus <em>EXPORT_SYMBOL_GPL</em>. Symbols exported by
+<em>EXPORT_SYMBOL_GPL</em>(func3, func4) can be used by only GPL modules whereas
+symbols exported by <em>EXPORT_SYMBOL</em> can be used by both GPL and Non-GPL
+modules. A module gets it&#8217;s license from the <em>MODULE_LICENSE</em> macro added
+in it&#8217;s source code along with the other metadata.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="C"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init sample_module_init(<span style="color:#088;font-weight:bold">void</span>)
+.
+.
+.
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);                                <i class="conum" data-value="1"></i><b>(1)</b>
+MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Sample Module</span><span style="color:#710">&quot;</span></span>);
+MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Newbie</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Module license is GPL</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The kernel can only use symbols defined in its source code. It cannot
+use symbols exported by <em>modules</em> even if they are GPL licensed modules.
+Symbols exported with <em>EXPORT_SYMBOL_GPL</em> can be used only by GPL licensed
+modules. Symbols exported with <em>EXPORT_SYMBOL</em> can be used by GPL and Non-GPL
+licensed modules</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="about-module-licenses"><a class="anchor" href="#about-module-licenses"></a>30.2. About Module Licenses</h3>
+<div class="paragraph">
+<p>The <em>MODULE_LICENSE</em> macro is used to define the license of the module. It is
+used to restrict the functions that a module can use if it is not a GPL licensed
+module. GPL licensed modules have access to all exported symbols whereas
+Non-GPL licensed modules can only access symbols exported with <em>EXPORT_SYMBOL</em>.</p>
+</div>
+<div class="paragraph">
+<p>Another use for module licenses is to identify issues comming from proprietary
+modules. Typically kernel developers do not fix issues coming from proprietary
+modules or drivers which cause kernel crashes and OOPSes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="C"><span style="color:#579">#ifndef</span> __LICENSE_H
+<span style="color:#579">#define</span> __LICENSE_H
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#0a8;font-weight:bold">int</span> license_is_gpl_compatible(<span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *license)
+{
+        <span style="color:#080;font-weight:bold">return</span> (strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>
+                || strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL v2</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>
+                || strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL and additional rights</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>
+                || strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Dual BSD/GPL</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>
+                || strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Dual MIT/GPL</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>
+                || strcmp(license, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Dual MPL/GPL</span><span style="color:#710">&quot;</span></span>) == <span style="color:#00D">0</span>);
+}
+
+<span style="color:#579">#endif</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>GPL compatible licenses are defined in the <em>include/linux/license.h</em> file as
+shown above. These include GPL, GPL v2, GPL and additional rights, Dual BSD/GPL,
+Dual MIT/GPL or Dual MPL/GPL. All other licenses are considered as proprietary.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compiling-modules-out-of-tree"><a class="anchor" href="#compiling-modules-out-of-tree"></a>30.3. Compiling Modules Out Of Tree</h3>
+<div class="paragraph">
+<p>The source code is maintained separately outside the kernel source code.
+It is easier to modify the source code, however adapting the module source
+code to changes in the kernel API means that the maintainer has the onus
+of keeping it upto date with the changing kernel. One disadvantage is that
+the module cannot be built statically with the kernel. The following snippet
+shows the Makefile that can be used to build an out of tree kernel
+module/driver.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="makefile">ifneq ($(KERNELRELEASE),)
+obj-m := wassup.o
+else
+KDIR := /path/to/kernel/sources
+
+all:
+        $(MAKE) -C $(KDIR) M=$$PWD        <i class="conum" data-value="1"></i><b>(1)</b>
+endif</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Rule for the target <em>all</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When compiled out of tree the Makefile does not have <em>KERNELRELEASE</em> defined
+and therefore KDIR is set to the path to either:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Full kernel directory</p>
+</li>
+<li>
+<p>Kernel Headers Directory</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The kernel Makefile gets invoked as <em>KDIR</em> is set and the rule for the target
+<em>all</em> will change to the <em>KDIR</em> first and call the corresponding Makefile in that
+path. Additionally <em>$PWD</em> is passed as an argument value in <em>M</em> to the kernel
+Makefile. The double $$ is required to pass $PWD as the value to <em>M</em>.</p>
+</div>
+<div class="paragraph">
+<p>The kernel Makefile knows that it has to compile a module and because there
+is a value for <em>M</em> it can locate where the module Makefile is present. This
+time the kernel Makefile calls the module Makefile and the value of
+<em>KERNELRELEASE</em> is defined. The kernel uses the definition of <em>obj-m</em> to
+identify the module to be compiled which in our case is <em>wassup.o</em>. In this
+way the module Makefile given above is invoked twice, the first time  from the
+module directory and second time by the kernel Makefile.</p>
+</div>
+<div class="paragraph">
+<p>The kernel directory pointed to by <em>KDIR</em> in the module makefile must be
+configured as there will be differences between different configurations of
+the kernel. The module compiled against a specific version will only load in
+that version and configuration of the kernel. If there is a mismatch then
+<em>insmod/modprobe</em> will crib with an output <em>"Invalid module format"</em>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compiling-modules-inside-of-the-kernel-tree"><a class="anchor" href="#compiling-modules-inside-of-the-kernel-tree"></a>30.4. Compiling Modules Inside Of The  Kernel Tree</h3>
+<div class="paragraph">
+<p>The source code is integrated inside the kernel source code. It can be
+integrated with the configuration and compilation process of the kernel.
+The module can be built statically with the kernel source code.</p>
+</div>
+<div class="paragraph">
+<p>To add a new driver or module to the kernel source tree we have to place
+the source file in the appropriate source directory. For example we&#8217;ll
+take a look at the <em>USB serial navman</em> driver. The source code for the
+driver/module should be present in a single file. If the driver is
+really big then it should have its own directory. The source file
+for the <em>navman</em> driver is in <em>drivers/usb/serial/navman.c</em></p>
+</div>
+<div class="paragraph">
+<p>To configure the kernel to include a module or driver we need to add
+information in the <em>drivers/usb/serial/Kconfig</em> file in the same directory.
+The snippet below shows that the navman driver has a kernel option type of
+<em>tristate</em> which means it can be enabled, disabled or configured as a module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+config USB_SERIAL_NAVMAN
+        tristate &quot;USB Navman GPS device&quot;
+        help
+          To compile this driver as a module, choose M here: the
+          module will be called navman.
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next we take a look at the <em>drivers/usb/serial/Makefile</em> which has
+a line based on the <em>drivers/usb/serial/Kconfig</em> setting. The name
+of the configuration field <em>CONFIG_USB_SERIAL_NAVMAN</em> is derived
+from the KConfig settings. The value of <em>CONFIG_USB_SERIAL_NAVMAN</em>
+will be based on the configuration applied upon invoking
+<em>make menuconfig</em>. After configuring the kernel and enabling th
+module/driver we can build it by running <em>make</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="makefile">.
+.
+obj-$(CONFIG_USB_SERIAL_MOS7840)                += mos7840.o
+obj-$(CONFIG_USB_SERIAL_NAVMAN)                 += navman.o
+obj-$(CONFIG_USB_SERIAL_OMNINET)                += omninet.o
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Further information about the Kernel build process and incorporating
+newer files to the source can be obtained at:<br>
+<em>Documentation/kbuild</em></p>
 </div>
 </div>
 </div>
