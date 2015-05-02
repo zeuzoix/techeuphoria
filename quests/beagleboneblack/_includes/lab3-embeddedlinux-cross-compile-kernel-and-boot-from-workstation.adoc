@@ -435,11 +435,11 @@ login prompt are username as _root_ and no password.
 [source, bash]
 ----
 <1>
-include::lab3-kernel-boot.adoc[tags=bootm_start]
+include::../logs/lab3-kernel-boot.txt[tags=bootm_start]
 .
 .
 <2>
-include::lab3-kernel-boot.adoc[tags=nfs_mount_start]
+include::../logs/lab3-kernel-boot.txt[tags=nfs_mount_start]
 ----
 <1> Successfully starting the kernel
 <2> The NFS root filesystem has been successfully mounted giving us access to a root terminal.

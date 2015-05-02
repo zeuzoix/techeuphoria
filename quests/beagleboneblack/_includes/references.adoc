@@ -48,4 +48,4 @@
 :link-free-electrons-kernel-lab-data: link:../free_electrons_linux_kernel/linux-kernel-labs.tar.xz
 
 // Captured Logs
-:link-lab3-kernel-boot: link:{includedir}/lab3-kernel-boot.adoc
+:link-lab3-kernel-boot: link:../logs/lab3-kernel-boot.txt
