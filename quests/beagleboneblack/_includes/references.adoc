@@ -37,15 +37,15 @@
 :uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
 
 // Documents
-:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
-:link-am3359-datasheet-pdf: link:docs/am3359.pdf
-:link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
+:link-beagleboneblack-srm-pdf: link:../docs/BBB_SRM.pdf
+:link-am3359-datasheet-pdf: link:../docs/am3359.pdf
+:link-am3358-technical-reference-manual-pdf: link:../docs/spruh73i.pdf
 
 // Downloads
-:link-fe-linux-kernel-labs-tar-xz: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
-:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
-:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
-:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+:link-fe-linux-kernel-labs-tar-xz: link:../free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+:link-free-electrons-kernel-labs: link:../free_electrons_linux_kernel/linux-kernel-labs.pdf
+:link-free-electrons-kernel-slides: link:../free_electrons_linux_kernel/linux-kernel-slides.pdf
+:link-free-electrons-kernel-lab-data: link:../free_electrons_linux_kernel/linux-kernel-labs.tar.xz
 
 // Captured Logs
 :link-lab3-kernel-boot: link:{includedir}/lab3-kernel-boot.adoc
