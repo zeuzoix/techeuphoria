@@ -380,7 +380,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs
 <2> Unmounting the mounted partition
 
 ====
-[[beagleboneblacktux-media-boot-automounted]]
+[[beagleboneblacktux-bootable-microSD-contents]]
 .The contents of the bootable micro-SD card
 image::beagleboneblacktux-bootable-microSD-contents.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-bootable-microSD-contents.png]
 ====
