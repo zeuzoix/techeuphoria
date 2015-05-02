@@ -1,0 +1,219 @@
+# tag::bootm_start[]
+U-Boot# bootm 0x81000000 - 0x82000000
+## Booting kernel from Legacy Image at 81000000 ...
+   Image Name:   Linux-3.13.11
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4229384 Bytes = 4 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 82000000
+   Booting using the fdt blob at 0x82000000
+   Loading Kernel Image ... OK
+   Using Device Tree in place at 82000000, end 820075f6
+
+Starting kernel ...
+# end::bootm_start[]
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 3.13.11 (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #10 SMP Mon Mar 30 21:28:25 IST 2015
+[    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] Machine model: TI AM335x BeagleBone
+[    0.000000] cma: CMA: reserved 16 MiB at 9e800000
+[    0.000000] Memory policy: Data cache writeback
+[    0.000000] CPU: All CPU(s) started in SVC mode.
+[    0.000000] AM335X ES2.0 (sgx neon )
+[    0.000000] PERCPU: Embedded 9 pages/cpu @c11ec000 s13952 r8192 d14720 u36864
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 129792
+# tag::kernel_command_line[]
+[    0.000000] Kernel command line: root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot
+# end::kernel_command_line[]
+[    0.000000] PID hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.000000] Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+[    0.000000] Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Memory: 488036K/523264K available (5455K kernel code, 660K rwdata, 2128K rodata, 385K init, 5527K bss, 35228K reserved, 0K highmem)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .text : 0xc0008000 - 0xc077003c   (7585 kB)
+[    0.000000]       .init : 0xc0771000 - 0xc07d1680   ( 386 kB)
+[    0.000000]       .data : 0xc07d2000 - 0xc08771c0   ( 661 kB)
+[    0.000000]        .bss : 0xc08771c0 - 0xc0ddcfe8   (5528 kB)
+[    0.000000] Hierarchical RCU implementation.
+[    0.000000] 	RCU restricting CPUs from NR_CPUS=2 to nr_cpu_ids=1.
+[    0.000000] NR_IRQS:16 nr_irqs:16 16
+[    0.000000] IRQ: Found an INTC at 0xfa200000 (revision 5.0) with 128 interrupts
+[    0.000000] Total of 128 interrupts on 1 active controller
+[    0.000000] OMAP clockevent source: timer2 at 24000000 Hz
+[    0.000000] sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956969942ns
+[    0.000000] OMAP clocksource: timer1 at 24000000 Hz
+[    0.000000] Console: colour dummy device 80x30
+[    0.000000] Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
+[    0.000000] ... MAX_LOCKDEP_SUBCLASSES:  8
+[    0.000000] ... MAX_LOCK_DEPTH:          48
+[    0.000000] ... MAX_LOCKDEP_KEYS:        8191
+[    0.000000] ... CLASSHASH_SIZE:          4096
+[    0.000000] ... MAX_LOCKDEP_ENTRIES:     16384
+[    0.000000] ... MAX_LOCKDEP_CHAINS:      32768
+[    0.000000] ... CHAINHASH_SIZE:          16384
+[    0.000000]  memory used by lock dependency info: 3695 kB
+[    0.000000]  per task-struct memory footprint: 1152 bytes
+[    0.000912] Calibrating delay loop... 996.14 BogoMIPS (lpj=4980736)
+[    0.079674] pid_max: default: 32768 minimum: 301
+[    0.080030] Security Framework initialized
+[    0.080148] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.080161] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.091357] CPU: Testing write buffer coherency: ok
+[    0.092549] CPU0: thread -1, cpu 0, socket -1, mpidr 0
+[    0.092617] Setting up static identity map for 0x8052b400 - 0x8052b470
+[    0.095548] Brought up 1 CPUs
+[    0.095568] SMP: Total of 1 processors activated.
+[    0.095578] CPU: All CPU(s) started in SVC mode.
+[    0.098175] devtmpfs: initialized
+[    0.106143] VFP support v0.3: implementor 41 architecture 3 part 30 variant c rev 3
+[    0.120931] omap_hwmod: tptc0 using broken dt data from edma
+[    0.120987] omap_hwmod: tptc1 using broken dt data from edma
+[    0.121034] omap_hwmod: tptc2 using broken dt data from edma
+[    0.126414] omap_hwmod: debugss: _wait_target_disable failed
+[    0.185075] pinctrl core: initialized pinctrl subsystem
+[    0.188708] regulator-dummy: no parameters
+[    0.192088] NET: Registered protocol family 16
+[    0.197199] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.212805] platform 49000000.edma: alias fck already exists
+[    0.212835] platform 49000000.edma: alias fck already exists
+[    0.212852] platform 49000000.edma: alias fck already exists
+[    0.216581] OMAP GPIO hardware version 0.1
+[    0.240258] No ATAGs?
+[    0.240284] hw-breakpoint: debug architecture 0x4 unsupported.
+[    0.293520] bio: create slab <bio-0> at 0
+[    0.326587] edma-dma-engine edma-dma-engine.0: TI EDMA DMA engine driver
+[    0.328382] vmmcsd_fixed: 3300 mV 
+[    0.335405] SCSI subsystem initialized
+[    0.337222] usbcore: registered new interface driver usbfs
+[    0.337613] usbcore: registered new interface driver hub
+[    0.338317] usbcore: registered new device driver usb
+[    0.341596] omap_i2c 44e0b000.i2c: could not find pctldev for node /pinmux@44e10800/pinmux_i2c0_pins, deferring probe
+[    0.341641] platform 44e0b000.i2c: Driver omap_i2c requests probe deferral
+[    0.348109] Switched to clocksource timer1
+[    0.477629] NET: Registered protocol family 2
+[    0.479752] TCP established hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.479933] TCP bind hash table entries: 4096 (order: 5, 147456 bytes)
+[    0.481292] TCP: Hash tables configured (established 4096 bind 4096)
+[    0.481464] TCP: reno registered
+[    0.481491] UDP hash table entries: 256 (order: 2, 20480 bytes)
+[    0.481681] UDP-Lite hash table entries: 256 (order: 2, 20480 bytes)
+[    0.482680] NET: Registered protocol family 1
+[    0.484057] RPC: Registered named UNIX socket transport module.
+[    0.484077] RPC: Registered udp transport module.
+[    0.484086] RPC: Registered tcp transport module.
+[    0.484096] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.485177] hw perfevents: enabled with ARMv7 Cortex-A8 PMU driver, 5 counters available
+[    0.631256] VFS: Disk quotas dquot_6.5.2
+[    0.631451] Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
+[    0.633472] NFS: Registering the id_resolver key type
+[    0.633821] Key type id_resolver registered
+[    0.633837] Key type id_legacy registered
+[    0.633944] jffs2: version 2.2. (NAND) (SUMMARY)  © 2001-2006 Red Hat, Inc.
+[    0.634341] msgmni has been set to 985
+[    0.637519] io scheduler noop registered
+[    0.637541] io scheduler deadline registered
+[    0.637597] io scheduler cfq registered (default)
+[    0.640602] pinctrl-single 44e10800.pinmux: 142 pins at pa f9e10800 size 568
+[    0.644328] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.650756] omap_uart 44e09000.serial: no wakeirq for uart0
+[    0.651916] 44e09000.serial: ttyO0 at MMIO 0x44e09000 (irq = 88, base_baud = 3000000) is a OMAP UART0
+[    1.304688] console [ttyO0] enabled
+[    1.312732] omap_rng 48310000.rng: OMAP Random Number Generator ver. 20
+[    1.345427] brd: module loaded
+[    1.364412] loop: module loaded
+[    1.373433] mtdoops: mtd device (mtddev=name/number) must be supplied
+[    1.387660] usbcore: registered new interface driver asix
+[    1.394159] usbcore: registered new interface driver ax88179_178a
+[    1.401367] usbcore: registered new interface driver cdc_ether
+[    1.407825] usbcore: registered new interface driver r815x
+[    1.414081] usbcore: registered new interface driver smsc95xx
+[    1.420645] usbcore: registered new interface driver net1080
+[    1.426891] usbcore: registered new interface driver cdc_subset
+[    1.433528] usbcore: registered new interface driver zaurus
+[    1.439898] usbcore: registered new interface driver cdc_ncm
+[    1.447631] usbcore: registered new interface driver cdc_wdm
+[    1.454278] usbcore: registered new interface driver usb-storage
+[    1.461210] usbcore: registered new interface driver usbtest
+[    1.469716] mousedev: PS/2 mouse device common for all mice
+[    1.480562] omap_rtc 44e3e000.rtc: rtc core: registered 44e3e000.rtc as rtc0
+[    1.489592] i2c /dev entries driver
+[    1.493586] Driver for 1-wire Dallas network protocol.
+[    1.503553] omap_wdt: OMAP Watchdog Timer Rev 0x01: initial timeout 60 sec
+[    1.514296] edma-dma-engine edma-dma-engine.0: allocated channel for 0:25
+[    1.521644] edma-dma-engine edma-dma-engine.0: allocated channel for 0:24
+[    1.529253] 48060000.mmc supply vmmc_aux not found, using dummy regulator
+[    1.578669] edma-dma-engine edma-dma-engine.0: allocated channel for 0:3
+[    1.585696] edma-dma-engine edma-dma-engine.0: allocated channel for 0:2
+[    1.593078] 481d8000.mmc supply vmmc_aux not found, using dummy regulator
+[    1.649665] ledtrig-cpu: registered to indicate activity on CPUs
+[    1.660587] usbcore: registered new interface driver usbhid
+[    1.666413] usbhid: USB HID core driver
+[    1.672519] oprofile: using arm/armv7
+[    1.677037] TCP: cubic registered
+[    1.680865] Initializing XFRM netlink socket
+[    1.685505] NET: Registered protocol family 17
+[    1.690310] NET: Registered protocol family 15
+[    1.695316] Key type dns_resolver registered
+[    1.702467] ThumbEE CPU extension supported.
+[    1.710931] regulator-dummy: disabling
+[    1.726432] DCDC1: at 1500 mV 
+[    1.731833] vdd_mpu: 925 <--> 1325 mV at 1325 mV 
+[    1.737149] mmc1: BKOPS_EN bit is not set
+[    1.743755] vdd_core: 925 <--> 1150 mV at 1125 mV 
+[    1.751057] mmc1: new high speed MMC card at address 0001
+[    1.758157] LDO1: at 1800 mV 
+[    1.762827] mmcblk0: mmc1:0001 MMC02G 1.78 GiB 
+[    1.769218] mmcblk0boot0: mmc1:0001 MMC02G partition 1 1.00 MiB
+[    1.776393] mmcblk0boot1: mmc1:0001 MMC02G partition 2 1.00 MiB
+[    1.787119] LDO2: at 3300 mV 
+[    1.791113]  mmcblk0: p1 p2
+[    1.802008] LDO3: 1800 mV 
+[    1.805126]  mmcblk0boot1: unknown partition table
+[    1.814439] LDO4: at 3300 mV 
+[    1.819339]  mmcblk0boot0: unknown partition table
+[    1.826658] tps65217 0-0024: TPS65217 ID 0xe version 1.2
+[    1.832502] omap_i2c 44e0b000.i2c: bus 0 rev0.11 at 400 kHz
+[    1.898089] davinci_mdio 4a101000.mdio: davinci mdio revision 1.6
+[    1.904474] davinci_mdio 4a101000.mdio: detected phy mask fffffffe
+[    1.913422] libphy: 4a101000.mdio: probed
+[    1.917635] davinci_mdio 4a101000.mdio: phy[0]: device 4a101000.mdio:00, driver SMSC LAN8710/LAN8720
+[    1.928958] Detected MACID = 90:59:af:49:c8:ef
+[    1.937853] omap_rtc 44e3e000.rtc: setting system clock to 2000-01-01 00:00:00 UTC (946684800)
+[    1.948813] net eth0: initializing cpsw version 1.12 (0)
+[    1.956503] net eth0: phy found : id is : 0x7c0f1
+[    1.961625] libphy: PHY 4a101000.mdio:01 not found
+[    1.966634] net eth0: phy 4a101000.mdio:01 not found on slave 1
+# tag::nfs_mount_start[]
+[    5.028652] libphy: 4a101000.mdio:00 - Link is Up - 100/Full
+[    5.068073] IP-Config: Guessing netmask 255.255.255.0
+[    5.073695] IP-Config: Complete:
+[    5.077074]      device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+[    5.088130]      host=192.168.0.100, domain=, nis-domain=(none)
+[    5.094313]      bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+[    5.120355] VFS: Mounted root (nfs filesystem) on device 0:13.
+[    5.142936] devtmpfs: mounted
+[    5.146640] Freeing unused kernel memory: 384K (c0771000 - c07d1000)
+Starting logging: OK
+Initializing random number generator... [    5.795678] random: dd urandom read with 56 bits of entropy available
+done.
+Starting network...
+ip: RTNETLINK answers: File exists
+Starting dropbear sshd: OK
+
+Welcome to Buildroot
+buildroot login: root
+# 
+# 
+# 
+# 
+# end::nfs_mount_start[]
