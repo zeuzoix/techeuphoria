@@ -1,5 +1,3 @@
-:uri-free-software-foundation: http://www.fsf.org/
-
 == Is It Free?
 
 The Linux Kernel is licensed under GNU General Public License version 2. This

@@ -1,6 +1,3 @@
-:uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 
-:uri-lxr-free-electrions: http://lxr.free-electrons.com
-
 == Browsing The Sources
 
 One of the most common tasks required by any developer is the ability to browse

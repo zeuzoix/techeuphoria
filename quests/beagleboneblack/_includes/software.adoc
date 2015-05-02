@@ -1,12 +1,3 @@
-:uri-ubuntu: http://www.ubuntu.com/
-:uri-oracle-virtualbox: https://www.virtualbox.org/
-:uri-vmware: http://www.vmware.com
-:uri-git-scm: http://git-scm.com/
-:uri-free-electrons-kernel-trianing: http://free-electrons.com/training/kernel/
-:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
-:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
-:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
-
 == Software
 
 === Ubuntu
@@ -72,8 +63,3 @@ will be based on the version available at the time of its writing:
 . {link-free-electrons-kernel-slides}[Slides^]
 . {link-free-electrons-kernel-labs}[Labs^]
 . {link-free-electrons-kernel-lab-data}[Lab Data^]
-
-:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
-:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
-:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
-

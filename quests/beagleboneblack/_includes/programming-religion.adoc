@@ -1,5 +1,3 @@
-:uri-lkml-programming-religion: http://www.tux.org/lkml/#s15-3
-
 == Programming Religion
 
 The Linux Kernel is written primarily in C with a little assembly code too. The

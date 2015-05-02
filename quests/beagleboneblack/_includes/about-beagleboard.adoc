@@ -1,5 +1,3 @@
-:uri-beagleboard: http://beagleboard.org/
-
 == About BeagleBoard
 {uri-beagleboard}[BeagleBoard.org Foundation^] is a non-profit corporation which
 promotes open source software and open hardware. It was started by enthusiasts

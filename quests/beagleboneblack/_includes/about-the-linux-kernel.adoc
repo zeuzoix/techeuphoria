@@ -1,5 +1,3 @@
-:uri-linux-foundation: http://www.linuxfoundation.org/
-
 == About The Linux Kernel
 
 "I'm doing a (free) operating system (just a hobby, won't be big and

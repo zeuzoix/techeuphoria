@@ -1,14 +1,3 @@
-:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
-:uri-beagleboneblack-srm: https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true
-:link-am3359-datasheet-pdf: link:docs/am3359.pdf
-:uri-am3359-datasheet: http://www.ti.com/lit/ds/symlink/am3359.pdf
-:link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
-:uri-am3358-technical-reference-manual: http://www.ti.com/product/am3359
-:link-fe-linux-kernel-labs-tar-xz: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
-:link-elinux-bbb-serial-ftdi: http://elinux.org/Beagleboard:BeagleBone_Black_Serial
-:link-rhydolabz-home-page: http://www.rhydolabz.com/index.php
-:link-rhydolabz-ftdi-usb-to-serial-converter: http://www.rhydolabz.com/index.php?main_page=product_info&cPath=80&products_id=1090
-
 == LAB 2 : Setting Up The Beaglebone Black Board
 
 [NOTE]

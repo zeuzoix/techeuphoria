@@ -1,11 +1,3 @@
-:uri-kernel-org: https://www.kernel.org/
-:uri-linux-mtd-org: http://www.linux-mtd.infradead.org/index.html
-:uri-linux-mtd-git: git://git.infradead.org/linux-mtd.git
-:uri-linux-mips-org: http://www.linux-mips.org/wiki/Main_Page
-:uri-linux-mips-git: git://git.linux-mips.org/pub/scm/ralf/linux.git
-:uri-linux-usb-org: http://www.linux-usb.org/
-:uri-linux-usb-git: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git
-
 == Offical and Unofficial Kernel Sources
 
 The official source of the Linux Kernel is available at: +

@@ -1,5 +1,3 @@
-:uri-free-electrons: http://free-electrons.com/
-
 == About Free Electrons
 {uri-free-electrons}[Free Electrons^] is an engineering company consisting of
 embedded linux experts who support companies using Embedded Linux. They 

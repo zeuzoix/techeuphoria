@@ -1,7 +1,3 @@
-ifndef::awestruct[]
-:imagesdir: ../images
-endif::[]
-:link-lab3-kernel-boot: link:_includes/lab3-kernel-boot.adoc
 == LAB 3 : Cross Compiling The Kernel And Booting It From The Workstation
 
 [NOTE]

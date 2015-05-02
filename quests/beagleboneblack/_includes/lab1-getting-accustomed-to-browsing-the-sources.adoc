@@ -1,6 +1,3 @@
-:uri-lxr-free-electrions-ident-search: http://lxr.free-electrons.com/ident
-:uri-lxr-free-electrions-free-text-search: http://lxr.free-electrons.com/search
-
 == LAB 1 : Getting Accustomed To Browsing The Sources
 
 [NOTE]

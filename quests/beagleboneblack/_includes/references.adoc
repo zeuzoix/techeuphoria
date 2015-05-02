@@ -1,0 +1,51 @@
+// URL Addresses
+:uri-beagleboard: http://beagleboard.org/
+:uri-free-electrons: http://free-electrons.com/
+:uri-linux-foundation: http://www.linuxfoundation.org/
+:uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 
+:uri-lxr-free-electrions: http://lxr.free-electrons.com
+:uri-raspberry-pi: http://www.raspberrypi.org/
+:uri-free-software-foundation: http://www.fsf.org/
+:uri-lxr-free-electrions-ident-search: http://lxr.free-electrons.com/ident
+:uri-lxr-free-electrions-free-text-search: http://lxr.free-electrons.com/search
+:uri-beagleboneblack-srm: https://github.com/CircuitCo/BeagleBone-Black/blob/master/BBB_SRM.pdf?raw=true
+:uri-am3359-datasheet: http://www.ti.com/lit/ds/symlink/am3359.pdf
+:uri-am3358-technical-reference-manual: http://www.ti.com/product/am3359
+:link-elinux-bbb-serial-ftdi: http://elinux.org/Beagleboard:BeagleBone_Black_Serial
+:link-rhydolabz-home-page: http://www.rhydolabz.com/index.php
+:link-rhydolabz-ftdi-usb-to-serial-converter: http://www.rhydolabz.com/index.php?main_page=product_info&cPath=80&products_id=1090
+:uri-kernel-org: https://www.kernel.org/
+:uri-linux-mtd-org: http://www.linux-mtd.infradead.org/index.html
+:uri-linux-mtd-git: git://git.infradead.org/linux-mtd.git
+:uri-linux-mips-org: http://www.linux-mips.org/wiki/Main_Page
+:uri-linux-mips-git: git://git.linux-mips.org/pub/scm/ralf/linux.git
+:uri-linux-usb-org: http://www.linux-usb.org/
+:uri-linux-usb-git: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/patches.git
+:uri-lkml-programming-religion: http://www.tux.org/lkml/#s15-3
+:uri-ubuntu: http://www.ubuntu.com/
+:uri-oracle-virtualbox: https://www.virtualbox.org/
+:uri-vmware: http://www.vmware.com
+:uri-git-scm: http://git-scm.com/
+:uri-free-electrons-kernel-trianing: http://free-electrons.com/training/kernel/
+:uri-libusb-org: http://www.libusb.org/
+:uri-kernel-org-spidev-doc: https://www.kernel.org/doc/Documentation/spi/spidev
+:uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
+:uri-free-electrons-uio-howto: http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/
+
+
+// E-Mail Addresses
+:uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
+
+// Documents
+:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
+:link-am3359-datasheet-pdf: link:docs/am3359.pdf
+:link-am3358-technical-reference-manual-pdf: link:docs/spruh73i.pdf
+
+// Downloads
+:link-fe-linux-kernel-labs-tar-xz: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+:link-free-electrons-kernel-labs: link:free_electrons_linux_kernel/linux-kernel-labs.pdf
+:link-free-electrons-kernel-slides: link:free_electrons_linux_kernel/linux-kernel-slides.pdf
+:link-free-electrons-kernel-lab-data: link:free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+
+// Captured Logs
+:link-lab3-kernel-boot: link:{includedir}/lab3-kernel-boot.adoc

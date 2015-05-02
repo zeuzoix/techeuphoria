@@ -31,14 +31,16 @@ Conrad Gomes <conrad.s.j.gomes@gmail.com>
 :table-caption!:
 :example-caption!:
 :figure-caption!:
+ifndef::awestruct[]
 :imagesdir: images
-:awestruct-imagesdir: images
+endif::[]
+:awestruct-imagesdir: ../images
 :includedir: _includes
 :underscore: _
-// Refs
-:uri-conrad-mail: mailto:conrad.s.j.gomes@gmail.com
-
 :compat-mode!:
+// Refs
+include::{includedir}/references.adoc[]
+
 
 toc::[]
 

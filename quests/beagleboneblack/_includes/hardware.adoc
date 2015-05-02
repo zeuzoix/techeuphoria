@@ -1,6 +1,3 @@
-:uri-raspberry-pi: http://www.raspberrypi.org/
-:link-beagleboneblack-srm-pdf: link:docs/BBB_SRM.pdf
-
 == Hardware
 
 === BeagleBone Black
