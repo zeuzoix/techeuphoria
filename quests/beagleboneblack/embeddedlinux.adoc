@@ -116,7 +116,7 @@ include::{includedir}/whats-in-the-sources.adoc[]
 
 include::{includedir}/browsing-the-sources.adoc[]
 
-include::{includedir}/lab1-getting-accustomed-to-browsing-the-sources.adoc[]
+include::{includedir}/lab1-embeddedlinux-getting-accustomed-to-browsing-the-sources.adoc[]
 
 include::{includedir}/configuring-the-kernel.adoc[]
 
@@ -126,9 +126,9 @@ include::{includedir}/kernel-installation.adoc[]
 
 include::{includedir}/cross-compiling-the-kernel.adoc[]
 
-include::{includedir}/lab2-setting-up-the-beaglebone-black-board.adoc[]
+include::{includedir}/lab2-embeddedlinux-setting-up-the-beaglebone-black-board.adoc[]
 
-include::{includedir}/lab3-cross-compile-kernel-and-boot-from-workstation.adoc[]
+include::{includedir}/lab3-embeddedlinux-cross-compile-kernel-and-boot-from-workstation.adoc[]
 
 = Linux Kernel Modules
 
