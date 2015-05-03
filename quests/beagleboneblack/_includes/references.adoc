@@ -27,6 +27,7 @@
 :uri-vmware: http://www.vmware.com
 :uri-git-scm: http://git-scm.com/
 :uri-free-electrons-kernel-trianing: http://free-electrons.com/training/kernel/
+:uri-free-electrons-yocto-training: http://free-electrons.com/training/yocto/
 :uri-libusb-org: http://www.libusb.org/
 :uri-kernel-org-spidev-doc: https://www.kernel.org/doc/Documentation/spi/spidev
 :uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
@@ -46,6 +47,9 @@
 :link-free-electrons-kernel-labs: link:../free_electrons_linux_kernel/linux-kernel-labs.pdf
 :link-free-electrons-kernel-slides: link:../free_electrons_linux_kernel/linux-kernel-slides.pdf
 :link-free-electrons-kernel-lab-data: link:../free_electrons_linux_kernel/linux-kernel-labs.tar.xz
+:link-free-electrons-yocto-labs: link:../free_electrons_linux_kernel/yocto-labs.pdf
+:link-free-electrons-yocto-slides: link:../free_electrons_linux_kernel/yocto-slides.pdf
+:link-free-electrons-yocto-lab-data: link:../free_electrons_linux_kernel/yocto-labs.tar.xz
 
 // Captured Logs
 :link-lab3-kernel-boot: link:../logs/lab3-kernel-boot.txt

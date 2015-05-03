@@ -82,7 +82,7 @@ as details about how to procure the hardware.
 
 include::{includedir}/hardware.adoc[]
 
-include::{includedir}/software.adoc[]
+include::{includedir}/software.adoc[lines="1..66"]
 
 = The Kernel Source Code
 

@@ -10,7 +10,11 @@ This section of {sitename} is a random and unorganized collection of different
 pieces of technology. Each link represents an area of interest and curiosity.
  
 
-== Embedded
+== BeagleBone Black
 
 * link:beagleboneblack/embeddedlinux/[Exploring embedded linux with the BeagleBone Black board]
+* link:beagleboneblack/yocto_openembedded/[Exploring Yocto and OpenEmbedded with the BeagleBone Black board]
+
+== OpenWrt
+
 * link:prplwrt/[Exploring OpenWRT through PRPL]

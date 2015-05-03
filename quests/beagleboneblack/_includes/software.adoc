@@ -51,7 +51,7 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conr
 Further infomation about GIT can be obtained at: +
 {uri-git-scm}[{uri-git-scm}^].
 
-=== Free Electrons
+=== Free Electrons Linux Kernel Data
 
 Since we are going through the training material provided by Free Electrons
 we'll need to download their slides and lab data from their website link: +
@@ -63,3 +63,16 @@ will be based on the version available at the time of its writing:
 . {link-free-electrons-kernel-slides}[Slides^]
 . {link-free-electrons-kernel-labs}[Labs^]
 . {link-free-electrons-kernel-lab-data}[Lab Data^]
+
+=== Free Electrons Yocto and OpenEmbedded Data
+
+Since we are going through the training material provided by Free Electrons
+we'll need to download their slides and lab data from their website link: +
+{uri-free-electrons-yocto-training}[{uri-free-electrons-yocto-training}^]
+
+As Free Electrons continues to improve on their training material, this journal
+will be based on the version available at the time of its writing:
+
+. {link-free-electrons-yocto-slides}[Slides^]
+. {link-free-electrons-yocto-labs}[Labs^]
+. {link-free-electrons-yocto-lab-data}[Lab Data^]
