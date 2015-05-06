@@ -1,0 +1,46 @@
+== Installing Lab Data
+
+Download the lab data provided by Free Electrons from
+http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ wget http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz		<1>
+--2015-05-06 18:27:08--  http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz
+Resolving free-electrons.com (free-electrons.com)... 87.98.146.151
+Connecting to free-electrons.com (free-electrons.com)|87.98.146.151|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 28480 (28K) [application/x-tar]
+Saving to: ‘yocto-labs.tar.xz’
+
+100%[==============================================================================================================================================>] 28,480      --.-K/s   in 0.02s   
+
+2015-05-06 18:27:08 (1.18 MB/s) - ‘yocto-labs.tar.xz’ saved [28480/28480]
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ 
+----
+<1> Using wget to download the Yocto lab data
+
+Unpackage the lab data after successfully downloading it.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ tar Jvxf yocto-labs.tar.xz	<1>
+yocto-labs/
+yocto-labs/nunchuck/
+yocto-labs/nunchuck/ninvaders/
+yocto-labs/nunchuck/ninvaders/joystick-support.patch
+yocto-labs/nunchuck/linux/
+yocto-labs/nunchuck/linux/0001-Add-nunchuk-driver.patch
+yocto-labs/nunchuck/linux/0002-Add-i2c1-and-nunchuk-nodes-in-dts.patch
+yocto-labs/nunchuck/linux/defconfig
+yocto-labs/script/
+yocto-labs/script/format_sdcard.sh
+yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ cd yocto-labs/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ ls		<2>
+0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch  nunchuck  script
+----
+<1> Tar command used to unpack the package
+<2> Listing the contents of the package
+
