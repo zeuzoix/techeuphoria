@@ -1,0 +1,6 @@
+== About Yocto
+{uri-yoctoproject}[Yocto Project^] is a collaborative attempt to provide a
+set of templates, tools and methods to create a custom Linux-based system
+for embedded products. It was started in 2010 by many hardware manufacturers,
+open-source operating systems vendors and hardware companies to unify the
+process of creating an embedded Linux system.

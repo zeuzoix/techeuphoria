@@ -1,5 +1,6 @@
 // URL Addresses
 :uri-beagleboard: http://beagleboard.org/
+:uri-yoctoproject: https://www.yoctoproject.org/
 :uri-free-electrons: http://free-electrons.com/
 :uri-linux-foundation: http://www.linuxfoundation.org/
 :uri-sourceforge-lxr: http://sourceforge.net/projects/lxr 

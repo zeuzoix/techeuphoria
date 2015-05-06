@@ -64,6 +64,8 @@ objective is to become well versed with the Yocto project and use it as a build
 system for embedded systems
 --
 
+include::{includedir}/about-yocto.adoc[]
+
 include::{includedir}/about-beagleboard.adoc[]
 
 include::{includedir}/about-free-electrons.adoc[]
