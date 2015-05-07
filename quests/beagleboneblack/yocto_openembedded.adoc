@@ -83,7 +83,10 @@ include::{includedir}/hardware.adoc[]
 
 include::{includedir}/software.adoc[lines="1..53,67..78"]
 
-include::{includedir}/installing-lab-data.adoc[]
+include::{includedir}/installing-yoctooe-prerequisite-packages.adoc[]
+
+include::{includedir}/installing-yoctooe-lab-data.adoc[]
+
 
 
 
