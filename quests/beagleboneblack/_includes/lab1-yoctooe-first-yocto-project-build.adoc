@@ -1,0 +1,327 @@
+== Lab1: First Yocto Build
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Download the sources
+. Set up an OpenEmbedded environment
+. Configure the project and choose a target
+. Build your first Poky image
+====
+
+=== Download The Stable Release
+
+First download the latest stable releases of the Yocto project:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ wget http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2
+--2015-05-07 11:17:37--  http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2
+Resolving downloads.yoctoproject.org (downloads.yoctoproject.org)... 198.145.20.127
+Connecting to downloads.yoctoproject.org (downloads.yoctoproject.org)|198.145.20.127|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 13887789 (13M) [application/octet-stream]
+Saving to: ‘poky-dora-10.0.1.tar.bz2’
+
+100%[==============================================================================================================================================>] 13,887,789   986KB/s   in 16s    
+
+2015-05-07 11:17:53 (856 KB/s) - ‘poky-dora-10.0.1.tar.bz2’ saved [13887789/13887789]
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ 
+----
+
+=== Extract The Package
+
+Then extract the tarball:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ tar xvjf poky-dora-10.0.1.tar.bz2 
+poky-dora-10.0.1/
+poky-dora-10.0.1/meta-hob/
+poky-dora-10.0.1/meta-hob/recipes-core/
+poky-dora-10.0.1/meta-hob/recipes-core/images/
+poky-dora-10.0.1/meta-hob/recipes-core/images/hob-image.bb
+poky-dora-10.0.1/meta-hob/recipes-core/meta/
+.
+.
+.
+poky-dora-10.0.1/scripts/bitbake-prserv-tool
+poky-dora-10.0.1/scripts/runqemu-gen-tapdevs
+poky-dora-10.0.1/scripts/runqemu-export-rootfs
+poky-dora-10.0.1/scripts/crosstap
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ 
+----
+
+=== Clone The _meta-ti_ 
+
+Next go to the extracted directed and download the OpenEmbedded TI layer
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ cd poky-dora-10.0.1/	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ ls
+bitbake  documentation  LICENSE  meta  meta-hob  meta-skeleton  meta-yocto  meta-yocto-bsp  oe-init-build-env  oe-init-build-env-memres  README  README.hardware  RELEASENOTES  scripts
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ git clone git://git.yoctoproject.org/meta-ti.git	<2>
+Cloning into 'meta-ti'...
+remote: Counting objects: 14697, done.
+remote: Compressing objects: 100% (5714/5714), done.
+remote: Total 14697 (delta 8514), reused 14419 (delta 8249)
+Receiving objects: 100% (14697/14697), 7.16 MiB | 780.00 KiB/s, done.
+Resolving deltas: 100% (8514/8514), done.
+Checking connectivity... done.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ 
+----
+<1> Change to the poky directory
+<2> Clone the _meta-ti_ project
+
+We will have to checkout the _dora_ branch of the _meta-ti_ project.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ ls
+bitbake        LICENSE  meta-hob       meta-ti     meta-yocto-bsp     oe-init-build-env-memres  README.hardware  scripts
+documentation  meta     meta-skeleton  meta-yocto  oe-init-build-env  README                    RELEASENOTES
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ cd meta-ti/	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ ls
+conf  COPYING.MIT  licenses  README  recipes-bsp  recipes-connectivity  recipes-core  recipes-graphics  recipes-kernel  recipes-ti
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git status	<2>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+nothing to commit, working directory clean
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git branch -a	<3>
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/daisy
+  remotes/origin/danny
+  remotes/origin/denzil
+  remotes/origin/dora
+  remotes/origin/dylan
+  remotes/origin/master
+  remotes/origin/split
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git checkout dora	<4>
+Branch dora set up to track remote branch dora from origin.
+Switched to a new branch 'dora'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
+Switched to a new branch 'dora'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git status	<5>
+On branch dora
+Your branch is up-to-date with 'origin/dora'.
+
+nothing to commit, working directory clean
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
+
+
+----
+<1> Change to the cloned _meta-ti_ project
+<2> Use _git status_ to see which branch we're on. It shows we're on _master_
+<3> List out the available branches with _git branch -a_
+<4> Checkout the _dora_ branch 
+<5> Use _git status_ to see which branch we're on. It shows we're on _dora_ in sync with _origin/dora_
+
+=== Apply A Patch 
+
+We will now apply a patch to the _meta-ti_ project
+to improve BeagleBone support. We can read the patch
+to understand its purpose and modifications.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ cat ~/Training/yocto/yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch 
+From 0be91378e26a54cb4ef469290bc960d383ef2898 Mon Sep 17 00:00:00 2001
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Date: Mon, 4 Aug 2014 17:13:56 +0200
+Subject: [PATCH] beaglebone: use the am335x_boneblack u-boot configuration
+
+Using the am335x_boneblack configuration for u-boot allows to save the
+environment to the emmc. Else, it is not possible to save the
+environment at all.
+
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ conf/machine/beaglebone.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/conf/machine/beaglebone.conf b/conf/machine/beaglebone.conf
+index 8a83a1aeb569..0b4dce3ad647 100644
+--- a/conf/machine/beaglebone.conf
++++ b/conf/machine/beaglebone.conf
+@@ -11,4 +11,4 @@ IMAGE_FSTYPES += "tar.gz"
+ 
+ SERIAL_CONSOLE = "115200 ttyO0"
+ 
+-UBOOT_MACHINE = "am335x_evm_config"
++UBOOT_MACHINE = "am335x_boneblack"
+-- 
+1.9.1
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
+----
+
+Now that we know the patch allows the U-Boot environment
+to be saved to the emmc we can go ahead and apply it.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git am ~/Training/yocto/yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch 
+Applying: beaglebone: use the am335x_boneblack u-boot configuration
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
+----
+
+=== Set Up The Build Environment
+
+==== Configure Default Shell As _bash_
+
+If you're on Ubuntu make sure the default shell is _bash_ and not _dash_.
+This can be done by running:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ sudo dpkg-reconfigure dash
+----
+
+Select <No> and hit "Enter".
+
+====
+[[yoctooe-dash-reconfigure]]
+.Reconfigure dash
+image::yoctooe-dash-reconfigure.png[width="640", height="480", align="center", link={awestruct-imagesdir}/yoctooe-dash-reconfigure.png]
+====
+
+==== Source _oe-init-build-env_
+
+Before building all the needed environment variables have to be exported
+and a build directory must be specified. To do this we can use
+_oe-init-build-env_, which is present in the Poky package. It will
+create the default build directory as _build_ if nothing is specified
+
+Before sourcing the script our environment variables
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ printenv > pre_environment.txt
+----
+
+We now source the _oe-init-build-env_ script as follows. It creates a _build_
+directory by default as we haven't specified any build directory.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ source oe-init-build-env
+You had no conf/local.conf file. This configuration file has therefore been
+created for you with some default values. You may wish to edit it to use a 
+different MACHINE (target hardware) or enable parallel build options to take 
+advantage of multiple cores for example. See the file for more information as 
+common configuration options are commented.
+
+The Yocto Project has extensive documentation about OE including a reference manual
+which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+You had no conf/bblayers.conf file. The configuration file has been created for
+you with some default values. To add additional metadata layers into your
+configuration please add entries to this file.
+
+The Yocto Project has extensive documentation about OE including a reference manual
+which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    meta-toolchain-sdk
+    adt-installer
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ 
+----
+
+We now capture the environment variables to check what has changed.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ printenv > post_environment.txt
+----
+
+With _diff_ we see the difference in the environment variables after sourcing
+the script.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ diff pre_environment.txt post_environment.txt 
+10a11
+> OLDPWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build/conf
+23c24
+< PATH=/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin
+---
+> PATH=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/scripts:/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/bitbake/bin:/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin	<1>
+27c28
+< PWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1
+---
+> PWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build
+37a39
+> BUILDDIR=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build	<2>
+59a62
+> BB_ENV_EXTRAWHITE=MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR	<3>
+64d66
+< OLDPWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/bitbake
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ 
+----
+<1> Two paths added to the PATH variable: ...poky-dora-10.0.1/scripts and ...poky-dora-10.0.1/bitbake/bin
+<2> New variable BUILDDIR=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build	added
+<3> New variable BB_ENV_EXTRAWHITE added. This describes the list of environment variables to be imported into BitBake data store.
+
+=== Set Up The _build/conf/_ Directory
+
+After sourcing the _oe-init-build-env_ script we are placed in the
+_build_ directory. There are two files present in the _conf_ folder
+which can be used to tune the build configuration
+
+bblayers.conf:: List the available layers e.g. _meta-ti_
+local.conf:: Configuration variables for the current user
+
+We will update the BB_NUMBER_THREADS and PARALLEL_MAKE to define
+how many tasks should be run in parallel. This will be specific
+to the build system and can be inferred as follows:
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ grep "processor" -ri /proc/cpuinfo
+processor	: 0
+processor	: 1
+----
+
+As indicated above we can set those parallelization variables to 2.
+Additionally we need to set the MACHINE to _beaglebone_.
+
+====
+[[yoctooe-conf-local]]
+.conf/local.conf variable modifications
+image::yoctooe-conf-local.png[width="640", height="480", align="center", link={awestruct-imagesdir}/yoctooe-conf-local.png]
+====
+
+We also add the full path of _meta-ti_ to the _conf/bblayers.conf_ file.
+
+====
+[[yoctooe-conf-bblayers]]
+.conf/bblayers.conf variable modifications
+image::yoctooe-conf-bblayers.png[width="640", height="480", align="center", link={awestruct-imagesdir}/yoctooe-conf-bblayers.png]
+====
+
+

@@ -87,6 +87,14 @@ include::{includedir}/installing-yoctooe-prerequisite-packages.adoc[]
 
 include::{includedir}/installing-yoctooe-lab-data.adoc[]
 
+= First Yocto Project Build
+
+[partintro]
+--
+We'll dive into the build mechanism of the Yocto project
+--
+
+include::{includedir}/lab1-yoctooe-first-yocto-project-build.adoc[]
 
 
 
