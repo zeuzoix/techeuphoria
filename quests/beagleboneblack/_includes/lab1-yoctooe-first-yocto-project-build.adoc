@@ -1,7 +1,7 @@
 == Lab1: First Yocto Build
 
 [NOTE]
-.This is a hands on session taken from the Free Electrons labs with the following objectives
+.This is a hands on session based on the Free Electrons labs with the following objectives
 ====
 . Download the sources
 . Set up an OpenEmbedded environment
@@ -9,165 +9,28 @@
 . Build your first Poky image
 ====
 
-=== Download The Stable Release
+=== Clone The Stable Release
 
-First download the latest stable releases of the Yocto project:
+We need to download the latest stable releases of the Yocto project in order
+to start building our first images. 
 
+[WARNING]
+.Diverging from _yocto-labs.pdf_
+====
+The downloaded PDF _yocto-labs.pdf_ suggests downloading the "dora" release of
+yocto. However problems are seen while building with bitbake with that release.
+One of the problems that were seen was that the initial sanity check was failing
+and our version of Ubuntu 14.04 is not supported by the dora release download package
+{uri-poky-dora-tar}[poky-dora-10.0.1.tar.bz2^]. We diverge here from the labs and
+clone the git branch of daisy of the Yocto project.
+====
+
+We clone the sources as shown below. This repository has support for BeagleBone Black
+and so we don't clone the _meta-ti_ project as mentioned in the _yocto-labs.pdf_ from
+Free Electrons.
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ wget http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2
---2015-05-07 11:17:37--  http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2
-Resolving downloads.yoctoproject.org (downloads.yoctoproject.org)... 198.145.20.127
-Connecting to downloads.yoctoproject.org (downloads.yoctoproject.org)|198.145.20.127|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 13887789 (13M) [application/octet-stream]
-Saving to: ‘poky-dora-10.0.1.tar.bz2’
-
-100%[==============================================================================================================================================>] 13,887,789   986KB/s   in 16s    
-
-2015-05-07 11:17:53 (856 KB/s) - ‘poky-dora-10.0.1.tar.bz2’ saved [13887789/13887789]
-
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ 
-----
-
-=== Extract The Package
-
-Then extract the tarball:
-
-[source, bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ tar xvjf poky-dora-10.0.1.tar.bz2 
-poky-dora-10.0.1/
-poky-dora-10.0.1/meta-hob/
-poky-dora-10.0.1/meta-hob/recipes-core/
-poky-dora-10.0.1/meta-hob/recipes-core/images/
-poky-dora-10.0.1/meta-hob/recipes-core/images/hob-image.bb
-poky-dora-10.0.1/meta-hob/recipes-core/meta/
-.
-.
-.
-poky-dora-10.0.1/scripts/bitbake-prserv-tool
-poky-dora-10.0.1/scripts/runqemu-gen-tapdevs
-poky-dora-10.0.1/scripts/runqemu-export-rootfs
-poky-dora-10.0.1/scripts/crosstap
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ 
-----
-
-=== Clone The _meta-ti_ 
-
-Next go to the extracted directed and download the OpenEmbedded TI layer
-
-[source, bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ cd poky-dora-10.0.1/	<1>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ ls
-bitbake  documentation  LICENSE  meta  meta-hob  meta-skeleton  meta-yocto  meta-yocto-bsp  oe-init-build-env  oe-init-build-env-memres  README  README.hardware  RELEASENOTES  scripts
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ 
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ git clone git://git.yoctoproject.org/meta-ti.git	<2>
-Cloning into 'meta-ti'...
-remote: Counting objects: 14697, done.
-remote: Compressing objects: 100% (5714/5714), done.
-remote: Total 14697 (delta 8514), reused 14419 (delta 8249)
-Receiving objects: 100% (14697/14697), 7.16 MiB | 780.00 KiB/s, done.
-Resolving deltas: 100% (8514/8514), done.
-Checking connectivity... done.
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ 
-----
-<1> Change to the poky directory
-<2> Clone the _meta-ti_ project
-
-We will have to checkout the _dora_ branch of the _meta-ti_ project.
-
-[source, bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ ls
-bitbake        LICENSE  meta-hob       meta-ti     meta-yocto-bsp     oe-init-build-env-memres  README.hardware  scripts
-documentation  meta     meta-skeleton  meta-yocto  oe-init-build-env  README                    RELEASENOTES
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ cd meta-ti/	<1>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ ls
-conf  COPYING.MIT  licenses  README  recipes-bsp  recipes-connectivity  recipes-core  recipes-graphics  recipes-kernel  recipes-ti
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git status	<2>
-On branch master
-Your branch is up-to-date with 'origin/master'.
-
-nothing to commit, working directory clean
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git branch -a	<3>
-* master
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/daisy
-  remotes/origin/danny
-  remotes/origin/denzil
-  remotes/origin/dora
-  remotes/origin/dylan
-  remotes/origin/master
-  remotes/origin/split
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git checkout dora	<4>
-Branch dora set up to track remote branch dora from origin.
-Switched to a new branch 'dora'
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
-Switched to a new branch 'dora'
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git status	<5>
-On branch dora
-Your branch is up-to-date with 'origin/dora'.
-
-nothing to commit, working directory clean
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
-
-
-----
-<1> Change to the cloned _meta-ti_ project
-<2> Use _git status_ to see which branch we're on. It shows we're on _master_
-<3> List out the available branches with _git branch -a_
-<4> Checkout the _dora_ branch 
-<5> Use _git status_ to see which branch we're on. It shows we're on _dora_ in sync with _origin/dora_
-
-=== Apply A Patch 
-
-We will now apply a patch to the _meta-ti_ project
-to improve BeagleBone support. We can read the patch
-to understand its purpose and modifications.
-
-[source, bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ cat ~/Training/yocto/yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch 
-From 0be91378e26a54cb4ef469290bc960d383ef2898 Mon Sep 17 00:00:00 2001
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Date: Mon, 4 Aug 2014 17:13:56 +0200
-Subject: [PATCH] beaglebone: use the am335x_boneblack u-boot configuration
-
-Using the am335x_boneblack configuration for u-boot allows to save the
-environment to the emmc. Else, it is not possible to save the
-environment at all.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- conf/machine/beaglebone.conf | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/conf/machine/beaglebone.conf b/conf/machine/beaglebone.conf
-index 8a83a1aeb569..0b4dce3ad647 100644
---- a/conf/machine/beaglebone.conf
-+++ b/conf/machine/beaglebone.conf
-@@ -11,4 +11,4 @@ IMAGE_FSTYPES += "tar.gz"
- 
- SERIAL_CONSOLE = "115200 ttyO0"
- 
--UBOOT_MACHINE = "am335x_evm_config"
-+UBOOT_MACHINE = "am335x_boneblack"
--- 
-1.9.1
-
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
-----
-
-Now that we know the patch allows the U-Boot environment
-to be saved to the emmc we can go ahead and apply it.
-
-[source, bash]
-----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ git am ~/Training/yocto/yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch 
-Applying: beaglebone: use the am335x_boneblack u-boot configuration
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/meta-ti$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone git://git.yoctoproject.org/poky.git -b daisy
 ----
 
 === Set Up The Build Environment
@@ -201,7 +64,7 @@ Before sourcing the script our environment variables
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ printenv > pre_environment.txt
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ printenv > pre_environment.txt
 ----
 
 We now source the _oe-init-build-env_ script as follows. It creates a _build_
@@ -209,7 +72,7 @@ directory by default as we haven't specified any build directory.
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1$ source oe-init-build-env
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ source oe-init-build-env	<1>
 You had no conf/local.conf file. This configuration file has therefore been
 created for you with some default values. You may wish to edit it to use a 
 different MACHINE (target hardware) or enable parallel build options to take 
@@ -244,19 +107,19 @@ Common targets are:
     core-image-minimal
     core-image-sato
     meta-toolchain
-    meta-toolchain-sdk
     adt-installer
     meta-ide-support
 
 You can also run generated qemu images with a command like 'runqemu qemux86'
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$
 ----
+<1> Sourcing the _oe-init-build-env_ script without specifying a build directory
 
 We now capture the environment variables to check what has changed.
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ printenv > post_environment.txt
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ printenv > post_environment.txt
 ----
 
 With _diff_ we see the difference in the environment variables after sourcing
@@ -264,40 +127,42 @@ the script.
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ diff pre_environment.txt post_environment.txt 
-10a11
-> OLDPWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build/conf
-23c24
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ diff ../pre_environment.txt post_environment.txt 
+11c11
+< OLDPWD=/home/conrad/Git
+---
+> OLDPWD=/home/conrad/Git/poky
+24c24
 < PATH=/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin
 ---
-> PATH=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/scripts:/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/bitbake/bin:/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin	<1>
-27c28
-< PWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1
+> PATH=/home/conrad/Git/poky/scripts:/home/conrad/Git/poky/bitbake/bin:/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin	<1>
+28c28
+< PWD=/home/conrad/Git/poky
 ---
-> PWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build
-37a39
-> BUILDDIR=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build	<2>
-59a62
+> PWD=/home/conrad/Git/poky/build
+38a39
+> BUILDDIR=/home/conrad/Git/poky/build	<2>
+60a62
 > BB_ENV_EXTRAWHITE=MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR	<3>
-64d66
-< OLDPWD=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/bitbake
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs/poky-dora-10.0.1/build$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ 
 ----
-<1> Two paths added to the PATH variable: ...poky-dora-10.0.1/scripts and ...poky-dora-10.0.1/bitbake/bin
-<2> New variable BUILDDIR=/home/conrad/Training/yocto/yocto-labs/poky-dora-10.0.1/build	added
+<1> Two paths added to the PATH variable: ...poky/scripts and ...poky/bitbake/bin
+<2> New variable BUILDDIR=/home/conrad/Git/poky/build	added
 <3> New variable BB_ENV_EXTRAWHITE added. This describes the list of environment variables to be imported into BitBake data store.
 
 === Set Up The _build/conf/_ Directory
 
 After sourcing the _oe-init-build-env_ script we are placed in the
-_build_ directory. There are two files present in the _conf_ folder
+_build_ directory. There are three files present in the _conf_ folder
 which can be used to tune the build configuration
 
 bblayers.conf:: List the available layers e.g. _meta-ti_
 local.conf:: Configuration variables for the current user
+templateconf.cfg:: Path of the templates from which the bblayers.conf and local.conf were created
 
-We will update the BB_NUMBER_THREADS and PARALLEL_MAKE to define
-how many tasks should be run in parallel. This will be specific
+In the older versions of Yocto We would have to update the BB_NUMBER_THREADS
+and PARALLEL_MAKE to define how many tasks should be run in parallel. In the
+newer version this is updated directly. This will be specific
 to the build system and can be inferred as follows:
 
 [source, bash]
@@ -307,8 +172,9 @@ processor	: 0
 processor	: 1
 ----
 
-As indicated above we can set those parallelization variables to 2.
-Additionally we need to set the MACHINE to _beaglebone_.
+As indicated above we can set those parallelization variables to 2. However the
+OpenEmbedded utilities takes care of it for us. The main change we need to do
+is set the MACHINE to _beaglebone_.
 
 ====
 [[yoctooe-conf-local]]
@@ -316,12 +182,737 @@ Additionally we need to set the MACHINE to _beaglebone_.
 image::yoctooe-conf-local.png[width="640", height="480", align="center", link={awestruct-imagesdir}/yoctooe-conf-local.png]
 ====
 
-We also add the full path of _meta-ti_ to the _conf/bblayers.conf_ file.
+In the older versions as BeagleBone Black was not supported we would have to clone
+the _meta-ti_ layer in the _poky_ directory from _git://git.yoctoproject.org/meta-ti.git_.
+However it is not required as the newer versions of Yocto supports the
+BeagleBone Black board.
 
 ====
 [[yoctooe-conf-bblayers]]
-.conf/bblayers.conf variable modifications
+.conf/bblayers.conf modifications
 image::yoctooe-conf-bblayers.png[width="640", height="480", align="center", link={awestruct-imagesdir}/yoctooe-conf-bblayers.png]
 ====
+
+=== Build The Image
+
+Once the build configuration has been set we can start the compilation using
+_bitbake [options] [recipe/target...]_
+
+Common targets that were listed when sourcing the script:
+core-image-minimal::A small image to boot a device and have access to core
+command line commands and services.
+core-image-sato:: Image with Sato support. Sato is a GNOME mobile-based user
+interface.
+meta-toolchain:: Includes development headers and libraries to develop directly
+on the target.
+adt-installer:: Build the application development toolkit installer.
+meta-ide-support:: Generates the cross-tool chain
+
+On our first attempt at building the _core-image-minimal_ target we get an error.
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ bitbake core-image-minimal	<1>
+Loading cache: 100% |####################################################################################################################################################| ETA:  00:00:00
+Loaded 1319 entries from dependency cache.
+NOTE: Resolving any missing task queue dependencies
+NOTE: multiple providers are available for u-boot (u-boot, u-boot-glsdk, u-boot-ti-staging)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match u-boot
+
+Build Configuration:
+BB_VERSION        = "1.22.0"
+BUILD_SYS         = "i686-linux"
+NATIVELSBSTRING   = "Ubuntu-14.04"
+TARGET_SYS        = "arm-poky-linux-gnueabi"
+MACHINE           = "beaglebone"
+DISTRO            = "poky"
+DISTRO_VERSION    = "1.6.2"
+TUNE_FEATURES     = "armv7a vfp neon callconvention-hard cortexa8"
+TARGET_FPU        = "vfp-neon"
+meta              
+meta-yocto        
+meta-yocto-bsp    = "daisy:91c507ce1cf983a600c2d38c4284e605a80297d6"
+meta-ti           = "daisy:b09b86c399eebce475d41c3a5df56477f6024a2b"
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+WARNING: Failed to fetch URL http://kernel.org/pub/linux/kernel/v3.0/linux-3.14.tar.xz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.gnu.org/gnu/readline/readline-6.3.tar.gz;name=archive, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://zlib.net/pigz/pigz-2.3.1.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/b/base-passwd/base-passwd_3.5.29.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://pkg-shadow.alioth.debian.org/releases/shadow-4.1.4.3.tar.bz2, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz;name=libtar, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://www.cpan.org/src/5.0/perl-5.14.3.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/n/netbase/netbase_5.2.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/d/dpkg/dpkg_1.17.4.tar.xz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://ftp.de.debian.org/debian/pool/main/m/mklibs/mklibs_0.1.38.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://createrepo.baseurl.org/download/createrepo-0.4.11.tar.gz, attempting MIRRORS if available
+NOTE: validating kernel config, see log.do_kernel_configcheck for details
+NOTE: Tasks Summary: Attempted 1797 tasks of which 165 didn't need to be rerun and all succeeded.
+
+Summary: There were 13 WARNING messages shown.
+----
+<1> We build the target _core-image-minimal_
+
+The build process takes a while depending on your bandwidth and processor speeds.
+
+=== Setting Up The SD Card
+
+We will use an SD card to store the bootloader, kernel and root filesystem.
+Before copying the built files we need to partition and format the SD card
+using a script available as a part of the yocto-labs data package downloaded
+from Free Electrons.
+
+WARNING: The script assumes that our workstation has a micro-SD card slot 
+and will be detected as a _/dev/mmcblk0*_ type of device. In our case we
+use a micro-SD card to SD card adapter and our device is registered as a
+_/dev/sdb_ type of device
+
+Take the micro-SD card and insert it into a micro-SD adapter/reader
+like the one shown in the image below:
+
+====
+[[beagleboneblacktux-microsd-adaptor-sd]]
+.Micro SD card adapter
+image::sdcard-microsd-adaptor-sd.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/sdcard-microsd-adaptor-sd.jpg]
+====
+ 
+This memory card reader/adapter should be inserted into the SD card
+slot available. If your system has a micro-SD card slot then please
+use that directly. On checking the kernel logs with _dmesg_ we should
+be able to identify the card detected in the system. If a micro-SD
+card slot is available then the system should register it as a 
+_/dev/mmcblk0_ whereas in this case with a memory card reader we see
+it as _/dev/sdb_. The following shows the kernel logs:
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ dmesg
+.
+.
+.
+[127595.272118] usb 1-2: new high-speed USB device number 6 using ehci-pci
+[127595.405640] usb 1-2: New USB device found, idVendor=058f, idProduct=6366
+[127595.405650] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[127595.405658] usb 1-2: Product: Mass Storage Device
+[127595.405665] usb 1-2: Manufacturer: Generic
+[127595.405671] usb 1-2: SerialNumber: 058F63666433
+[127595.406226] usb-storage 1-2:1.0: USB Mass Storage device detected
+[127595.407830] scsi9 : usb-storage 1-2:1.0
+[127596.532963] scsi 9:0:0:0: Direct-Access     Multiple Card  Reader     1.00 PQ: 0 ANSI: 0
+[127596.533754] sd 9:0:0:0: Attached scsi generic sg1 type 0
+[127598.192274] sd 9:0:0:0: [sdb] 7744512 512-byte logical blocks: (3.96 GB/3.69 GiB) <1>
+[127598.193263] sd 9:0:0:0: [sdb] Write Protect is off
+[127598.193269] sd 9:0:0:0: [sdb] Mode Sense: 03 00 00 00
+[127598.194256] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.194259] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+[127598.199023] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.199028] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l /dev/sdb 	<2>
+brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb
+----
+<1> We see the device attached as sdb
+<2> The device node has been created successfully as /dev/sdb
+
+==== Partition The SD Card
+
+We will have to first partition the micro-SD card using the _sfdisk_ utility
+which is part of the _util-linux_ APT package.
+This tool helps us to list the partitions of a device, check the sizes of the
+partitions, check the partitions on a device and re-partition a device. We must
+*be extra careful* when we use such a tool as it could also cause damage to our
+workstation system if we select the wrong device file unintentionally.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo sfdisk --in-order --Linux --unit M /dev/sdb << EOF		<1>
+> 1,48,0xE,*
+> ,,,-
+> EOF
+Checking that no-one is using this disk right now ...
+BLKRRPART: Device or resource busy						<2>
+
+This disk is currently in use - repartitioning is probably a bad idea.
+Umount all file systems, and swapoff all swap partitions on this disk.
+Use the --no-reread flag to suppress this check.
+Use the --force flag to overrule all checks.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ mount		<3>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2) <4>
+----
+<1> The command to re-partition the _/devsdb_ device with _sfdisk_. The options
+_--in-order_ indicates that the partitions are in order in the input. _--Linux_
+tells sfdisk to ignore all warnings irrelevant for Linux.
+<2> The device is apparently busy.
+<3> We do a _mount_ to check if it is mounted
+<4> We see that a partition is mounted in our Workstation at /media/conrad/boot
+
+If the micro-SD card is already partitioned and formated it may be auto mounted
+by our work station. We will have to un-mount all the partitions before we can
+proceed.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo umount /media/conrad/boot 	<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ mount		<2>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+----
+<1> We have to unmount the _/dev/sdb1_ from the mount point i.e. _/media/conrad/boot_
+<2> We check to see if anything else is mounted again
+
+Again we attempt to repartition the micro-SD card 
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo sfdisk --in-order --Linux --unit M /dev/sdb << EOF	
+1,48,0xE,*
+,,,-
+EOF											<1>
+Checking that no-one is using this disk right now ...					<2>
+OK
+
+Disk /dev/sdb: 1023 cylinders, 122 heads, 62 sectors/track
+Old situation:										<3>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+New situation:										<4>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+Successfully wrote the new partition table
+
+Re-reading the partition table ...
+BLKRRPART: Device or resource busy
+The command to re-read the partition table failed.
+Run partprobe(8), kpartx(8) or reboot your system now,
+before using mkfs
+If you created or changed a DOS partition, /dev/foo7, say, then use dd(1)
+to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1
+(See fdisk(8).)
+----
+<1> The _sfdisk_ utility is invoked supplying the information about the partitions
+<2> _sfdisk_ checking to see that no one is using the disk
+<3> The old partition map is displayed first. *This will vary based on the history
+of the micro-SD card*
+<4> The new partition map is displayed. The first partition is a W95 FAT16 one
+which is 48 MB. This is the first line of input to sfdisk. The remaining has
+been converted to a Linux partition.
+
+==== Format The Partitions
+
+We will have to format the first partition of the disk using the _mkfs.vfat_
+partition.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo mkfs.vfat -F 16 /dev/sdb1 -n boot	<1>
+[sudo] password for conrad: 
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+mkfs.fat 3.0.26 (2014-03-07)
+mkfs.fat: warning - lowercase labels might not work properly with DOS or Windows
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ echo $?			<2>
+0
+----
+<1> _mkfs.vfat_ is run on the partition _/dev/sdb1_. The label of the partition
+is set to _boot_ with the -n option and the -F option specifies the type of
+file allocation tables used (12, 16 or 32 bit).
+<2> Checks the return value of the command
+
+We will have to format the second partition of the disk using the _mkfs.vfat_
+partition.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo mkfs.ext4 /dev/sdb2 -L rootfs	<1>
+mke2fs 1.42.9 (4-Feb-2014)
+Filesystem label=rootfs
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+239040 inodes, 955392 blocks
+47769 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=981467136
+30 block groups
+32768 blocks per group, 32768 fragments per group
+7968 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done 
+----
+<1> _mkfs.ext4_ is run on the partition _/dev/sdb2_. The label of the partition
+is set to _rootfs_ with the -L option 
+
+On disconnecting the SD card adapter and reconnecting it we see the
+two partitions mounted under devices. The steps to prepare the SD card
+are the same as what would be executed by _yocto-labs/script/format_sdcard.sh_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cat ~/Training/yocto/yocto-labs/script/format_sdcard.sh 
+#!/bin/bash
+
+if [ $(id -u) -ne 0 ]; then
+  echo "Please run this script as root"
+  exit
+fi
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 mmc_device"
+  exit
+fi
+
+exec 1>&-
+exec 2>&-
+
+dd if=/dev/zero of=$1 bs=1M count=16
+sfdisk --in-order --L --unit M $1 <<EOF
+1,48,0xE,*
+,,,-
+EOF
+
+mkfs.vfat -F 16 ${1}p1 -n boot
+mkfs.ext4 ${1}p2 -L rootfs
+
+exit 0
+
+----
+
+==== Copy The Built Images
+
+We copy the two U-Boot stages, Linux image and compiled device tree in the
+_boot_ partition.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l build/tmp/deploy/images/beaglebone/	<1>
+total 43064
+-rw-r--r-- 1 conrad conrad  2949120 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad      972 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2264889 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2
+lrwxrwxrwx 1 conrad conrad       57 May 11 23:51 core-image-minimal-beaglebone.jffs2 -> core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+lrwxrwxrwx 1 conrad conrad       60 May 11 23:51 core-image-minimal-beaglebone.manifest -> core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+lrwxrwxrwx 1 conrad conrad       59 May 11 23:51 core-image-minimal-beaglebone.tar.bz2 -> core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO -> MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO-beaglebone -> MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rwxr-xr-x 2 conrad conrad   102348 May 12 15:15 MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rw-rw-r-- 2 conrad conrad 33333836 May 12 02:04 modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 modules-beaglebone.tgz -> modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+-rw-rw-r-- 2 conrad conrad      294 May 12 02:04 README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot-beaglebone.img -> u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+-rwxr-xr-x 2 conrad conrad   356456 May 12 15:15 u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot.img -> u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+-rw-r--r-- 2 conrad conrad    28596 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad    29192 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad  4985352 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+lrwxrwxrwx 1 conrad conrad       80 May 12 02:04 uImage-am335x-boneblack.dtb -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 uImage-am335x-bone.dtb -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage-beaglebone.bin -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cp build/tmp/deploy/images/beaglebone/MLO-beaglebone /media/conrad/boot/MLO	<2>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cp build/tmp/deploy/images/beaglebone/u-boot-beaglebone.img /media/conrad/boot/u-boot.img	<3>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpf build/tmp/deploy/images/beaglebone/core-image-minimal-beaglebone.tar.bz2 -C /media/conrad/rootfs	<4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l /media/conrad/rootfs/
+total 60
+drwxr-xr-x  2 root root 4096 May 11 23:51 bin
+drwxr-xr-x  2 root root 4096 May 11 20:51 boot
+drwxr-xr-x  2 root root 4096 May 11 20:51 dev
+drwxr-xr-x 17 root root 4096 May 11 23:51 etc
+drwxr-sr-x  3 root root 4096 May 11 23:51 home
+drwxr-xr-x  3 root root 4096 May 11 23:51 lib
+drwxr-xr-x  2 root root 4096 May 11 20:51 media
+drwxr-xr-x  2 root root 4096 May 11 20:51 mnt
+drwxr-xr-x  2 root root 4096 May 11 20:51 proc
+drwxr-xr-x  2 root root 4096 May 11 20:51 run
+drwxr-xr-x  2 root root 4096 May 11 23:51 sbin
+drwxr-xr-x  2 root root 4096 May 11 20:51 sys
+drwxrwxrwt  2 root root 4096 May 11 20:51 tmp
+drwxr-xr-x  9 root root 4096 May 11 23:30 usr
+drwxr-xr-x  7 root root 4096 May 11 20:50 var
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpf build/tmp/deploy/images/beaglebone/modules-beaglebone.tgz -C /media/conrad/rootfs	<5>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo cp build/tmp/deploy/images/beaglebone/uImage-beaglebone.bin /media/conrad/rootfs/boot/uImage
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo cp build/tmp/deploy/images/beaglebone/uImage-am335x-boneblack.dtb /media/conrad/rootfs/boot/am335x-boneblack.dtb	<6>
+----
+<1> Listing the images built
+<2> Copying the first stage bootloader _MLO_ to the _boot_ partition
+<3> Copying the second stage bootloader _u-boot.img_ to the _boot_ partition
+<4> Untar the root filesystem in the _rootfs_ partition
+<5> Untar the kernel modules in the _rootfs_ partition as we have built a core-image-minimal target
+<6> Copy the compiled device tree binary
+
+=== Setting Up Serial Communication With The Board
+	
+The debug serial header connector is a 1x6 header. Serial
+capability is provided by UART0 of the processor. It would be good to read
+the section on the debug serial header given in the
+{link-am3358-technical-reference-manual-pdf}[Technical Reference Manual^].
+
+The only two signals available are TX and RX on the connector and the levels
+on these signals is 3.3V. A FTDI USB to serial cable is recommended as this
+serves to provide a serial port to PCs/Laptops making use of the available
+USB port. The FTDI chip translates the USB data to serial and vice versa. There
+are several provided in the elinux.org website link at: +
+{link-elinux-bbb-serial-ftdi}[{link-elinux-bbb-serial-ftdi}^].
+
+==== Rhydolabz FTDI USB To Serial Breakout Board
+
+In this journal a breakout board was purchased from
+{link-rhydolabz-home-page}[Rhydolabz^]. There are several boards available but
+one without a 1x6 connector was chosen. All the signals of the FTDI can be
+exposed by soldering a bergstrip pin-out for advanced users but for our use
+case GND, RX and TX are provided with an easy to access 4 pin connector. The
+board is also capable of outputing both 5V and 3.3V. This is controlled by
+soldering the 3.3V leads at the back of the breakout board. The board can be
+picked up from: +
+{link-rhydolabz-ftdi-usb-to-serial-converter}[{link-rhydolabz-ftdi-usb-to-serial-converter}^]
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-usb-serial-breakout-board]]
+.Rhydolabz breakout board with mini USB cable
+image::rhydolabz-ftdi-usb-to-serial-interface-module.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/rhydolabz-ftdi-usb-to-serial-interface-module.jpg]
+====
+
+==== Connecting The Breakout Board
+
+The FTDI breakout board comes with a Grove 4 pin Female jumper to 4 pin
+conversion cable. Each of the cables can be connected to female connectors
+to be slotted into the serial debug header pins. We need only the GND, RXD
+and TXD signals from the board. Before connecting the board signals make
+sure the 3.3V leads are shorted at the bottom of the board. The board from
+Rhydolabz comes with the 5V lead shorted and must be converted for the Beagle
+Bone Black.
+
+. Connect the GND cable of the FTDI breakout board to pin 1 of the serial header.
+. Next connect RXD of the FTDI breakout board to pin 5 which is the TX of the serial debug header.
+. Finally connect TXD of the board to pin 4 which is the RX of the serial debug header.
+
+It is always good to understand the specifications of the connectors whenever
+interfacing electronic circuits. In this case we know that the BeagleBone Black
+takes 3.3V from the System Reference Manual. If a different cable is to be used
+check and see if its connector is compatible with the header. The figure below
+shows the setup where GND is the orange cable on the right, next RXD is the
+brown cable followed by the TXD which is the red cable.
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection]]
+.Rhydolabz breakout board serial connection to BeagleBone Black 1x6 header
+image::beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg]
+====
+
+Once the connections are in place between the BeagleBone Black serial debug
+header and the FTDI cable or breakout board then connect the USB cable to the
+breakout board. The picture shows that the board lights up.
+
+====
+[[beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection]]
+.Rhydolabz breakout board mini USB connection
+image::beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg]
+====
+
+The linux kernel running on the workstation should register the new USB
+device connected. We can probe the kernel logs to see if there is any activity
+using dmesg.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ dmesg
+.
+.
+.
+[60269.932101] usb 6-1: new full-speed USB device number 2 using uhci_hcd
+[60270.125794] usb 6-1: New USB device found, idVendor=0403, idProduct=6001
+[60270.125804] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[60270.125812] usb 6-1: Product: FT232R USB UART
+[60270.125819] usb 6-1: Manufacturer: FTDI
+[60270.125825] usb 6-1: SerialNumber: A602I2CN
+[60270.212583] usbcore: registered new interface driver usbserial
+[60270.212599] usbcore: registered new interface driver usbserial_generic
+[60270.212611] usbserial: USB Serial support registered for generic
+[60270.230288] usbcore: registered new interface driver ftdi_sio
+[60270.230305] usbserial: USB Serial support registered for FTDI USB Serial Device
+[60270.230972] ftdi_sio 6-1:1.0: FTDI USB Serial Device converter detected
+[60270.231033] usb 6-1: Detected FT232RL
+[60270.231036] usb 6-1: Number of endpoints 2
+[60270.231039] usb 6-1: Endpoint 1 MaxPacketSize 64
+[60270.231041] usb 6-1: Endpoint 2 MaxPacketSize 64
+[60270.231043] usb 6-1: Setting MaxPacketSize 64
+[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ ls -l /dev/ttyUSB0 
+crw-rw---- 1 root dialout 188, 0 Mar 25 22:28 /dev/ttyUSB0	<2>
+----
+<1> The device has been recognized as a tty device and is named ttyUSB0
+<2> A device node _/dev/ttyUSB0_ is created in the root filesystem
+
+==== Accessing The Serial Port With _Picocom_
+
+We can now access the serial port with a terminal application like picocom.
+This can be installed as follows:
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo apt-get install picocom	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo adduser $USER dialout	<2>
+----
+<1> Installing _picocom_ with _apt-get_
+<2> Adding $USER to the dialout group to use _picocom_ without sudo. $USER is set to the username i.e conrad in the above case.
+
+We can now start _picocom_ and connect it to the _/dev/ttyUSB0_ device which
+was created earlier. The baud rate is specified with the -b option. The
+default serial port settings for the board are:
+
+. Baud 115,200
+. Bits 8
+. Parity N
+. Stop Bits 1
+. Handshake None
+
+After starting the _picocom_ application we should be able to see the serial
+port is opened and the settings should be the default settings. If they are
+not then try to get the settings by providing options to picocom. Once we get
+the desired settings we can apply power to the connected BeagleBone Black. At
+this point we will boot up the board for the first time and should see the
+serial logs of the bootloader U-Boot. The boot process can be interrupted by
+hitting any key on the keyboard and allowing us to configure the U-Boot 
+environment.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 <1>
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        : 
+omap is        : 
+emap is        : crcrlf,delbs,
+
+Terminal ready	<2>
+----
+<1> We run the _picocom_ application setting the baud rate to 115200 and
+choosing the device as _/dev/ttyUSB0_
+<2> _picocom_ shows that the terminal is ready after printing the serial
+port settings
+
+=== Booting The Board
+
+Insert the micro-SD card in the dedicated slot on the BeagleBone Black.
+Press the S2 push button (located just above the previous slot), plug in
+the power supply (External/USB) and release the push button. You
+should see boot messages on the console.
+
+[source, bash]
+----
+Terminal ready
+"
+U-Boot 2013.07 (May 12 2015 - 15:15:09)		<1>
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+mmc0 is current device
+SD/MMC found on device 0
+reading uEnv.txt
+** Unable to read file uEnv.txt **
+4985352 bytes read in 865 ms (5.5 MiB/s)
+29192 bytes read in 35 ms (814.5 KiB/s)
+Booting from mmc ...					<2>
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   Linux-3.14.0-yocto-standard
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4985288 Bytes = 4.8 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 88000000
+   Booting using the fdt blob at 0x88000000
+   Loading Kernel Image ... OK
+   Loading Device Tree to 8fff5000, end 8ffff207 ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Initializing cgroup subsys cpuset
+Initializing cgroup subsys cpu
+Initializing cgroup subsys cpuacct
+Linux version 3.14.0-yocto-standard (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.8.2 (GCC) ) #1 PREEMPT Tue May 12 01:59:26 IST 2015
+CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine model: TI AM335x BeagleBone
+cma: CMA: reserved 16 MiB at 9e800000
+Memory policy: Data cache writeback
+CPU: All CPU(s) started in SVC mode.
+AM335X ES2.0 (sgx neon )
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 129792
+Kernel command line: console=ttyO0,115200n8 root=/dev/mmcblk0p2 ro rootfstype=ext4 rootwait	<3>
+PID hash table entries: 2048 (order: 1, 8192 bytes)
+Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+allocated 1048576 bytes of page_cgroup
+please try 'cgroup_disable=memory' option if you don't want memory cgroups
+Memory: 489444K/523264K available (7491K kernel code, 520K rwdata, 2456K rodata, 488K init, 757K bss, 33820K reserved, 0K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+    lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .text : 0xc0008000 - 0xc09bf044   (9949 kB)
+      .init : 0xc09c0000 - 0xc0a3a034   ( 489 kB)
+      .data : 0xc0a3c000 - 0xc0abe0d4   ( 521 kB)
+       .bss : 0xc0abe0d4 - 0xc0b7b678   ( 758 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Preemptible hierarchical RCU implementation.
+NR_IRQS:16 nr_irqs:16 16
+IRQ: Found an INTC at 0xfa200000 (revision 5.0) with 128 interrupts
+Total of 128 interrupts on 1 active controller
+OMAP clockevent source: timer2 at 24000000 Hz
+sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956969942ns
+OMAP clocksource: timer1 at 24000000 Hz
+Console: colour dummy device 80x30
+Calibrating delay loop... 548.86 BogoMIPS (lpj=2744320)
+pid_max: default: 32768 minimum: 301
+Security Framework initialized
+.
+.
+.
+omap_rtc 44e3e000.rtc: setting system clock to 2000-01-01 00:00:01 UTC (946684801)
+EXT4-fs (mmcblk0p2): INFO: recovery required on readonly filesystem
+EXT4-fs (mmcblk0p2): write access will be enabled during recovery
+mmc1: BKOPS_EN bit is not set
+mmc1: new high speed MMC card at address 0001
+mmcblk1: mmc1:0001 MMC02G 1.78 GiB 
+mmcblk1boot0: mmc1:0001 MMC02G partition 1 1.00 MiB
+mmcblk1boot1: mmc1:0001 MMC02G partition 2 1.00 MiB
+ mmcblk1: p1 p2
+ mmcblk1boot1: unknown partition table
+ mmcblk1boot0: unknown partition table
+EXT4-fs (mmcblk0p2): recovery complete
+EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
+VFS: Mounted root (ext4 filesystem) readonly on device 179:2.	<4>
+devtmpfs: mounted
+Freeing unused kernel memory: 488K (c09c0000 - c0a3a000)
+INIT: version 2.88 booting
+Starting udev
+udevd[80]: starting version 182
+EXT4-fs (mmcblk0p2): re-mounted. Opts: data=ordered
+Starting Bootlog daemon: bootlogd.
+random: nonblocking pool is initialized
+Mon May 11 18:21:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... net eth0: initializing cpsw version 1.12 (0)
+net eth0: phy found : id is : 0x7c0f1
+libphy: PHY 4a101000.mdio:01 not found
+net eth0: phy 4a101000.mdio:01 not found on slave 1
+IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+udhcpc (v1.22.1) started
+Sending discover...
+Sending discover...
+Sending discover...
+No lease, failing
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root	<5>
+root@beaglebone:~# 
+root@beaglebone:~# pwd
+/home/root
+----
+<1> Our compiled U-Boot with it's timestamp is loaded
+<2> The kernel and compiled device tree binary is booted from mmc 
+<3> The kernel arguments show that _root=/dev/mmcblk0p2_ the second partition is the root filesystem
+<4> The second partition is successfully mounted as the root filesystem
+<5> We have access to the root login. 
+
+
 
 
