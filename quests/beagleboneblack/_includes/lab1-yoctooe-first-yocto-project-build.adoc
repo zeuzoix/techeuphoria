@@ -774,6 +774,25 @@ should see boot messages on the console.
 ----
 Terminal ready
 "
+"
+U-Boot SPL 2013.07 (May 12 2015 - 15:15:09)
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+OMAP SD/MMC: 0
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
 U-Boot 2013.07 (May 12 2015 - 15:15:09)		<1>
 
 I2C:   ready

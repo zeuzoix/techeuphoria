@@ -96,5 +96,12 @@ We'll dive into the build mechanism of the Yocto project
 
 include::{includedir}/lab1-yoctooe-first-yocto-project-build.adoc[]
 
+= Advanced Yocto configuration
 
+[partintro]
+--
+We'll configure the build, customize the images and use a NFS root file system.
+--
+
+include::{includedir}/lab2-yoctooe-advanced-yocto-configuration.adoc[]
 

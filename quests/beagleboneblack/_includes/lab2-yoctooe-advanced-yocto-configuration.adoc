@@ -1,0 +1,446 @@
+== Lab2: Advanced Yocto Configuration
+
+
+[NOTE]
+.This is a hands on session based on the Free Electrons labs with the following objectives
+====
+. Customize the package selection
+. Configure the build system
+====
+
+=== Using rootfs Over NFS
+
+In the previous lab we flashed the compiled images and rootfilesystem
+onto the microSD card. The flashing process does take a while even
+with the fastest SD cards and also may cause the connectors to wear
+out thereby damaging the board. Another disadvantage is that with
+each write operation the life of the SD card also reduces. We need to
+switch to a network type of development environment to solve these
+problems. This enables us to build our binaries on the workstation
+and test it on the board without having to flash the board which saves
+time as well as prolongs the life of the eMMC device or micro-SD card.
+We will enable a NFS type of root filesystem which will allow us to test
+cross-compiled binaries on board. 
+
+==== Setting Up The NFS Server
+
+We will now need to setup our workstation as a NFS server. This will require
+installation of the _nfs-kernel-server_ package.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install nfs-kernel-server
+----
+
+Once installed we need to edit the _/etc/exports_ file to configure the server
+to allow a NFS client to connect to it and mount a directory. In this case
+we want to configure the NFS server in such a way so as to allow our
+BeagleBone Black platform to mount the root filesystem which is there in our
+workstation lab data directory.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports 		<1>
+# /etc/exports: the access control list for filesystems which may be exported
+#		to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
+/home/conrad/Training/yocto/nfs 192.168.0.100(rw,no_root_squash,no_subtree_check)		<2>
+----
+<1> After editing the file we cat its contents
+<2> The directory of nfsroot is exported to IP 192.168.0.100 which is our BBB IP
+
+Finally before we boot make sure to restart the NFS server as shown below. If
+there are any errors then the server will refuse to start and error logs will
+appear. The _/etc/exports_ file must be revisited and the syntax of the line
+must be inspected and corrected. Fix the errors and ensure the NFS server
+restarts before proceeding.
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service nfs-kernel-server restart
+ * Stopping NFS kernel daemon 				[ OK ] 
+ * Unexporting directories for NFS kernel daemon...     [ OK ] 
+ * Exporting directories for NFS kernel daemon...       [ OK ] 
+ * Starting NFS kernel daemon                           [ OK ] 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ 
+----
+
+Now we will connect an ethernet cable between our workstation and the BeagleBone
+Black ethernet connector. If the workstation does not have any more connections
+then we will have to use a USB ethernet adapter. In this case we have an unused
+connection so we will connect the cable as shown.
+
+====
+[[beagleboneblacktux-ethernet-connection]]
+.BeagleBone Black connected to ethernet cable
+image::beagleboneblacktux-ethernet-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-connection.jpg]
+====
+
+We next have to configure the network interface on the workstation side. Click
+on the network manager tasklet on the desktop and select _Edit Connections_.
+
+====
+[[beagleboneblacktux-ethernet-screenshot-edit-connections]]
+.Screen shot of _Edit Connections_ selected in the network manager tasklet
+image::beagleboneblacktux-ethernet-screenshot-edit-connections.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-edit-connections.png]
+====
+
+Click on the Add button on the left and then _Create.._ an ethernet connection.
+
+====
+[[beagleboneblacktux-ethernet-screenshot-add-new-connection]]
+.Screen shot of adding a new ethernet conneciton
+image::beagleboneblacktux-ethernet-screenshot-add-new-connection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-add-new-connection.png]
+====
+
+Edit the new ethernet connection by changing its name to _BBB_. Change the
+IPV4 settings by selecting the method as manual. And finally add the static
+address as 192.168.0.1 and netmask as 255.255.255.0. There's no need to add
+a gateway but if the cursor is in the textbox enter 0.0.0.0. Save the
+settings and the interface is set up on the workstation.
+
+====
+[[beagleboneblacktux-ethernet-screenshot-edit-new-connection]]
+.Screen shot of editing IPV4 settings of the new ethernet connection
+image::beagleboneblacktux-ethernet-screenshot-edit-new-connection.png[width="640", height="480", align="center", link={awestruct-imagesdir}/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png]
+====
+
+=== Modifying The U-Boot Args With uEnv.txt
+
+Our next step is to modify the U-Boot environment in order to setup
+the U-Boot image to mount the root filesystem from a NFS file server.
+We basically make use of the _bootcmd_ variable in the default U-Boot
+environment.
+
+[source, bash]
+----
+bootcmd=run findfdt; mmc dev ${mmcdev}; if mmc rescan; then echo SD/MMC found on device ${mmcdev};if run loadbootenv; then echo Loaded environment from ${bootenv};run importbootenv;fi;if test -n $uenvcmd; then echo Running uenvcmd ...;run uenvcmd;fi;if run loaduimage; then run loadfdt;run mmcboot;fi;else run nandboot;fi;	<1>
+----
+<1> The _bootcmd_ in the default U-Boot environment
+
+The _bootcmd_ will search for a uEnv.txt file in the same
+partition as the u-boot.img. If found it is loaded into memory
+and then imported into the environment ready to be read or executed.
+After this, the script checks to see if the variable uenvcmd is defined.
+If it is defined, the script in the variable is executed. The script
+can be reordered as follows to give it decode it. Certain variables
+such as _loadbootenv_ are defined in the U-Boot environment
+variables.
+
+[source, bash]
+----
+run findfdt;
+mmc dev ${mmcdev};
+if mmc rescan;
+	then echo SD/MMC found on device ${mmcdev};
+	if run loadbootenv;
+		then echo Loaded environment from ${bootenv};
+		run importbootenv;
+	fi;
+	if test -n $uenvcmd;
+		then echo Running uenvcmd ...;
+		run uenvcmd;
+	fi;
+	if run loaduimage;
+		then run loadfdt;
+		run mmcboot;
+	fi;
+else 
+	run nandboot;
+fi;
+----
+
+We create a uEnv.txt file so as to override the required variables and 
+execute our own bootcmd using _uenvcmd_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cat /media/conrad/boot/uEnv.txt 
+bootpart=0:2
+bootdir=/boot
+bootfile=uImage
+loadaddr=0x82000000
+fdtaddr=0x88000000
+loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile}
+loaduimage=load mmc ${bootpart} ${loadaddr} ${bootdir}/${bootfile}
+ipaddr=192.168.0.100
+bootargs=console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100	<1>
+uenvcmdx=run loaduimage;run loadfdt;bootm ${loadaddr} - ${fdtaddr}	<2>
+uenvcmd=run uenvcmdx							<3>
+									<4>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$
+----
+<1> The bootargs is set to instruct the kernel to boot the root filesystem from a NFS server
+<2> We create a variable to store our instructions for _uenvcmd_
+<3> The _uenvcmd_ is defined to run _uenvcmdx_
+<4> We need a space at the end of the file after all the variables are set.
+
+==== Explanation Of The Bootargs
+
+root=/dev/nfs:: We set the root filesystem device as /dev/nfs to indicate that
+NFS is to be used.
+rw::The root filesystem should be mounted with read and write capabilities
+ip=192.168.0.100:: The IP of the BeagleBone Black board should be 192.168.0.100
+before mounting the NFS root filesystem
+console=ttyO0:: The console to be used is serial port 0. The character before
+the 0 is 'O' as in "OMAP".
+nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs:: The
+NFS root filesystem server IP and path of the directory. This is similar to
+the workstation settings. The IP is the workstation ethernet static IP and
+the path is the same as that in the _/etc/exports_.
+
+==== Prepare The NFS Export Directory
+
+We have untar the _core-image-minimal-beaglebone.tar.bz2_ package to the
+NFS export directory _/home/conrad/Training/yocto/nfs_ in order to have 
+a successful mount of the root filesystem.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpvjf build/tmp/deploy/images/beaglebone/core-image-minimal-beaglebone.tar.bz2 -C ~/Training/yocto/nfs	<1>
+./
+./home/
+./home/root/
+./var/
+./var/lock
+./var/run
+./var/spool/
+./var/volatile/
+./var/volatile/log/
+./var/volatile/tmp/
+./var/log
+./var/lib/
+./var/lib/wdj/
+./var/lib/wdj/l10n/
+./var/lib/urandom/
+./var/lib/misc/
+./var/tmp
+./var/local/
+./var/backups/
+.
+.
+./bin/df
+./bin/pidof.sysvinit
+./bin/chmod
+./bin/pwd
+./bin/true
+./bin/ash
+./bin/busybox.suid
+./bin/cpio
+./bin/cat
+./bin/chattr
+./bin/dd
+./bin/chgrp
+./bin/login
+./bin/echo
+./bin/kill
+./bin/mknod
+----
+<1> Untar the package to our NFS export directory
+
+==== Boot The System
+
+Make sure the BeagleBone Black is connected to the USB to serial connector
+correctly as was described in Lab1. Also make sure your etherned cable is
+connected between the board and your workstation. 
+
+After saving the uEnv.txt file in the _boot_ partition of the microSD
+card we unmount the device and plug it into the BeagleBone Black SD
+card slot. Press the S2 push button (located just above the previous slot),
+plug in the power supply (External/USB) and release the push button. You
+should see boot messages on the console.
+
+[source, bash]
+----
+U-Boot SPL 2013.07 (May 12 2015 - 15:15:09)
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+OMAP SD/MMC: 0
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.07 (May 12 2015 - 15:15:09)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0 
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0 
+mmc0 is current device
+SD/MMC found on device 0
+reading uEnv.txt								<1>
+439 bytes read in 3 ms (142.6 KiB/s)
+Loaded environment from uEnv.txt
+Importing environment from mmc ...
+Running uenvcmd ...								<2>
+4985352 bytes read in 864 ms (5.5 MiB/s)
+29192 bytes read in 34 ms (837.9 KiB/s)
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   Linux-3.14.0-yocto-standard
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4985288 Bytes = 4.8 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 88000000
+   Booting using the fdt blob at 0x88000000
+   Loading Kernel Image ... OK
+   Loading Device Tree to 8fff5000, end 8ffff207 ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Initializing cgroup subsys cpuset
+Initializing cgroup subsys cpu
+Initializing cgroup subsys cpuacct
+Linux version 3.14.0-yocto-standard (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.8.2 (GCC) ) #1 PREEMPT Tue May 12 01:59:26 IST 2015
+CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine model: TI AM335x BeagleBone
+cma: CMA: reserved 16 MiB at 9e800000
+Memory policy: Data cache writeback
+CPU: All CPU(s) started in SVC mode.
+AM335X ES2.0 (sgx neon )
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 129792
+Kernel command line: console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100	<3>
+PID hash table entries: 2048 (order: 1, 8192 bytes)
+Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+allocated 1048576 bytes of page_cgroup
+please try 'cgroup_disable=memory' option if you don't want memory cgroups
+Memory: 489444K/523264K available (7491K kernel code, 520K rwdata, 2456K rodata, 488K init, 757K bss, 33820K reserved, 0K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+    lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .text : 0xc0008000 - 0xc09bf044   (9949 kB)
+      .init : 0xc09c0000 - 0xc0a3a034   ( 489 kB)
+      .data : 0xc0a3c000 - 0xc0abe0d4   ( 521 kB)
+       .bss : 0xc0abe0d4 - 0xc0b7b678   ( 758 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Preemptible hierarchical RCU implementation.
+.
+.
+.
+IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+ mmcblk1boot1: unknown partition table
+ mmcblk1boot0: unknown partition table
+libphy: 4a101000.mdio:00 - Link is Up - 100/Full
+IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+IP-Config: Guessing netmask 255.255.255.0
+IP-Config: Complete:
+     device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+     host=192.168.0.100, domain=, nis-domain=(none)
+     bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+VFS: Mounted root (nfs filesystem) on device 0:12.			<4>	
+devtmpfs: mounted
+Freeing unused kernel memory: 488K (c09c0000 - c0a3a000)
+INIT: version 2.88 booting
+Starting udev
+udevd[76]: starting version 182
+random: nonblocking pool is initialized
+Starting Bootlog daemon: bootlogd.
+Populating dev cache
+Mon May 11 18:21:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... ifup skipped for nfsroot interface eth0
+run-parts: /etc/network/if-pre-up.d/nfsroot exited with code 1
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root
+root@beaglebone:~# cat /proc/cmdline 
+console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100
+root@beaglebone:~# mount
+rootfs on / type rootfs (rw)
+192.168.0.1:/home/conrad/Training/yocto/nfs on / type nfs (rw,relatime,vers=2,rsize=4096,wsize=4096,namlen=255,hard,nolock,proto=udp,timeo=11,retrans=3,sec=sys,mountaddr=192.168.0.1,mountvers=1,mountproto=udp,local_lock=all,addr=192.168.0.1)	<5>
+devtmpfs on /dev type devtmpfs (rw,relatime,size=244720k,nr_inodes=61180,mode=755)
+proc on /proc type proc (rw,relatime)
+sysfs on /sys type sysfs (rw,relatime)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)
+tmpfs on /var/volatile type tmpfs (rw,relatime)
+devpts on /dev/pts type devpts (rw,relatime,gid=5,mode=620)
+root@beaglebone:~# 
+----
+<1> The uEnv.txt file is loaded
+<2> The _uenvcmd_ is executed
+<3> Our _bootargs_ is taken as Kernel parameters
+<4> The kernel successfully mounts the NFS server
+<5> We see the root filesystem is mounted from our NFS server
+
+=== Add A Package To The Rootfs Image
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
