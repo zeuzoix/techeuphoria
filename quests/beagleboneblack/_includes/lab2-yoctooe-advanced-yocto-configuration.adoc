@@ -117,7 +117,7 @@ image::beagleboneblacktux-ethernet-screenshot-edit-new-connection.png[width="640
 Our next step is to modify the U-Boot environment in order to setup
 the U-Boot image to mount the root filesystem from a NFS file server.
 We basically make use of the _bootcmd_ variable in the default U-Boot
-environment.
+environment. 
 
 [source, bash]
 ----
@@ -181,6 +181,9 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$
 <2> We create a variable to store our instructions for _uenvcmd_
 <3> The _uenvcmd_ is defined to run _uenvcmdx_
 <4> We need a space at the end of the file after all the variables are set.
+
+Further information about using uEnv.txt can be obtained from
+{uri-handy-uboot-trick}[{uri-handy-uboot-trick}^].
 
 ==== Explanation Of The Bootargs
 
@@ -407,9 +410,224 @@ root@beaglebone:~#
 <4> The kernel successfully mounts the NFS server
 <5> We see the root filesystem is mounted from our NFS server
 
+
 === Add A Package To The Rootfs Image
 
+We will now add the _dropbear_ package to the packages
+installed in the built Yocto image. To do this
+we have to append the keyword __append_ to the configuration
+variable _IMAGE_INSTALL_ in our _conf/local.conf_ file.
 
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ tail conf/local.conf 
+PACKAGECONFIG_pn-nativesdk-qemu = "sdl"
+ASSUME_PROVIDED += "libsdl-native"
+
+
+# CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
+# track the version of this file when it was generated. This can safely be ignored if
+# this doesn't mean anything to you.
+CONF_VERSION = "1"
+
+IMAGE_INSTALL_append = "dropbear"	<1>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ 
+----
+<1> We've added _dropbear_ by using the append method
+
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ source oe-init-build-env	<1>
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    adt-installer
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ bitbake core-image-minimal	<2>
+Parsing recipes: 100% |#################################################################################################################################################| Time: 00:02:10
+Parsing of 862 .bb files complete (0 cached, 862 parsed). 1221 targets, 61 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION        = "1.22.0"
+BUILD_SYS         = "i686-linux"
+NATIVELSBSTRING   = "Ubuntu-14.04"
+TARGET_SYS        = "arm-poky-linux-gnueabi"
+MACHINE           = "beaglebone"
+DISTRO            = "poky"
+DISTRO_VERSION    = "1.6.2"
+TUNE_FEATURES     = "armv7a vfp neon callconvention-hard cortexa8"
+TARGET_FPU        = "vfp-neon"
+meta              
+meta-yocto        
+meta-yocto-bsp    = "daisy:91c507ce1cf983a600c2d38c4284e605a80297d6"
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+NOTE: Tasks Summary: Attempted 1809 tasks of which 1794 didn't need to be rerun and all succeeded.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ 
+modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz       
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l tmp/deploy/images/beaglebone/	<3>
+total 48408
+-rw-r--r-- 1 conrad conrad  2949120 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad      972 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2264889 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2	<4>
+-rw-r--r-- 1 conrad conrad  3080192 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad     1009 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2387393 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2	<5>
+lrwxrwxrwx 1 conrad conrad       57 May 13 20:15 core-image-minimal-beaglebone.jffs2 -> core-image-minimal-beaglebone-20150513143651.rootfs.jffs2
+lrwxrwxrwx 1 conrad conrad       60 May 13 20:15 core-image-minimal-beaglebone.manifest -> core-image-minimal-beaglebone-20150513143651.rootfs.manifest
+lrwxrwxrwx 1 conrad conrad       59 May 13 20:15 core-image-minimal-beaglebone.tar.bz2 -> core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2	<6>
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO -> MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO-beaglebone -> MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rwxr-xr-x 2 conrad conrad   102348 May 12 15:15 MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rw-rw-r-- 2 conrad conrad 33333836 May 12 02:04 modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 modules-beaglebone.tgz -> modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+-rw-r--r-- 2 conrad conrad      294 May 13 20:12 README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot-beaglebone.img -> u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+-rwxr-xr-x 2 conrad conrad   356456 May 12 15:15 u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot.img -> u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+-rw-r--r-- 2 conrad conrad    28596 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad    29192 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad  4985352 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+lrwxrwxrwx 1 conrad conrad       80 May 12 02:04 uImage-am335x-boneblack.dtb -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 uImage-am335x-bone.dtb -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage-beaglebone.bin -> uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ 
+----
+<1> Source the _oe-init-build-env_ script
+<2> Build the _core-image-minimal_ target again
+<3> We list the built images and see the core-image-minimal rootfs has been rebuilt
+<4> The older _core-image-minimal-beaglebone_ tar package
+<5> The newer _core-image-minimal-beaglebone_ tar package
+<6> The soft link pointing to the newer _core-image-minimal-beaglebone_ tar package
+
+Now untar the root filesystem to the NFS export directory. Be careful to delete
+the contents of the directory before untarring the new package.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ sudo rm -Rf /home/conrad/Training/yocto/nfs/*conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l /home/conrad/Training/yocto/nfs/	<1>
+total 0
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ sudo tar xpvjf tmp/deploy/images/beaglebone/core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2 -C ~/Training/yocto/nfs	<2>
+./
+./home/
+./home/root/
+.
+.
+./bin/kill
+./bin/mknod
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l /home/conrad/Training/yocto/nfs/	<3>
+total 60
+drwxr-xr-x  2 root root 4096 May 13 20:14 bin
+drwxr-xr-x  2 root root 4096 May 11 20:51 boot
+drwxr-xr-x  2 root root 4096 May 11 20:51 dev
+drwxr-xr-x 18 root root 4096 May 13 20:15 etc
+drwxr-sr-x  3 root root 4096 May 13 20:14 home
+drwxr-xr-x  4 root root 4096 May 13 20:15 lib
+drwxr-xr-x  2 root root 4096 May 11 20:51 media
+drwxr-xr-x  2 root root 4096 May 11 20:51 mnt
+drwxr-xr-x  2 root root 4096 May 11 20:51 proc
+drwxr-xr-x  2 root root 4096 May 11 20:51 run
+drwxr-xr-x  2 root root 4096 May 13 20:14 sbin
+drwxr-xr-x  2 root root 4096 May 11 20:51 sys
+drwxrwxrwt  2 root root 4096 May 11 20:51 tmp
+drwxr-xr-x  9 root root 4096 May 11 23:30 usr
+drwxr-xr-x  7 root root 4096 May 13 20:11 var
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ 
+----
+<1> Remove the old NFS export directory contents
+<2> Untar the package
+<3> List the contents of the NFS export directory
+
+This time in the boot logs we see that the Dropbear server has been started.
+
+[source, bash]
+----
+.
+.
+.
+udevd[76]: starting version 182
+random: nonblocking pool is initialized
+Starting Bootlog daemon: bootlogd.
+Populating dev cache
+Wed May 13 14:45:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... ifup skipped for nfsroot interface eth0
+run-parts: /etc/network/if-pre-up.d/nfsroot exited with code 1
+Starting Dropbear SSH server: Generating key, this may take a while...	<1>
+Public key portion is:
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzQCH8KKC3o65RCZnp8sNta+QtqX8t60Iyq3msHPIG1LBI+UvJ+pBnGcFG5CQfG56ZyUNm3ugL7nFGMeABAbfTiXYXW8INQbp09x4pm3sJr2OkL2IZZWO+O8iY/O26xHszPfzeH8czCm+Kws7BPS65GAng6+a9FZSNKH36WeRn8fYdcCXK+PK5nyuT8JmfH/Ig7DXDgkvQdz0RnndO/NzmeBfwYB7EMplDEksE861rU3bEemhFPNgyBpgHiK0ofzVS1KgCXzCyyXoA0ZeN/KVrA0JtTsNJwZ0l+xdaGdiia5+W7/Qmhmjb9CwhNcps4Ck0vGjhQF9Sx/547YjG5kgv root@beaglebone
+Fingerprint: md5 e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18
+dropbear.
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root
+root@beaglebone:~# 
+
+----
+<1> Dropbear server logs
+
+We can now try to ssh to the BeagleBone Black board on its IP. The IP
+should be the static IP 192.168.0.100 which we set in the uEnv.txt settings
+for _bootargs_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ping 192.168.0.100	<1>
+PING 192.168.0.100 (192.168.0.100) 56(84) bytes of data.
+64 bytes from 192.168.0.100: icmp_seq=1 ttl=64 time=0.188 ms
+64 bytes from 192.168.0.100: icmp_seq=2 ttl=64 time=0.235 ms
+^C
+--- 192.168.0.100 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.188/0.211/0.235/0.027 ms
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh root@192.168.0.100	<2>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the RSA key sent by the remote host is
+e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18.
+Please contact your system administrator.
+Add correct host key in /home/conrad/.ssh/known_hosts to get rid of this message.
+Offending RSA key in /home/conrad/.ssh/known_hosts:4
+  remove with: ssh-keygen -f "/home/conrad/.ssh/known_hosts" -R 192.168.0.100
+RSA host key for 192.168.0.100 has changed and you have requested strict checking.
+Host key verification failed.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh-keygen -f "/home/conrad/.ssh/known_hosts" -R 192.168.0.100	<3>
+# Host 192.168.0.100 found: line 4 type RSA
+/home/conrad/.ssh/known_hosts updated.
+Original contents retained as /home/conrad/.ssh/known_hosts.old
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh root@192.168.0.100	<4>
+The authenticity of host '192.168.0.100 (192.168.0.100)' can't be established.
+RSA key fingerprint is e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.0.100' (RSA) to the list of known hosts.
+root@beaglebone:~# uname -a	<5>
+Linux beaglebone 3.14.0-yocto-standard #1 PREEMPT Tue May 12 01:59:26 IST 2015 armv7l GNU/Linux
+----
+<1> We ping the BBB to check if it is alive
+<2> Our first attempt to ssh with root login gives us a Warning
+<3> We've connected previously with previous experiments so we have to clear the keys
+<4> Our second attempt to ssh to the BBB is successful
+<5> We're able to print the name of the built OS
 
 
 

@@ -34,6 +34,7 @@
 :uri-kernel-org-i2cdev-doc: https://www.kernel.org/doc/Documentation/i2c/dev-interface
 :uri-free-electrons-uio-howto: http://free-electrons.com/kerneldoc/latest/DocBook/uio-howto/
 :uri-poky-dora-tar: http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2
+:uri-handy-uboot-trick: http://www.linuxjournal.com/content/handy-u-boot-trick
 
 
 // E-Mail Addresses
