@@ -19,11 +19,11 @@ static void __exit sample_module_exit(void)	<4>
 {
 	pr_alert("Cya Later!\n");
 }
-	
+
 module_init(sample_module_init);		<3>
 module_exit(sample_module_exit);		<5>
-	
-MODULE_LICENSE("GPL");				
+
+MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Sample Module");
 MODULE_AUTHOR("Newbie");
 <6>
@@ -293,5 +293,60 @@ Further information about the Kernel build process and incorporating
 newer files to the source can be obtained at: +
 _Documentation/kbuild_
 
+=== Adding Parameters To Kernel Modules
 
+Kernel modules can have parameters which can change the runtime
+behavior of the kernel based on the input arguments. There are
+two methods which can be used to declare module parameters.
 
+module_param(name, type, perm):: This method declares a single parameter
+module_param_array(name, type, nump, perm):: This method is used to declare
+an array as a parameter. +
+
+. *name* : the variable to alter, and exposed parameter name. It becomes the module parameter, or (prefixed by KBUILD_MODNAME and a ".") the kernel commandline parameter.
+. *type* : the type of the parameter.  Standard types are:
+.. byte, short, ushort, int, uint, long, ulong
+.. charp, a character pointer
+.. bool, a bool, values 0/1, y/n, Y/N.
+.. invbool, the above, only sense-reversed (N = true).
+. *perm* : visibility in sysfs.is 0 if the the variable is not to appear in sysfs, or 0444 for world-readable, 0644 for root-writable, etc.  Note that if it is writable, you may need to use kparam_block_sysfs_write() around accesses (esp. charp, which can be kfreed when it changes)
+. *nump* : optional pointer filled in with the number written.
+
+[source, C]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+
+/* Parameters that control who gets wassup'd and how many times */
+
+static char* yourname = "Anonymous";
+module_param(yourname, charp, 0);
+
+static int ntimes = 1;
+module_param(ntimes, int, 0);
+
+static int __init sample_module_init(void)
+{
+	int i = 0;
+
+	for(i = 0 ; i < ntimes ; i++)
+		pr_alert("Wassup %s!\n", yourname);
+	return 0;
+}
+
+static void __exit sample_module_exit(void)
+{
+	int i = 0;
+
+	for(i = 0 ; i < ntimes ; i++)
+		pr_alert("Cya Later %s!\n", yourname);
+}
+
+module_init(sample_module_init);
+module_exit(sample_module_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("Sample Module With Parameters");
+MODULE_AUTHOR("Newbie");
+----
