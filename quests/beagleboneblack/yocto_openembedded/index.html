@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<div id="preamble">
+<div class="sectionbody">
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel0">
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel1">
+<li><a href="#about-yocto">1. About Yocto</a></li>
+<li><a href="#about-beagleboard">2. About BeagleBoard</a></li>
+<li><a href="#about-free-electrons">3. About Free Electrons</a></li>
+</ul>
+</li>
+<li><a href="#training-and-workbench-setup">Training and Workbench Setup</a>
+<ul class="sectlevel1">
+<li><a href="#hardware">4. Hardware</a>
+<ul class="sectlevel2">
+<li><a href="#beaglebone-black">4.1. BeagleBone Black</a></li>
+</ul>
+</li>
+<li><a href="#software">5. Software</a>
+<ul class="sectlevel2">
+<li><a href="#ubuntu">5.1. Ubuntu</a></li>
+<li><a href="#git">5.2. GIT</a></li>
+<li><a href="#free-electrons-yocto-and-openembedded-data">5.3. Free Electrons Yocto and OpenEmbedded Data</a></li>
+</ul>
+</li>
+<li><a href="#installing-prerequisite-packages-required-for-yocto">6. Installing Prerequisite Packages Required For Yocto</a></li>
+<li><a href="#installing-lab-data">7. Installing Lab Data</a></li>
+</ul>
+</li>
+<li><a href="#first-yocto-project-build">First Yocto Project Build</a>
+<ul class="sectlevel1">
+<li><a href="#lab1-first-yocto-build">8. Lab1: First Yocto Build</a>
+<ul class="sectlevel2">
+<li><a href="#clone-the-stable-release">8.1. Clone The Stable Release</a></li>
+<li><a href="#set-up-the-build-environment">8.2. Set Up The Build Environment</a>
+<ul class="sectlevel3">
+<li><a href="#configure-default-shell-as-em-bash-em">8.2.1. Configure Default Shell As <em>bash</em></a></li>
+<li><a href="#source-em-oe-init-build-env-em">8.2.2. Source <em>oe-init-build-env</em></a></li>
+</ul>
+</li>
+<li><a href="#set-up-the-em-build-conf-em-directory">8.3. Set Up The <em>build/conf/</em> Directory</a></li>
+<li><a href="#build-the-image">8.4. Build The Image</a></li>
+<li><a href="#setting-up-the-sd-card">8.5. Setting Up The SD Card</a>
+<ul class="sectlevel3">
+<li><a href="#partition-the-sd-card">8.5.1. Partition The SD Card</a></li>
+<li><a href="#format-the-partitions">8.5.2. Format The Partitions</a></li>
+<li><a href="#copy-the-built-images">8.5.3. Copy The Built Images</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-serial-communication-with-the-board">8.6. Setting Up Serial Communication With The Board</a>
+<ul class="sectlevel3">
+<li><a href="#rhydolabz-ftdi-usb-to-serial-breakout-board">8.6.1. Rhydolabz FTDI USB To Serial Breakout Board</a></li>
+<li><a href="#connecting-the-breakout-board">8.6.2. Connecting The Breakout Board</a></li>
+<li><a href="#accessing-the-serial-port-with-em-picocom-em">8.6.3. Accessing The Serial Port With <em>Picocom</em></a></li>
+</ul>
+</li>
+<li><a href="#booting-the-board">8.7. Booting The Board</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#advanced-yocto-configuration">Advanced Yocto configuration</a>
+<ul class="sectlevel1">
+<li><a href="#lab2-advanced-yocto-configuration">9. Lab2: Advanced Yocto Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#using-rootfs-over-nfs">9.1. Using rootfs Over NFS</a>
+<ul class="sectlevel3">
+<li><a href="#setting-up-the-nfs-server">9.1.1. Setting Up The NFS Server</a></li>
+</ul>
+</li>
+<li><a href="#modifying-the-u-boot-args-with-uenv-txt">9.2. Modifying The U-Boot Args With uEnv.txt</a>
+<ul class="sectlevel3">
+<li><a href="#explanation-of-the-bootargs">9.2.1. Explanation Of The Bootargs</a></li>
+<li><a href="#prepare-the-nfs-export-directory">9.2.2. Prepare The NFS Export Directory</a></li>
+<li><a href="#boot-the-system">9.2.3. Boot The System</a></li>
+</ul>
+</li>
+<li><a href="#add-a-package-to-the-rootfs-image">9.3. Add A Package To The Rootfs Image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This document is under active development!</div>
+<div class="paragraph">
+<p>If you find errors or omissions in this document, please don&#8217;t hesitate to <a href="mailto:conrad.s.j.gomes@gmail.com">send me a mail</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This journal assumes you are comfortable with a linux environment as most of the
+published work here uses an Ubuntu distribution as the work station.</p>
+</div>
+</div>
+</div>
+<h1 id="introduction" class="sect0"><a class="anchor" href="#introduction"></a>Introduction</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This journal was started in order to document my exploration of Yocto and
+OpenEmbedded using a popular low-cost platform i.e. the BeagleBone Black. The end
+objective is to become well versed with the Yocto project and use it as a build
+system for embedded systems</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-yocto"><a class="anchor" href="#about-yocto"></a>1. About Yocto</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.yoctoproject.org/" target="_blank">Yocto Project</a> is a collaborative attempt to provide a
+set of templates, tools and methods to create a custom Linux-based system
+for embedded products. It was started in 2010 by many hardware manufacturers,
+open-source operating systems vendors and hardware companies to unify the
+process of creating an embedded Linux system.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-beagleboard"><a class="anchor" href="#about-beagleboard"></a>2. About BeagleBoard</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://beagleboard.org/" target="_blank">BeagleBoard.org Foundation</a> is a non-profit corporation which
+promotes open source software and open hardware. It was started by enthusiasts
+from TI with the aim of providing a powerful platform to design embedded solutions.
+The BeagleBone Black is their fourth board till date which offers a lot of
+possibilities in a small credit card size form factor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-free-electrons"><a class="anchor" href="#about-free-electrons"></a>3. About Free Electrons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://free-electrons.com/" target="_blank">Free Electrons</a> is an engineering company consisting of
+embedded linux experts who support companies using Embedded Linux. They
+additionally conduct training workshops for companies on different topics
+such as Linux kernel and device driver development, Android system development,
+Yocto Project and OpenEmbedded development, etc. This journal uses the Free
+Electrons training material which they publish online to explore Embedded Linux
+with the BeagleBone Black board from TI.</p>
+</div>
+</div>
+</div>
+<h1 id="training-and-workbench-setup" class="sect0"><a class="anchor" href="#training-and-workbench-setup"></a>Training and Workbench Setup</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This section covers the setup software and hardware used in this journal.
+The sources of the training material and references are mentioned as well
+as details about how to procure the hardware.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hardware"><a class="anchor" href="#hardware"></a>4. Hardware</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="beaglebone-black"><a class="anchor" href="#beaglebone-black"></a>4.1. BeagleBone Black</h3>
+<div class="paragraph">
+<p>The BeagleBone Black is the newest member in the BeagleBoard family. The board
+is designed to be a low sized small form factor board. The size of the board
+is comparable to the size of a credit card and it offers expansion headers to
+add headers called as capes similar to the <a href="http://www.raspberrypi.org/" target="_blank">Raspberry Pi</a>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-BeagleBoneBlackREV_A5A" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/BeagleBoneBlackREV_A5A.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackREV_A5A.jpg" alt="BeagleBoneBlackREV A5A" width="640" height="480"></a>
+</div>
+<div class="title">Beagle Bone Black Revision A5A Board</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The table below highlights the key onboard components of the board along with
+the connectors available on the board. The diagram of the table below is taken
+from the <a href="../docs/BBB_SRM.pdf" target="_blank">BeagleBone Black System Reference Manual</a>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-BeagleBoneBlackFeatures" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/BeagleBoneBlackFeatures.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/BeagleBoneBlackFeatures.jpg" alt="BeagleBoneBlackFeatures" width="640" height="480"></a>
+</div>
+<div class="title">Beagle Bone Black Feature Table</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="software"><a class="anchor" href="#software"></a>5. Software</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="ubuntu"><a class="anchor" href="#ubuntu"></a>5.1. Ubuntu</h3>
+<div class="paragraph">
+<p>To work with an embedded system you need a work station on which you can
+perform the various tasks that are required in the development life cycle.
+These tasks include:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Editing your build scripts and source code</p>
+</li>
+<li>
+<p>Cross-compiling your source code for the embedded target</p>
+</li>
+<li>
+<p>Transferring or accessing the cross-compiled application and libraries
+to or from the embedded target</p>
+</li>
+<li>
+<p>Collecting debug information from the target</p>
+</li>
+<li>
+<p>Communicating with the target remotely using its interfaces like
+serial, USB, network, etc..</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In this document we use the popular Debian based Linux operating system,
+<a href="http://www.ubuntu.com/">Ubuntu</a> as our work station for all the tasks listed above.
+Ubuntu can be easily downloaded and installed on any PC or laptop.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">Do not use a virtual machine runnning Ubuntu as your workstation</div>
+<div class="paragraph">
+<p>This document uses Ubuntu 14.04 running on a HP laptop. Use of a similar
+environment through a virtual machine runnning on <a href="http://www.vmware.com" target="_blank">VMWare</a> or
+<a href="https://www.virtualbox.org/" target="_blank">Oracle VirtualBox</a> is
+not recommended.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="git"><a class="anchor" href="#git"></a>5.2. GIT</h3>
+<div class="paragraph">
+<p>The source code management tool used by the Linux kernel community is
+<a href="http://git-scm.com/" target="_blank">GIT</a>. To use GIT we need to install the packages required
+on our work station using the Advanced Packaging Tool(APT) using a
+command line terminal.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ sudo apt-get install git gitk git-email</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the packages are successfully installed we will need to configure GIT with
+some basic information about our name and email address</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.name Conrad Gomes
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~$ git config --global user.email conrad.s.j.gomes@gmail.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Further infomation about GIT can be obtained at:<br>
+<a href="http://git-scm.com/" target="_blank">http://git-scm.com/</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="free-electrons-yocto-and-openembedded-data"><a class="anchor" href="#free-electrons-yocto-and-openembedded-data"></a>5.3. Free Electrons Yocto and OpenEmbedded Data</h3>
+<div class="paragraph">
+<p>Since we are going through the training material provided by Free Electrons
+we&#8217;ll need to download their slides and lab data from their website link:<br>
+<a href="http://free-electrons.com/training/yocto/" target="_blank">http://free-electrons.com/training/yocto/</a></p>
+</div>
+<div class="paragraph">
+<p>As Free Electrons continues to improve on their training material, this journal
+will be based on the version available at the time of its writing:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="../free_electrons_linux_kernel/yocto-slides.pdf" target="_blank">Slides</a></p>
+</li>
+<li>
+<p><a href="../free_electrons_linux_kernel/yocto-labs.pdf" target="_blank">Labs</a></p>
+</li>
+<li>
+<p><a href="../free_electrons_linux_kernel/yocto-labs.tar.xz" target="_blank">Lab Data</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-prerequisite-packages-required-for-yocto"><a class="anchor" href="#installing-prerequisite-packages-required-for-yocto"></a>6. Installing Prerequisite Packages Required For Yocto</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We need to install a couple of packages on our workstation before
+proceeding with the Yocto labs. Depending on the state of your workstation
+APT will install the appropriate packages and dependencies.
+The packages required are bc, build-essential, chrpath, diffstat, gawk, git,
+texinfo, wget and vim.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria$ sudo apt-get install bc build-essential chrpath diffstat gawk git texinfo wget vim
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+bc is already the newest version.
+build-essential is already the newest version.
+gawk is already the newest version.
+vim is already the newest version.
+git is already the newest version.
+wget is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.13.0-36 linux-headers-3.13.0-36-generic
+  linux-image-3.13.0-36-generic linux-image-extra-3.13.0-36-generic
+Use 'apt-get autoremove' to remove them.
+The following extra packages will be installed:
+  libencode-locale-perl libfile-listing-perl libfont-afm-perl
+  libhtml-form-perl libhtml-format-perl libhtml-parser-perl
+  libhtml-tagset-perl libhtml-tree-perl libhttp-cookies-perl
+  libhttp-daemon-perl libhttp-date-perl libhttp-message-perl
+  libhttp-negotiate-perl libintl-perl libio-html-perl libio-socket-inet6-perl
+  libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
+  libmailtools-perl libnet-http-perl libnet-smtp-ssl-perl libnet-ssleay-perl
+  libsocket6-perl libtext-unidecode-perl liburi-perl libwww-perl
+  libwww-robotrules-perl libxml-libxml-perl libxml-namespacesupport-perl
+  libxml-parser-perl libxml-sax-base-perl libxml-sax-expat-perl
+  libxml-sax-perl
+Suggested packages:
+  libdata-dump-perl libintl-xs-perl libcrypt-ssleay-perl libauthen-ntlm-perl
+  texlive-base texlive-latex-base texlive-generic-recommended
+  texinfo-doc-nonfree
+The following NEW packages will be installed:
+  chrpath diffstat libencode-locale-perl libfile-listing-perl libfont-afm-perl
+  libhtml-form-perl libhtml-format-perl libhtml-parser-perl
+  libhtml-tagset-perl libhtml-tree-perl libhttp-cookies-perl
+  libhttp-daemon-perl libhttp-date-perl libhttp-message-perl
+  libhttp-negotiate-perl libintl-perl libio-html-perl libio-socket-inet6-perl
+  libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
+  libmailtools-perl libnet-http-perl libnet-smtp-ssl-perl libnet-ssleay-perl
+  libsocket6-perl libtext-unidecode-perl liburi-perl libwww-perl
+  libwww-robotrules-perl libxml-libxml-perl libxml-namespacesupport-perl
+  libxml-parser-perl libxml-sax-base-perl libxml-sax-expat-perl
+  libxml-sax-perl texinfo
+0 upgraded, 37 newly installed, 0 to remove and 24 not upgraded.
+Need to get 2,723 kB/3,996 kB of archives.
+After this operation, 15.1 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://lk.archive.ubuntu.com/ubuntu/ trusty/main chrpath i386 0.14-3ubuntu1 [12.2 kB]
+Get:2 http://lk.archive.ubuntu.com/ubuntu/ trusty/main libfont-afm-perl all 1.20-1 [14.3 kB]
+.
+.
+.
+Replacing config file /etc/perl/XML/SAX/ParserDetails.ini with new version
+Setting up texinfo (5.2.0.dfsg.1-2) ...
+Setting up libwww-perl (6.05-2) ...
+Setting up liblwp-protocol-https-perl (6.04-2ubuntu0.1) ...
+Setting up libxml-parser-perl (2.41-1build3) ...
+Setting up libxml-sax-expat-perl (0.40-2) ...
+update-perl-sax-parsers: Registering Perl SAX parser XML::SAX::Expat with priority 50...
+update-perl-sax-parsers: Updating overall Perl SAX parser modules info file...
+Replacing config file /etc/perl/XML/SAX/ParserDetails.ini with new version</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-lab-data"><a class="anchor" href="#installing-lab-data"></a>7. Installing Lab Data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Download the lab data provided by Free Electrons from
+<a href="http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz" class="bare">http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ wget http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz                <i class="conum" data-value="1"></i><b>(1)</b>
+--2015-05-06 18:27:08--  http://free-electrons.com/doc/training/yocto/yocto-labs.tar.xz
+Resolving free-electrons.com (free-electrons.com)... 87.98.146.151
+Connecting to free-electrons.com (free-electrons.com)|87.98.146.151|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 28480 (28K) [application/x-tar]
+Saving to: ‘yocto-labs.tar.xz’
+
+100%[==============================================================================================================================================&gt;] 28,480      --.-K/s   in 0.02s
+
+2015-05-06 18:27:08 (1.18 MB/s) - ‘yocto-labs.tar.xz’ saved [28480/28480]
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Using wget to download the Yocto lab data</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Unpackage the lab data after successfully downloading it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ tar Jvxf yocto-labs.tar.xz        <i class="conum" data-value="1"></i><b>(1)</b>
+yocto-labs/
+yocto-labs/nunchuck/
+yocto-labs/nunchuck/ninvaders/
+yocto-labs/nunchuck/ninvaders/joystick-support.patch
+yocto-labs/nunchuck/linux/
+yocto-labs/nunchuck/linux/0001-Add-nunchuk-driver.patch
+yocto-labs/nunchuck/linux/0002-Add-i2c1-and-nunchuk-nodes-in-dts.patch
+yocto-labs/nunchuck/linux/defconfig
+yocto-labs/script/
+yocto-labs/script/format_sdcard.sh
+yocto-labs/0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto$ cd yocto-labs/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ ls                <i class="conum" data-value="2"></i><b>(2)</b>
+0001-beaglebone-use-the-am335x_boneblack-u-boot-configura.patch  nunchuck  script</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Tar command used to unpack the package</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Listing the contents of the package</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<h1 id="first-yocto-project-build" class="sect0"><a class="anchor" href="#first-yocto-project-build"></a>First Yocto Project Build</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>We&#8217;ll dive into the build mechanism of the Yocto project</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab1-first-yocto-build"><a class="anchor" href="#lab1-first-yocto-build"></a>8. Lab1: First Yocto Build</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session based on the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download the sources</p>
+</li>
+<li>
+<p>Set up an OpenEmbedded environment</p>
+</li>
+<li>
+<p>Configure the project and choose a target</p>
+</li>
+<li>
+<p>Build your first Poky image</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="clone-the-stable-release"><a class="anchor" href="#clone-the-stable-release"></a>8.1. Clone The Stable Release</h3>
+<div class="paragraph">
+<p>We need to download the latest stable releases of the Yocto project in order
+to start building our first images.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Diverging from <em>yocto-labs.pdf</em></div>
+<div class="paragraph">
+<p>The downloaded PDF <em>yocto-labs.pdf</em> suggests downloading the "dora" release of
+yocto. However problems are seen while building with bitbake with that release.
+One of the problems that were seen was that the initial sanity check was failing
+and our version of Ubuntu 14.04 is not supported by the dora release download package
+<a href="http://downloads.yoctoproject.org/releases/yocto/yocto-1.5.1/poky-dora-10.0.1.tar.bz2" target="_blank">poky-dora-10.0.1.tar.bz2</a>. We diverge here from the labs and
+clone the git branch of daisy of the Yocto project.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We clone the sources as shown below. This repository has support for BeagleBone Black
+and so we don&#8217;t clone the <em>meta-ti</em> project as mentioned in the <em>yocto-labs.pdf</em> from
+Free Electrons.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git$ git clone git://git.yoctoproject.org/poky.git -b daisy</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="set-up-the-build-environment"><a class="anchor" href="#set-up-the-build-environment"></a>8.2. Set Up The Build Environment</h3>
+<div class="sect3">
+<h4 id="configure-default-shell-as-em-bash-em"><a class="anchor" href="#configure-default-shell-as-em-bash-em"></a>8.2.1. Configure Default Shell As <em>bash</em></h4>
+<div class="paragraph">
+<p>If you&#8217;re on Ubuntu make sure the default shell is <em>bash</em> and not <em>dash</em>.
+This can be done by running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ sudo dpkg-reconfigure dash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Select &lt;No&gt; and hit "Enter".</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="yoctooe-dash-reconfigure" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/yoctooe-dash-reconfigure.png"><img src="http://zeuzoix.github.io/techeuphoria/images/yoctooe-dash-reconfigure.png" alt="yoctooe dash reconfigure" width="640" height="480"></a>
+</div>
+<div class="title">Reconfigure dash</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="source-em-oe-init-build-env-em"><a class="anchor" href="#source-em-oe-init-build-env-em"></a>8.2.2. Source <em>oe-init-build-env</em></h4>
+<div class="paragraph">
+<p>Before building all the needed environment variables have to be exported
+and a build directory must be specified. To do this we can use
+<em>oe-init-build-env</em>, which is present in the Poky package. It will
+create the default build directory as <em>build</em> if nothing is specified</p>
+</div>
+<div class="paragraph">
+<p>Before sourcing the script our environment variables</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ printenv &gt; pre_environment.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We now source the <em>oe-init-build-env</em> script as follows. It creates a <em>build</em>
+directory by default as we haven&#8217;t specified any build directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ source oe-init-build-env        <i class="conum" data-value="1"></i><b>(1)</b>
+You had no conf/local.conf file. This configuration file has therefore been
+created for you with some default values. You may wish to edit it to use a
+different MACHINE (target hardware) or enable parallel build options to take
+advantage of multiple cores for example. See the file for more information as
+common configuration options are commented.
+
+The Yocto Project has extensive documentation about OE including a reference manual
+which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+You had no conf/bblayers.conf file. The configuration file has been created for
+you with some default values. To add additional metadata layers into your
+configuration please add entries to this file.
+
+The Yocto Project has extensive documentation about OE including a reference manual
+which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake &lt;target&gt;'
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    adt-installer
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Sourcing the <em>oe-init-build-env</em> script without specifying a build directory</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We now capture the environment variables to check what has changed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ printenv &gt; post_environment.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With <em>diff</em> we see the difference in the environment variables after sourcing
+the script.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ diff ../pre_environment.txt post_environment.txt
+11c11
+&lt; OLDPWD=/home/conrad/Git
+---
+&gt; OLDPWD=/home/conrad/Git/poky
+24c24
+&lt; PATH=/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin
+---
+&gt; PATH=/home/conrad/Git/poky/scripts:/home/conrad/Git/poky/bitbake/bin:/usr/local/gcc-arm-none-eabi-4_7-2013q3/bin/:/usr/local/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/conrad/.rvm/bin:/home/conrad/.rvm/bin        <i class="conum" data-value="1"></i><b>(1)</b>
+28c28
+&lt; PWD=/home/conrad/Git/poky
+---
+&gt; PWD=/home/conrad/Git/poky/build
+38a39
+&gt; BUILDDIR=/home/conrad/Git/poky/build        <i class="conum" data-value="2"></i><b>(2)</b>
+60a62
+&gt; BB_ENV_EXTRAWHITE=MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR        <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Two paths added to the PATH variable: &#8230;&#8203;poky/scripts and &#8230;&#8203;poky/bitbake/bin</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>New variable BUILDDIR=/home/conrad/Git/poky/build	added</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>New variable BB_ENV_EXTRAWHITE added. This describes the list of environment variables to be imported into BitBake data store.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="set-up-the-em-build-conf-em-directory"><a class="anchor" href="#set-up-the-em-build-conf-em-directory"></a>8.3. Set Up The <em>build/conf/</em> Directory</h3>
+<div class="paragraph">
+<p>After sourcing the <em>oe-init-build-env</em> script we are placed in the
+<em>build</em> directory. There are three files present in the <em>conf</em> folder
+which can be used to tune the build configuration</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">bblayers.conf</dt>
+<dd>
+<p>List the available layers e.g. <em>meta-ti</em></p>
+</dd>
+<dt class="hdlist1">local.conf</dt>
+<dd>
+<p>Configuration variables for the current user</p>
+</dd>
+<dt class="hdlist1">templateconf.cfg</dt>
+<dd>
+<p>Path of the templates from which the bblayers.conf and local.conf were created</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In the older versions of Yocto We would have to update the BB_NUMBER_THREADS
+and PARALLEL_MAKE to define how many tasks should be run in parallel. In the
+newer version this is updated directly. This will be specific
+to the build system and can be inferred as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Training/yocto/yocto-labs$ grep &quot;processor&quot; -ri /proc/cpuinfo
+processor        : 0
+processor        : 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As indicated above we can set those parallelization variables to 2. However the
+OpenEmbedded utilities takes care of it for us. The main change we need to do
+is set the MACHINE to <em>beaglebone</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="yoctooe-conf-local" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/yoctooe-conf-local.png"><img src="http://zeuzoix.github.io/techeuphoria/images/yoctooe-conf-local.png" alt="yoctooe conf local" width="640" height="480"></a>
+</div>
+<div class="title">conf/local.conf variable modifications</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In the older versions as BeagleBone Black was not supported we would have to clone
+the <em>meta-ti</em> layer in the <em>poky</em> directory from <em>git://git.yoctoproject.org/meta-ti.git</em>.
+However it is not required as the newer versions of Yocto supports the
+BeagleBone Black board.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="yoctooe-conf-bblayers" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/yoctooe-conf-bblayers.png"><img src="http://zeuzoix.github.io/techeuphoria/images/yoctooe-conf-bblayers.png" alt="yoctooe conf bblayers" width="640" height="480"></a>
+</div>
+<div class="title">conf/bblayers.conf modifications</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="build-the-image"><a class="anchor" href="#build-the-image"></a>8.4. Build The Image</h3>
+<div class="paragraph">
+<p>Once the build configuration has been set we can start the compilation using
+<em>bitbake [options] [recipe/target&#8230;&#8203;]</em></p>
+</div>
+<div class="paragraph">
+<p>Common targets that were listed when sourcing the script:
+core-image-minimal::A small image to boot a device and have access to core
+command line commands and services.
+core-image-sato:: Image with Sato support. Sato is a GNOME mobile-based user
+interface.
+meta-toolchain:: Includes development headers and libraries to develop directly
+on the target.
+adt-installer:: Build the application development toolkit installer.
+meta-ide-support:: Generates the cross-tool chain</p>
+</div>
+<div class="paragraph">
+<p>On our first attempt at building the <em>core-image-minimal</em> target we get an error.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ bitbake core-image-minimal        <i class="conum" data-value="1"></i><b>(1)</b>
+Loading cache: 100% |####################################################################################################################################################| ETA:  00:00:00
+Loaded 1319 entries from dependency cache.
+NOTE: Resolving any missing task queue dependencies
+NOTE: multiple providers are available for u-boot (u-boot, u-boot-glsdk, u-boot-ti-staging)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match u-boot
+
+Build Configuration:
+BB_VERSION        = &quot;1.22.0&quot;
+BUILD_SYS         = &quot;i686-linux&quot;
+NATIVELSBSTRING   = &quot;Ubuntu-14.04&quot;
+TARGET_SYS        = &quot;arm-poky-linux-gnueabi&quot;
+MACHINE           = &quot;beaglebone&quot;
+DISTRO            = &quot;poky&quot;
+DISTRO_VERSION    = &quot;1.6.2&quot;
+TUNE_FEATURES     = &quot;armv7a vfp neon callconvention-hard cortexa8&quot;
+TARGET_FPU        = &quot;vfp-neon&quot;
+meta
+meta-yocto
+meta-yocto-bsp    = &quot;daisy:91c507ce1cf983a600c2d38c4284e605a80297d6&quot;
+meta-ti           = &quot;daisy:b09b86c399eebce475d41c3a5df56477f6024a2b&quot;
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+WARNING: Failed to fetch URL http://kernel.org/pub/linux/kernel/v3.0/linux-3.14.tar.xz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.gnu.org/gnu/readline/readline-6.3.tar.gz;name=archive, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://zlib.net/pigz/pigz-2.3.1.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/b/base-passwd/base-passwd_3.5.29.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://pkg-shadow.alioth.debian.org/releases/shadow-4.1.4.3.tar.bz2, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz;name=libtar, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://www.cpan.org/src/5.0/perl-5.14.3.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/n/netbase/netbase_5.2.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL ftp://ftp.debian.org/debian/pool/main/d/dpkg/dpkg_1.17.4.tar.xz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://ftp.de.debian.org/debian/pool/main/m/mklibs/mklibs_0.1.38.tar.gz, attempting MIRRORS if available
+WARNING: Failed to fetch URL http://createrepo.baseurl.org/download/createrepo-0.4.11.tar.gz, attempting MIRRORS if available
+NOTE: validating kernel config, see log.do_kernel_configcheck for details
+NOTE: Tasks Summary: Attempted 1797 tasks of which 165 didn't need to be rerun and all succeeded.
+
+Summary: There were 13 WARNING messages shown.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We build the target <em>core-image-minimal</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The build process takes a while depending on your bandwidth and processor speeds.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-the-sd-card"><a class="anchor" href="#setting-up-the-sd-card"></a>8.5. Setting Up The SD Card</h3>
+<div class="paragraph">
+<p>We will use an SD card to store the bootloader, kernel and root filesystem.
+Before copying the built files we need to partition and format the SD card
+using a script available as a part of the yocto-labs data package downloaded
+from Free Electrons.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The script assumes that our workstation has a micro-SD card slot
+and will be detected as a <em>/dev/mmcblk0*</em> type of device. In our case we
+use a micro-SD card to SD card adapter and our device is registered as a
+<em>/dev/sdb</em> type of device
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Take the micro-SD card and insert it into a micro-SD adapter/reader
+like the one shown in the image below:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-microsd-adaptor-sd" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/sdcard-microsd-adaptor-sd.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/sdcard-microsd-adaptor-sd.jpg" alt="sdcard microsd adaptor sd" width="640" height="480"></a>
+</div>
+<div class="title">Micro SD card adapter</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This memory card reader/adapter should be inserted into the SD card
+slot available. If your system has a micro-SD card slot then please
+use that directly. On checking the kernel logs with <em>dmesg</em> we should
+be able to identify the card detected in the system. If a micro-SD
+card slot is available then the system should register it as a
+<em>/dev/mmcblk0</em> whereas in this case with a memory card reader we see
+it as <em>/dev/sdb</em>. The following shows the kernel logs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ dmesg
+.
+.
+.
+[127595.272118] usb 1-2: new high-speed USB device number 6 using ehci-pci
+[127595.405640] usb 1-2: New USB device found, idVendor=058f, idProduct=6366
+[127595.405650] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[127595.405658] usb 1-2: Product: Mass Storage Device
+[127595.405665] usb 1-2: Manufacturer: Generic
+[127595.405671] usb 1-2: SerialNumber: 058F63666433
+[127595.406226] usb-storage 1-2:1.0: USB Mass Storage device detected
+[127595.407830] scsi9 : usb-storage 1-2:1.0
+[127596.532963] scsi 9:0:0:0: Direct-Access     Multiple Card  Reader     1.00 PQ: 0 ANSI: 0
+[127596.533754] sd 9:0:0:0: Attached scsi generic sg1 type 0
+[127598.192274] sd 9:0:0:0: [sdb] 7744512 512-byte logical blocks: (3.96 GB/3.69 GiB) <i class="conum" data-value="1"></i><b>(1)</b>
+[127598.193263] sd 9:0:0:0: [sdb] Write Protect is off
+[127598.193269] sd 9:0:0:0: [sdb] Mode Sense: 03 00 00 00
+[127598.194256] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.194259] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+[127598.199023] sd 9:0:0:0: [sdb] No Caching mode page found
+[127598.199028] sd 9:0:0:0: [sdb] Assuming drive cache: write through
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l /dev/sdb         <i class="conum" data-value="2"></i><b>(2)</b>
+brw-rw---- 1 root disk 8, 16 Mar 22 21:09 /dev/sdb</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We see the device attached as sdb</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device node has been created successfully as /dev/sdb</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="partition-the-sd-card"><a class="anchor" href="#partition-the-sd-card"></a>8.5.1. Partition The SD Card</h4>
+<div class="paragraph">
+<p>We will have to first partition the micro-SD card using the <em>sfdisk</em> utility
+which is part of the <em>util-linux</em> APT package.
+This tool helps us to list the partitions of a device, check the sizes of the
+partitions, check the partitions on a device and re-partition a device. We must
+<strong>be extra careful</strong> when we use such a tool as it could also cause damage to our
+workstation system if we select the wrong device file unintentionally.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo sfdisk --in-order --Linux --unit M /dev/sdb &lt;&lt; EOF                <i class="conum" data-value="1"></i><b>(1)</b>
+&gt; 1,48,0xE,*
+&gt; ,,,-
+&gt; EOF
+Checking that no-one is using this disk right now ...
+BLKRRPART: Device or resource busy                                                <i class="conum" data-value="2"></i><b>(2)</b>
+
+This disk is currently in use - repartitioning is probably a bad idea.
+Umount all file systems, and swapoff all swap partitions on this disk.
+Use the --no-reread flag to suppress this check.
+Use the --force flag to overrule all checks.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ mount                <i class="conum" data-value="3"></i><b>(3)</b>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)
+/dev/sdb1 on /media/conrad/boot type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2) <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The command to re-partition the <em>/devsdb</em> device with <em>sfdisk</em>. The options
+<em>--in-order</em> indicates that the partitions are in order in the input. <em>--Linux</em>
+tells sfdisk to ignore all warnings irrelevant for Linux.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device is apparently busy.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We do a <em>mount</em> to check if it is mounted</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>We see that a partition is mounted in our Workstation at /media/conrad/boot</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the micro-SD card is already partitioned and formated it may be auto mounted
+by our work station. We will have to un-mount all the partitions before we can
+proceed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo umount /media/conrad/boot         <i class="conum" data-value="1"></i><b>(1)</b>
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ mount                <i class="conum" data-value="2"></i><b>(2)</b>
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+rpc_pipefs on /run/rpc_pipefs type rpc_pipefs (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=conrad)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We have to unmount the <em>/dev/sdb1</em> from the mount point i.e. <em>/media/conrad/boot</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We check to see if anything else is mounted again</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Again we attempt to repartition the micro-SD card</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo sfdisk --in-order --Linux --unit M /dev/sdb &lt;&lt; EOF
+1,48,0xE,*
+,,,-
+EOF                                                                                        <i class="conum" data-value="1"></i><b>(1)</b>
+Checking that no-one is using this disk right now ...                                        <i class="conum" data-value="2"></i><b>(2)</b>
+OK
+
+Disk /dev/sdb: 1023 cylinders, 122 heads, 62 sectors/track
+Old situation:                                                                                <i class="conum" data-value="3"></i><b>(3)</b>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+New situation:                                                                                <i class="conum" data-value="4"></i><b>(4)</b>
+Units = mebibytes of 1048576 bytes, blocks of 1024 bytes, counting from 0
+
+   Device Boot Start   End    MiB    #blocks   Id  System
+/dev/sdb1   *     1     48     48      49152    e  W95 FAT16 (LBA)
+/dev/sdb2        49   3780   3732    3821568   83  Linux
+/dev/sdb3         0      -      0          0    0  Empty
+/dev/sdb4         0      -      0          0    0  Empty
+Successfully wrote the new partition table
+
+Re-reading the partition table ...
+BLKRRPART: Device or resource busy
+The command to re-read the partition table failed.
+Run partprobe(8), kpartx(8) or reboot your system now,
+before using mkfs
+If you created or changed a DOS partition, /dev/foo7, say, then use dd(1)
+to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1
+(See fdisk(8).)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>sfdisk</em> utility is invoked supplying the information about the partitions</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>sfdisk</em> checking to see that no one is using the disk</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The old partition map is displayed first. <strong>This will vary based on the history
+of the micro-SD card</strong></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The new partition map is displayed. The first partition is a W95 FAT16 one
+which is 48 MB. This is the first line of input to sfdisk. The remaining has
+been converted to a Linux partition.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="format-the-partitions"><a class="anchor" href="#format-the-partitions"></a>8.5.2. Format The Partitions</h4>
+<div class="paragraph">
+<p>We will have to format the first partition of the disk using the <em>mkfs.vfat</em>
+partition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo mkfs.vfat -F 16 /dev/sdb1 -n boot        <i class="conum" data-value="1"></i><b>(1)</b>
+[sudo] password for conrad:
+no talloc stackframe at ../source3/param/loadparm.c:4864, leaking memory
+mkfs.fat 3.0.26 (2014-03-07)
+mkfs.fat: warning - lowercase labels might not work properly with DOS or Windows
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ echo $?                        <i class="conum" data-value="2"></i><b>(2)</b>
+0</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>mkfs.vfat</em> is run on the partition <em>/dev/sdb1</em>. The label of the partition
+is set to <em>boot</em> with the -n option and the -F option specifies the type of
+file allocation tables used (12, 16 or 32 bit).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Checks the return value of the command</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We will have to format the second partition of the disk using the <em>mkfs.vfat</em>
+partition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo mkfs.ext4 /dev/sdb2 -L rootfs        <i class="conum" data-value="1"></i><b>(1)</b>
+mke2fs 1.42.9 (4-Feb-2014)
+Filesystem label=rootfs
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+239040 inodes, 955392 blocks
+47769 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=981467136
+30 block groups
+32768 blocks per group, 32768 fragments per group
+7968 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>mkfs.ext4</em> is run on the partition <em>/dev/sdb2</em>. The label of the partition
+is set to <em>rootfs</em> with the -L option</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>On disconnecting the SD card adapter and reconnecting it we see the
+two partitions mounted under devices. The steps to prepare the SD card
+are the same as what would be executed by <em>yocto-labs/script/format_sdcard.sh</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cat ~/Training/yocto/yocto-labs/script/format_sdcard.sh
+#!/bin/bash
+
+if [ $(id -u) -ne 0 ]; then
+  echo &quot;Please run this script as root&quot;
+  exit
+fi
+
+if [ $# -ne 1 ]; then
+  echo &quot;Usage: $0 mmc_device&quot;
+  exit
+fi
+
+exec 1&gt;&amp;-
+exec 2&gt;&amp;-
+
+dd if=/dev/zero of=$1 bs=1M count=16
+sfdisk --in-order --L --unit M $1 &lt;&lt;EOF
+1,48,0xE,*
+,,,-
+EOF
+
+mkfs.vfat -F 16 ${1}p1 -n boot
+mkfs.ext4 ${1}p2 -L rootfs
+
+exit 0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="copy-the-built-images"><a class="anchor" href="#copy-the-built-images"></a>8.5.3. Copy The Built Images</h4>
+<div class="paragraph">
+<p>We copy the two U-Boot stages, Linux image and compiled device tree in the
+<em>boot</em> partition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l build/tmp/deploy/images/beaglebone/        <i class="conum" data-value="1"></i><b>(1)</b>
+total 43064
+-rw-r--r-- 1 conrad conrad  2949120 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad      972 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2264889 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2
+lrwxrwxrwx 1 conrad conrad       57 May 11 23:51 core-image-minimal-beaglebone.jffs2 -&gt; core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+lrwxrwxrwx 1 conrad conrad       60 May 11 23:51 core-image-minimal-beaglebone.manifest -&gt; core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+lrwxrwxrwx 1 conrad conrad       59 May 11 23:51 core-image-minimal-beaglebone.tar.bz2 -&gt; core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO -&gt; MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO-beaglebone -&gt; MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rwxr-xr-x 2 conrad conrad   102348 May 12 15:15 MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rw-rw-r-- 2 conrad conrad 33333836 May 12 02:04 modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 modules-beaglebone.tgz -&gt; modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+-rw-rw-r-- 2 conrad conrad      294 May 12 02:04 README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot-beaglebone.img -&gt; u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+-rwxr-xr-x 2 conrad conrad   356456 May 12 15:15 u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot.img -&gt; u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+-rw-r--r-- 2 conrad conrad    28596 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad    29192 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad  4985352 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+lrwxrwxrwx 1 conrad conrad       80 May 12 02:04 uImage-am335x-boneblack.dtb -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 uImage-am335x-bone.dtb -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage-beaglebone.bin -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cp build/tmp/deploy/images/beaglebone/MLO-beaglebone /media/conrad/boot/MLO        <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cp build/tmp/deploy/images/beaglebone/u-boot-beaglebone.img /media/conrad/boot/u-boot.img        <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+.
+.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpf build/tmp/deploy/images/beaglebone/core-image-minimal-beaglebone.tar.bz2 -C /media/conrad/rootfs        <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ ls -l /media/conrad/rootfs/
+total 60
+drwxr-xr-x  2 root root 4096 May 11 23:51 bin
+drwxr-xr-x  2 root root 4096 May 11 20:51 boot
+drwxr-xr-x  2 root root 4096 May 11 20:51 dev
+drwxr-xr-x 17 root root 4096 May 11 23:51 etc
+drwxr-sr-x  3 root root 4096 May 11 23:51 home
+drwxr-xr-x  3 root root 4096 May 11 23:51 lib
+drwxr-xr-x  2 root root 4096 May 11 20:51 media
+drwxr-xr-x  2 root root 4096 May 11 20:51 mnt
+drwxr-xr-x  2 root root 4096 May 11 20:51 proc
+drwxr-xr-x  2 root root 4096 May 11 20:51 run
+drwxr-xr-x  2 root root 4096 May 11 23:51 sbin
+drwxr-xr-x  2 root root 4096 May 11 20:51 sys
+drwxrwxrwt  2 root root 4096 May 11 20:51 tmp
+drwxr-xr-x  9 root root 4096 May 11 23:30 usr
+drwxr-xr-x  7 root root 4096 May 11 20:50 var
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpf build/tmp/deploy/images/beaglebone/modules-beaglebone.tgz -C /media/conrad/rootfs        <i class="conum" data-value="5"></i><b>(5)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sync
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo cp build/tmp/deploy/images/beaglebone/uImage-beaglebone.bin /media/conrad/rootfs/boot/uImage
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo cp build/tmp/deploy/images/beaglebone/uImage-am335x-boneblack.dtb /media/conrad/rootfs/boot/am335x-boneblack.dtb        <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Listing the images built</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Copying the first stage bootloader <em>MLO</em> to the <em>boot</em> partition</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Copying the second stage bootloader <em>u-boot.img</em> to the <em>boot</em> partition</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Untar the root filesystem in the <em>rootfs</em> partition</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Untar the kernel modules in the <em>rootfs</em> partition as we have built a core-image-minimal target</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Copy the compiled device tree binary</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-serial-communication-with-the-board"><a class="anchor" href="#setting-up-serial-communication-with-the-board"></a>8.6. Setting Up Serial Communication With The Board</h3>
+<div class="paragraph">
+<p>The debug serial header connector is a 1x6 header. Serial
+capability is provided by UART0 of the processor. It would be good to read
+the section on the debug serial header given in the
+<a href="../docs/spruh73i.pdf" target="_blank">Technical Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The only two signals available are TX and RX on the connector and the levels
+on these signals is 3.3V. A FTDI USB to serial cable is recommended as this
+serves to provide a serial port to PCs/Laptops making use of the available
+USB port. The FTDI chip translates the USB data to serial and vice versa. There
+are several provided in the elinux.org website link at:<br>
+<a href="http://elinux.org/Beagleboard:BeagleBone_Black_Serial" target="_blank">http://elinux.org/Beagleboard:BeagleBone_Black_Serial</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="rhydolabz-ftdi-usb-to-serial-breakout-board"><a class="anchor" href="#rhydolabz-ftdi-usb-to-serial-breakout-board"></a>8.6.1. Rhydolabz FTDI USB To Serial Breakout Board</h4>
+<div class="paragraph">
+<p>In this journal a breakout board was purchased from
+<a href="http://www.rhydolabz.com/index.php" target="_blank">Rhydolabz</a>. There are several boards available but
+one without a 1x6 connector was chosen. All the signals of the FTDI can be
+exposed by soldering a bergstrip pin-out for advanced users but for our use
+case GND, RX and TX are provided with an easy to access 4 pin connector. The
+board is also capable of outputing both 5V and 3.3V. This is controlled by
+soldering the 3.3V leads at the back of the breakout board. The board can be
+picked up from:<br>
+<a href="http://www.rhydolabz.com/index.php?main_page=product_info&amp;cPath=80&amp;products_id=1090" target="_blank">http://www.rhydolabz.com/index.php?main_page=product_info&amp;cPath=80&amp;products_id=1090</a></p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-usb-serial-breakout-board" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/rhydolabz-ftdi-usb-to-serial-interface-module.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/rhydolabz-ftdi-usb-to-serial-interface-module.jpg" alt="rhydolabz ftdi usb to serial interface module" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board with mini USB cable</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="connecting-the-breakout-board"><a class="anchor" href="#connecting-the-breakout-board"></a>8.6.2. Connecting The Breakout Board</h4>
+<div class="paragraph">
+<p>The FTDI breakout board comes with a Grove 4 pin Female jumper to 4 pin
+conversion cable. Each of the cables can be connected to female connectors
+to be slotted into the serial debug header pins. We need only the GND, RXD
+and TXD signals from the board. Before connecting the board signals make
+sure the 3.3V leads are shorted at the bottom of the board. The board from
+Rhydolabz comes with the 5V lead shorted and must be converted for the Beagle
+Bone Black.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Connect the GND cable of the FTDI breakout board to pin 1 of the serial header.</p>
+</li>
+<li>
+<p>Next connect RXD of the FTDI breakout board to pin 5 which is the TX of the serial debug header.</p>
+</li>
+<li>
+<p>Finally connect TXD of the board to pin 4 which is the RX of the serial debug header.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is always good to understand the specifications of the connectors whenever
+interfacing electronic circuits. In this case we know that the BeagleBone Black
+takes 3.3V from the System Reference Manual. If a different cable is to be used
+check and see if its connector is compatible with the header. The figure below
+shows the setup where GND is the orange cable on the right, next RXD is the
+brown cable followed by the TXD which is the red cable.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-rhydolabz-ftdi-serial-debug-connection.jpg" alt="beagleboneblacktux rhydolabz ftdi serial debug connection" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board serial connection to BeagleBone Black 1x6 header</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the connections are in place between the BeagleBone Black serial debug
+header and the FTDI cable or breakout board then connect the USB cable to the
+breakout board. The picture shows that the board lights up.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-rhydolabz-ftdi-mini-usb-connection.jpg" alt="beagleboneblacktux rhydolabz ftdi mini usb connection" width="640" height="480"></a>
+</div>
+<div class="title">Rhydolabz breakout board mini USB connection</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The linux kernel running on the workstation should register the new USB
+device connected. We can probe the kernel logs to see if there is any activity
+using dmesg.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ dmesg
+.
+.
+.
+[60269.932101] usb 6-1: new full-speed USB device number 2 using uhci_hcd
+[60270.125794] usb 6-1: New USB device found, idVendor=0403, idProduct=6001
+[60270.125804] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[60270.125812] usb 6-1: Product: FT232R USB UART
+[60270.125819] usb 6-1: Manufacturer: FTDI
+[60270.125825] usb 6-1: SerialNumber: A602I2CN
+[60270.212583] usbcore: registered new interface driver usbserial
+[60270.212599] usbcore: registered new interface driver usbserial_generic
+[60270.212611] usbserial: USB Serial support registered for generic
+[60270.230288] usbcore: registered new interface driver ftdi_sio
+[60270.230305] usbserial: USB Serial support registered for FTDI USB Serial Device
+[60270.230972] ftdi_sio 6-1:1.0: FTDI USB Serial Device converter detected
+[60270.231033] usb 6-1: Detected FT232RL
+[60270.231036] usb 6-1: Number of endpoints 2
+[60270.231039] usb 6-1: Endpoint 1 MaxPacketSize 64
+[60270.231041] usb 6-1: Endpoint 2 MaxPacketSize 64
+[60270.231043] usb 6-1: Setting MaxPacketSize 64
+[60270.233850] usb 6-1: FTDI USB Serial Device converter now attached to ttyUSB0        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ ls -l /dev/ttyUSB0
+crw-rw---- 1 root dialout 188, 0 Mar 25 22:28 /dev/ttyUSB0        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The device has been recognized as a tty device and is named ttyUSB0</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A device node <em>/dev/ttyUSB0</em> is created in the root filesystem</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="accessing-the-serial-port-with-em-picocom-em"><a class="anchor" href="#accessing-the-serial-port-with-em-picocom-em"></a>8.6.3. Accessing The Serial Port With <em>Picocom</em></h4>
+<div class="paragraph">
+<p>We can now access the serial port with a terminal application like picocom.
+This can be installed as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo apt-get install picocom        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs$ sudo adduser $USER dialout        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Installing <em>picocom</em> with <em>apt-get</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Adding $USER to the dialout group to use <em>picocom</em> without sudo. $USER is set to the username i.e conrad in the above case.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can now start <em>picocom</em> and connect it to the <em>/dev/ttyUSB0</em> device which
+was created earlier. The baud rate is specified with the -b option. The
+default serial port settings for the board are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Baud 115,200</p>
+</li>
+<li>
+<p>Bits 8</p>
+</li>
+<li>
+<p>Parity N</p>
+</li>
+<li>
+<p>Stop Bits 1</p>
+</li>
+<li>
+<p>Handshake None</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After starting the <em>picocom</em> application we should be able to see the serial
+port is opened and the settings should be the default settings. If they are
+not then try to get the settings by providing options to picocom. Once we get
+the desired settings we can apply power to the connected BeagleBone Black. At
+this point we will boot up the board for the first time and should see the
+serial logs of the bootloader U-Boot. The boot process can be interrupted by
+hitting any key on the keyboard and allowing us to configure the U-Boot
+environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/techeuphoria/quests/beagleboneblacktux/free_electrons_linux_kernel$ picocom -b 115200 /dev/ttyUSB0 <i class="conum" data-value="1"></i><b>(1)</b>
+picocom v1.7
+
+port is        : /dev/ttyUSB0
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        :
+omap is        :
+emap is        : crcrlf,delbs,
+
+Terminal ready        <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We run the <em>picocom</em> application setting the baud rate to 115200 and
+choosing the device as <em>/dev/ttyUSB0</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>picocom</em> shows that the terminal is ready after printing the serial
+port settings</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="booting-the-board"><a class="anchor" href="#booting-the-board"></a>8.7. Booting The Board</h3>
+<div class="paragraph">
+<p>Insert the micro-SD card in the dedicated slot on the BeagleBone Black.
+Press the S2 push button (located just above the previous slot), plug in
+the power supply (External/USB) and release the push button. You
+should see boot messages on the console.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">Terminal ready
+&quot;
+&quot;
+U-Boot SPL 2013.07 (May 12 2015 - 15:15:09)
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+OMAP SD/MMC: 0
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.07 (May 12 2015 - 15:15:09)                <i class="conum" data-value="1"></i><b>(1)</b>
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+Net:   &lt;ethaddr&gt; not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0
+mmc0 is current device
+SD/MMC found on device 0
+reading uEnv.txt
+** Unable to read file uEnv.txt **
+4985352 bytes read in 865 ms (5.5 MiB/s)
+29192 bytes read in 35 ms (814.5 KiB/s)
+Booting from mmc ...                                        <i class="conum" data-value="2"></i><b>(2)</b>
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   Linux-3.14.0-yocto-standard
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4985288 Bytes = 4.8 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 88000000
+   Booting using the fdt blob at 0x88000000
+   Loading Kernel Image ... OK
+   Loading Device Tree to 8fff5000, end 8ffff207 ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Initializing cgroup subsys cpuset
+Initializing cgroup subsys cpu
+Initializing cgroup subsys cpuacct
+Linux version 3.14.0-yocto-standard (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.8.2 (GCC) ) #1 PREEMPT Tue May 12 01:59:26 IST 2015
+CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine model: TI AM335x BeagleBone
+cma: CMA: reserved 16 MiB at 9e800000
+Memory policy: Data cache writeback
+CPU: All CPU(s) started in SVC mode.
+AM335X ES2.0 (sgx neon )
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 129792
+Kernel command line: console=ttyO0,115200n8 root=/dev/mmcblk0p2 ro rootfstype=ext4 rootwait        <i class="conum" data-value="3"></i><b>(3)</b>
+PID hash table entries: 2048 (order: 1, 8192 bytes)
+Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+allocated 1048576 bytes of page_cgroup
+please try 'cgroup_disable=memory' option if you don't want memory cgroups
+Memory: 489444K/523264K available (7491K kernel code, 520K rwdata, 2456K rodata, 488K init, 757K bss, 33820K reserved, 0K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+    lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .text : 0xc0008000 - 0xc09bf044   (9949 kB)
+      .init : 0xc09c0000 - 0xc0a3a034   ( 489 kB)
+      .data : 0xc0a3c000 - 0xc0abe0d4   ( 521 kB)
+       .bss : 0xc0abe0d4 - 0xc0b7b678   ( 758 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Preemptible hierarchical RCU implementation.
+NR_IRQS:16 nr_irqs:16 16
+IRQ: Found an INTC at 0xfa200000 (revision 5.0) with 128 interrupts
+Total of 128 interrupts on 1 active controller
+OMAP clockevent source: timer2 at 24000000 Hz
+sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956969942ns
+OMAP clocksource: timer1 at 24000000 Hz
+Console: colour dummy device 80x30
+Calibrating delay loop... 548.86 BogoMIPS (lpj=2744320)
+pid_max: default: 32768 minimum: 301
+Security Framework initialized
+.
+.
+.
+omap_rtc 44e3e000.rtc: setting system clock to 2000-01-01 00:00:01 UTC (946684801)
+EXT4-fs (mmcblk0p2): INFO: recovery required on readonly filesystem
+EXT4-fs (mmcblk0p2): write access will be enabled during recovery
+mmc1: BKOPS_EN bit is not set
+mmc1: new high speed MMC card at address 0001
+mmcblk1: mmc1:0001 MMC02G 1.78 GiB
+mmcblk1boot0: mmc1:0001 MMC02G partition 1 1.00 MiB
+mmcblk1boot1: mmc1:0001 MMC02G partition 2 1.00 MiB
+ mmcblk1: p1 p2
+ mmcblk1boot1: unknown partition table
+ mmcblk1boot0: unknown partition table
+EXT4-fs (mmcblk0p2): recovery complete
+EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
+VFS: Mounted root (ext4 filesystem) readonly on device 179:2.        <i class="conum" data-value="4"></i><b>(4)</b>
+devtmpfs: mounted
+Freeing unused kernel memory: 488K (c09c0000 - c0a3a000)
+INIT: version 2.88 booting
+Starting udev
+udevd[80]: starting version 182
+EXT4-fs (mmcblk0p2): re-mounted. Opts: data=ordered
+Starting Bootlog daemon: bootlogd.
+random: nonblocking pool is initialized
+Mon May 11 18:21:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... net eth0: initializing cpsw version 1.12 (0)
+net eth0: phy found : id is : 0x7c0f1
+libphy: PHY 4a101000.mdio:01 not found
+net eth0: phy 4a101000.mdio:01 not found on slave 1
+IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+udhcpc (v1.22.1) started
+Sending discover...
+Sending discover...
+Sending discover...
+No lease, failing
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root        <i class="conum" data-value="5"></i><b>(5)</b>
+root@beaglebone:~#
+root@beaglebone:~# pwd
+/home/root</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Our compiled U-Boot with it&#8217;s timestamp is loaded</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The kernel and compiled device tree binary is booted from mmc</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The kernel arguments show that <em>root=/dev/mmcblk0p2</em> the second partition is the root filesystem</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The second partition is successfully mounted as the root filesystem</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>We have access to the root login.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<h1 id="advanced-yocto-configuration" class="sect0"><a class="anchor" href="#advanced-yocto-configuration"></a>Advanced Yocto configuration</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>We&#8217;ll configure the build, customize the images and use a NFS root file system.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab2-advanced-yocto-configuration"><a class="anchor" href="#lab2-advanced-yocto-configuration"></a>9. Lab2: Advanced Yocto Configuration</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session based on the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Customize the package selection</p>
+</li>
+<li>
+<p>Configure the build system</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="using-rootfs-over-nfs"><a class="anchor" href="#using-rootfs-over-nfs"></a>9.1. Using rootfs Over NFS</h3>
+<div class="paragraph">
+<p>In the previous lab we flashed the compiled images and rootfilesystem
+onto the microSD card. The flashing process does take a while even
+with the fastest SD cards and also may cause the connectors to wear
+out thereby damaging the board. Another disadvantage is that with
+each write operation the life of the SD card also reduces. We need to
+switch to a network type of development environment to solve these
+problems. This enables us to build our binaries on the workstation
+and test it on the board without having to flash the board which saves
+time as well as prolongs the life of the eMMC device or micro-SD card.
+We will enable a NFS type of root filesystem which will allow us to test
+cross-compiled binaries on board.</p>
+</div>
+<div class="sect3">
+<h4 id="setting-up-the-nfs-server"><a class="anchor" href="#setting-up-the-nfs-server"></a>9.1.1. Setting Up The NFS Server</h4>
+<div class="paragraph">
+<p>We will now need to setup our workstation as a NFS server. This will require
+installation of the <em>nfs-kernel-server</em> package.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo apt-get install nfs-kernel-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once installed we need to edit the <em>/etc/exports</em> file to configure the server
+to allow a NFS client to connect to it and mount a directory. In this case
+we want to configure the NFS server in such a way so as to allow our
+BeagleBone Black platform to mount the root filesystem which is there in our
+workstation lab data directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ cat /etc/exports                 <i class="conum" data-value="1"></i><b>(1)</b>
+# /etc/exports: the access control list for filesystems which may be exported
+#                to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
+/home/conrad/Training/yocto/nfs 192.168.0.100(rw,no_root_squash,no_subtree_check)                <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>After editing the file we cat its contents</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The directory of nfsroot is exported to IP 192.168.0.100 which is our BBB IP</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally before we boot make sure to restart the NFS server as shown below. If
+there are any errors then the server will refuse to start and error logs will
+appear. The <em>/etc/exports</em> file must be revisited and the syntax of the line
+must be inspected and corrected. Fix the errors and ensure the NFS server
+restarts before proceeding.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$ sudo service nfs-kernel-server restart
+ * Stopping NFS kernel daemon                                 [ OK ]
+ * Unexporting directories for NFS kernel daemon...     [ OK ]
+ * Exporting directories for NFS kernel daemon...       [ OK ]
+ * Starting NFS kernel daemon                           [ OK ]
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we will connect an ethernet cable between our workstation and the BeagleBone
+Black ethernet connector. If the workstation does not have any more connections
+then we will have to use a USB ethernet adapter. In this case we have an unused
+connection so we will connect the cable as shown.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-ethernet-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-connection.jpg" alt="beagleboneblacktux ethernet connection" width="640" height="480"></a>
+</div>
+<div class="title">BeagleBone Black connected to ethernet cable</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We next have to configure the network interface on the workstation side. Click
+on the network manager tasklet on the desktop and select <em>Edit Connections</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-edit-connections" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-ethernet-screenshot-edit-connections.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-edit-connections.png" alt="beagleboneblacktux ethernet screenshot edit connections" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of <em>Edit Connections</em> selected in the network manager tasklet</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Click on the Add button on the left and then <em>Create..</em> an ethernet connection.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-add-new-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-ethernet-screenshot-add-new-connection.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-add-new-connection.png" alt="beagleboneblacktux ethernet screenshot add new connection" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of adding a new ethernet conneciton</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Edit the new ethernet connection by changing its name to <em>BBB</em>. Change the
+IPV4 settings by selecting the method as manual. And finally add the static
+address as 192.168.0.1 and netmask as 255.255.255.0. There&#8217;s no need to add
+a gateway but if the cursor is in the textbox enter 0.0.0.0. Save the
+settings and the interface is set up on the workstation.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-ethernet-screenshot-edit-new-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-ethernet-screenshot-edit-new-connection.png" alt="beagleboneblacktux ethernet screenshot edit new connection" width="640" height="480"></a>
+</div>
+<div class="title">Screen shot of editing IPV4 settings of the new ethernet connection</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="modifying-the-u-boot-args-with-uenv-txt"><a class="anchor" href="#modifying-the-u-boot-args-with-uenv-txt"></a>9.2. Modifying The U-Boot Args With uEnv.txt</h3>
+<div class="paragraph">
+<p>Our next step is to modify the U-Boot environment in order to setup
+the U-Boot image to mount the root filesystem from a NFS file server.
+We basically make use of the <em>bootcmd</em> variable in the default U-Boot
+environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">bootcmd=run findfdt; mmc dev ${mmcdev}; if mmc rescan; then echo SD/MMC found on device ${mmcdev};if run loadbootenv; then echo Loaded environment from ${bootenv};run importbootenv;fi;if test -n $uenvcmd; then echo Running uenvcmd ...;run uenvcmd;fi;if run loaduimage; then run loadfdt;run mmcboot;fi;else run nandboot;fi;        <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>bootcmd</em> in the default U-Boot environment</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <em>bootcmd</em> will search for a uEnv.txt file in the same
+partition as the u-boot.img. If found it is loaded into memory
+and then imported into the environment ready to be read or executed.
+After this, the script checks to see if the variable uenvcmd is defined.
+If it is defined, the script in the variable is executed. The script
+can be reordered as follows to give it decode it. Certain variables
+such as <em>loadbootenv</em> are defined in the U-Boot environment
+variables.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">run findfdt;
+mmc dev ${mmcdev};
+if mmc rescan;
+        then echo SD/MMC found on device ${mmcdev};
+        if run loadbootenv;
+                then echo Loaded environment from ${bootenv};
+                run importbootenv;
+        fi;
+        if test -n $uenvcmd;
+                then echo Running uenvcmd ...;
+                run uenvcmd;
+        fi;
+        if run loaduimage;
+                then run loadfdt;
+                run mmcboot;
+        fi;
+else
+        run nandboot;
+fi;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We create a uEnv.txt file so as to override the required variables and
+execute our own bootcmd using <em>uenvcmd</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ cat /media/conrad/boot/uEnv.txt
+bootpart=0:2
+bootdir=/boot
+bootfile=uImage
+loadaddr=0x82000000
+fdtaddr=0x88000000
+loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile}
+loaduimage=load mmc ${bootpart} ${loadaddr} ${bootdir}/${bootfile}
+ipaddr=192.168.0.100
+bootargs=console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100        <i class="conum" data-value="1"></i><b>(1)</b>
+uenvcmdx=run loaduimage;run loadfdt;bootm ${loadaddr} - ${fdtaddr}        <i class="conum" data-value="2"></i><b>(2)</b>
+uenvcmd=run uenvcmdx                                                        <i class="conum" data-value="3"></i><b>(3)</b>
+                                                                        <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The bootargs is set to instruct the kernel to boot the root filesystem from a NFS server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We create a variable to store our instructions for <em>uenvcmd</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <em>uenvcmd</em> is defined to run <em>uenvcmdx</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>We need a space at the end of the file after all the variables are set.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Further information about using uEnv.txt can be obtained from
+<a href="http://www.linuxjournal.com/content/handy-u-boot-trick" target="_blank">http://www.linuxjournal.com/content/handy-u-boot-trick</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="explanation-of-the-bootargs"><a class="anchor" href="#explanation-of-the-bootargs"></a>9.2.1. Explanation Of The Bootargs</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">root=/dev/nfs</dt>
+<dd>
+<p>We set the root filesystem device as /dev/nfs to indicate that
+NFS is to be used.
+rw::The root filesystem should be mounted with read and write capabilities</p>
+</dd>
+<dt class="hdlist1">ip=192.168.0.100</dt>
+<dd>
+<p>The IP of the BeagleBone Black board should be 192.168.0.100
+before mounting the NFS root filesystem</p>
+</dd>
+<dt class="hdlist1">console=ttyO0</dt>
+<dd>
+<p>The console to be used is serial port 0. The character before
+the 0 is 'O' as in "OMAP".</p>
+</dd>
+<dt class="hdlist1">nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs</dt>
+<dd>
+<p>The
+NFS root filesystem server IP and path of the directory. This is similar to
+the workstation settings. The IP is the workstation ethernet static IP and
+the path is the same as that in the <em>/etc/exports</em>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="prepare-the-nfs-export-directory"><a class="anchor" href="#prepare-the-nfs-export-directory"></a>9.2.2. Prepare The NFS Export Directory</h4>
+<div class="paragraph">
+<p>We have untar the <em>core-image-minimal-beaglebone.tar.bz2</em> package to the
+NFS export directory <em>/home/conrad/Training/yocto/nfs</em> in order to have
+a successful mount of the root filesystem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ sudo tar xpvjf build/tmp/deploy/images/beaglebone/core-image-minimal-beaglebone.tar.bz2 -C ~/Training/yocto/nfs        <i class="conum" data-value="1"></i><b>(1)</b>
+./
+./home/
+./home/root/
+./var/
+./var/lock
+./var/run
+./var/spool/
+./var/volatile/
+./var/volatile/log/
+./var/volatile/tmp/
+./var/log
+./var/lib/
+./var/lib/wdj/
+./var/lib/wdj/l10n/
+./var/lib/urandom/
+./var/lib/misc/
+./var/tmp
+./var/local/
+./var/backups/
+.
+.
+./bin/df
+./bin/pidof.sysvinit
+./bin/chmod
+./bin/pwd
+./bin/true
+./bin/ash
+./bin/busybox.suid
+./bin/cpio
+./bin/cat
+./bin/chattr
+./bin/dd
+./bin/chgrp
+./bin/login
+./bin/echo
+./bin/kill
+./bin/mknod</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Untar the package to our NFS export directory</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="boot-the-system"><a class="anchor" href="#boot-the-system"></a>9.2.3. Boot The System</h4>
+<div class="paragraph">
+<p>Make sure the BeagleBone Black is connected to the USB to serial connector
+correctly as was described in Lab1. Also make sure your etherned cable is
+connected between the board and your workstation.</p>
+</div>
+<div class="paragraph">
+<p>After saving the uEnv.txt file in the <em>boot</em> partition of the microSD
+card we unmount the device and plug it into the BeagleBone Black SD
+card slot. Press the S2 push button (located just above the previous slot),
+plug in the power supply (External/USB) and release the push button. You
+should see boot messages on the console.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">U-Boot SPL 2013.07 (May 12 2015 - 15:15:09)
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+OMAP SD/MMC: 0
+reading args
+spl: error reading image args, err - -1
+reading u-boot.img
+reading u-boot.img
+
+
+U-Boot 2013.07 (May 12 2015 - 15:15:09)
+
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
+
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+Net:   &lt;ethaddr&gt; not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0
+mmc0 is current device
+SD/MMC found on device 0
+reading uEnv.txt                                                                <i class="conum" data-value="1"></i><b>(1)</b>
+439 bytes read in 3 ms (142.6 KiB/s)
+Loaded environment from uEnv.txt
+Importing environment from mmc ...
+Running uenvcmd ...                                                                <i class="conum" data-value="2"></i><b>(2)</b>
+4985352 bytes read in 864 ms (5.5 MiB/s)
+29192 bytes read in 34 ms (837.9 KiB/s)
+## Booting kernel from Legacy Image at 82000000 ...
+   Image Name:   Linux-3.14.0-yocto-standard
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4985288 Bytes = 4.8 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 88000000
+   Booting using the fdt blob at 0x88000000
+   Loading Kernel Image ... OK
+   Loading Device Tree to 8fff5000, end 8ffff207 ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Initializing cgroup subsys cpuset
+Initializing cgroup subsys cpu
+Initializing cgroup subsys cpuacct
+Linux version 3.14.0-yocto-standard (conrad@conrad-HP-Pavilion-dm3-Notebook-PC) (gcc version 4.8.2 (GCC) ) #1 PREEMPT Tue May 12 01:59:26 IST 2015
+CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine model: TI AM335x BeagleBone
+cma: CMA: reserved 16 MiB at 9e800000
+Memory policy: Data cache writeback
+CPU: All CPU(s) started in SVC mode.
+AM335X ES2.0 (sgx neon )
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 129792
+Kernel command line: console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100        <i class="conum" data-value="3"></i><b>(3)</b>
+PID hash table entries: 2048 (order: 1, 8192 bytes)
+Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+allocated 1048576 bytes of page_cgroup
+please try 'cgroup_disable=memory' option if you don't want memory cgroups
+Memory: 489444K/523264K available (7491K kernel code, 520K rwdata, 2456K rodata, 488K init, 757K bss, 33820K reserved, 0K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+    lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .text : 0xc0008000 - 0xc09bf044   (9949 kB)
+      .init : 0xc09c0000 - 0xc0a3a034   ( 489 kB)
+      .data : 0xc0a3c000 - 0xc0abe0d4   ( 521 kB)
+       .bss : 0xc0abe0d4 - 0xc0b7b678   ( 758 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Preemptible hierarchical RCU implementation.
+.
+.
+.
+IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+ mmcblk1boot1: unknown partition table
+ mmcblk1boot0: unknown partition table
+libphy: 4a101000.mdio:00 - Link is Up - 100/Full
+IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+IP-Config: Guessing netmask 255.255.255.0
+IP-Config: Complete:
+     device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+     host=192.168.0.100, domain=, nis-domain=(none)
+     bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+VFS: Mounted root (nfs filesystem) on device 0:12.                        <i class="conum" data-value="4"></i><b>(4)</b>
+devtmpfs: mounted
+Freeing unused kernel memory: 488K (c09c0000 - c0a3a000)
+INIT: version 2.88 booting
+Starting udev
+udevd[76]: starting version 182
+random: nonblocking pool is initialized
+Starting Bootlog daemon: bootlogd.
+Populating dev cache
+Mon May 11 18:21:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... ifup skipped for nfsroot interface eth0
+run-parts: /etc/network/if-pre-up.d/nfsroot exited with code 1
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root
+root@beaglebone:~# cat /proc/cmdline
+console=ttyO0,115200n8 root=/dev/nfs nfsroot=192.168.0.1:/home/conrad/Training/yocto/nfs rw ip=192.168.0.100
+root@beaglebone:~# mount
+rootfs on / type rootfs (rw)
+192.168.0.1:/home/conrad/Training/yocto/nfs on / type nfs (rw,relatime,vers=2,rsize=4096,wsize=4096,namlen=255,hard,nolock,proto=udp,timeo=11,retrans=3,sec=sys,mountaddr=192.168.0.1,mountvers=1,mountproto=udp,local_lock=all,addr=192.168.0.1)        <i class="conum" data-value="5"></i><b>(5)</b>
+devtmpfs on /dev type devtmpfs (rw,relatime,size=244720k,nr_inodes=61180,mode=755)
+proc on /proc type proc (rw,relatime)
+sysfs on /sys type sysfs (rw,relatime)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)
+tmpfs on /var/volatile type tmpfs (rw,relatime)
+devpts on /dev/pts type devpts (rw,relatime,gid=5,mode=620)
+root@beaglebone:~#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The uEnv.txt file is loaded</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <em>uenvcmd</em> is executed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Our <em>bootargs</em> is taken as Kernel parameters</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The kernel successfully mounts the NFS server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>We see the root filesystem is mounted from our NFS server</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-a-package-to-the-rootfs-image"><a class="anchor" href="#add-a-package-to-the-rootfs-image"></a>9.3. Add A Package To The Rootfs Image</h3>
+<div class="paragraph">
+<p>We will now add the <em>dropbear</em> package to the packages
+installed in the built Yocto image. To do this
+we have to append the keyword <em>_append</em> to the configuration
+variable <em>IMAGE_INSTALL</em> in our <em>conf/local.conf</em> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ tail conf/local.conf
+PACKAGECONFIG_pn-nativesdk-qemu = &quot;sdl&quot;
+ASSUME_PROVIDED += &quot;libsdl-native&quot;
+
+
+# CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
+# track the version of this file when it was generated. This can safely be ignored if
+# this doesn't mean anything to you.
+CONF_VERSION = &quot;1&quot;
+
+IMAGE_INSTALL_append = &quot;dropbear&quot;        <i class="conum" data-value="1"></i><b>(1)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We&#8217;ve added <em>dropbear</em> by using the append method</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky$ source oe-init-build-env        <i class="conum" data-value="1"></i><b>(1)</b>
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake &lt;target&gt;'
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    adt-installer
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ bitbake core-image-minimal        <i class="conum" data-value="2"></i><b>(2)</b>
+Parsing recipes: 100% |#################################################################################################################################################| Time: 00:02:10
+Parsing of 862 .bb files complete (0 cached, 862 parsed). 1221 targets, 61 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION        = &quot;1.22.0&quot;
+BUILD_SYS         = &quot;i686-linux&quot;
+NATIVELSBSTRING   = &quot;Ubuntu-14.04&quot;
+TARGET_SYS        = &quot;arm-poky-linux-gnueabi&quot;
+MACHINE           = &quot;beaglebone&quot;
+DISTRO            = &quot;poky&quot;
+DISTRO_VERSION    = &quot;1.6.2&quot;
+TUNE_FEATURES     = &quot;armv7a vfp neon callconvention-hard cortexa8&quot;
+TARGET_FPU        = &quot;vfp-neon&quot;
+meta
+meta-yocto
+meta-yocto-bsp    = &quot;daisy:91c507ce1cf983a600c2d38c4284e605a80297d6&quot;
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+NOTE: Tasks Summary: Attempted 1809 tasks of which 1794 didn't need to be rerun and all succeeded.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$
+modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l tmp/deploy/images/beaglebone/        <i class="conum" data-value="3"></i><b>(3)</b>
+total 48408
+-rw-r--r-- 1 conrad conrad  2949120 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad      972 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2264889 May 11 23:51 core-image-minimal-beaglebone-20150511125839.rootfs.tar.bz2        <i class="conum" data-value="4"></i><b>(4)</b>
+-rw-r--r-- 1 conrad conrad  3080192 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.jffs2
+-rw-r--r-- 1 conrad conrad     1009 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.manifest
+-rw-r--r-- 1 conrad conrad  2387393 May 13 20:15 core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2        <i class="conum" data-value="5"></i><b>(5)</b>
+lrwxrwxrwx 1 conrad conrad       57 May 13 20:15 core-image-minimal-beaglebone.jffs2 -&gt; core-image-minimal-beaglebone-20150513143651.rootfs.jffs2
+lrwxrwxrwx 1 conrad conrad       60 May 13 20:15 core-image-minimal-beaglebone.manifest -&gt; core-image-minimal-beaglebone-20150513143651.rootfs.manifest
+lrwxrwxrwx 1 conrad conrad       59 May 13 20:15 core-image-minimal-beaglebone.tar.bz2 -&gt; core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2        <i class="conum" data-value="6"></i><b>(6)</b>
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO -&gt; MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+lrwxrwxrwx 1 conrad conrad       48 May 12 15:15 MLO-beaglebone -&gt; MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rwxr-xr-x 2 conrad conrad   102348 May 12 15:15 MLO-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0
+-rw-rw-r-- 2 conrad conrad 33333836 May 12 02:04 modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 modules-beaglebone.tgz -&gt; modules--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.tgz
+-rw-r--r-- 2 conrad conrad      294 May 13 20:12 README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot-beaglebone.img -&gt; u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+-rwxr-xr-x 2 conrad conrad   356456 May 12 15:15 u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       55 May 12 15:15 u-boot.img -&gt; u-boot-beaglebone-v2013.07+gitAUTOINC+62c175fbb8-r0.img
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+-rw-r--r-- 2 conrad conrad    28596 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad    29192 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+-rw-r--r-- 2 conrad conrad  4985352 May 12 02:04 uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+lrwxrwxrwx 1 conrad conrad       80 May 12 02:04 uImage-am335x-boneblack.dtb -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-boneblack-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       75 May 12 02:04 uImage-am335x-bone.dtb -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-am335x-bone-20150511125839.dtb
+lrwxrwxrwx 1 conrad conrad       74 May 12 02:04 uImage-beaglebone.bin -&gt; uImage--3.14.4+git0+183622e809_0143c6ebb4-r0-beaglebone-20150511125839.bin
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Source the <em>oe-init-build-env</em> script</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Build the <em>core-image-minimal</em> target again</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We list the built images and see the core-image-minimal rootfs has been rebuilt</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The older <em>core-image-minimal-beaglebone</em> tar package</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The newer <em>core-image-minimal-beaglebone</em> tar package</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>The soft link pointing to the newer <em>core-image-minimal-beaglebone</em> tar package</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now untar the root filesystem to the NFS export directory. Be careful to delete
+the contents of the directory before untarring the new package.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ sudo rm -Rf /home/conrad/Training/yocto/nfs/*conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l /home/conrad/Training/yocto/nfs/        <i class="conum" data-value="1"></i><b>(1)</b>
+total 0
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ sudo tar xpvjf tmp/deploy/images/beaglebone/core-image-minimal-beaglebone-20150513143651.rootfs.tar.bz2 -C ~/Training/yocto/nfs        <i class="conum" data-value="2"></i><b>(2)</b>
+./
+./home/
+./home/root/
+.
+.
+./bin/kill
+./bin/mknod
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ls -l /home/conrad/Training/yocto/nfs/        <i class="conum" data-value="3"></i><b>(3)</b>
+total 60
+drwxr-xr-x  2 root root 4096 May 13 20:14 bin
+drwxr-xr-x  2 root root 4096 May 11 20:51 boot
+drwxr-xr-x  2 root root 4096 May 11 20:51 dev
+drwxr-xr-x 18 root root 4096 May 13 20:15 etc
+drwxr-sr-x  3 root root 4096 May 13 20:14 home
+drwxr-xr-x  4 root root 4096 May 13 20:15 lib
+drwxr-xr-x  2 root root 4096 May 11 20:51 media
+drwxr-xr-x  2 root root 4096 May 11 20:51 mnt
+drwxr-xr-x  2 root root 4096 May 11 20:51 proc
+drwxr-xr-x  2 root root 4096 May 11 20:51 run
+drwxr-xr-x  2 root root 4096 May 13 20:14 sbin
+drwxr-xr-x  2 root root 4096 May 11 20:51 sys
+drwxrwxrwt  2 root root 4096 May 11 20:51 tmp
+drwxr-xr-x  9 root root 4096 May 11 23:30 usr
+drwxr-xr-x  7 root root 4096 May 13 20:11 var
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Remove the old NFS export directory contents</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Untar the package</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>List the contents of the NFS export directory</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This time in the boot logs we see that the Dropbear server has been started.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">.
+.
+.
+udevd[76]: starting version 182
+random: nonblocking pool is initialized
+Starting Bootlog daemon: bootlogd.
+Populating dev cache
+Wed May 13 14:45:00 UTC 2015
+INIT: Entering runlevel: 5
+Configuring network interfaces... ifup skipped for nfsroot interface eth0
+run-parts: /etc/network/if-pre-up.d/nfsroot exited with code 1
+Starting Dropbear SSH server: Generating key, this may take a while...        <i class="conum" data-value="1"></i><b>(1)</b>
+Public key portion is:
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzQCH8KKC3o65RCZnp8sNta+QtqX8t60Iyq3msHPIG1LBI+UvJ+pBnGcFG5CQfG56ZyUNm3ugL7nFGMeABAbfTiXYXW8INQbp09x4pm3sJr2OkL2IZZWO+O8iY/O26xHszPfzeH8czCm+Kws7BPS65GAng6+a9FZSNKH36WeRn8fYdcCXK+PK5nyuT8JmfH/Ig7DXDgkvQdz0RnndO/NzmeBfwYB7EMplDEksE861rU3bEemhFPNgyBpgHiK0ofzVS1KgCXzCyyXoA0ZeN/KVrA0JtTsNJwZ0l+xdaGdiia5+W7/Qmhmjb9CwhNcps4Ck0vGjhQF9Sx/547YjG5kgv root@beaglebone
+Fingerprint: md5 e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18
+dropbear.
+Starting syslogd/klogd: done
+Stopping Bootlog daemon: bootlogd.
+
+Poky (Yocto Project Reference Distro) 1.6.2 beaglebone /dev/ttyO0
+
+beaglebone login: root
+root@beaglebone:~#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Dropbear server logs</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can now try to ssh to the BeagleBone Black board on its IP. The IP
+should be the static IP 192.168.0.100 which we set in the uEnv.txt settings
+for <em>bootargs</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ping 192.168.0.100        <i class="conum" data-value="1"></i><b>(1)</b>
+PING 192.168.0.100 (192.168.0.100) 56(84) bytes of data.
+64 bytes from 192.168.0.100: icmp_seq=1 ttl=64 time=0.188 ms
+64 bytes from 192.168.0.100: icmp_seq=2 ttl=64 time=0.235 ms
+^C
+--- 192.168.0.100 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.188/0.211/0.235/0.027 ms
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh root@192.168.0.100        <i class="conum" data-value="2"></i><b>(2)</b>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the RSA key sent by the remote host is
+e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18.
+Please contact your system administrator.
+Add correct host key in /home/conrad/.ssh/known_hosts to get rid of this message.
+Offending RSA key in /home/conrad/.ssh/known_hosts:4
+  remove with: ssh-keygen -f &quot;/home/conrad/.ssh/known_hosts&quot; -R 192.168.0.100
+RSA host key for 192.168.0.100 has changed and you have requested strict checking.
+Host key verification failed.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh-keygen -f &quot;/home/conrad/.ssh/known_hosts&quot; -R 192.168.0.100        <i class="conum" data-value="3"></i><b>(3)</b>
+# Host 192.168.0.100 found: line 4 type RSA
+/home/conrad/.ssh/known_hosts updated.
+Original contents retained as /home/conrad/.ssh/known_hosts.old
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/poky/build$ ssh root@192.168.0.100        <i class="conum" data-value="4"></i><b>(4)</b>
+The authenticity of host '192.168.0.100 (192.168.0.100)' can't be established.
+RSA key fingerprint is e6:ed:ed:24:3e:80:59:e3:cf:1d:71:d8:5d:99:bd:18.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.0.100' (RSA) to the list of known hosts.
+root@beaglebone:~# uname -a        <i class="conum" data-value="5"></i><b>(5)</b>
+Linux beaglebone 3.14.0-yocto-standard #1 PREEMPT Tue May 12 01:59:26 IST 2015 armv7l GNU/Linux</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We ping the BBB to check if it is alive</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Our first attempt to ssh with root login gives us a Warning</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We&#8217;ve connected previously with previous experiments so we have to clear the keys</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Our second attempt to ssh to the BBB is successful</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>We&#8217;re able to print the name of the built OS</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2015
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-61553633-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</body>
+</html>
