@@ -1,0 +1,318 @@
+== LAB 4 : Writing Kernel Modules
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Cross-compile and test standalone kernel modules, whose code is not part of the main Linux sources.
+. Write a kernel module with different capabilities
+. Access kernel internals from within the kernel module.
+. Set up the environment to compile it.
+. Create a kernel patch. 
+====
+
+=== Starting With A Template File
+
+Since we've enabled a NFS root filesystem we can compile our kernel module
+on the development server and test it on out BeagleBone Black target.
+
+We go to the _~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello_
+directory. A template file _hello_version.c_ is present which we can modify to
+test the module.
+
+[source,bash]
+----
+hello_version.c  Makefile
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ cat hello_version.c 
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/i2c.h>
+
+/* Add your code here */
+
+MODULE_LICENSE("GPL");
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$
+----
+
+
+=== Adding Code To The Template
+
+Our first objective is to print a message as follows: +
+
+_*Hello Master. You are currently using Linux <version>*_
+
+To do this we need to find some function which will spit out the version
+of the kernel running. Here's where we have to search the kernel sources or
+use any other means to locate a suitable function to get the kernel version. 
+
+==== Searching For A Version Function/MACRO
+
+First we try searching for files in the kernel sources which have _version_
+in them.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find . -name '*version*'
+./arch/x86/boot/version.c
+./arch/x86/math-emu/version.h
+.
+.
+.
+./init/version.o
+./init/.version.o.cmd
+./init/version.c	<1>
+./Documentation/isdn/README.diversion
+./Documentation/misc-devices/mei/mei-amt-version.c
+./fs/proc/version.o
+./fs/proc/.version.o.cmd
+./fs/proc/version.c
+./fs/reiserfs/tail_conversion.c
+./.tmp_versions
+./.version
+./sound/pci/asihpi/hpi_version.h
+./tools/power/cpupower/utils/version-gen.sh
+./tools/perf/config/feature-checks/test-libpython-version.c
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+----
+<1> A possible candidate
+
+Opening the file _version.c_ we see that it does print some sort of version information
+using a MACRO _UTS_RELEASE_.
+
+[source, c]
+----
+#include <generated/compile.h>
+#include <linux/module.h>
+#include <linux/uts.h>
+#include <linux/utsname.h>		<1>
+#include <generated/utsrelease.h>	<2>
+#include <linux/version.h>
+#include <linux/proc_ns.h>
+
+#ifndef CONFIG_KALLSYMS
+#define version(a) Version_ ## a
+#define version_string(a) version(a)
+
+extern int version_string(LINUX_VERSION_CODE);
+int version_string(LINUX_VERSION_CODE);
+#endif
+
+struct uts_namespace init_uts_ns = {
+        .kref = {
+                .refcount       = ATOMIC_INIT(2),
+        },
+        .name = {
+                .sysname        = UTS_SYSNAME,
+                .nodename       = UTS_NODENAME,
+                .release        = UTS_RELEASE,
+                .version        = UTS_VERSION,
+                .machine        = UTS_MACHINE,
+                .domainname     = UTS_DOMAINNAME,
+        },
+        .user_ns = &init_user_ns,
+        .proc_inum = PROC_UTS_INIT_INO,
+};
+EXPORT_SYMBOL_GPL(init_uts_ns);
+
+/* FIXED STRINGS! Don't touch! */
+const char linux_banner[] =					<3>
+        "Linux version " UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+        LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION "\n";
+
+const char linux_proc_banner[] =
+        "%s version %s"
+        " (" LINUX_COMPILE_BY "@" LINUX_COMPILE_HOST ")"
+        " (" LINUX_COMPILER ") %s\n";
+
+----
+<1> Header file with definitions
+<2> Header file with generated release name
+<3> Macro used to pring version of compiled kernel 
+
+We take a look at the header files and see that _<generated/utsrelease.h>_
+defines the MACRO _UTS_RELEASE_ which is the version of the kernel.
+
+However if we take a careful look at _<linux/utsname.h>_ we see there is 
+a function _utsname_. This function returns the current kernel information
+in the form a structure _struct new_utsname_.
+
+[source, c]
+----
+#ifndef _LINUX_UTSNAME_H
+#define _LINUX_UTSNAME_H
+
+
+#include <linux/sched.h>
+#include <linux/kref.h>
+#include <linux/nsproxy.h>
+#include <linux/err.h>
+#include <uapi/linux/utsname.h>		<1>
+.
+.
+.
+.
+static inline struct new_utsname *utsname(void)
+{
+        return &current->nsproxy->uts_ns->name;
+}
+.
+.
+----
+<1> Header file with definition of _struct new_utsname_
+
+The structure is in the header file _<uapi/linux/utsname.h>_.
+Opening the file we see which member we need to print the current kernel
+version.
+
+[source, c]
+----
+#ifndef _UAPI_LINUX_UTSNAME_H
+#define _UAPI_LINUX_UTSNAME_H
+
+#define __OLD_UTS_LEN 8
+
+struct oldold_utsname {
+        char sysname[9];
+        char nodename[9];
+        char release[9];
+        char version[9];
+        char machine[9];
+};
+
+#define __NEW_UTS_LEN 64
+
+struct old_utsname {
+        char sysname[65];
+        char nodename[65];
+        char release[65];
+        char version[65];
+        char machine[65];
+};
+
+struct new_utsname {
+        char sysname[__NEW_UTS_LEN + 1];
+        char nodename[__NEW_UTS_LEN + 1];
+        char release[__NEW_UTS_LEN + 1];	<1>
+        char version[__NEW_UTS_LEN + 1];
+        char machine[__NEW_UTS_LEN + 1];
+        char domainname[__NEW_UTS_LEN + 1];
+};
+
+
+#endif /* _UAPI_LINUX_UTSNAME_H */
+----
+<1> The character string with the kernel version.
+
+==== Implementing The Version Function/MACRO Into The Module
+
+We can now write our C code to print the kernel information. We add
+the code in the initialization code of the kernel module.
+
+[source, c]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/utsname.h>
+#include <generated/utsrelease.h>
+
+static int __init version_init(void)
+{
+        printk(KERN_INFO "Hello Master you are currently using kernel version %s\n", utsname()->release);
+        printk(KERN_INFO "Your kernel module is compiled with version %s\n", UTS_RELEASE);
+        return 0;
+}
+
+static void __exit version_exit(void)
+{
+        printk(KERN_INFO "Over and out!\n");
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("zeuzoix");
+MODULE_DESCRIPTION("Kernel Module Version Example Module");
+
+MODULE_LICENSE("GPL");
+----
+<1> Printing the run time version
+<2> Printing the compile time version
+
+To compile the kernel module we use the Makefile present in the same directory
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ cat Makefile 
+ifneq ($(KERNELRELEASE),)
+obj-m := hello_version.o
+else
+KDIR := $(HOME)/linux-kernel-labs/src/linux
+all:
+        $(MAKE) -C $(KDIR) M=$$PWD
+endif
+----
+
+We can pass the KDIR variable to the make command to use our kernel source.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ make KDIR=/home/conrad/Git/linux
+make -C /home/conrad/Git/linux M=$PWD
+make[1]: Entering directory `/home/conrad/Git/linux'
+  CC [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello/hello_version.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello/hello_version.mod.o
+  LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello/hello_version.ko
+make[1]: Leaving directory `/home/conrad/Git/linux'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$
+----
+
+==== Testing The Kernel Module
+
+After compiling the kernel module we can immediately test it on the
+target by going to the folder and inserting the compiled ko file.
+
+[source, bash]
+----
+Welcome to Buildroot
+buildroot login: root
+# cd /root/hello/
+# ls
+Makefile             hello_version.c      hello_version.mod.o
+Module.symvers       hello_version.ko     hello_version.o
+built-in.o           hello_version.mod.c  modules.order
+# insmod hello_version.ko 				<1>
+[12261.297192] Hello Master you are currently using kernel version 3.13.11
+[12261.304310] Your kernel module is compiled with version 3.13.11
+# 
+----
+<1> Insert the compiled kernel module
+
+Great, now that the module works we take a look at seeing which modules are inserted
+in the running kernel. There are two ways to do it as shown below.
+
+[source, bash]
+----
+# lsmod				<1>
+Module                  Size  Used by    Tainted: G  
+hello_version            824  0 
+# 
+# cat /proc/modules		<2>
+hello_version 824 0 - Live 0xbf000000 (O)
+# 
+----
+<1> Using lsmod
+<2> Reading _/proc/modules_
+
+Finally if we need to unload the kernel moduel we can use _rmmod_.
+
+[source, bash]
+----
+# rmmod hello_version		<1>
+[12557.539564] Over and out!
+# 
+----
+<1> _rmmod_ removes the kernel module.

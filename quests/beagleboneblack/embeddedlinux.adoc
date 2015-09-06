@@ -151,3 +151,5 @@ include::{includedir}/removing-modules.adoc[]
 include::{includedir}/kernel-module-parameters.adoc[]
 
 include::{includedir}/developing-kernel-modules.adoc[]
+
+include::{includedir}/lab4-embeddedlinux-writing-kernel-modules.adoc[]
