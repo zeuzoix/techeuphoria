@@ -203,6 +203,7 @@ struct new_utsname {
 ----
 <1> The character string with the kernel version.
 
+
 ==== Implementing The Version Function/MACRO Into The Module
 
 We can now write our C code to print the kernel information. We add
@@ -270,6 +271,7 @@ make[1]: Leaving directory `/home/conrad/Git/linux'
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$
 ----
 
+
 ==== Testing The Kernel Module
 
 After compiling the kernel module we can immediately test it on the
@@ -316,3 +318,78 @@ Finally if we need to unload the kernel moduel we can use _rmmod_.
 # 
 ----
 <1> _rmmod_ removes the kernel module.
+
+
+=== Adding A Parameter To The Module
+
+We'll now try to add a parameter to the module. Let's try to change
+_Master_ based on a parameter passed. In order to define a new parameter
+we define a static gobal string and use _module_param_ to indicate
+that it is a module parameter.
+
+Additionally we use _MODULE_PARM_DESC_ to give description about the
+new module parameter.
+
+[source, c]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/utsname.h>
+#include <generated/utsrelease.h>
+
+static char *who = "Master";	<1>
+module_param(who, charp, 0);	<2>
+
+static int __init version_init(void)
+{
+        printk(KERN_INFO "Hello %s you are currently using kernel version %s\n", who, utsname()->release);	<3>
+        printk(KERN_INFO "Your kernel module is compiled with version %s\n", UTS_RELEASE);
+        return 0;
+}
+
+static void __exit version_exit(void)
+{
+        printk(KERN_INFO "Over and out!\n");
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("zeuzoix");
+MODULE_DESCRIPTION("Kernel Module Version Example Module");
+MODULE_PARM_DESC(who, "Name of the user");	<4>
+
+MODULE_LICENSE("GPL");
+----
+<1> Definition static global string, _who_
+<2> Declaring _who_ as a module parameter
+<3> Using _who_ in the statement
+<4> Adding a module parameter description with _MODULE_PARM_DESC_
+
+On testing the module we must pass the value of _who_ in the arguments with _insmod_.
+If we don't pass any value the default value of "Master" is used.
+
+[source, bash]
+----
+# insmod hello_version.ko 	<1>
+[ 9790.064102] Hello Master you are currently using kernel version 3.13.11
+[ 9790.071216] Your kernel module is compiled with version 3.13.11
+# rmmod hello_version
+[ 9796.676646] Over and out!
+# insmod hello_version.ko who="Anonymous"
+[ 9814.183983] Hello Master you are currently using kernel version 3.13.11
+[ 9814.191080] Your kernel module is compiled with version 3.13.11
+# 
+# rmmod hello_version
+[ 9822.334179] Over and out!
+# 
+# insmod hello_version.ko who="Anonymous"	<2>
+[ 9869.352553] Hello Anonymous you are currently using kernel version 3.13.11
+[ 9869.359930] Your kernel module is compiled with version 3.13.11
+# rmmod hello_version
+[ 9874.813462] Over and out!
+----
+<1> Without arguments
+<2> With argument as Anonymous
