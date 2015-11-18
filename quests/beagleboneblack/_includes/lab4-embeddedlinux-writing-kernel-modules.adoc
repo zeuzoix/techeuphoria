@@ -219,8 +219,8 @@ the code in the initialization code of the kernel module.
 
 static int __init version_init(void)
 {
-        printk(KERN_INFO "Hello Master you are currently using kernel version %s\n", utsname()->release);
-        printk(KERN_INFO "Your kernel module is compiled with version %s\n", UTS_RELEASE);
+        printk(KERN_INFO "Hello Master you are currently using kernel version %s\n", utsname()->release); <1>
+        printk(KERN_INFO "Your kernel module is compiled with version %s\n", UTS_RELEASE); <2>
         return 0;
 }
 
