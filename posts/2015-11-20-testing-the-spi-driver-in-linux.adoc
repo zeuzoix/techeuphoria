@@ -1,0 +1,13 @@
+=  Testing The SPI Driver In Linux
+Conrad Gomes
+2015-11-20
+:awestruct-tags: [linux, i.mx28]
+:excerpt: While working with a new board we wanted to test the SPI communications on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. To test access we decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.
+:awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+
+{excerpt}
