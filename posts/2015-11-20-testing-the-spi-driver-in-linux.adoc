@@ -2,12 +2,285 @@
 Conrad Gomes
 2015-11-20
 :awestruct-tags: [linux, i.mx28]
-:excerpt: While working with a new board we wanted to test the SPI communications on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. To test access we decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.
+:excerpt: While working with a new board we had to test the SPI communication on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. We decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.
 :awestruct-excerpt: {excerpt}
 ifndef::awestruct[]
 :imagesdir: ../images
 endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
+// URL Addresses
+:jedec-wiki: https://en.wikipedia.org/wiki/JEDEC
+:cfi-wiki: https://en.wikipedia.org/wiki/Common_Flash_Memory_Interface
+:uri-kernel-documentation-spidev: https://www.kernel.org/doc/Documentation/spi/spidev
+// E-Mail Addresses
+// Documents
+:link-winbond-flash-datasheet-pdf: link:../../../../docs/w25q128fv-rev.l-08242015.pdf
+// Captured Logs
 
 {excerpt}
+
+== JEDEC ID
+
+"The JEDEC Solid State Technology Association, formerly known as the
+Joint Electron Device Engineering Council ({jedec-wiki}[JEDEC^]), is an independent
+semiconductor engineering trade organization and standardization body."
+-- Wikipedia
+
+"The Common Flash Memory Interface ({cfi-wiki}[CFI^]) is an open standard jointly
+developed by AMD, Intel, Sharp and Fujitsu. It is implementable by all
+flash memory vendors, and has been approved by the non-volatile-memory
+subcommittee of JEDEC. The goal of the specification is the
+interchangeability of flash memory devices offered by different vendors."
+-- Wikipedia
+
+The newer SPI flash devices support electronic signatures which can
+be obtained from the device using a read command. This command can
+be obtained from the data sheet of the device. There are two types
+of signatures, JEDEC and CFI. While JEDEC RDID only reads the device
+ID, CFI reads the device size, erase block size and other information.
+ 
+We will get the JEDEC ID command from the
+{link-winbond-flash-datasheet-pdf}[data sheet^] of our flash chip
+which happens to be a Winbond Serial NOR 128 Mbit or 16MB flash memory device.
+A command called _READ ID_ has to be issued on the data lines in order
+to get the JEDEC ID. The command code is typically common across devices
+supporting the JEDEC ID and is 0x9F. On issuing this command we get
+three bytes as output on the same data lines. The first byte is the
+JEDEC assigned manufacturer ID which in our case happens to be 0XEF for Winbond.
+The next two bytes represent the Device ID i.e. Memory Type and Capacity.
+
+== SPIDEV
+
+To access the SPI Flash we make use of the spidev programming interface.
+One of the things we need to do is check if the spidev driver is enabled
+in the kernel.
+
+[source,bash]
+----
+#
+# SPI Protocol Masters
+#
+CONFIG_SPI_SPIDEV=y             <1>
+# CONFIG_SPI_TLE62X0 is not set
+----
+<1> Enable spidev in kernel configuration
+
+If it is not enabled use _make menuconfig_ and enable it.
+
+Additionally we need to check the device tree source(DTS) used to see if there
+is a spidev node mapped to the device. This can be done by locating
+the DTS file and checking to see if any device node is defined as a child node
+in the SPI bus definition node.
+
+[source,bash]
+----
+   spi@f00 {
+      #address-cells = <1>;
+      #size-cells = <0>;
+      compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
+      reg = <0xf00 0x20>;
+      interrupts = <2 13 0 2 14 0>;
+      interrupt-parent = <&mpc5200_pic>;
+
+      spiflash@0 {                      <1>
+         compatible = "spidev";
+         reg = <0>;
+         spi-max-frequency = <50000000>;
+      };
+
+      ethernet-switch@0 {               <2>
+         compatible = "micrel,ks8995m";
+         spi-max-frequency = <1000000>;
+         reg = <1>;
+      };
+
+      codec@1 {
+         compatible = "ti,tlv320aic26"; <3>
+         spi-max-frequency = <100000>;
+         reg = <2>;
+      };
+   };
+
+----
+<1> SPI Flashnode defined
+<2> Ethernet switch node is defined
+<3> Codec is defined
+
+In the above example we see three SPI devices defined as part of the
+_spi@f00_ bus. SPI devices can be multiplexed on a common bus so long
+as there is a way to select each of the devices when communicating with
+them.  The _reg = <0>_ is used to indicate which chip select line of
+the SPI bus is to be used.
+
+If the SPI flash is accessible through the _spidev_ interface then we
+should be able to see it as the device node file _/dev/spidev0.0_.
+The _0.0_ indicates the SPI bus number and device number on that bus.
+So in this case we can see our device is connected to SPI bus 0 and
+is using chip select line 0. If it were _/dev/spidev1.3_ it would mean
+SPI bus 1 and device 3.
+
+== Programming
+
+Once we have access to the SPI flash device through spidev we can access
+it using the IOCTLs defined in the _linux/spi/spidev.h_ header file.
+Additional information can be taken from the linux documentation at
+{uri-kernel-documentation-spidev}[{uri-kernel-documentation-spidev}^].
+
+Here is the source code which is used to read the SPI flash JEDEC ID.
+It takes the device file of the SPI flash device in the system i.e. 
+_/dev/spidev0.0_ as argument.
+
+[source, c]
+----
+/*
+* Sample application that makes use of the SPIDEV interface
+* to access an SPI slave device. Specifically, this sample
+* reads a Device ID of a JEDEC-compliant SPI Flash device.
+*
+*/
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/spi/spidev.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
+#define ICE5LP_MODE SPI_MODE_3
+#define ICE5LP_SPEED (1*1000*1000)
+#define ICE5LP_BITS_PER_WORD (8)
+#define ICE5LP_LSB (0)
+
+int main(int argc, char **argv)
+{
+        int fd = -1;
+        struct spi_ioc_transfer xfer;
+        uint8_t wr_buf[32];
+        uint8_t rd_buf[32];
+        uint8_t *bp;
+        int len = 0;
+        int status = 0;
+        int ret = 0;
+        uint8_t mode = ICE5LP_MODE;
+        uint8_t lsb = ICE5LP_LSB;
+        uint8_t bits = ICE5LP_BITS_PER_WORD;
+        uint32_t speed = ICE5LP_SPEED;
+
+        if (2 != argc)
+        {
+                printf("invalid arguments");
+                ret = -1;
+                goto END;
+        }
+
+        fd = open(argv[1], O_RDWR);                             <1>
+        if (fd < 0) {
+                printf("open error");
+                ret = -2;
+                goto END;
+        }
+
+        if (ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0) {            <2>
+                ret = -3;
+                goto END;
+        }
+
+        if (ioctl(fd, SPI_IOC_WR_LSB_FIRST, &lsb) < 0) {        
+                ret = -4;
+                goto END;
+        }
+
+        if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0) {
+                ret = -5;
+                goto END;
+        }
+
+        if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0) {
+                ret = -6;
+                goto END;
+        }
+
+        if (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed) < 0) {
+                ret = -7;
+                goto END;
+        }
+
+        memset(&xfer, 0, sizeof xfer);
+        memset(wr_buf, 0, sizeof wr_buf);
+        memset(rd_buf, 0, sizeof rd_buf);
+
+        /*
+         * Send a GetID command
+         */
+        wr_buf[0] = 0x9f;                                       <3>
+        xfer.tx_buf = (unsigned long)wr_buf;
+        xfer.rx_buf = (unsigned long)rd_buf;
+        xfer.len = 4;
+        xfer.speed_hz = ICE5LP_SPEED;
+        xfer.bits_per_word = ICE5LP_BITS_PER_WORD;
+        xfer.delay_usecs = 0; //ICE5LP_DELAY_US;
+        xfer.cs_change = 1; //ICE5LP_CS_CHANGE;
+
+        status = ioctl(fd, SPI_IOC_MESSAGE(1), &xfer);          <4>
+        if (status < 0) {
+                perror("SPI_IOC_MESSAGE");
+                return -1;
+        }
+        printf("response(%d): ", status);
+
+        for (len = 3, bp = &rd_buf[1]; len; len--)
+                printf("%02x ", *bp++);                         <5>
+        printf("\n");
+
+        if ((rd_buf[1] != 0xEF) || (rd_buf[2] != 0x40) || (rd_buf[3] != 0x18))  <6>
+        {
+                printf("Can't read JEDEC\n");
+        }
+        else
+        {
+                printf("Read JEDEC\n");
+        }
+
+        ret = 0;
+
+END:
+        if (-1 != fd) {
+                close(fd);
+        }
+        return ret;
+}
+----
+<1> Open the device file
+<2> Set the mode, bit justification, write bits per transfer word, write speed and read speed using IOCTL messages
+<3> Prepare the SPI transfer object _xfer_
+<4> Issue a transfer IOCTL
+<5> Print the three bytes
+<6> Check if we get the desired JEDEC values
+
+The program above uses the _spidev_ programming interface. After opening
+the device file we issue a series of IOCTL calls to set the attributes
+of the bus for this device. 
+
+We make use of two 32 byte buffers for read and write which we use in the
+_struct spi_ioc_transfer_ type of object _xfer_. The len is set to 4 as
+the transfer involves an exchange of 4 bytes between the SOC and Flash device
+over the SPI bus i.e. 1 write byte and 3 read bytes.
+
+We ignore the first byte in the read buffer as at that point we are
+transmitting our command byte from the write buffer.
+
+The output of the program should look like this
+[source, bash]
+----
+$./jedec_read /dev/spidev1.0                                                    <
+response(4): ef 40 18 
+Read JEDEC
+----
+
