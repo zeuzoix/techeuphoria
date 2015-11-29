@@ -49,7 +49,7 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
-<a href="/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/">Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</a>
+<a href="/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/">Testing The SPI Driver In Linux</a>
 </h1>
 <h4>
 <em>by</em>
@@ -57,83 +57,22 @@ TechEuphoria
 Conrad Gomes
 </a>
 on
-<time class="pubdate" datetime="2015-02-06T00:00:00+00:00">
-February  6, 2015
+<time class="pubdate" datetime="2015-11-20T00:00:00+00:00">
+November 20, 2015
 </time>
 </h4>
 </header>
 <div class="post-body">
-<p>In the first part we worked on getting LTIB configured for our machine. We ran into alot of problems but fixed each problem after a bit of online reading. In this part we attempt to actually build the bootloaders, kernel and applications with LTIB which will comprise the BSP</p>
+<p>While working with a new board we had to test the SPI communication on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. We decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.</p>
 <p>
-<a class="small secondary button" href="/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/">Read more...</a>
+<a class="small secondary button" href="/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/">Read more...</a>
 </p>
 </div>
 <footer class="post-footer">
 <div class="tags"><i class="label icon-tags"></i>
 <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/i.mx28/">i.mx28</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/">Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2015-01-28T00:00:00+00:00">
-January 28, 2015
-</time>
-</h4>
-</header>
-<div class="post-body">
-<p>My first attempt at building the BSP for i.MX28 evaluation board. Freescale provides the source code required to build the BSP for its i.MX28 evaluation board. We take a look at the tool LTIB which is used to build its BSP.</p>
-<p>
-<a class="small secondary button" href="/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/">Read more...</a>
-</p>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/i.mx28/">i.mx28</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/">Understanding The i.MX28 sdimage Utility Code</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2015-01-20T00:00:00+00:00">
-January 20, 2015
-</time>
-</h4>
-</header>
-<div class="post-body">
-<p>The i.MX28 development environment provides a utility like sdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this post we walk through the code of sdimage to understand its implementation</p>
-<p>
-<a class="small secondary button" href="/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/">Read more...</a>
-</p>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/sdcard/">sdcard</a>
-, <a href="/techeuphoria/posts/tag/linux/">linux</a>
-, <a href="/techeuphoria/posts/tag/i.mx28/">i.mx28</a>
-, <a href="/techeuphoria/posts/tag/mmc/">mmc</a></div>
+, <a href="/techeuphoria/posts/tag/spi/">spi</a>
+, <a href="/techeuphoria/posts/tag/jedec/">jedec</a></div>
 </footer>
 <hr>
 </article>
