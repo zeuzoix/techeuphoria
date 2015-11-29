@@ -5475,8 +5475,8 @@ the code in the initialization code of the kernel module.</p>
 
 <span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init version_init(<span style="color:#088;font-weight:bold">void</span>)
 {
-        printk(KERN_INFO <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Hello Master you are currently using kernel version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, utsname()-&gt;release);
-        printk(KERN_INFO <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Your kernel module is compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, UTS_RELEASE);
+        printk(KERN_INFO <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Hello Master you are currently using kernel version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, utsname()-&gt;release); <i class="conum" data-value="1"></i><b>(1)</b>
+        printk(KERN_INFO <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Your kernel module is compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, UTS_RELEASE); <i class="conum" data-value="2"></i><b>(2)</b>
         <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
 }
 

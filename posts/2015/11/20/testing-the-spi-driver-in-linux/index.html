@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/">Testing The SPI Driver In Linux</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2015-11-20T00:00:00+00:00">
+November 20, 2015
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>While working with a new board we had to test the SPI communication on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. We decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="jedec-id"><a class="anchor" href="#jedec-id"></a>JEDEC ID</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+The JEDEC Solid State Technology Association, formerly known as the
+Joint Electron Device Engineering Council (<a href="https://en.wikipedia.org/wiki/JEDEC" target="_blank">JEDEC</a>), is an independent
+semiconductor engineering trade organization and standardization body.
+</blockquote>
+<div class="attribution">
+&#8212; Wikipedia
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+The Common Flash Memory Interface (<a href="https://en.wikipedia.org/wiki/Common_Flash_Memory_Interface" target="_blank">CFI</a>) is an open standard jointly
+developed by AMD, Intel, Sharp and Fujitsu. It is implementable by all
+flash memory vendors, and has been approved by the non-volatile-memory
+subcommittee of JEDEC. The goal of the specification is the
+interchangeability of flash memory devices offered by different vendors.
+</blockquote>
+<div class="attribution">
+&#8212; Wikipedia
+</div>
+</div>
+<div class="paragraph">
+<p>The newer SPI flash devices support electronic signatures which can
+be obtained from the device using a read command. This command can
+be obtained from the data sheet of the device. There are two types
+of signatures, JEDEC and CFI. While JEDEC RDID only reads the device
+ID, CFI reads the device size, erase block size and other information.</p>
+</div>
+<div class="paragraph">
+<p>We will get the JEDEC ID command from the
+<a href="../../../../docs/w25q128fv-rev.l-08242015.pdf" target="_blank">data sheet</a> of our flash chip
+which happens to be a Winbond Serial NOR 128 Mbit or 16MB flash memory device.
+A command called <em>READ ID</em> has to be issued on the data lines in order
+to get the JEDEC ID. The command code is typically common across devices
+supporting the JEDEC ID and is 0x9F. On issuing this command we get
+three bytes as output on the same data lines. The first byte is the
+JEDEC assigned manufacturer ID which in our case happens to be 0XEF for Winbond.
+The next two bytes represent the Device ID i.e. Memory Type and Capacity.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="spidev"><a class="anchor" href="#spidev"></a>SPIDEV</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To access the SPI Flash we make use of the spidev programming interface.
+One of the things we need to do is check if the spidev driver is enabled
+in the kernel.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">#
+# SPI Protocol Masters
+#
+CONFIG_SPI_SPIDEV=y             <i class="conum" data-value="1"></i><b>(1)</b>
+# CONFIG_SPI_TLE62X0 is not set</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enable spidev in kernel configuration</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If it is not enabled use <em>make menuconfig</em> and enable it.</p>
+</div>
+<div class="paragraph">
+<p>Additionally we need to check the device tree source(DTS) used to see if there
+is a spidev node mapped to the device. This can be done by locating
+the DTS file and checking to see if any device node is defined as a child node
+in the SPI bus definition node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">   spi@f00 {
+      #address-cells = &lt;1&gt;;
+      #size-cells = &lt;0&gt;;
+      compatible = &quot;fsl,mpc5200b-spi&quot;,&quot;fsl,mpc5200-spi&quot;;
+      reg = &lt;0xf00 0x20&gt;;
+      interrupts = &lt;2 13 0 2 14 0&gt;;
+      interrupt-parent = &lt;&amp;mpc5200_pic&gt;;
+
+      spiflash@0 {                      <i class="conum" data-value="1"></i><b>(1)</b>
+         compatible = &quot;spidev&quot;;
+         reg = &lt;0&gt;;
+         spi-max-frequency = &lt;50000000&gt;;
+      };
+
+      ethernet-switch@0 {               <i class="conum" data-value="2"></i><b>(2)</b>
+         compatible = &quot;micrel,ks8995m&quot;;
+         spi-max-frequency = &lt;1000000&gt;;
+         reg = &lt;1&gt;;
+      };
+
+      codec@1 {
+         compatible = &quot;ti,tlv320aic26&quot;; <i class="conum" data-value="3"></i><b>(3)</b>
+         spi-max-frequency = &lt;100000&gt;;
+         reg = &lt;2&gt;;
+      };
+   };</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>SPI Flashnode defined</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Ethernet switch node is defined</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Codec is defined</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the above example we see three SPI devices defined as part of the
+<em>spi@f00</em> bus. SPI devices can be multiplexed on a common bus so long
+as there is a way to select each of the devices when communicating with
+them.  The <em>reg = &lt;0&gt;</em> is used to indicate which chip select line of
+the SPI bus is to be used.</p>
+</div>
+<div class="paragraph">
+<p>If the SPI flash is accessible through the <em>spidev</em> interface then we
+should be able to see it as the device node file <em>/dev/spidev0.0</em>.
+The <em>0.0</em> indicates the SPI bus number and device number on that bus.
+So in this case we can see our device is connected to SPI bus 0 and
+is using chip select line 0. If it were <em>/dev/spidev1.3</em> it would mean
+SPI bus 1 and device 3.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="programming"><a class="anchor" href="#programming"></a>Programming</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once we have access to the SPI flash device through spidev we can access
+it using the IOCTLs defined in the <em>linux/spi/spidev.h</em> header file.
+Additional information can be taken from the linux documentation at
+<a href="https://www.kernel.org/doc/Documentation/spi/spidev" target="_blank">https://www.kernel.org/doc/Documentation/spi/spidev</a>.</p>
+</div>
+<div class="paragraph">
+<p>Here is the source code which is used to read the SPI flash JEDEC ID.
+It takes the device file of the SPI flash device in the system i.e.
+<em>/dev/spidev0.0</em> as argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#777">/*
+* Sample application that makes use of the SPIDEV interface
+* to access an SPI slave device. Specifically, this sample
+* reads a Device ID of a JEDEC-compliant SPI Flash device.
+*
+*/</span>
+
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;stdio.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;sys/types.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;sys/stat.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;fcntl.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;unistd.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;sys/ioctl.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/types.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/spi/spidev.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;stdint.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;stdio.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;string.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;errno.h&gt;</span>
+
+<span style="color:#579">#define</span> ICE5LP_MODE SPI_MODE_3
+<span style="color:#579">#define</span> ICE5LP_SPEED (<span style="color:#00D">1</span>*<span style="color:#00D">1000</span>*<span style="color:#00D">1000</span>)
+<span style="color:#579">#define</span> ICE5LP_BITS_PER_WORD (<span style="color:#00D">8</span>)
+<span style="color:#579">#define</span> ICE5LP_LSB (<span style="color:#00D">0</span>)
+
+<span style="color:#0a8;font-weight:bold">int</span> main(<span style="color:#0a8;font-weight:bold">int</span> argc, <span style="color:#0a8;font-weight:bold">char</span> **argv)
+{
+        <span style="color:#0a8;font-weight:bold">int</span> fd = -<span style="color:#00D">1</span>;
+        <span style="color:#080;font-weight:bold">struct</span> spi_ioc_transfer xfer;
+        uint8_t wr_buf[<span style="color:#00D">32</span>];
+        uint8_t rd_buf[<span style="color:#00D">32</span>];
+        uint8_t *bp;
+        <span style="color:#0a8;font-weight:bold">int</span> len = <span style="color:#00D">0</span>;
+        <span style="color:#0a8;font-weight:bold">int</span> status = <span style="color:#00D">0</span>;
+        <span style="color:#0a8;font-weight:bold">int</span> ret = <span style="color:#00D">0</span>;
+        uint8_t mode = ICE5LP_MODE;
+        uint8_t lsb = ICE5LP_LSB;
+        uint8_t bits = ICE5LP_BITS_PER_WORD;
+        uint32_t speed = ICE5LP_SPEED;
+
+        <span style="color:#080;font-weight:bold">if</span> (<span style="color:#00D">2</span> != argc)
+        {
+                printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">invalid arguments</span><span style="color:#710">&quot;</span></span>);
+                ret = -<span style="color:#00D">1</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        fd = open(argv[<span style="color:#00D">1</span>], O_RDWR);                             <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#080;font-weight:bold">if</span> (fd &lt; <span style="color:#00D">0</span>) {
+                printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">open error</span><span style="color:#710">&quot;</span></span>);
+                ret = -<span style="color:#00D">2</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#080;font-weight:bold">if</span> (ioctl(fd, SPI_IOC_WR_MODE, &amp;mode) &lt; <span style="color:#00D">0</span>) {            <i class="conum" data-value="2"></i><b>(2)</b>
+                ret = -<span style="color:#00D">3</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#080;font-weight:bold">if</span> (ioctl(fd, SPI_IOC_WR_LSB_FIRST, &amp;lsb) &lt; <span style="color:#00D">0</span>) {
+                ret = -<span style="color:#00D">4</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#080;font-weight:bold">if</span> (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &amp;bits) &lt; <span style="color:#00D">0</span>) {
+                ret = -<span style="color:#00D">5</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#080;font-weight:bold">if</span> (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &amp;speed) &lt; <span style="color:#00D">0</span>) {
+                ret = -<span style="color:#00D">6</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#080;font-weight:bold">if</span> (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &amp;speed) &lt; <span style="color:#00D">0</span>) {
+                ret = -<span style="color:#00D">7</span>;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        memset(&amp;xfer, <span style="color:#00D">0</span>, <span style="color:#080;font-weight:bold">sizeof</span> xfer);
+        memset(wr_buf, <span style="color:#00D">0</span>, <span style="color:#080;font-weight:bold">sizeof</span> wr_buf);
+        memset(rd_buf, <span style="color:#00D">0</span>, <span style="color:#080;font-weight:bold">sizeof</span> rd_buf);
+
+        <span style="color:#777">/*
+         * Send a GetID command
+         */</span>
+        wr_buf[<span style="color:#00D">0</span>] = <span style="color:#02b">0x9f</span>;                                       <i class="conum" data-value="3"></i><b>(3)</b>
+        xfer.tx_buf = (<span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>)wr_buf;
+        xfer.rx_buf = (<span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>)rd_buf;
+        xfer.len = <span style="color:#00D">4</span>;
+        xfer.speed_hz = ICE5LP_SPEED;
+        xfer.bits_per_word = ICE5LP_BITS_PER_WORD;
+        xfer.delay_usecs = <span style="color:#00D">0</span>; <span style="color:#777">//ICE5LP_DELAY_US;</span>
+        xfer.cs_change = <span style="color:#00D">1</span>; <span style="color:#777">//ICE5LP_CS_CHANGE;</span>
+
+        status = ioctl(fd, SPI_IOC_MESSAGE(<span style="color:#00D">1</span>), &amp;xfer);          <i class="conum" data-value="4"></i><b>(4)</b>
+        <span style="color:#080;font-weight:bold">if</span> (status &lt; <span style="color:#00D">0</span>) {
+                perror(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">SPI_IOC_MESSAGE</span><span style="color:#710">&quot;</span></span>);
+                <span style="color:#080;font-weight:bold">return</span> -<span style="color:#00D">1</span>;
+        }
+        printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">response(%d): </span><span style="color:#710">&quot;</span></span>, status);
+
+        <span style="color:#080;font-weight:bold">for</span> (len = <span style="color:#00D">3</span>, bp = &amp;rd_buf[<span style="color:#00D">1</span>]; len; len--)
+                printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%02x </span><span style="color:#710">&quot;</span></span>, *bp++);                         <i class="conum" data-value="5"></i><b>(5)</b>
+        printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+
+        <span style="color:#080;font-weight:bold">if</span> ((rd_buf[<span style="color:#00D">1</span>] != <span style="color:#02b">0xEF</span>) || (rd_buf[<span style="color:#00D">2</span>] != <span style="color:#02b">0x40</span>) || (rd_buf[<span style="color:#00D">3</span>] != <span style="color:#02b">0x18</span>))  <i class="conum" data-value="6"></i><b>(6)</b>
+        {
+                printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Can't read JEDEC</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+        }
+        <span style="color:#080;font-weight:bold">else</span>
+        {
+                printf(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Read JEDEC</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+        }
+
+        ret = <span style="color:#00D">0</span>;
+
+<span style="color:#970;font-weight:bold">END:</span>
+        <span style="color:#080;font-weight:bold">if</span> (-<span style="color:#00D">1</span> != fd) {
+                close(fd);
+        }
+        <span style="color:#080;font-weight:bold">return</span> ret;
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Open the device file</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Set the mode, bit justification, write bits per transfer word, write speed and read speed using IOCTL messages</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Prepare the SPI transfer object <em>xfer</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Issue a transfer IOCTL</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Print the three bytes</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Check if we get the desired JEDEC values</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The program above uses the <em>spidev</em> programming interface. After opening
+the device file we issue a series of IOCTL calls to set the attributes
+of the bus for this device.</p>
+</div>
+<div class="paragraph">
+<p>We make use of two 32 byte buffers for read and write which we use in the
+<em>struct spi_ioc_transfer</em> type of object <em>xfer</em>. The len is set to 4 as
+the transfer involves an exchange of 4 bytes between the SOC and Flash device
+over the SPI bus i.e. 1 write byte and 3 read bytes.</p>
+</div>
+<div class="paragraph">
+<p>We ignore the first byte in the read buffer as at that point we are
+transmitting our command byte from the write buffer.</p>
+</div>
+<div class="paragraph">
+<p>The output of the program should look like this</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">$./jedec_read /dev/spidev1.0                                                    &lt;
+response(4): ef 40 18
+Read JEDEC</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/linux/">linux</a>
+, <a href="/techeuphoria/posts/tag/i.mx28/">i.mx28</a></div>
+</footer>
+<hr>
+<div id="comments">
+
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            var disqus_shortname = 'zeuzoix-techblog';
+            var disqus_url = "http://zeuzoix.github.io/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/";
+            var disqus_developer = null;
+            var disqus_identifier = "7025ba21c7182b13293e69853ca435df14483ec8";
+            (function() {
+              var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=zeuzoix-techblog">comments powered by Disqus.</a></noscript>
+          
+</div>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2015
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-61553633-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</body>
+</html>

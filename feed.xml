@@ -5,13 +5,394 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-29T21:04:29+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/</id>
+<title>Testing The SPI Driver In Linux</title>
+<updated>2015-11-29T21:04:29+05:30</updated>
+<published>2015-11-20T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="linux"></category>
+<category term="i.mx28"></category>
+<summary>
+While working with a new board we had to test the SPI communication on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. We decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.
+
+
+
+
+JEDEC ID
+
+
+
+The JEDEC Solid State Technology Association, formerly known as the
+Joint Electron Device Engineering Council (JEDEC), is an independent
+semiconductor engineering trade organization and standardization body.
+
+
+&#8212; Wikipedia
+
+
+
+
+The Common Flash Memory Interface (CFI) is an...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;While working with a new board we had to test the SPI communication on board from user space. We knew that the SPI bus was functional because we were able to load a u-boot image from a SPI based daughter board on configuring the bootstrap settings and powering up the board. We decided to write a userspace program to read the JEDEC ID of the SPI Flash chip.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;jedec-id&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#jedec-id&quot;&gt;&lt;/a&gt;JEDEC ID&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+The JEDEC Solid State Technology Association, formerly known as the
+Joint Electron Device Engineering Council (&lt;a href=&quot;https://en.wikipedia.org/wiki/JEDEC&quot; target=&quot;_blank&quot;&gt;JEDEC&lt;/a&gt;), is an independent
+semiconductor engineering trade organization and standardization body.
+&lt;/blockquote&gt;
+&lt;div class=&quot;attribution&quot;&gt;
+— Wikipedia
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+The Common Flash Memory Interface (&lt;a href=&quot;https://en.wikipedia.org/wiki/Common_Flash_Memory_Interface&quot; target=&quot;_blank&quot;&gt;CFI&lt;/a&gt;) is an open standard jointly
+developed by AMD, Intel, Sharp and Fujitsu. It is implementable by all
+flash memory vendors, and has been approved by the non-volatile-memory
+subcommittee of JEDEC. The goal of the specification is the
+interchangeability of flash memory devices offered by different vendors.
+&lt;/blockquote&gt;
+&lt;div class=&quot;attribution&quot;&gt;
+— Wikipedia
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The newer SPI flash devices support electronic signatures which can
+be obtained from the device using a read command. This command can
+be obtained from the data sheet of the device. There are two types
+of signatures, JEDEC and CFI. While JEDEC RDID only reads the device
+ID, CFI reads the device size, erase block size and other information.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will get the JEDEC ID command from the
+&lt;a href=&quot;../../../../docs/w25q128fv-rev.l-08242015.pdf&quot; target=&quot;_blank&quot;&gt;data sheet&lt;/a&gt; of our flash chip
+which happens to be a Winbond Serial NOR 128 Mbit or 16MB flash memory device.
+A command called &lt;em&gt;READ ID&lt;/em&gt; has to be issued on the data lines in order
+to get the JEDEC ID. The command code is typically common across devices
+supporting the JEDEC ID and is 0x9F. On issuing this command we get
+three bytes as output on the same data lines. The first byte is the
+JEDEC assigned manufacturer ID which in our case happens to be 0XEF for Winbond.
+The next two bytes represent the Device ID i.e. Memory Type and Capacity.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;spidev&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#spidev&quot;&gt;&lt;/a&gt;SPIDEV&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To access the SPI Flash we make use of the spidev programming interface.
+One of the things we need to do is check if the spidev driver is enabled
+in the kernel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;#
+# SPI Protocol Masters
+#
+CONFIG_SPI_SPIDEV=y             &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+# CONFIG_SPI_TLE62X0 is not set&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Enable spidev in kernel configuration&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If it is not enabled use &lt;em&gt;make menuconfig&lt;/em&gt; and enable it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Additionally we need to check the device tree source(DTS) used to see if there
+is a spidev node mapped to the device. This can be done by locating
+the DTS file and checking to see if any device node is defined as a child node
+in the SPI bus definition node.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;   spi@f00 {
+      #address-cells = &amp;lt;1&amp;gt;;
+      #size-cells = &amp;lt;0&amp;gt;;
+      compatible = &amp;quot;fsl,mpc5200b-spi&amp;quot;,&amp;quot;fsl,mpc5200-spi&amp;quot;;
+      reg = &amp;lt;0xf00 0x20&amp;gt;;
+      interrupts = &amp;lt;2 13 0 2 14 0&amp;gt;;
+      interrupt-parent = &amp;lt;&amp;amp;mpc5200_pic&amp;gt;;
+
+      spiflash@0 {                      &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+         compatible = &amp;quot;spidev&amp;quot;;
+         reg = &amp;lt;0&amp;gt;;
+         spi-max-frequency = &amp;lt;50000000&amp;gt;;
+      };
+
+      ethernet-switch@0 {               &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+         compatible = &amp;quot;micrel,ks8995m&amp;quot;;
+         spi-max-frequency = &amp;lt;1000000&amp;gt;;
+         reg = &amp;lt;1&amp;gt;;
+      };
+
+      codec@1 {
+         compatible = &amp;quot;ti,tlv320aic26&amp;quot;; &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+         spi-max-frequency = &amp;lt;100000&amp;gt;;
+         reg = &amp;lt;2&amp;gt;;
+      };
+   };&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;SPI Flashnode defined&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Ethernet switch node is defined&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Codec is defined&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the above example we see three SPI devices defined as part of the
+&lt;em&gt;spi@f00&lt;/em&gt; bus. SPI devices can be multiplexed on a common bus so long
+as there is a way to select each of the devices when communicating with
+them.  The &lt;em&gt;reg = &amp;lt;0&amp;gt;&lt;/em&gt; is used to indicate which chip select line of
+the SPI bus is to be used.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If the SPI flash is accessible through the &lt;em&gt;spidev&lt;/em&gt; interface then we
+should be able to see it as the device node file &lt;em&gt;/dev/spidev0.0&lt;/em&gt;.
+The &lt;em&gt;0.0&lt;/em&gt; indicates the SPI bus number and device number on that bus.
+So in this case we can see our device is connected to SPI bus 0 and
+is using chip select line 0. If it were &lt;em&gt;/dev/spidev1.3&lt;/em&gt; it would mean
+SPI bus 1 and device 3.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;programming&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#programming&quot;&gt;&lt;/a&gt;Programming&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once we have access to the SPI flash device through spidev we can access
+it using the IOCTLs defined in the &lt;em&gt;linux/spi/spidev.h&lt;/em&gt; header file.
+Additional information can be taken from the linux documentation at
+&lt;a href=&quot;https://www.kernel.org/doc/Documentation/spi/spidev&quot; target=&quot;_blank&quot;&gt;https://www.kernel.org/doc/Documentation/spi/spidev&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here is the source code which is used to read the SPI flash JEDEC ID.
+It takes the device file of the SPI flash device in the system i.e.
+&lt;em&gt;/dev/spidev0.0&lt;/em&gt; as argument.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#777&quot;&gt;/*
+* Sample application that makes use of the SPIDEV interface
+* to access an SPI slave device. Specifically, this sample
+* reads a Device ID of a JEDEC-compliant SPI Flash device.
+*
+*/&lt;/span&gt;
+
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;sys/types.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;sys/stat.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;fcntl.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;sys/ioctl.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/types.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/spi/spidev.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;errno.h&amp;gt;&lt;/span&gt;
+
+&lt;span style=&quot;color:#579&quot;&gt;#define&lt;/span&gt; ICE5LP_MODE SPI_MODE_3
+&lt;span style=&quot;color:#579&quot;&gt;#define&lt;/span&gt; ICE5LP_SPEED (&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;*&lt;span style=&quot;color:#00D&quot;&gt;1000&lt;/span&gt;*&lt;span style=&quot;color:#00D&quot;&gt;1000&lt;/span&gt;)
+&lt;span style=&quot;color:#579&quot;&gt;#define&lt;/span&gt; ICE5LP_BITS_PER_WORD (&lt;span style=&quot;color:#00D&quot;&gt;8&lt;/span&gt;)
+&lt;span style=&quot;color:#579&quot;&gt;#define&lt;/span&gt; ICE5LP_LSB (&lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;)
+
+&lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; main(&lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; argc, &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;char&lt;/span&gt; **argv)
+{
+        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; fd = -&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;;
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;struct&lt;/span&gt; spi_ioc_transfer xfer;
+        uint8_t wr_buf[&lt;span style=&quot;color:#00D&quot;&gt;32&lt;/span&gt;];
+        uint8_t rd_buf[&lt;span style=&quot;color:#00D&quot;&gt;32&lt;/span&gt;];
+        uint8_t *bp;
+        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; len = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; status = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; ret = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+        uint8_t mode = ICE5LP_MODE;
+        uint8_t lsb = ICE5LP_LSB;
+        uint8_t bits = ICE5LP_BITS_PER_WORD;
+        uint32_t speed = ICE5LP_SPEED;
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (&lt;span style=&quot;color:#00D&quot;&gt;2&lt;/span&gt; != argc)
+        {
+                printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;invalid arguments&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        fd = open(argv[&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;], O_RDWR);                             &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (fd &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;open error&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;2&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (ioctl(fd, SPI_IOC_WR_MODE, &amp;amp;mode) &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {            &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (ioctl(fd, SPI_IOC_WR_LSB_FIRST, &amp;amp;lsb) &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;4&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &amp;amp;bits) &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;5&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &amp;amp;speed) &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;6&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &amp;amp;speed) &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                ret = -&lt;span style=&quot;color:#00D&quot;&gt;7&lt;/span&gt;;
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;goto&lt;/span&gt; END;
+        }
+
+        memset(&amp;amp;xfer, &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;, &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;sizeof&lt;/span&gt; xfer);
+        memset(wr_buf, &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;, &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;sizeof&lt;/span&gt; wr_buf);
+        memset(rd_buf, &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;, &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;sizeof&lt;/span&gt; rd_buf);
+
+        &lt;span style=&quot;color:#777&quot;&gt;/*
+         * Send a GetID command
+         */&lt;/span&gt;
+        wr_buf[&lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;] = &lt;span style=&quot;color:#02b&quot;&gt;0x9f&lt;/span&gt;;                                       &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+        xfer.tx_buf = (&lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;unsigned&lt;/span&gt; &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;long&lt;/span&gt;)wr_buf;
+        xfer.rx_buf = (&lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;unsigned&lt;/span&gt; &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;long&lt;/span&gt;)rd_buf;
+        xfer.len = &lt;span style=&quot;color:#00D&quot;&gt;4&lt;/span&gt;;
+        xfer.speed_hz = ICE5LP_SPEED;
+        xfer.bits_per_word = ICE5LP_BITS_PER_WORD;
+        xfer.delay_usecs = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;; &lt;span style=&quot;color:#777&quot;&gt;//ICE5LP_DELAY_US;&lt;/span&gt;
+        xfer.cs_change = &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;; &lt;span style=&quot;color:#777&quot;&gt;//ICE5LP_CS_CHANGE;&lt;/span&gt;
+
+        status = ioctl(fd, SPI_IOC_MESSAGE(&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;), &amp;amp;xfer);          &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (status &amp;lt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;) {
+                perror(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;SPI_IOC_MESSAGE&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+                &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;return&lt;/span&gt; -&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;;
+        }
+        printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;response(%d): &lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, status);
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;for&lt;/span&gt; (len = &lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;, bp = &amp;amp;rd_buf[&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;]; len; len--)
+                printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;%02x &lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, *bp++);                         &lt;i class=&quot;conum&quot; data-value=&quot;5&quot;&gt;&lt;/i&gt;&lt;b&gt;(5)&lt;/b&gt;
+        printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; ((rd_buf[&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;] != &lt;span style=&quot;color:#02b&quot;&gt;0xEF&lt;/span&gt;) || (rd_buf[&lt;span style=&quot;color:#00D&quot;&gt;2&lt;/span&gt;] != &lt;span style=&quot;color:#02b&quot;&gt;0x40&lt;/span&gt;) || (rd_buf[&lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;] != &lt;span style=&quot;color:#02b&quot;&gt;0x18&lt;/span&gt;))  &lt;i class=&quot;conum&quot; data-value=&quot;6&quot;&gt;&lt;/i&gt;&lt;b&gt;(6)&lt;/b&gt;
+        {
+                printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Can&amp;apos;t read JEDEC&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+        }
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;else&lt;/span&gt;
+        {
+                printf(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Read JEDEC&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+        }
+
+        ret = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
+
+&lt;span style=&quot;color:#970;font-weight:bold&quot;&gt;END:&lt;/span&gt;
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; (-&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt; != fd) {
+                close(fd);
+        }
+        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;return&lt;/span&gt; ret;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Open the device file&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Set the mode, bit justification, write bits per transfer word, write speed and read speed using IOCTL messages&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Prepare the SPI transfer object &lt;em&gt;xfer&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Issue a transfer IOCTL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;5&quot;&gt;&lt;/i&gt;&lt;b&gt;5&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Print the three bytes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;6&quot;&gt;&lt;/i&gt;&lt;b&gt;6&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;Check if we get the desired JEDEC values&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The program above uses the &lt;em&gt;spidev&lt;/em&gt; programming interface. After opening
+the device file we issue a series of IOCTL calls to set the attributes
+of the bus for this device.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We make use of two 32 byte buffers for read and write which we use in the
+&lt;em&gt;struct spi_ioc_transfer&lt;/em&gt; type of object &lt;em&gt;xfer&lt;/em&gt;. The len is set to 4 as
+the transfer involves an exchange of 4 bytes between the SOC and Flash device
+over the SPI bus i.e. 1 write byte and 3 read bytes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We ignore the first byte in the read buffer as at that point we are
+transmitting our command byte from the write buffer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The output of the program should look like this&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;$./jedec_read /dev/spidev1.0                                                    &amp;lt;
+response(4): ef 40 18
+Read JEDEC&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/</id>
 <title>Benchmarking RT Preempt Kernel 3.18 On BeagleBone Black</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-04-21T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/" rel="alternate" type="text/html" />
 <author>
@@ -550,7 +931,7 @@ and firmware are available &lt;a href=&quot;https://github.com/zeuzoix/compiled-
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-04-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/" rel="alternate" type="text/html" />
 <author>
@@ -1291,7 +1672,7 @@ this kernel and benchmark its performance.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-04-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" rel="alternate" type="text/html" />
 <author>
@@ -2147,7 +2528,7 @@ applying the rt-preempt patches.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-02-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
 <author>
@@ -2515,7 +2896,7 @@ drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-01-28T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
 <author>
@@ -3967,7 +4348,7 @@ next step which is configuration of the BSP.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -4342,7 +4723,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -4647,7 +5028,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2015-09-22T23:13:05+05:30</updated>
+<updated>2015-11-18T21:35:15+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -4918,77 +5299,6 @@ the following repositories:&lt;/p&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Happy Blogging!&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/</id>
-<title>Printing the Linux kernel version</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2014-01-29T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/01/29/printing-linux-kernel-version/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="linux"></category>
-<category term="kernel"></category>
-<category term="programming"></category>
-<category term="c"></category>
-<summary>
-The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
-in the first log and the version of the kernel is compiled with is shown
-in the second log in the version_init function:
-
-
-
-#include &lt;linux/init.h&gt;
-#include &lt;linux/module.h&gt;
-#include &lt;linux/kernel.h&gt;
-#include &lt;linux/utsname.h&gt;
-#include &lt;generated/utsrelease.h&gt;
-
-static int __init version_init(void)
-{
-        int i = 0;
-
-        pr_alert(&quot;Kernel module running of version %s\n&quot;, utsname()-&gt;release);
-        pr_alert(&quot;Kernel module compiled with version %s\n&quot;,...
-</summary>
-<content type="html">
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The kernel version that a kernel module is built with can differ from the kernel version it is running on. The version of the kernel that the module is running on is shown
-in the first log and the version of the kernel is compiled with is shown
-in the second log in the version_init function:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/init.h&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/module.h&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/kernel.h&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;linux/utsname.h&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#579&quot;&gt;#include&lt;/span&gt; &lt;span style=&quot;color:#B44;font-weight:bold&quot;&gt;&amp;lt;generated/utsrelease.h&amp;gt;&lt;/span&gt;
-
-&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; __init version_init(&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt;)
-{
-        &lt;span style=&quot;color:#0a8;font-weight:bold&quot;&gt;int&lt;/span&gt; i = &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
-
-        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel module running of version %s&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, utsname()-&amp;gt;release);
-        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel module compiled with version %s&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, UTS_RELEASE);
-        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;0&lt;/span&gt;;
-}
-
-&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt; __exit version_exit(&lt;span style=&quot;color:#088;font-weight:bold&quot;&gt;void&lt;/span&gt;)
-{
-        pr_alert(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Over and out!&lt;/span&gt;&lt;span style=&quot;color:#b0b&quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
-}
-
-module_init(version_init);
-module_exit(version_exit);
-
-MODULE_LICENSE(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;GPL&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
-MODULE_AUTHOR(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;zeuzoix&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
-MODULE_DESCRIPTION(&lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;Kernel Module Version Example Module&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </content>
