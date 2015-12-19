@@ -738,7 +738,7 @@ Once the compilation goes through we can check in the changes in our branch.
 
 [source, bash]
 ----
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status				<1>
 On branch hello_version
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
@@ -762,7 +762,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/hello_version.c	<2>
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Kconfig		<3>
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Makefile		<4>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s				<5>
 
 ----
 <1> Check the status of the branch first
