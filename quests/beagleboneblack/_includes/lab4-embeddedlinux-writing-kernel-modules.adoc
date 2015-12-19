@@ -790,6 +790,20 @@ Date:   Sat Dec 19 09:05:25 2015 +0530
 
 ----
 
+=== Create A Kernel Patch
+
+Finally to share the code we would need to submit a patch to the Linux community.
+Creating a patch is easy with _git_. Since our changes are isolated on a separate
+branch we can create the patch between the local branch and the source branch
+which is _3.13.y_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git format-patch 3.13.y
+0001-hello_version-Adding-a-miscellaneous-module.patch
+----
+
+The patch name is taken from the commit message added during the commit.
 
 
 
