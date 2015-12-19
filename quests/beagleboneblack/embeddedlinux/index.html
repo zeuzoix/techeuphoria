@@ -242,6 +242,8 @@ TechEuphoria
 </ul>
 </li>
 <li><a href="#adding-a-parameter-to-the-module">31.3. Adding A Parameter To The Module</a></li>
+<li><a href="#following-linux-coding-standards">31.4. Following Linux Coding Standards</a></li>
+<li><a href="#adding-em-hello_version-em-to-the-kernel-sources">31.5. Adding <em>hello_version</em> To The Kernel Sources</a></li>
 </ul>
 </li>
 </ul>
@@ -5718,6 +5720,465 @@ If we don&#8217;t pass any value the default value of "Master" is used.</p>
 <td>With argument as Anonymous</td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="following-linux-coding-standards"><a class="anchor" href="#following-linux-coding-standards"></a>31.4. Following Linux Coding Standards</h3>
+<div class="paragraph">
+<p>Coding style is a matter of personal taste but it is crucial for every
+software project to adhere to a coding standard. This helps in maintaining
+consistency in the style of code being generated for the project. It
+makes the code easier to read and also easier to maintain.</p>
+</div>
+<div class="paragraph">
+<p>The Linux kernel also has its own coding style and also provides a utility
+to check for source code violations. The utility is <em>checkpatch.pl</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ scripts/checkpatch.pl -h
+Usage: checkpatch.pl [OPTION]... [FILE]...
+Version: 0.32
+
+Options:
+  -q, --quiet                quiet
+  --no-tree                  run without a kernel tree
+  --no-signoff               do not check for 'Signed-off-by' line
+  --patch                    treat FILE as patchfile (default)
+  --emacs                    emacs compile window format
+  --terse                    one line per report
+  -f, --file                 treat FILE as regular source file
+  --subjective, --strict     enable more subjective tests
+  --types TYPE(,TYPE2...)    show only these comma separated message types
+  --ignore TYPE(,TYPE2...)   ignore various comma separated message types
+  --max-line-length=n        set the maximum line length, if exceeded, warn
+  --show-types               show the message &quot;types&quot; in the output
+  --root=PATH                PATH to the kernel tree root
+  --no-summary               suppress the per-file summary
+  --mailback                 only produce a report in case of warnings/errors
+  --summary-file             include the filename in summary
+  --debug KEY=[0|1]          turn on/off debugging of KEY, where KEY is one of
+                             'values', 'possible', 'type', and 'attr' (default
+                             is all off)
+  --test-only=WORD           report only warnings/errors containing WORD
+                             literally
+  --fix                      EXPERIMENTAL - may create horrible results
+                             If correctable single-line errors exist, create
+                             &quot;&lt;inputfile&gt;.EXPERIMENTAL-checkpatch-fixes&quot;
+                             with potential errors corrected to the preferred
+                             checkpatch style
+  --ignore-perl-version      override checking of perl version.  expect
+                             runtime errors.
+  -h, --help, --version      display this help and exit
+
+When FILE is - read standard input.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We run the <em>checkpatch.pl</em> utility on our <em>hello_version.c</em> kernel module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ ~/Git/linux/scripts/checkpatch.pl --file --no-tree hello_version.c
+WARNING: line over 80 characters
+#20: FILE: hello_version.c:20:
++        printk(KERN_INFO &quot;Hello %s you are currently using kernel version %s\n&quot;, who, utsname()-&gt;release);
+
+ERROR: code indent should use tabs where possible        <i class="conum" data-value="1"></i><b>(1)</b>
+#20: FILE: hello_version.c:20:
++        printk(KERN_INFO &quot;Hello %s you are currently using kernel version %s\n&quot;, who, utsname()-&gt;release);$
+
+WARNING: please, no spaces at the start of a line
+#20: FILE: hello_version.c:20:
++        printk(KERN_INFO &quot;Hello %s you are currently using kernel version %s\n&quot;, who, utsname()-&gt;release);$
+
+WARNING: Prefer netdev_info(netdev, ... then dev_info(dev, ... then pr_info(...  to printk(KERN_INFO ...
+#20: FILE: hello_version.c:20:
++        printk(KERN_INFO &quot;Hello %s you are currently using kernel version %s\n&quot;, who, utsname()-&gt;release);
+
+WARNING: line over 80 characters                        <i class="conum" data-value="2"></i><b>(2)</b>
+#21: FILE: hello_version.c:21:
++        printk(KERN_INFO &quot;Your kernel module is compiled with version %s\n&quot;, UTS_RELEASE);
+
+ERROR: code indent should use tabs where possible
+#21: FILE: hello_version.c:21:
++        printk(KERN_INFO &quot;Your kernel module is compiled with version %s\n&quot;, UTS_RELEASE);$
+
+WARNING: please, no spaces at the start of a line        <i class="conum" data-value="3"></i><b>(3)</b>
+#21: FILE: hello_version.c:21:
++        printk(KERN_INFO &quot;Your kernel module is compiled with version %s\n&quot;, UTS_RELEASE);$
+
+WARNING: Prefer netdev_info(netdev, ... then dev_info(dev, ... then pr_info(...  to printk(KERN_INFO ...
+#21: FILE: hello_version.c:21:
++        printk(KERN_INFO &quot;Your kernel module is compiled with version %s\n&quot;, UTS_RELEASE);
+
+ERROR: code indent should use tabs where possible
+#22: FILE: hello_version.c:22:
++        return 0;$
+
+WARNING: please, no spaces at the start of a line
+#22: FILE: hello_version.c:22:
++        return 0;$
+
+ERROR: code indent should use tabs where possible
+#34: FILE: hello_version.c:34:
++        printk(KERN_INFO &quot;Over and out!\n&quot;);$
+
+WARNING: please, no spaces at the start of a line
+#34: FILE: hello_version.c:34:
++        printk(KERN_INFO &quot;Over and out!\n&quot;);$
+
+WARNING: Prefer netdev_info(netdev, ... then dev_info(dev, ... then pr_info(...  to printk(KERN_INFO ... <i class="conum" data-value="4"></i><b>(4)</b>
+#34: FILE: hello_version.c:34:
++        printk(KERN_INFO &quot;Over and out!\n&quot;);
+
+ERROR: code indent should use tabs where possible
+#35: FILE: hello_version.c:35:
++        printk(KERN_INFO &quot;Time lapsed is %u s\n&quot;, do_div(n_secs,NSEC_PER_SEC));$
+
+WARNING: please, no spaces at the start of a line
+#35: FILE: hello_version.c:35:
++        printk(KERN_INFO &quot;Time lapsed is %u s\n&quot;, do_div(n_secs,NSEC_PER_SEC));$
+
+WARNING: Prefer netdev_info(netdev, ... then dev_info(dev, ... then pr_info(...  to printk(KERN_INFO ...
+#35: FILE: hello_version.c:35:
++        printk(KERN_INFO &quot;Time lapsed is %u s\n&quot;, do_div(n_secs,NSEC_PER_SEC));
+
+ERROR: space required after that ',' (ctx:VxV)
+#35: FILE: hello_version.c:35:
++        printk(KERN_INFO &quot;Time lapsed is %u s\n&quot;, do_div(n_secs,NSEC_PER_SEC));
+                                                                ^
+
+total: 6 errors, 11 warnings, 46 lines checked
+
+NOTE: whitespace errors detected, you may wish to use scripts/cleanpatch or
+      scripts/cleanfile
+
+hello_version.c has style problems, please review.
+
+If any of these errors are false positives, please report
+them to the maintainer, see CHECKPATCH in MAINTAINERS.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Spaces used instead of tabs</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Line over 80 characters long</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Space detected at the start of the line</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>pr_info to be used instead of printk</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After correcting the warnings we get the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ ~/Git/linux/scripts/checkpatch.pl --file --no-tree hello_version.c
+total: 0 errors, 0 warnings, 48 lines checked        <i class="conum" data-value="1"></i><b>(1)</b>
+
+hello_version.c has no obvious style problems and is ready for submission.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Source code has 0 errors and 0 warnings</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve followed the guidelines as mentioned in <em>Documentation/CodingStyle</em>.
+The source code after corrections looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/kernel.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/utsname.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;generated/utsrelease.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/time.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;asm/div64.h&gt;</span>
+
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">char</span> *who = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Master</span><span style="color:#710">&quot;</span></span>;
+module_param(who, charp, <span style="color:#00D">0</span>);
+
+<span style="color:#777">/* Note starting time of kernel module */</span>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> timeval start;
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init version_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+
+        do_gettimeofday(&amp;start);
+        pr_info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Hello %s you are currently using kernel version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>,
+                who, utsname()-&gt;release);
+        pr_info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Your kernel module is compiled with version %s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>,
+                UTS_RELEASE);
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit version_exit(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#080;font-weight:bold">struct</span> timeval now;
+        s64 n_secs;
+
+        do_gettimeofday(&amp;now);
+
+        n_secs = timeval_to_ns(&amp;now) - timeval_to_ns(&amp;start);
+
+        pr_info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Over and out!</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+        pr_info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Time lapsed is %u s</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, do_div(n_secs, NSEC_PER_SEC));
+}
+
+module_init(version_init);
+module_exit(version_exit);
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);
+MODULE_AUTHOR(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">zeuzoix</span><span style="color:#710">&quot;</span></span>);
+MODULE_DESCRIPTION(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Kernel Module Version Example Module</span><span style="color:#710">&quot;</span></span>);
+MODULE_PARM_DESC(who, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Name of the user</span><span style="color:#710">&quot;</span></span>);
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-em-hello_version-em-to-the-kernel-sources"><a class="anchor" href="#adding-em-hello_version-em-to-the-kernel-sources"></a>31.5. Adding <em>hello_version</em> To The Kernel Sources</h3>
+<div class="paragraph">
+<p>Its time to add our tested kernel module to the kernel sources. We create
+a special branch for our changes and then attempt to add the module sources
+to the <em>drivers/misc</em> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello$ cd ~/Git/linux
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout 3.13.y
+Already on '3.13.y'
+Your branch is up-to-date with 'stable/linux-3.13.y'.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+* 3.13.y
+  fix_unioxx5
+  master
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout -b hello_version
+Switched to a new branch 'hello_version'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+  3.13.y
+  fix_unioxx5
+* hello_version
+  master
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp ~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/hello/hello_version.c ~/Git/linux/drivers/misc/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We modify the files <em>drivers/misc/Kconfig</em> and <em>drivers/misc/Makefile</em> to
+include the <em>hello_version.c</em> file as part of the Linux kernel build. The changes
+done to the files are as shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git diff drivers/misc/Makefile        <i class="conum" data-value="1"></i><b>(1)</b>
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index f45473e..8fae713 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -53,3 +53,4 @@ obj-$(CONFIG_VMWARE_VMCI)     += vmw_vmci/
+ obj-$(CONFIG_LATTICE_ECP3_CONFIG)      += lattice-ecp3-config.o
+ obj-$(CONFIG_SRAM)             += sram.o
+ obj-y                          += mic/
++obj-$(CONFIG_HELLO_VERSION)    += hello_version.o
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git diff drivers/misc/Kconfig        <i class="conum" data-value="2"></i><b>(2)</b>
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index a3e291d..1c055e4 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -515,6 +515,12 @@ config SRAM
+          the genalloc API. It is supposed to be used for small on-chip SRAM
+          areas found on many SoCs.
+
++config HELLO_VERSION
++       tristate &quot;Sample module to print version information&quot;
++       help
++         To compile this driver as a module, choose M here: the module will
++         be called kernel_version.
++
+ source &quot;drivers/misc/c2port/Kconfig&quot;
+ source &quot;drivers/misc/eeprom/Kconfig&quot;
+ source &quot;drivers/misc/cb710/Kconfig&quot;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Modifications done to the <em>Makefile</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Modifications done to the <em>Kconfig</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We then configure the kernel and enable the kernel_verion module in the configuration
+before issuing the build.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="beagleboneblacktux-enable-kernel-version" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/beagleboneblacktux-enable-kernel-version.png"><img src="http://zeuzoix.github.io/techeuphoria/images/beagleboneblacktux-enable-kernel-version.png" alt="beagleboneblacktux enable kernel version" width="640" height="480"></a>
+</div>
+<div class="title">We select kernel version in the <em>menuconfig</em></div>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- omap2plus_defconfig
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/zconf.tab.o
+  HOSTLD  scripts/kconfig/conf
+#
+# configuration written to .config
+#
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- menuconfig
+  HOSTCC  scripts/kconfig/lxdialog/checklist.o
+  HOSTCC  scripts/kconfig/lxdialog/inputbox.o
+  HOSTCC  scripts/kconfig/lxdialog/menubox.o
+  HOSTCC  scripts/kconfig/lxdialog/textbox.o
+  HOSTCC  scripts/kconfig/lxdialog/util.o
+  HOSTCC  scripts/kconfig/lxdialog/yesno.o
+  HOSTCC  scripts/kconfig/mconf.o
+  HOSTLD  scripts/kconfig/mconf
+scripts/kconfig/mconf Kconfig
+configuration written to .config
+
+*** End of the configuration.
+*** Execute 'make' to start the build or try 'make help'.
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- clean
+  CLEAN   .
+  CLEAN   arch/arm/kernel
+  CLEAN   drivers/tty/vt
+  CLEAN   drivers/video/logo
+  CLEAN   kernel
+  CLEAN   lib
+  CLEAN   usr
+  CLEAN   arch/arm/boot/compressed
+  CLEAN   arch/arm/boot/dts
+  CLEAN   arch/arm/boot
+  CLEAN   .tmp_versions
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the compilation goes through we can check in the changes in our branch.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status
+On branch hello_version
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+        modified:   drivers/misc/Kconfig
+        modified:   drivers/misc/Makefile
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+
+        defconfig
+        drivers/Module.symvers
+        drivers/misc/Module.symvers
+        drivers/misc/hello_version.c
+        drivers/staging/Module.symvers
+        drivers/staging/comedi/Module.symvers
+        drivers/staging/comedi/drivers/Module.symvers
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/hello_version.c        <i class="conum" data-value="2"></i><b>(2)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Kconfig                <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Makefile                <i class="conum" data-value="4"></i><b>(4)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Check the status of the branch first</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Add the hello_version.c file to staging</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Add the Kconfig file to staging</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Add the Makefile  file to staging</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Commit the staged changes. The -s adds a Signed-off-by line to the commit message.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can verify the commit message using <em>git log</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git log
+commit 56e2688434d7fd5ff8f3c35849e9d4b0ac0d2721
+Author: Conrad Gomes &lt;conrad.s.j.gomes@gmail.com&gt;
+Date:   Sat Dec 19 09:05:25 2015 +0530
+
+    hello_version: Adding a miscellaneous module
+
+    Adding a miscellaneous kernel module the source code.
+    Changed the Kconfig and Makefile to include the module as part of
+    the configuration.
+
+    Signed-off-by: Conrad Gomes &lt;conrad.s.j.gomes@gmail.com&gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
