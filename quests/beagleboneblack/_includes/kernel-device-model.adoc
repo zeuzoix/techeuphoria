@@ -1,0 +1,69 @@
+== The Purpose Behind Having A Device Model
+
+The Linux kernel runs on a wide variety of architectures and platforms.
+There are platforms which may have the same type of device for which
+the same driver may be used. To fascilitate this architecture a device
+model is required so that the driver for a device can be independent
+of the platform on which it is implemented.
+
+There are several layers of abstraction in which the Linux kernel
+separates the device description from the _device drivers_. Additionally
+the _bus drivers_ are separated from the _device drivers_.
+
+. In Linux the driver is designed to first interface between a *framework*
+which groups the functionality of the device to the application in a
+generic way. e.g. input devices like keyboards and the mouse are represented
+as an input event framework.
+
+. Secondly the driver has to interface with a *bus infrastructure* in order
+to access the device. The bus interface can be anything ranging from UART, USB
+to SPI.
+
+====
+[[kernel-device-driver-model]]
+.Kernel Device Driver Model
+image::kernel-device-driver-model.png[width="320", height="240", align="center", link={awestruct-imagesdir}/kernel-device-driver-model.png]
+====
+
+////
+[ditaa, kernel-device-driver-model]
+----
+	/----------------\
+	|   Application  |
+	\-------+--------/
+		|
+----------------+--------------
+		|
+		v
+	/----------------\
+	|   System Call  |
+	|   Interface    |
+	\-------+--------/
+		|
+		V
+	/----------------\
+	|   Framework	 |
+	|   		 |
+	\-------+--------/
+		|
+		V
+	/----------------\
+	|     Driver	 |
+	|   		 |
+	\-------+--------/
+		|
+		V
+	/----------------\
+	|     Bus	 |
+	| Infrastructure |
+	\-------+--------/
+		|
+----------------+--------------
+		|
+		V
+	/-------+--------\
+	|     Hardware 	 |
+	| 		 |
+	\----------------/
+----
+////
