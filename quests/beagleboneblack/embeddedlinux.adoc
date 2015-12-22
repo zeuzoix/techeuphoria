@@ -153,3 +153,18 @@ include::{includedir}/kernel-module-parameters.adoc[]
 include::{includedir}/developing-kernel-modules.adoc[]
 
 include::{includedir}/lab4-embeddedlinux-writing-kernel-modules.adoc[]
+
+= Linux Device And Driver Model
+
+[partintro]
+--
+This section covers details about the Linux Kernel device and driver model.
+We will understand why we need an architecture to describe a device and its
+driver. We'll see how the kernel recognises a device in the system and also
+understand how it associates a driver to the device.
+--
+
+include::{includedir}/kernel-device-model.adoc[]
+
+include::{includedir}/device-model-data-structures.adoc[]
+
