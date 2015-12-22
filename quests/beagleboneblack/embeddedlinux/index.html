@@ -244,8 +244,15 @@ TechEuphoria
 <li><a href="#adding-a-parameter-to-the-module">31.3. Adding A Parameter To The Module</a></li>
 <li><a href="#following-linux-coding-standards">31.4. Following Linux Coding Standards</a></li>
 <li><a href="#adding-em-hello_version-em-to-the-kernel-sources">31.5. Adding <em>hello_version</em> To The Kernel Sources</a></li>
+<li><a href="#create-a-kernel-patch">31.6. Create A Kernel Patch</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#linux-device-and-driver-model">Linux Device And Driver Model</a>
+<ul class="sectlevel1">
+<li><a href="#the-purpose-behind-having-a-device-model">32. The Purpose Behind Having A Device Model</a></li>
+<li><a href="#device-model-data-structures">33. Device Model Data Structures</a></li>
 </ul>
 </li>
 </ul>
@@ -6110,7 +6117,7 @@ make[1]: `include/generated/mach-types.h' is up to date.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status                                <i class="conum" data-value="1"></i><b>(1)</b>
 On branch hello_version
 Changes not staged for commit:
   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
@@ -6134,7 +6141,7 @@ no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&q
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/hello_version.c        <i class="conum" data-value="2"></i><b>(2)</b>
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Kconfig                <i class="conum" data-value="3"></i><b>(3)</b>
 conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add drivers/misc/Makefile                <i class="conum" data-value="4"></i><b>(4)</b>
-conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s</code></pre>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s                                <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -6180,6 +6187,103 @@ Date:   Sat Dec 19 09:05:25 2015 +0530
     Signed-off-by: Conrad Gomes &lt;conrad.s.j.gomes@gmail.com&gt;</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="create-a-kernel-patch"><a class="anchor" href="#create-a-kernel-patch"></a>31.6. Create A Kernel Patch</h3>
+<div class="paragraph">
+<p>Finally to share the code we would need to submit a patch to the Linux community.
+Creating a patch is easy with <em>git</em>. Since our changes are isolated on a separate
+branch we can create the patch between the local branch and the source branch
+which is <em>3.13.y</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git format-patch 3.13.y
+0001-hello_version-Adding-a-miscellaneous-module.patch</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The patch name is taken from the commit message added during the commit.</p>
+</div>
+</div>
+</div>
+</div>
+<h1 id="linux-device-and-driver-model" class="sect0"><a class="anchor" href="#linux-device-and-driver-model"></a>Linux Device And Driver Model</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>This section covers details about the Linux Kernel device and driver model.
+We will understand why we need an architecture to describe a device and its
+driver. We&#8217;ll see how the kernel recognises a device in the system and also
+understand how it associates a driver to the device.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-purpose-behind-having-a-device-model"><a class="anchor" href="#the-purpose-behind-having-a-device-model"></a>32. The Purpose Behind Having A Device Model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Linux kernel runs on a wide variety of architectures and platforms.
+There are platforms which may have the same type of device for which
+the same driver may be used. To fascilitate this architecture a device
+model is required so that the driver for a device can be independent
+of the platform on which it is implemented.</p>
+</div>
+<div class="paragraph">
+<p>There are several layers of abstraction in which the Linux kernel
+separates the device description from the <em>device drivers</em>. Additionally
+the <em>bus drivers</em> are separated from the <em>device drivers</em>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In Linux the driver is designed to first interface between a <strong>framework</strong>
+which groups the functionality of the device to the application in a
+generic way. e.g. input devices like keyboards and the mouse are represented
+as an input event framework.</p>
+</li>
+<li>
+<p>Secondly the driver has to interface with a <strong>bus infrastructure</strong> in order
+to access the device. The bus interface can be anything ranging from UART, USB
+to SPI.</p>
+</li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="kernel-device-driver-model" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/kernel-device-driver-model.png"><img src="http://zeuzoix.github.io/techeuphoria/images/kernel-device-driver-model.png" alt="kernel device driver model" width="320" height="240"></a>
+</div>
+<div class="title">Kernel Device Driver Model</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="device-model-data-structures"><a class="anchor" href="#device-model-data-structures"></a>33. Device Model Data Structures</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The main data structures in the device driver model are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>struct bus_type</em> structure represents a bus system viz. USB, SPI, I2C, etc..</p>
+</li>
+<li>
+<p>The <em>struct device_driver</em> structure represents one driver capable of handling devices on a certain bus.</p>
+</li>
+<li>
+<p>The <em>struct device</em> represents a device connected to a bus.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Inheritance is used in the device driver model in order to create
+specialized versions of <em>struct device driver</em> and <em>struct device</em> for specific
+bus systems.</p>
 </div>
 </div>
 </div>
