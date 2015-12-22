@@ -1,0 +1,11 @@
+== Device Model Data Structures
+
+The main data structures in the device driver model are:
+
+. The _struct bus_type_ structure represents a bus system viz. USB, SPI, I2C, etc..
+. The _struct device_driver_ structure represents one driver capable of handling devices on a certain bus.
+. The _struct device_ represents a device connected to a bus.
+
+Inheritance is used in the device driver model in order to create
+specialized versions of _struct device driver_ and _struct device_ for specific
+bus systems.
