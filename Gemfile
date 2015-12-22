@@ -3,6 +3,7 @@ source 'https://rubygems.org'                             # This tells Bundler w
 gem 'awestruct', '~> 0.5.1'                               # Goes without saying
 gem 'rake', '>= 0.9.2'                                    # Needed for the Rakefile to work
 gem 'zurb-foundation'
+gem 'asciidoctor-diagram', '~> 1.2.0.pre'
 # gem 'coffee-script', '~> 2.2.0'                         # If using coffee-script or to remove the warning
 # gem 'therubyracer', '0.10.0', :platforms => :ruby       # Javascript runtime on mri (needed for LESS and coffee-script)
 # gem 'therubyrhino', '~> 2.0.2', :platforms => :jruby    # Javascript runtime on jruby (needed for LESS and coffee-script)
