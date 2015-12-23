@@ -10,6 +10,9 @@ There are several layers of abstraction in which the Linux kernel
 separates the device description from the _device drivers_. Additionally
 the _bus drivers_ are separated from the _device drivers_.
 
+
+== Interfaces To A Kernel Driver
+
 . In Linux the driver is designed to first interface between a *framework*
 which groups the functionality of the device to the application in a
 generic way. e.g. input devices like keyboards and the mouse are represented
