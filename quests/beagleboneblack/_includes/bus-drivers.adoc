@@ -1,0 +1,19 @@
+== Bus Drivers
+
+Typically to interface the processor to any external device we would need
+a bus. The bus defines an interface to communicate with other devices through
+a protocol. The Linux kernel abstracts the bus as a bus driver thereby allowing
+reuse of the same driver across many platforms.
+
+There is one bus driver for each type of bus e.g. PCI, USB, SPI, I2C, etc..
+So what are the functions of the bus driver?
+
+. Regisitering the bus type i.e. _struct bus_type_.
+. Registering adapter drivers which can detect devices and communicate with them
+on the bus.
+. Register device drivers which are to support devices connected on the bus.
+. Pair devices connected on the bus with registered device drivers.
+
+== USB Bus As An Example Of A Bus Driver
+
+
