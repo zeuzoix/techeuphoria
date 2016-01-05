@@ -16,4 +16,9 @@ on the bus.
 
 == USB Bus As An Example Of A Bus Driver
 
+====
+[[usb-bus-driver-model]]
+.USB Bus Driver Model
+image::usb-bus-driver-model.png[width="320", height="240", align="center", link={awestruct-imagesdir}/usb-bus-driver-model.png]
+====
 
