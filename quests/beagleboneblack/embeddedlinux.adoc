@@ -168,3 +168,6 @@ include::{includedir}/kernel-device-model.adoc[]
 
 include::{includedir}/device-model-data-structures.adoc[]
 
+include::{includedir}/bus-drivers.adoc[]
+
+
