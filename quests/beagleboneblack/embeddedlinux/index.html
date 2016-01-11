@@ -252,7 +252,22 @@ TechEuphoria
 <li><a href="#linux-device-and-driver-model">Linux Device And Driver Model</a>
 <ul class="sectlevel1">
 <li><a href="#the-purpose-behind-having-a-device-model">32. The Purpose Behind Having A Device Model</a></li>
-<li><a href="#device-model-data-structures">33. Device Model Data Structures</a></li>
+<li><a href="#interfaces-to-a-kernel-driver">33. Interfaces To A Kernel Driver</a></li>
+<li><a href="#device-model-data-structures">34. Device Model Data Structures</a></li>
+<li><a href="#bus-drivers">35. Bus Drivers</a>
+<ul class="sectlevel2">
+<li><a href="#usb-bus-as-an-example-of-a-bus-driver">35.1. USB Bus As An Example Of A Bus Driver</a></li>
+<li><a href="#example-of-a-usb-device-driver">35.2. Example Of A USB Device Driver</a>
+<ul class="sectlevel3">
+<li><a href="#device-identification">35.2.1. Device Identification</a></li>
+<li><a href="#driver-instantiation">35.2.2. Driver Instantiation</a></li>
+<li><a href="#driver-registration-and-unregistration">35.2.3. Driver Registration And Unregistration</a></li>
+<li><a href="#device-detection">35.2.4. Device Detection</a></li>
+<li><a href="#probing-the-driver">35.2.5. Probing The Driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -6234,6 +6249,11 @@ of the platform on which it is implemented.</p>
 separates the device description from the <em>device drivers</em>. Additionally
 the <em>bus drivers</em> are separated from the <em>device drivers</em>.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="interfaces-to-a-kernel-driver"><a class="anchor" href="#interfaces-to-a-kernel-driver"></a>33. Interfaces To A Kernel Driver</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -6262,7 +6282,7 @@ to SPI.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="device-model-data-structures"><a class="anchor" href="#device-model-data-structures"></a>33. Device Model Data Structures</h2>
+<h2 id="device-model-data-structures"><a class="anchor" href="#device-model-data-structures"></a>34. Device Model Data Structures</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The main data structures in the device driver model are:</p>
@@ -6287,13 +6307,401 @@ bus systems.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="bus-drivers"><a class="anchor" href="#bus-drivers"></a>35. Bus Drivers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Typically to interface the processor to any external device we would need
+a bus. The bus defines an interface to communicate with other devices through
+a protocol. The Linux kernel abstracts the bus as a bus driver thereby allowing
+reuse of the same driver across many platforms.</p>
+</div>
+<div class="paragraph">
+<p>There is one bus driver for each type of bus e.g. PCI, USB, SPI, I2C, etc..
+So what are the functions of the bus driver?</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Regisitering the bus type i.e. <em>struct bus_type</em>.</p>
+</li>
+<li>
+<p>Registering adapter drivers which can detect devices and communicate with them
+on the bus.</p>
+</li>
+<li>
+<p>Register device drivers which are to support devices connected on the bus.</p>
+</li>
+<li>
+<p>Pair devices connected on the bus with registered device drivers.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="usb-bus-as-an-example-of-a-bus-driver"><a class="anchor" href="#usb-bus-as-an-example-of-a-bus-driver"></a>35.1. USB Bus As An Example Of A Bus Driver</h3>
+<div class="exampleblock">
+<div class="content">
+<div id="usb-bus-driver-model" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/usb-bus-driver-model.png"><img src="http://zeuzoix.github.io/techeuphoria/images/usb-bus-driver-model.png" alt="usb bus driver model" width="640" height="480"></a>
+</div>
+<div class="title">USB Bus Driver Model</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The diagram illustrates the various kernel components that enable the USB architecture to
+support multiple platforms, controllers and devices. It is essentially divided into three
+parts:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Core Infrastructure</dt>
+<dd>
+<p>This is the main source code responsible for declaring the bus type and registering it.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The code is defined in <em>drivers/usb/core</em></p>
+</li>
+<li>
+<p><em>struct bus_type</em> is defined in <em>drivers/usb/core/driver.c</em> and registered in
+<em>drivers/usb/core/usb.c</em></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Adapter Drivers</dt>
+<dd>
+<p>This is the driver code which implement the host controllers the software which is able to communicate
+with the device drivers. There are several versions of the host controller which are implemented
+on different platforms</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The code is defined in <em>drivers/usb/host</em></p>
+</li>
+<li>
+<p>OHCI, UHCI, EHCI, XHCI are different host controller interfaces implemented for different platforms.</p>
+</li>
+<li>
+<p>UHCI (Universal Host Controller Interface) is an intel defined controller for USB 1.x.</p>
+</li>
+<li>
+<p>OHCI (Open Host Controller Interface) is used on systems which do not have x86 USB1.1 controllers.</p>
+</li>
+<li>
+<p>EHCI (Enhanced Host Controller Interface) was defined as a standard for USB 2.0</p>
+</li>
+<li>
+<p>XHCI (Extensible Host Controller Interface) is the latest standard which supports all USB versions
+upto USB 3.1</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Device Drivers</dt>
+<dd>
+<p>The device drivers are spread across the kernel source code. Based on the device classification the
+device driver will be present in its appropriate framework.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-of-a-usb-device-driver"><a class="anchor" href="#example-of-a-usb-device-driver"></a>35.2. Example Of A USB Device Driver</h3>
+<div class="paragraph">
+<p>We&#8217;ll take a look at a USB network card. As it is a network device we&#8217;ll be able to
+find it in the network framework of the kernel source code. Since it interfaces with
+the USB bus it will be a USB device driver. The driver is located at
+<em>drivers/net/usb/rtl8150.c</em>.</p>
+</div>
+<div class="sect3">
+<h4 id="device-identification"><a class="anchor" href="#device-identification"></a>35.2.1. Device Identification</h4>
+<div class="paragraph">
+<p>Typically each device driver may support multiple devices. So a driver should describe
+the list of devices which it supports. This is defined by a device table.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#777">/* table of devices that work with this driver */</span>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> usb_device_id rtl8150_table[] = {
+        {USB_DEVICE(VENDOR_ID_REALTEK, PRODUCT_ID_RTL8150)},
+        {USB_DEVICE(VENDOR_ID_MELCO, PRODUCT_ID_LUAKTX)},
+        {USB_DEVICE(VENDOR_ID_MICRONET, PRODUCT_ID_SP128AR)},
+        {USB_DEVICE(VENDOR_ID_LONGSHINE, PRODUCT_ID_LCS8138TX)},
+        {USB_DEVICE(VENDOR_ID_OQO, PRODUCT_ID_RTL8150)},
+        {USB_DEVICE(VENDOR_ID_ZYXEL, PRODUCT_ID_PRESTIGE)},
+        {}
+};
+
+MODULE_DEVICE_TABLE(usb, rtl8150_table);
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The device table serves two purposes. Once the driver is loaded the USB core knows
+which devices it can work with so when a device is attached to the USB bus and the core
+will match the driver to that device. Another use is to extract the map between device
+identifier and driver so that a dynamic loading ability is present. The <em>depmod</em>
+utility can extract the module device table information which can be used by <em>udev</em>
+in userspace whenever the kernel sends a notification of a new device connected.</p>
+</div>
+<div class="paragraph">
+<p>Information about the mapping is normally present in the path
+<em>/lib/modules/$(uname -r)/modules.alias</em> or <em>/lib/modules/$(uname -r)/modules.usbmap</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="driver-instantiation"><a class="anchor" href="#driver-instantiation"></a>35.2.2. Driver Instantiation</h4>
+<div class="paragraph">
+<p>To instantiate a USB device driver the core provides an API with which an
+appropriate structure can be registered. This is present at the end of the file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> usb_driver rtl8150_driver = {
+        .name           = driver_name,
+        .probe          = rtl8150_probe,
+        .disconnect     = rtl8150_disconnect,
+        .id_table       = rtl8150_table,
+        .suspend        = rtl8150_suspend,
+        .resume         = rtl8150_resume,
+        .disable_hub_initiated_lpm = <span style="color:#00D">1</span>,
+};
+
+module_usb_driver(rtl8150_driver);
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As mentioned before the kernel is filled with inheritance and in this case
+the <em>struct usb_driver</em> inherits a <em>struct device_driver</em> in its definition.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="driver-registration-and-unregistration"><a class="anchor" href="#driver-registration-and-unregistration"></a>35.2.3. Driver Registration And Unregistration</h4>
+<div class="paragraph">
+<p>Now comes the part where the driver registers itself with the USB core system.
+This is done in the module initialisation and exit functions. This is abstracted
+through the API <em>module_usb_driver</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+module_usb_driver(rtl8150_driver);
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So if we see the definition of <em>module_usb_driver</em> in <em>include/linux/usb.h</em> it
+turns out that it uses the generic driver registration function <em>module_driver</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+<span style="color:#777">/**
+ * module_usb_driver() - Helper macro for registering a USB driver
+ * @__usb_driver: usb_driver struct
+ *
+ * Helper macro for USB drivers which do not do anything special in module
+ * init/exit. This eliminates a lot of boilerplate. Each module may only
+ * use this macro once, and calling it replaces module_init() and module_exit()
+ */</span>
+<span style="color:#579">#define</span> module_usb_driver(__usb_driver) \
+        module_driver(__usb_driver, usb_register, \
+                       usb_deregister)
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The definition of <em>module_driver</em> is in <em>include/linux/device.h</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+<span style="color:#777">/**
+ * module_driver() - Helper macro for drivers that don't do anything
+ * special in module init/exit. This eliminates a lot of boilerplate.
+ * Each module may only use this macro once, and calling it replaces
+ * module_init() and module_exit().
+ *
+ * @__driver: driver name
+ * @__register: register function for this driver type
+ * @__unregister: unregister function for this driver type
+ * @...: Additional arguments to be passed to __register and __unregister.
+ *
+ * Use this macro to construct bus specific macros for registering
+ * drivers, and do not use it on its own.
+ */</span>
+<span style="color:#579">#define</span> module_driver(__driver, __register, __unregister, ...) \
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init __driver<span style="color:#579">#</span><span style="color:#579">#_init</span>(<span style="color:#088;font-weight:bold">void</span>) \
+{ \
+        <span style="color:#080;font-weight:bold">return</span> __register(&amp;(__driver) , <span style="color:#579">#</span><span style="color:#579">#__VA_ARGS__</span>); \
+} \
+module_init(__driver<span style="color:#579">#</span><span style="color:#579">#_init</span>); \
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit __driver<span style="color:#579">#</span><span style="color:#579">#_exit</span>(<span style="color:#088;font-weight:bold">void</span>) \
+{ \
+        __unregister(&amp;(__driver) , <span style="color:#579">#</span><span style="color:#579">#__VA_ARGS__</span>); \
+} \
+module_exit(__driver<span style="color:#579">#</span><span style="color:#579">#_exit</span>);
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In a similar fashion the adapter driver also registers itself
+with the USB core using <em>usb_add_hcd()</em></p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="usb-core-registration" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/usb-core-registration.png"><img src="http://zeuzoix.github.io/techeuphoria/images/usb-core-registration.png" alt="usb core registration" width="640" height="480"></a>
+</div>
+<div class="title">USB Adapter and Device Driver Registration</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="device-detection"><a class="anchor" href="#device-detection"></a>35.2.4. Device Detection</h4>
+<div class="paragraph">
+<p>The USB adapter driver registers itself with the USB core using the
+<em>usb_add_hcd()</em> function. The adapter driver is responsible to detect
+a new device connected. It communicates the device id of the device
+to the USB core. Thereafter the USB core matches the device id with
+a list of known device id to driver mapping. If there is a match
+the <em>probe</em> function of the driver is called.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="usb-device-driver-rtl8150" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/usb-device-driver-rtl8150.png"><img src="http://zeuzoix.github.io/techeuphoria/images/usb-device-driver-rtl8150.png" alt="usb device driver rtl8150" width="640" height="480"></a>
+</div>
+<div class="title">USB rtl8150 Device Driver Mapping</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="probing-the-driver"><a class="anchor" href="#probing-the-driver"></a>35.2.5. Probing The Driver</h4>
+<div class="paragraph">
+<p>On invoking the <em>probe</em> function of the driver a structure is passed which is
+specific to the bus interface. On invocation the driver can:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Map I/O memory,</p>
+</li>
+<li>
+<p>Register interrupts</p>
+</li>
+<li>
+<p>Initialise private driver data structures</p>
+</li>
+<li>
+<p>Register the driver with the appropriate framework.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> rtl8150_probe(<span style="color:#080;font-weight:bold">struct</span> usb_interface *intf,
+                         <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> usb_device_id *id)
+{
+        <span style="color:#080;font-weight:bold">struct</span> usb_device *udev = interface_to_usbdev(intf);
+        rtl8150_t *dev;
+        <span style="color:#080;font-weight:bold">struct</span> net_device *netdev;
+
+        netdev = alloc_etherdev(<span style="color:#080;font-weight:bold">sizeof</span>(rtl8150_t));                <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#080;font-weight:bold">if</span> (!netdev)
+                <span style="color:#080;font-weight:bold">return</span> -ENOMEM;
+
+        dev = netdev_priv(netdev);
+
+        dev-&gt;intr_buff = kmalloc(INTBUFSIZE, GFP_KERNEL);
+        <span style="color:#080;font-weight:bold">if</span> (!dev-&gt;intr_buff) {
+                free_netdev(netdev);
+                <span style="color:#080;font-weight:bold">return</span> -ENOMEM;
+        }
+
+        tasklet_init(&amp;dev-&gt;tl, rx_fixup, (<span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>)dev);        <i class="conum" data-value="2"></i><b>(2)</b>
+        spin_lock_init(&amp;dev-&gt;rx_pool_lock);
+
+        dev-&gt;udev = udev;
+        dev-&gt;netdev = netdev;
+        netdev-&gt;netdev_ops = &amp;rtl8150_netdev_ops;
+        netdev-&gt;watchdog_timeo = RTL8150_TX_TIMEOUT;
+        SET_ETHTOOL_OPS(netdev, &amp;ops);
+        dev-&gt;intr_interval = <span style="color:#00D">100</span>;       <span style="color:#777">/* 100ms */</span>
+
+        <span style="color:#080;font-weight:bold">if</span> (!alloc_all_urbs(dev)) {
+                dev_err(&amp;intf-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">out of memory</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+                <span style="color:#080;font-weight:bold">goto</span> out;
+        }
+        <span style="color:#080;font-weight:bold">if</span> (!rtl8150_reset(dev)) {
+                dev_err(&amp;intf-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">couldn't reset the device</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+                <span style="color:#080;font-weight:bold">goto</span> out1;
+        }
+        fill_skb_pool(dev);
+        set_ethernet_addr(dev);
+
+        usb_set_intfdata(intf, dev);
+        SET_NETDEV_DEV(netdev, &amp;intf-&gt;dev);
+        <span style="color:#080;font-weight:bold">if</span> (register_netdev(netdev) != <span style="color:#00D">0</span>) {                                        <i class="conum" data-value="3"></i><b>(3)</b>
+                dev_err(&amp;intf-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">couldn't register the device</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+                <span style="color:#080;font-weight:bold">goto</span> out2;
+        }
+
+        dev_info(&amp;intf-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: rtl8150 is detected</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>, netdev-&gt;name);
+
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+
+<span style="color:#970;font-weight:bold">out2:</span>
+        usb_set_intfdata(intf, <span style="color:#069">NULL</span>);
+        free_skb_pool(dev);
+<span style="color:#970;font-weight:bold">out1:</span>
+        free_all_urbs(dev);
+<span style="color:#970;font-weight:bold">out:</span>
+        kfree(dev-&gt;intr_buff);
+        free_netdev(netdev);
+        <span style="color:#080;font-weight:bold">return</span> -EIO;
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Allocate etherdev structure</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Initialise tasklet</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Register with net framework</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <footer class="row" style="max-width: 100%">
 <hr>
 <div class="large-6 columns">
 <p style="margin-bottom: .75em">
-&copy; conrad.s.j.gomes@gmail.com 2015
+&copy; conrad.s.j.gomes@gmail.com 2016
 <br>
 Built on Foundation. Baked by Awestruct. Composed with Asciidoc
 </p>
