@@ -14,7 +14,7 @@ on the bus.
 . Register device drivers which are to support devices connected on the bus.
 . Pair devices connected on the bus with registered device drivers.
 
-== USB Bus As An Example Of A Bus Driver
+=== USB Bus As An Example Of A Bus Driver
 
 ====
 [[usb-bus-driver-model]]
@@ -53,3 +53,300 @@ image::usb-bus-driver-model.png[width="640", height="480", align="center", link=
 				  +------------------+
 ----
 ////
+
+The diagram illustrates the various kernel components that enable the USB architecture to
+support multiple platforms, controllers and devices. It is essentially divided into three
+parts:
+
+Core Infrastructure::
+This is the main source code responsible for declaring the bus type and registering it.
+. The code is defined in _drivers/usb/core_
+. _struct bus_type_ is defined in _drivers/usb/core/driver.c_ and registered in
+_drivers/usb/core/usb.c_
+
+Adapter Drivers::
+This is the driver code which implement the host controllers the software which is able to communicate
+with the device drivers. There are several versions of the host controller which are implemented
+on different platforms
+. The code is defined in _drivers/usb/host_
+. OHCI, UHCI, EHCI, XHCI are different host controller interfaces implemented for different platforms.
+. UHCI (Universal Host Controller Interface) is an intel defined controller for USB 1.x.
+. OHCI (Open Host Controller Interface) is used on systems which do not have x86 USB1.1 controllers.
+. EHCI (Enhanced Host Controller Interface) was defined as a standard for USB 2.0
+. XHCI (Extensible Host Controller Interface) is the latest standard which supports all USB versions
+upto USB 3.1
+
+Device Drivers::
+The device drivers are spread across the kernel source code. Based on the device classification the
+device driver will be present in its appropriate framework.
+
+=== Example Of A USB Device Driver
+
+We'll take a look at a USB network card. As it is a network device we'll be able to
+find it in the network framework of the kernel source code. Since it interfaces with
+the USB bus it will be a USB device driver. The driver is located at
+_drivers/net/usb/rtl8150.c_.
+
+==== Device Identification
+
+Typically each device driver may support multiple devices. So a driver should describe
+the list of devices which it supports. This is defined by a device table.
+
+[source, c]
+----
+.
+.
+/* table of devices that work with this driver */
+static struct usb_device_id rtl8150_table[] = {
+        {USB_DEVICE(VENDOR_ID_REALTEK, PRODUCT_ID_RTL8150)},
+        {USB_DEVICE(VENDOR_ID_MELCO, PRODUCT_ID_LUAKTX)},
+        {USB_DEVICE(VENDOR_ID_MICRONET, PRODUCT_ID_SP128AR)},
+        {USB_DEVICE(VENDOR_ID_LONGSHINE, PRODUCT_ID_LCS8138TX)},
+        {USB_DEVICE(VENDOR_ID_OQO, PRODUCT_ID_RTL8150)},
+        {USB_DEVICE(VENDOR_ID_ZYXEL, PRODUCT_ID_PRESTIGE)},
+        {}
+};
+
+MODULE_DEVICE_TABLE(usb, rtl8150_table);
+.
+----
+
+The device table serves two purposes. Once the driver is loaded the USB core knows
+which devices it can work with so when a device is attached to the USB bus and the core
+will match the driver to that device. Another use is to extract the map between device
+identifier and driver so that a dynamic loading ability is present. The _depmod_
+utility can extract the module device table information which can be used by _udev_
+in userspace whenever the kernel sends a notification of a new device connected.
+
+Information about the mapping is normally present in the path
+_/lib/modules/$(uname -r)/modules.alias_ or _/lib/modules/$(uname -r)/modules.usbmap_.
+
+==== Driver Instantiation
+
+To instantiate a USB device driver the core provides an API with which an
+appropriate structure can be registered. This is present at the end of the file:
+
+[source, c]
+----
+.
+.
+static struct usb_driver rtl8150_driver = {
+        .name           = driver_name,
+        .probe          = rtl8150_probe,
+        .disconnect     = rtl8150_disconnect,
+        .id_table       = rtl8150_table,
+        .suspend        = rtl8150_suspend,
+        .resume         = rtl8150_resume,
+        .disable_hub_initiated_lpm = 1,
+};
+
+module_usb_driver(rtl8150_driver);
+.
+----
+
+As mentioned before the kernel is filled with inheritance and in this case
+the _struct usb_driver_ inherits a _struct device_driver_ in its definition.
+
+==== Driver Registration And Unregistration
+
+Now comes the part where the driver registers itself with the USB core system.
+This is done in the module initialisation and exit functions. This is abstracted
+through the API _module_usb_driver_. 
+
+[source, c]
+----
+.
+module_usb_driver(rtl8150_driver);
+.
+----
+
+So if we see the definition of _module_usb_driver_ in _include/linux/usb.h_ it
+turns out that it uses the generic driver registration function _module_driver_.
+
+[source, c]
+----
+.
+/**     
+ * module_usb_driver() - Helper macro for registering a USB driver
+ * @__usb_driver: usb_driver struct
+ *      
+ * Helper macro for USB drivers which do not do anything special in module
+ * init/exit. This eliminates a lot of boilerplate. Each module may only
+ * use this macro once, and calling it replaces module_init() and module_exit()
+ */     
+#define module_usb_driver(__usb_driver) \
+        module_driver(__usb_driver, usb_register, \
+                       usb_deregister)
+.
+----
+
+The definition of _module_driver_ is in _include/linux/device.h_
+
+[source,c]
+----
+.
+/**                         
+ * module_driver() - Helper macro for drivers that don't do anything
+ * special in module init/exit. This eliminates a lot of boilerplate.
+ * Each module may only use this macro once, and calling it replaces
+ * module_init() and module_exit().
+ *              
+ * @__driver: driver name
+ * @__register: register function for this driver type
+ * @__unregister: unregister function for this driver type
+ * @...: Additional arguments to be passed to __register and __unregister.
+ *
+ * Use this macro to construct bus specific macros for registering
+ * drivers, and do not use it on its own.
+ */
+#define module_driver(__driver, __register, __unregister, ...) \
+static int __init __driver##_init(void) \
+{ \     
+        return __register(&(__driver) , ##__VA_ARGS__); \
+} \
+module_init(__driver##_init); \
+static void __exit __driver##_exit(void) \
+{ \
+        __unregister(&(__driver) , ##__VA_ARGS__); \
+} \
+module_exit(__driver##_exit);
+.
+
+----
+
+In a similar fashion the adapter driver also registers itself 
+with the USB core using _usb_add_hcd()_
+
+====
+[[usb-core-registration]]
+.USB Adapter and Device Driver Registration 
+image::usb-core-registration.png[width="640", height="480", align="center", link={awestruct-imagesdir}/usb-core-registration.png]
+====
+
+////
+[ditaa, usb-core-registration]
+----
+	/------------------------------------\
+	|		USB 		     |
+	|		Core	  	     |
+	\------------------------------------/
+		^		     ^	
+  usb_add_hcd() |		     | usb_register()
+		|		     |
+	/-------+--------\   /-------+--------\
+	|   ohci-at91	 |   |   rtl8150      |
+	|   		 |   |   	      |
+	\-------+--------/   \-------+--------/
+----
+////
+
+==== Device Detection
+
+The USB adapter driver registers itself with the USB core using the
+_usb_add_hcd()_ function. The adapter driver is responsible to detect
+a new device connected. It communicates the device id of the device
+to the USB core. Thereafter the USB core matches the device id with
+a list of known device id to driver mapping. If there is a match 
+the _probe_ function of the driver is called.
+
+====
+[[usb-device-driver-rtl8150]]
+.USB rtl8150 Device Driver Mapping
+image::usb-device-driver-rtl8150.png[width="640", height="480", align="center", link={awestruct-imagesdir}/usb-device-driver-rtl8150.png]
+====
+
+////
+[ditaa, usb-device-driver-rtl8150]
+----
+	/------------------------------------\	Step 2
+	|		USB 		     |	USB core looks up the 
+	|		Core	  	     |	registered ID to driver mappings
+	\----------------------------+-------/
+    Step 1	^		     | Step 3	
+  New device 	|		     | Probe method is called of 
+   detected	|		     v the mapped driver
+	/-------+--------\   /----------------\
+	|   ohci-at91	 |   |   rtl8150      |
+	|   		 |   |   	      |
+	\-------+--------/   \-------+--------/
+----
+////
+
+==== Probing The Driver
+
+On invoking the _probe_ function of the driver a structure is passed which is
+specific to the bus interface. On invocation the driver can:
+
+. Map I/O memory,
+. Register interrupts
+. Initialise private driver data structures
+. Register the driver with the appropriate framework.
+
+[source, c]
+----
+static int rtl8150_probe(struct usb_interface *intf,
+                         const struct usb_device_id *id)
+{
+        struct usb_device *udev = interface_to_usbdev(intf);
+        rtl8150_t *dev;
+        struct net_device *netdev;
+
+        netdev = alloc_etherdev(sizeof(rtl8150_t));		<1>
+        if (!netdev)
+                return -ENOMEM;
+
+        dev = netdev_priv(netdev);
+
+        dev->intr_buff = kmalloc(INTBUFSIZE, GFP_KERNEL);
+        if (!dev->intr_buff) {
+                free_netdev(netdev);
+                return -ENOMEM;
+        }
+
+        tasklet_init(&dev->tl, rx_fixup, (unsigned long)dev);	<2>
+        spin_lock_init(&dev->rx_pool_lock);
+
+        dev->udev = udev;
+        dev->netdev = netdev;
+        netdev->netdev_ops = &rtl8150_netdev_ops;
+        netdev->watchdog_timeo = RTL8150_TX_TIMEOUT;
+        SET_ETHTOOL_OPS(netdev, &ops);
+        dev->intr_interval = 100;       /* 100ms */
+
+        if (!alloc_all_urbs(dev)) {
+                dev_err(&intf->dev, "out of memory\n");
+                goto out;
+        }
+        if (!rtl8150_reset(dev)) {
+                dev_err(&intf->dev, "couldn't reset the device\n");
+                goto out1;
+        }
+        fill_skb_pool(dev);
+        set_ethernet_addr(dev);
+
+        usb_set_intfdata(intf, dev);
+        SET_NETDEV_DEV(netdev, &intf->dev);
+        if (register_netdev(netdev) != 0) {					<3>
+                dev_err(&intf->dev, "couldn't register the device\n");
+                goto out2;
+        }
+
+        dev_info(&intf->dev, "%s: rtl8150 is detected\n", netdev->name);
+
+        return 0;
+
+out2:
+        usb_set_intfdata(intf, NULL);
+        free_skb_pool(dev);
+out1:
+        free_all_urbs(dev);
+out:
+        kfree(dev->intr_buff);
+        free_netdev(netdev);
+        return -EIO;
+}
+
+----
+<1> Allocate etherdev structure
+<2> Initialise tasklet
+<3> Register with net framework
