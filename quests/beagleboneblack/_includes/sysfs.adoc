@@ -1,0 +1,20 @@
+== sysfs
+
+The _sysfs_ offers a mechanism to access the information related to 
+the bus, drivers, devices, etc to the userspace. This information 
+can be used to support features such as :
+. dynamic loading of drivers
+. dynamic loading of firmware
+. automatic creation of device file
+
+The _sysfs_ is usually mounted in _/sys/_. It is organised into different sections
+of information. For instance:
+
+. _/sys/block_ contains information of different block devices
+. _/sys/class_ contains information about devices by class e.g. net, graphics, block, input, etc..
+. _/sys/devices_ contains the list of devices
+. _/sys/bus_ contains the list of buses
+
+While writing a kernel module or driver we can export properties to userspace
+through the _sysfs_ interface.
+

@@ -172,3 +172,4 @@ include::{includedir}/bus-drivers.adoc[]
 
 include::{includedir}/platform-drivers.adoc[]
 
+include::{includedir}/sysfs.adoc[]
