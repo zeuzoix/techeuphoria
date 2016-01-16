@@ -170,4 +170,5 @@ include::{includedir}/device-model-data-structures.adoc[]
 
 include::{includedir}/bus-drivers.adoc[]
 
+include::{includedir}/platform-drivers.adoc[]
 

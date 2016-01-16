@@ -1,0 +1,556 @@
+== Platform Drivers
+
+Not all buses have the ability to dynamically detect new devices. Some
+buses such as SPI and I2C do not support enumeration or hotplugging.
+And in the case of SOCs there are devices like the UART which are directly
+part of the chip. These devices are described to the kernel through either
+source code or a _Device Tree_ file format.
+
+To support such devices in the device driver model of the Linux kernel a
+_platform bus_ is created which handles _platform drivers_ and _platform devices_.
+The _platform bus_ works like any other bus except that the devices are not
+discovered but rather defined using either source code in the kernel or using
+the _Device Tree_ file mechanism.
+
+=== Serial i.MX As An Example Of A Platform Driver
+
+Let's take a look at the serial driver for the i.MX platform from Freescale.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find . -name 'imx.c'
+./drivers/tty/serial/imx.c
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+----
+
+The structure which defines the serial platform driver is:
+
+[source, c]
+----
+.
+.
+static struct platform_driver serial_imx_driver = {
+        .probe          = serial_imx_probe,
+        .remove         = serial_imx_remove,
+
+        .suspend        = serial_imx_suspend,
+        .resume         = serial_imx_resume,
+        .id_table       = imx_uart_devtype,
+        .driver         = {
+                .name   = "imx-uart",
+                .owner  = THIS_MODULE,
+                .of_match_table = imx_uart_dt_ids,
+        },
+};
+.
+.
+----
+
+The registration and deregistration of this platform driver takes place in
+the initialisation and exit functions of the driver.
+
+[source, c]
+----
+.
+.
+static int __init imx_serial_init(void)
+{
+        int ret;
+
+        pr_info("Serial: IMX driver\n");
+
+        ret = uart_register_driver(&imx_reg);
+        if (ret)
+                return ret;
+
+        ret = platform_driver_register(&serial_imx_driver); <1>
+        if (ret != 0)
+                uart_unregister_driver(&imx_reg);
+
+        return ret;
+}
+
+static void __exit imx_serial_exit(void)
+{
+        platform_driver_unregister(&serial_imx_driver);	<2>
+        uart_unregister_driver(&imx_reg);
+}
+
+module_init(imx_serial_init);
+module_exit(imx_serial_exit);
+.
+.
+----
+<1> Platform driver registration
+<2> Platform driver deregistration
+
+=== Declaring Platform Devices In Source Code
+
+The platform device is declared in source code. To locate where the device is
+declared we have to probe a bit into the source code. Typically the platform 
+device if declared in this manner will be present in the machine specific
+section of the kernel. We first take a look at
+_arch/arm/mach-imx/devices/platform-imx-uart.c_. The main function is
+_
+
+[source,c]
+----
+.
+.
+struct platform_device *__init imx_add_imx_uart_3irq(
+                const struct imx_imx_uart_3irq_data *data,
+                const struct imxuart_platform_data *pdata)
+{
+        struct resource res[] = {
+                {
+                        .start = data->iobase,
+                        .end = data->iobase + data->iosize - 1,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data->irqrx,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqtx,
+                        .end = data->irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqrts,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        return imx_add_platform_device("imx1-uart", data->id, res,
+                        ARRAY_SIZE(res), pdata, sizeof(*pdata));
+}
+.
+.
+----
+<1> The device is created by thise _imx_add_platform_device_.
+
+If we search for the definition of _imx_add_platform_device_ we can locate it
+in _arch/arm/mach-imx/devices/devices-common.h_
+
+[source, c]
+----
+.
+.
+static inline struct platform_device *imx_add_platform_device_dmamask(
+                const char *name, int id,
+                const struct resource *res, unsigned int num_resources,
+                const void *data, size_t size_data, u64 dmamask)	<3>
+{
+        struct platform_device_info pdevinfo = {		<4>
+                .name = name,
+                .id = id,
+                .res = res,
+                .num_res = num_resources,
+                .data = data, 
+                .size_data = size_data,
+                .dma_mask = dmamask,
+        };
+        return platform_device_register_full(&pdevinfo);
+}
+
+static inline struct platform_device *imx_add_platform_device( 
+                const char *name, int id,
+                const struct resource *res, unsigned int num_resources,
+                const void *data, size_t size_data) 	<1>
+{
+        return imx_add_platform_device_dmamask(
+                        name, id, res, num_resources, data, size_data, 0);	<2>
+}
+.
+.
+----
+<1> The definition of _imx_add_platform_device_
+<2> Another function is called which instantiates the device
+<3> The definition of _imx_add_platform_device_dmamask
+<4> The device structure values
+ 
+The device is instantiated in the _arch/arm/mach-imx/mach-mx1ads.c_ file.
+
+[source, c]
+----
+.
+.
+static void __init mx1ads_init(void)
+{
+        imx1_soc_init();
+
+        mxc_gpio_setup_multiple_pins(mx1ads_pins,
+                ARRAY_SIZE(mx1ads_pins), "mx1ads");
+
+        /* UART */
+        imx1_add_imx_uart0(&uart0_pdata);	<1>
+        imx1_add_imx_uart1(&uart1_pdata);	<2>
+
+        /* Physmap flash */
+        platform_device_register_resndata(NULL, "physmap-flash", 0,
+                        &flash_resource, 1,
+                        &mx1ads_flash_data, sizeof(mx1ads_flash_data));
+
+        /* I2C */
+        i2c_register_board_info(0, mx1ads_i2c_devices,
+                                ARRAY_SIZE(mx1ads_i2c_devices));
+
+        imx1_add_imx_i2c(&mx1ads_i2c_data);
+}
+.
+.
+MACHINE_START(MX1ADS, "Freescale MX1ADS")
+        /* Maintainer: Sascha Hauer, Pengutronix */
+        .atag_offset = 0x100,
+        .map_io = mx1_map_io,
+        .init_early = imx1_init_early,
+        .init_irq = mx1_init_irq,
+        .handle_irq = imx1_handle_irq,
+        .init_time      = mx1ads_timer_init,
+        .init_machine = mx1ads_init,
+        .restart        = mxc_restart,
+MACHINE_END
+.
+.
+----
+<1> UART 0 is added
+<2> UART 1 is added
+
+The definition of _imx1_add_imx_uart0_ is in _arch/arm/mach-imx/devices-imx1.h_
+
+[source,c]
+----
+.
+.
+extern const struct imx_imx_uart_3irq_data imx1_imx_uart_data[];
+#define imx1_add_imx_uart(id, pdata)    \
+        imx_add_imx_uart_3irq(&imx1_imx_uart_data[id], pdata)
+#define imx1_add_imx_uart0(pdata)       imx1_add_imx_uart(0, pdata)
+#define imx1_add_imx_uart1(pdata)       imx1_add_imx_uart(1, pdata)
+.
+.
+----
+
+=== Accessing Resources
+
+Resources to a device can be IRQ lines, DMA channels, I/O registers' addresses
+and so forth. All devices will require access to different resources. If we
+look at the device instantiating function above we see the resources assigned in
+_imx_add_imx_uart_3irq_. The resources are defined with the _struct resource_
+structure definition. So in the function an array of resources is associated with 
+the device during instantiation. This again allows a driver to work with multiple
+platform devices using different resources.
+
+[source,c]
+----
+.
+.
+struct platform_device *__init imx_add_imx_uart_3irq(
+                const struct imx_imx_uart_3irq_data *data,
+                const struct imxuart_platform_data *pdata)
+{
+        struct resource res[] = {	<1>
+                {
+                        .start = data->iobase,
+                        .end = data->iobase + data->iosize - 1,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data->irqrx,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqtx,
+                        .end = data->irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqrts,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        return imx_add_platform_device("imx1-uart", data->id, res,	<2>
+                        ARRAY_SIZE(res), pdata, sizeof(*pdata));
+}
+.
+.
+----
+<1> Array of resources defined
+<2> Resources are associated with the device
+
+=== Accessing Platform Data
+
+Many drivers will require platform specific data for each device. This is also passed
+during platform instantiation. Basically since the _struct platform_data_ inherits the
+_struct device_ the platform data can be passed through the _platform_data_ field of 
+_struct device_. The field is defined as a _void *_ data type so any data type can 
+be passed through it. Typically the platform driver will define the data structure to
+pass information through _platform_data_.
+
+[source,c]
+----
+.
+.
+struct platform_device *__init imx_add_imx_uart_3irq(
+                const struct imx_imx_uart_3irq_data *data,
+                const struct imxuart_platform_data *pdata)	<1>
+{
+        struct resource res[] = {	<1>
+                {
+                        .start = data->iobase,
+                        .end = data->iobase + data->iosize - 1,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data->irqrx,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqtx,
+                        .end = data->irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data->irqrts,
+                        .end = data->irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        return imx_add_platform_device("imx1-uart", data->id, res,
+                        ARRAY_SIZE(res), pdata, sizeof(*pdata));	<2>
+}
+.
+.
+----
+<1> Platform data is defined as struct imxuart_platform_data 
+<2> The platform data is passed to the device during instantiation
+
+The definition of the _struct imxuart_platform_data_ is located in
+_include/linux/platform_data/serial-imx.h_
+
+[source,c]
+----
+.
+.
+struct imxuart_platform_data {
+        int (*init)(struct platform_device *pdev);
+        void (*exit)(struct platform_device *pdev);
+        unsigned int flags;
+        void (*irda_enable)(int enable);
+        unsigned int irda_inv_rx:1;
+        unsigned int irda_inv_tx:1;
+        unsigned short transceiver_delay;
+};
+.
+.
+----
+
+The board code in _arch/arm/mach-imx/mach-mx1ads.c_ initiates
+the structure as _&uart0_pdata_.
+
+[source,c]
+----
+.
+.
+static const struct imxuart_platform_data uart0_pdata __initconst = {
+        .flags = IMXUART_HAVE_RTSCTS,
+};
+.
+.
+----
+
+The platform driver can then access this data in its probe function where the
+platform device is passed to it:
+
+[source, c]
+----
+.
+.
+static void serial_imx_probe_pdata(struct imx_port *sport,
+                struct platform_device *pdev)
+{
+        struct imxuart_platform_data *pdata = dev_get_platdata(&pdev->dev);
+.
+.
+.
+        if (pdata->flags & IMXUART_HAVE_RTSCTS)	<3>
+                sport->have_rtscts = 1;
+.
+.
+
+}
+
+static int serial_imx_probe(struct platform_device *pdev)	<1>
+{
+        struct imx_port *sport;
+        struct imxuart_platform_data *pdata;
+.
+.
+.
+        ret = serial_imx_probe_dt(sport, pdev);
+        if (ret > 0)
+                serial_imx_probe_pdata(sport, pdev);	<2>
+        else if (ret < 0)
+                return ret;
+.
+.
+}
+----
+<1> The _serial_imx_probe_ function calls the _serial_imx_probe_pdata_
+<2> The _serial_imx_probe_pdata_ calls accesses the platform data.
+
+=== Device Tree
+
+The older approach of writing code to instantiate devices is not easily
+maintainable. An alternative approach is to use the _Device Tree_ to
+describe the platform devices.
+
+A _Device Tree_ is a tree of nodes that describes the network of devices
+in a system. It can describe devices inside the processor as well as
+devices on the board. Each node has different properties which can be
+attached to the device such as addresses, interrupts, clocks, gpios, etc..
+
+The device tree is compiled into a binary file which is recognised
+by the kernel. During boot up the _device tree blob_ is passed to the
+kernel which describes the platform devices in the system. This allows
+the same kernel image to work with different systems.
+
+=== An Example Of Device Tree
+
+The device tree source files are stored in the architecture specific
+path of the Linux kernel source code. For example for ARM devices
+the files are located at _arch/arm/boot/dts/_. We can take a look at
+_arch/arm/boot/dts/omap3.dtsi_
+
+[source, c]
+----
+.
+.
+                uart1: serial@4806a000 {
+                        compatible = "ti,omap3-uart";
+                        reg = <0x4806a000 0x2000>;
+                        interrupts = <72>;
+                        dmas = <&sdma 49 &sdma 50>;
+                        dma-names = "tx", "rx";
+                        ti,hwmods = "uart1";
+                        clock-frequency = <48000000>;
+                };
+.
+.
+----
+
+In the node above _serial@4806a000_ is the name of the node. The notation
+_uart1_ is the alias which can be refer to the node as _&uart1_ in other
+sections of the device tree source. The remaining lines are properties
+of the node which are used by the platform driver.
+
+The file _arch/arm/boot/dts/omap3.dtsi_ is a common file which can be included
+by other hardware platforms. Thus device trees support inheritance whereby
+common similarities between different platforms can be defined in a common
+file.
+
+The file which includes the common file overrides the properties as well as
+defining its own properties. The _compatible_ property associated with the
+uart1 node defines the driver mapping for the device. The platform driver
+will also have the same string in the _of_match_table_ of the _struct device_driver_.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ egrep -ri "ti,omap3-uart" drivers/tty/
+Binary file drivers/tty/serial/built-in.o matches
+Binary file drivers/tty/serial/omap-serial.o matches
+drivers/tty/serial/omap-serial.c:	{ .compatible = "ti,omap3-uart" },	<1>
+Binary file drivers/tty/built-in.o matches
+----
+<1> Location of the platform driver
+
+When we open the platform driver source code we see the mapping:
+
+[source, c]
+----
+.
+.
+
+#if defined(CONFIG_OF)
+static const struct of_device_id omap_serial_of_match[] = {
+        { .compatible = "ti,omap2-uart" },
+        { .compatible = "ti,omap3-uart" },	<1>
+        { .compatible = "ti,omap4-uart" },
+        {},
+};
+MODULE_DEVICE_TABLE(of, omap_serial_of_match);
+#endif
+
+static struct platform_driver serial_omap_driver = {
+        .probe          = serial_omap_probe,
+        .remove         = serial_omap_remove,
+        .driver         = {
+                .name   = DRIVER_NAME,
+                .pm     = &serial_omap_dev_pm_ops,
+                .of_match_table = of_match_ptr(omap_serial_of_match),	<2>
+        },
+};
+.
+----
+<1> The _compatible_ property presetn in the _struct of_device_id_ table _omap_serial_of_match_
+<2> The _of_match_table_ of the _struct device_driver_
+
+The _CONFIG_OF_ macro stands for configuration of open firmware. This is associated
+with the device tree implementation in the kernel. With the device tree method 
+the resources such as interrupt numbers, physical addresses, etc.. are picked up from
+the properties of the device node.
+
+The resources list is built up at boot time by 
+the kernel when it reads the _Device Tree Blob_. The driver will not have to make
+any lookups to the DT but will get access to the node through the struct platform_device
+structure. Any other properties are specific to the class of the device or the driver it belongs
+to.
+
+=== Device Tree Bindings
+
+The _compatible_ string and the associated properties define the device tree binding.
+These are documented in the _Documentation/devicetree/bindings/_
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ ls -l Documentation/devicetree/bindings/
+total 284
+drwxrwxr-x  2 conrad conrad  4096 Nov 20  2013 arc
+drwxrwxr-x 15 conrad conrad  4096 Nov 12  2014 arm
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 ata
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 bus
+.
+.
+.
+drwxrwxr-x  3 conrad conrad  4096 Nov 12  2014 video
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 virtio
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 w1
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 watchdog
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 x86
+-rw-rw-r--  1 conrad conrad 10748 Oct 19  2013 xilinx.txt
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+----
+
+The _Device Tree_ is part of the ABI and a new kernel should work with an older Device Tree.
+The design of the bindings is carefully reviewed on the _devicetree@vger.kernel.org_
+mailing list. The device tree should only describe the properties of the hardware. Anything
+related to the configuration of the device should be avoided for instance
+whether DMA should be used or not.
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
