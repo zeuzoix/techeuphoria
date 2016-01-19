@@ -1,0 +1,361 @@
+== The I2C Subsystem
+
+The I2C bus is a low speed bus which is found on many SOCs today.
+It is a simple bus with two wires, SDA for the data and SCL for the
+clock. The SOC normally has the I2C controller and therefore is
+the master on the bus controlling the slave devices. 
+
+Each slave has a unique address on the bus and each transaction
+on the bus includes the address of the device with which communication
+is required from the controller.
+
+Only the master can initiate transactions on the bus with the addressed
+slave device responding. In some systems it may be possible for one
+bus to have two masters but there would be some level of arbitration
+mechanism implemented in order to have only one master controlling
+the bus at any time.
+
+Since I2C is a very common protocol we find many devices have it
+as an interface. I2C is found in a wide variety of chips which 
+can be used in the overall system design of the platform. Some
+use cases are:
+
+. Touchscreen controller
+. GPIO expander
+. Audio codec
+. Real Time clock
+
+The I2C subsystem is a platform bus system. It provides API to:
+
+. Implement I2C controller drivers
+. Implement I2C device drivers, in kernel space
+. Implement I2C device drivers, in user space
+
+The core of the I2C subsystem resides in _drivers/i2c_. The
+I2C controller drivers are present in _drivers/i2c/busses/_.
+And the device drivers are present in _drivers_ based on the
+classification of the device e.g. _drivers/gpio_ for gpio expanders.
+
+=== Registering An I2C Driver
+
+. The I2C subsystem defines a _struct i2c_driver_ which inherits the
+_struct device_driver_. This is instantiated and registered by each
+I2C device driver.
+.. Similarly this structure will have a _probe()_ and a _remove()_
+function.
+.. It also contains an _id_table_ which enumerates the list of devices
+that can be used with the driver. This table is normally used for
+non-DT based drivers.
+. The _i2c_add_driver()_ and _i2c_del_driver()_ functions are used
+to add the device driver and remove it from the I2C subsystem.
+. If the driver doesn't require anything else to be done in the
+initialisation and exit sequence then the _module_i2c_driver_
+macro can be used.
+
+We can take a look at an I2C device driver in _drivers/gpio/gpio-pcf857x.c_.
+
+[source, c]
+----
+.
+.
+static const struct i2c_device_id pcf857x_id[] = {	<1>
+        { "pcf8574", 8 },
+        { "pcf8574a", 8 },
+        { "pca8574", 8 },
+        { "pca9670", 8 },
+        { "pca9672", 8 },
+        { "pca9674", 8 },
+        { "pcf8575", 16 },
+        { "pca8575", 16 },
+        { "pca9671", 16 },
+        { "pca9673", 16 },
+        { "pca9675", 16 },
+        { "max7328", 8 },
+        { "max7329", 8 },
+        { "tca9554", 8 },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, pcf857x_id);	<2>
+
+#ifdef CONFIG_OF
+static const struct of_device_id pcf857x_of_table[] = {
+        { .compatible = "nxp,pcf8574" },
+        { .compatible = "nxp,pcf8574a" },
+        { .compatible = "nxp,pca8574" },
+        { .compatible = "nxp,pca9670" },
+        { .compatible = "nxp,pca9672" },
+        { .compatible = "nxp,pca9674" },
+        { .compatible = "nxp,pcf8575" },
+        { .compatible = "nxp,pca8575" },
+        { .compatible = "nxp,pca9671" },
+        { .compatible = "nxp,pca9673" },
+        { .compatible = "nxp,pca9675" },
+        { .compatible = "maxim,max7328" },
+        { .compatible = "maxim,max7329" },
+        { .compatible = "ti,tca9554" },
+        { }
+};
+MODULE_DEVICE_TABLE(of, pcf857x_of_table);
+#endif
+.
+.
+static struct i2c_driver pcf857x_driver = {	<3>
+        .driver = {
+                .name   = "pcf857x",
+                .owner  = THIS_MODULE,
+                .of_match_table = of_match_ptr(pcf857x_of_table),
+        },
+        .probe  = pcf857x_probe,	
+        .remove = pcf857x_remove,
+        .id_table = pcf857x_id,
+};
+
+static int __init pcf857x_init(void)
+{
+        return i2c_add_driver(&pcf857x_driver);	<4>
+}
+/* register after i2c postcore initcall and before
+ * subsys initcalls that may rely on these GPIOs
+ */
+subsys_initcall(pcf857x_init);
+
+static void __exit pcf857x_exit(void)
+{
+        i2c_del_driver(&pcf857x_driver);	<5>
+}
+module_exit(pcf857x_exit);
+
+.
+.
+----
+<1> _pcf857x_id_ is the device id table
+<2> The device id table is registered with the I2C subsystem
+<3> _pcf857x_driver_ is the _struct i2c_driver_
+<4> _i2c_add_driver_ registers the device driver
+<4> _i2c_del_driver_ deletes the device driver
+
+
+=== Registering An I2C Device, non-DT Approach
+
+On non-DT platforms the _struct i2c_board_info_ structure describes
+how the I2C device is connected on the board. The _I2C_BOARD_INFO_
+macro takes the device name and slave address of the device on the
+bus. If we take a look at
+the _arch/arm/mach-imx/mach-mx1ads.c_ file we can see its usage.
+
+[source, c]
+----
+.
+.
+static struct pcf857x_platform_data pcf857x_data[] = {
+        {
+                .gpio_base = 4 * 32,
+        }, {
+                .gpio_base = 4 * 32 + 16,
+        }
+};
+
+static const struct imxi2c_platform_data mx1ads_i2c_data __initconst = {
+        .bitrate = 100000,
+};
+
+static struct i2c_board_info mx1ads_i2c_devices[] = {	<1>
+        {
+                I2C_BOARD_INFO("pcf8575", 0x22),	<2>
+                .platform_data = &pcf857x_data[0],
+        }, {
+                I2C_BOARD_INFO("pcf8575", 0x24),
+                .platform_data = &pcf857x_data[1],
+        },
+};
+
+/*
+ * Board init
+ */
+static void __init mx1ads_init(void)
+{
+.
+.
+.
+        /* I2C */
+        i2c_register_board_info(0, mx1ads_i2c_devices,			<3>
+                                ARRAY_SIZE(mx1ads_i2c_devices));
+
+        imx1_add_imx_i2c(&mx1ads_i2c_data);
+}
+.
+.
+----
+<1> The array of devices is defined as _mx1ads_i2c_devices_
+<2> The _I2C_BOARD_INFO_ macro defines an I2C device
+<3> The _i2c_register_board_info_ API registers the devices
+
+=== Registering An I2C Device, DT Approach
+
+In the Device Tree approach the I2C controller is specified in the
+_.dtsi_ file that describes the processor. The controller is
+normally defined with _status = "disabled"_.
+
+At the board/platform level, in the _.dts_ file:
+. the I2C controller device is enabled i.e. _status = "ok"_
+. the I2C bus controller frequency is defined i.e. _clock-frequency = <100000>"
+. the I2C devices on the bus are described as children nodes and the
+_reg_ property gives their address.
+
+As an example take a look at the _arch/arm/boot/dts/tegra30.dtsi_ file.
+Here we see the I2C controller defined and disabled.
+
+[source, c]
+----
+.
+.
+        i2c@7000d000 {
+                compatible = "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
+                reg = <0x7000d000 0x100>;
+                interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+                #address-cells = <1>;
+                #size-cells = <0>;
+                clocks = <&tegra_car TEGRA30_CLK_I2C5>,
+                         <&tegra_car TEGRA30_CLK_PLL_P_OUT3>;
+                clock-names = "div-clk", "fast-clk";
+                status = "disabled";
+        };
+.
+.
+----
+<1> Controller _i2c@7000c000_
+<2> The controller is disabled
+<3> Controller _i2c@7000c400_
+<4> The controller is disabled
+
+If we take a look at a board file which includes the _.dtsi_ file.
+[source, c]
+----
+.
+.
+        i2c@7000d000 {
+                status = "okay";	<1>
+                clock-frequency = <100000>;	<2>
+
+                rt5640: rt5640 {
+                        compatible = "realtek,rt5640";
+                        reg = <0x1c>;	<3>
+                        interrupt-parent = <&gpio>;
+                        interrupts = <TEGRA_GPIO(X, 3) GPIO_ACTIVE_HIGH>;
+                        realtek,ldo1-en-gpios =
+                                <&gpio TEGRA_GPIO(X, 2) GPIO_ACTIVE_HIGH>;
+                };
+
+                tps62361 {
+                        compatible = "ti,tps62361";
+                        reg = <0x60>;	<4>
+
+                        regulator-name = "tps62361-vout";
+                        regulator-min-microvolt = <500000>;
+                        regulator-max-microvolt = <1500000>;
+                        regulator-boot-on;
+                        regulator-always-on;
+                        ti,vsel0-state-high;
+                        ti,vsel1-state-high;
+                };
+.
+.
+	};
+.
+.
+----
+<1> _status_ is set to "okay"
+<2> _clock-frequency_ is set to 100KHz
+<3> _rt5640_ is an I2C device on the bus with address 0x1C
+<4> _tps62361_ is an I2C device on the bus with address 0x60
+
+=== I2C Device Driver (Un)Registration
+
+From the above example of I2C device approach using a device tree we can
+identify a device driver for the device using the _compatible_ string.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ grep -ri "tps62361" drivers/*	<1>
+drivers/regulator/tps62360-regulator.c: * Driver for processor core supply tps62360, tps62361B, tps62362 and tps62363.
+drivers/regulator/tps62360-regulator.c:enum chips {TPS62360, TPS62361, TPS62362, TPS62363};
+drivers/regulator/tps62360-regulator.c:#define TPS62361_BASE_VOLTAGE	500000
+drivers/regulator/tps62360-regulator.c:#define TPS62361_N_VOLTAGES	128
+drivers/regulator/tps62360-regulator.c:	 { .compatible = "ti,tps62361", .data = (void *)TPS62361},
+drivers/regulator/tps62360-regulator.c:	case TPS62361:
+drivers/regulator/tps62360-regulator.c:		tps->desc.min_uV = TPS62361_BASE_VOLTAGE;
+drivers/regulator/tps62360-regulator.c:		tps->desc.n_voltages = TPS62361_N_VOLTAGES;
+drivers/regulator/tps62360-regulator.c:	{.name = "tps62361", .driver_data = TPS62361},
+----
+<1> Searching for the string "tps62361" we find it mentioned in the _tps62360-regulator.c_ file
+
+If we open up the _drivers/regulator/tps62360-regulator.c_ file we can see the
+_struct of_device_id_ table _tps62360_of_match_ defined.
+
+[source, c]
+----
+.
+.
+#if defined(CONFIG_OF)
+static const struct of_device_id tps62360_of_match[] = {
+         { .compatible = "ti,tps62360", .data = (void *)TPS62360},	<1>
+         { .compatible = "ti,tps62361", .data = (void *)TPS62361},
+         { .compatible = "ti,tps62362", .data = (void *)TPS62362},
+         { .compatible = "ti,tps62363", .data = (void *)TPS62363},
+        {},
+};
+MODULE_DEVICE_TABLE(of, tps62360_of_match);
+#endif
+.
+.
+----
+<1> The string "ti,tps62360" as part of the _struct of_device_id_
+
+The _struct i2c_driver_ is defined as _tps62360_i2c_driver_. The _tps62360_probe_
+and _tps62360_shutdown_ functions define the entry and exit points for the
+driver.
+
+[source, c]
+----
+.
+.
+static struct i2c_driver tps62360_i2c_driver = {
+        .driver = {
+                .name = "tps62360",
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(tps62360_of_match),
+        },
+        .probe = tps62360_probe,
+        .shutdown = tps62360_shutdown,
+        .id_table = tps62360_id,
+};
+
+static int __init tps62360_init(void)
+{
+        return i2c_add_driver(&tps62360_i2c_driver);
+}
+subsys_initcall(tps62360_init);
+
+static void __exit tps62360_cleanup(void)
+{
+        i2c_del_driver(&tps62360_i2c_driver);
+}
+module_exit(tps62360_cleanup);
+.
+.
+----
+
+The _tps62360_probe_ function initializes the device and registers it with
+the appropriate kernel framework which happens to be the _regulator_ framework.
+It receives the _struct i2c_client_ pointer which represents the I2C device.
+This device inherits from _struct device_. The probe function also receives
+the _struct i2c_device_id_ pointer which points to the device ID entry
+that matched the device.
+
+The tps62360 driver does not have a _remove_ function but if present it receives
+the _struct i2c_client_ pointer that was passed to it in the probe function.
+The _remove_ function should unregister the device from the kernel framework
+and shut it down.
+
+
+
