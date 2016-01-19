@@ -268,6 +268,26 @@ TechEuphoria
 </li>
 </ul>
 </li>
+<li><a href="#platform-drivers">36. Platform Drivers</a>
+<ul class="sectlevel2">
+<li><a href="#serial-i-mx-as-an-example-of-a-platform-driver">36.1. Serial i.MX As An Example Of A Platform Driver</a></li>
+<li><a href="#declaring-platform-devices-in-source-code">36.2. Declaring Platform Devices In Source Code</a></li>
+<li><a href="#accessing-resources">36.3. Accessing Resources</a></li>
+<li><a href="#accessing-platform-data">36.4. Accessing Platform Data</a></li>
+<li><a href="#device-tree-2">36.5. Device Tree</a></li>
+<li><a href="#an-example-of-device-tree">36.6. An Example Of Device Tree</a></li>
+<li><a href="#device-tree-bindings">36.7. Device Tree Bindings</a></li>
+</ul>
+</li>
+<li><a href="#sysfs">37. sysfs</a></li>
+<li><a href="#the-i2c-subsystem">38. The I2C Subsystem</a>
+<ul class="sectlevel2">
+<li><a href="#registering-an-i2c-driver">38.1. Registering An I2C Driver</a></li>
+<li><a href="#registering-an-i2c-device-non-dt-approach">38.2. Registering An I2C Device, non-DT Approach</a></li>
+<li><a href="#registering-an-i2c-device-dt-approach">38.3. Registering An I2C Device, DT Approach</a></li>
+<li><a href="#i2c-device-driver-un-registration">38.4. I2C Device Driver (Un)Registration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -6691,6 +6711,1205 @@ specific to the bus interface. On invocation the driver can:</p>
 </tr>
 </table>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="platform-drivers"><a class="anchor" href="#platform-drivers"></a>36. Platform Drivers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Not all buses have the ability to dynamically detect new devices. Some
+buses such as SPI and I2C do not support enumeration or hotplugging.
+And in the case of SOCs there are devices like the UART which are directly
+part of the chip. These devices are described to the kernel through either
+source code or a <em>Device Tree</em> file format.</p>
+</div>
+<div class="paragraph">
+<p>To support such devices in the device driver model of the Linux kernel a
+<em>platform bus</em> is created which handles <em>platform drivers</em> and <em>platform devices</em>.
+The <em>platform bus</em> works like any other bus except that the devices are not
+discovered but rather defined using either source code in the kernel or using
+the <em>Device Tree</em> file mechanism.</p>
+</div>
+<div class="sect2">
+<h3 id="serial-i-mx-as-an-example-of-a-platform-driver"><a class="anchor" href="#serial-i-mx-as-an-example-of-a-platform-driver"></a>36.1. Serial i.MX As An Example Of A Platform Driver</h3>
+<div class="paragraph">
+<p>Let&#8217;s take a look at the serial driver for the i.MX platform from Freescale.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find . -name 'imx.c'
+./drivers/tty/serial/imx.c
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The structure which defines the serial platform driver is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> platform_driver serial_imx_driver = {
+        .probe          = serial_imx_probe,
+        .remove         = serial_imx_remove,
+
+        .suspend        = serial_imx_suspend,
+        .resume         = serial_imx_resume,
+        .id_table       = imx_uart_devtype,
+        .driver         = {
+                .name   = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx-uart</span><span style="color:#710">&quot;</span></span>,
+                .owner  = THIS_MODULE,
+                .of_match_table = imx_uart_dt_ids,
+        },
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The registration and deregistration of this platform driver takes place in
+the initialisation and exit functions of the driver.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init imx_serial_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#0a8;font-weight:bold">int</span> ret;
+
+        pr_info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Serial: IMX driver</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+
+        ret = uart_register_driver(&amp;imx_reg);
+        <span style="color:#080;font-weight:bold">if</span> (ret)
+                <span style="color:#080;font-weight:bold">return</span> ret;
+
+        ret = platform_driver_register(&amp;serial_imx_driver); <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret != <span style="color:#00D">0</span>)
+                uart_unregister_driver(&amp;imx_reg);
+
+        <span style="color:#080;font-weight:bold">return</span> ret;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit imx_serial_exit(<span style="color:#088;font-weight:bold">void</span>)
+{
+        platform_driver_unregister(&amp;serial_imx_driver);        <i class="conum" data-value="2"></i><b>(2)</b>
+        uart_unregister_driver(&amp;imx_reg);
+}
+
+module_init(imx_serial_init);
+module_exit(imx_serial_exit);
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Platform driver registration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Platform driver deregistration</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="declaring-platform-devices-in-source-code"><a class="anchor" href="#declaring-platform-devices-in-source-code"></a>36.2. Declaring Platform Devices In Source Code</h3>
+<div class="paragraph">
+<p>The platform device is declared in source code. To locate where the device is
+declared we have to probe a bit into the source code. Typically the platform
+device if declared in this manner will be present in the machine specific
+section of the kernel. We first take a look at
+<em>arch/arm/mach-imx/devices/platform-imx-uart.c</em>. The main function is
+_</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#080;font-weight:bold">struct</span> platform_device *__init imx_add_imx_uart_3irq(
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imx_imx_uart_3irq_data *data,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data *pdata)
+{
+        <span style="color:#080;font-weight:bold">struct</span> resource res[] = {
+                {
+                        .start = data-&gt;iobase,
+                        .end = data-&gt;iobase + data-&gt;iosize - <span style="color:#00D">1</span>,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data-&gt;irqrx,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqtx,
+                        .end = data-&gt;irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqrts,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx1-uart</span><span style="color:#710">&quot;</span></span>, data-&gt;id, res,
+                        ARRAY_SIZE(res), pdata, <span style="color:#080;font-weight:bold">sizeof</span>(*pdata));
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The device is created by thise <em>imx_add_platform_device</em>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If we search for the definition of <em>imx_add_platform_device</em> we can locate it
+in <em>arch/arm/mach-imx/devices/devices-common.h</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#080;font-weight:bold">struct</span> platform_device *imx_add_platform_device_dmamask(
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *name, <span style="color:#0a8;font-weight:bold">int</span> id,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> resource *res, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> num_resources,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#088;font-weight:bold">void</span> *data, size_t size_data, u64 dmamask)        <i class="conum" data-value="3"></i><b>(3)</b>
+{
+        <span style="color:#080;font-weight:bold">struct</span> platform_device_info pdevinfo = {                <i class="conum" data-value="4"></i><b>(4)</b>
+                .name = name,
+                .id = id,
+                .res = res,
+                .num_res = num_resources,
+                .data = data,
+                .size_data = size_data,
+                .dma_mask = dmamask,
+        };
+        <span style="color:#080;font-weight:bold">return</span> platform_device_register_full(&amp;pdevinfo);
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#080;font-weight:bold">struct</span> platform_device *imx_add_platform_device(
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *name, <span style="color:#0a8;font-weight:bold">int</span> id,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> resource *res, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> num_resources,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#088;font-weight:bold">void</span> *data, size_t size_data)         <i class="conum" data-value="1"></i><b>(1)</b>
+{
+        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device_dmamask(
+                        name, id, res, num_resources, data, size_data, <span style="color:#00D">0</span>);        <i class="conum" data-value="2"></i><b>(2)</b>
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The definition of <em>imx_add_platform_device</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Another function is called which instantiates the device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The definition of _imx_add_platform_device_dmamask</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The device structure values</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The device is instantiated in the <em>arch/arm/mach-imx/mach-mx1ads.c</em> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __init mx1ads_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        imx1_soc_init();
+
+        mxc_gpio_setup_multiple_pins(mx1ads_pins,
+                ARRAY_SIZE(mx1ads_pins), <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">mx1ads</span><span style="color:#710">&quot;</span></span>);
+
+        <span style="color:#777">/* UART */</span>
+        imx1_add_imx_uart0(&amp;uart0_pdata);        <i class="conum" data-value="1"></i><b>(1)</b>
+        imx1_add_imx_uart1(&amp;uart1_pdata);        <i class="conum" data-value="2"></i><b>(2)</b>
+
+        <span style="color:#777">/* Physmap flash */</span>
+        platform_device_register_resndata(<span style="color:#069">NULL</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">physmap-flash</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">0</span>,
+                        &amp;flash_resource, <span style="color:#00D">1</span>,
+                        &amp;mx1ads_flash_data, <span style="color:#080;font-weight:bold">sizeof</span>(mx1ads_flash_data));
+
+        <span style="color:#777">/* I2C */</span>
+        i2c_register_board_info(<span style="color:#00D">0</span>, mx1ads_i2c_devices,
+                                ARRAY_SIZE(mx1ads_i2c_devices));
+
+        imx1_add_imx_i2c(&amp;mx1ads_i2c_data);
+}
+.
+.
+MACHINE_START(MX1ADS, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Freescale MX1ADS</span><span style="color:#710">&quot;</span></span>)
+        <span style="color:#777">/* Maintainer: Sascha Hauer, Pengutronix */</span>
+        .atag_offset = <span style="color:#02b">0x100</span>,
+        .map_io = mx1_map_io,
+        .init_early = imx1_init_early,
+        .init_irq = mx1_init_irq,
+        .handle_irq = imx1_handle_irq,
+        .init_time      = mx1ads_timer_init,
+        .init_machine = mx1ads_init,
+        .restart        = mxc_restart,
+MACHINE_END
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>UART 0 is added</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>UART 1 is added</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The definition of <em>imx1_add_imx_uart0</em> is in <em>arch/arm/mach-imx/devices-imx1.h</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">extern</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imx_imx_uart_3irq_data imx1_imx_uart_data[];
+<span style="color:#579">#define</span> imx1_add_imx_uart(id, pdata)    \
+        imx_add_imx_uart_3irq(&amp;imx1_imx_uart_data[id], pdata)
+<span style="color:#579">#define</span> imx1_add_imx_uart0(pdata)       imx1_add_imx_uart(<span style="color:#00D">0</span>, pdata)
+<span style="color:#579">#define</span> imx1_add_imx_uart1(pdata)       imx1_add_imx_uart(<span style="color:#00D">1</span>, pdata)
+.
+.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-resources"><a class="anchor" href="#accessing-resources"></a>36.3. Accessing Resources</h3>
+<div class="paragraph">
+<p>Resources to a device can be IRQ lines, DMA channels, I/O registers' addresses
+and so forth. All devices will require access to different resources. If we
+look at the device instantiating function above we see the resources assigned in
+<em>imx_add_imx_uart_3irq</em>. The resources are defined with the <em>struct resource</em>
+structure definition. So in the function an array of resources is associated with
+the device during instantiation. This again allows a driver to work with multiple
+platform devices using different resources.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#080;font-weight:bold">struct</span> platform_device *__init imx_add_imx_uart_3irq(
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imx_imx_uart_3irq_data *data,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data *pdata)
+{
+        <span style="color:#080;font-weight:bold">struct</span> resource res[] = {        <i class="conum" data-value="1"></i><b>(1)</b>
+                {
+                        .start = data-&gt;iobase,
+                        .end = data-&gt;iobase + data-&gt;iosize - <span style="color:#00D">1</span>,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data-&gt;irqrx,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqtx,
+                        .end = data-&gt;irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqrts,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx1-uart</span><span style="color:#710">&quot;</span></span>, data-&gt;id, res,        <i class="conum" data-value="2"></i><b>(2)</b>
+                        ARRAY_SIZE(res), pdata, <span style="color:#080;font-weight:bold">sizeof</span>(*pdata));
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Array of resources defined</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Resources are associated with the device</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-platform-data"><a class="anchor" href="#accessing-platform-data"></a>36.4. Accessing Platform Data</h3>
+<div class="paragraph">
+<p>Many drivers will require platform specific data for each device. This is also passed
+during platform instantiation. Basically since the <em>struct platform_data</em> inherits the
+<em>struct device</em> the platform data can be passed through the <em>platform_data</em> field of
+<em>struct device</em>. The field is defined as a <em>void *</em> data type so any data type can
+be passed through it. Typically the platform driver will define the data structure to
+pass information through <em>platform_data</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#080;font-weight:bold">struct</span> platform_device *__init imx_add_imx_uart_3irq(
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imx_imx_uart_3irq_data *data,
+                <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data *pdata)        <i class="conum" data-value="1"></i><b>(1)</b>
+{
+        <span style="color:#080;font-weight:bold">struct</span> resource res[] = {        <i class="conum" data-value="1"></i><b>(1)</b>
+                {
+                        .start = data-&gt;iobase,
+                        .end = data-&gt;iobase + data-&gt;iosize - <span style="color:#00D">1</span>,
+                        .flags = IORESOURCE_MEM,
+                }, {
+                        .start = data-&gt;irqrx,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqtx,
+                        .end = data-&gt;irqtx,
+                        .flags = IORESOURCE_IRQ,
+                }, {
+                        .start = data-&gt;irqrts,
+                        .end = data-&gt;irqrx,
+                        .flags = IORESOURCE_IRQ,
+                },
+        };
+
+        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx1-uart</span><span style="color:#710">&quot;</span></span>, data-&gt;id, res,
+                        ARRAY_SIZE(res), pdata, <span style="color:#080;font-weight:bold">sizeof</span>(*pdata));        <i class="conum" data-value="2"></i><b>(2)</b>
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Platform data is defined as struct imxuart_platform_data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The platform data is passed to the device during instantiation</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The definition of the <em>struct imxuart_platform_data</em> is located in
+<em>include/linux/platform_data/serial-imx.h</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data {
+        <span style="color:#0a8;font-weight:bold">int</span> (*init)(<span style="color:#080;font-weight:bold">struct</span> platform_device *pdev);
+        <span style="color:#088;font-weight:bold">void</span> (*exit)(<span style="color:#080;font-weight:bold">struct</span> platform_device *pdev);
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> flags;
+        <span style="color:#088;font-weight:bold">void</span> (*irda_enable)(<span style="color:#0a8;font-weight:bold">int</span> enable);
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> irda_inv_rx:<span style="color:#00D">1</span>;
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> irda_inv_tx:<span style="color:#00D">1</span>;
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">short</span> transceiver_delay;
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The board code in <em>arch/arm/mach-imx/mach-mx1ads.c</em> initiates
+the structure as <em>&amp;uart0_pdata</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data uart0_pdata __initconst = {
+        .flags = IMXUART_HAVE_RTSCTS,
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The platform driver can then access this data in its probe function where the
+platform device is passed to it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> serial_imx_probe_pdata(<span style="color:#080;font-weight:bold">struct</span> imx_port *sport,
+                <span style="color:#080;font-weight:bold">struct</span> platform_device *pdev)
+{
+        <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data *pdata = dev_get_platdata(&amp;pdev-&gt;dev);
+.
+.
+.
+        <span style="color:#080;font-weight:bold">if</span> (pdata-&gt;flags &amp; IMXUART_HAVE_RTSCTS)        <i class="conum" data-value="3"></i><b>(3)</b>
+                sport-&gt;have_rtscts = <span style="color:#00D">1</span>;
+.
+.
+
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> serial_imx_probe(<span style="color:#080;font-weight:bold">struct</span> platform_device *pdev)        <i class="conum" data-value="1"></i><b>(1)</b>
+{
+        <span style="color:#080;font-weight:bold">struct</span> imx_port *sport;
+        <span style="color:#080;font-weight:bold">struct</span> imxuart_platform_data *pdata;
+.
+.
+.
+        ret = serial_imx_probe_dt(sport, pdev);
+        <span style="color:#080;font-weight:bold">if</span> (ret &gt; <span style="color:#00D">0</span>)
+                serial_imx_probe_pdata(sport, pdev);        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span style="color:#080;font-weight:bold">else</span> <span style="color:#080;font-weight:bold">if</span> (ret &lt; <span style="color:#00D">0</span>)
+                <span style="color:#080;font-weight:bold">return</span> ret;
+.
+.
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>serial_imx_probe</em> function calls the <em>serial_imx_probe_pdata</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <em>serial_imx_probe_pdata</em> calls accesses the platform data.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="device-tree-2"><a class="anchor" href="#device-tree-2"></a>36.5. Device Tree</h3>
+<div class="paragraph">
+<p>The older approach of writing code to instantiate devices is not easily
+maintainable. An alternative approach is to use the <em>Device Tree</em> to
+describe the platform devices.</p>
+</div>
+<div class="paragraph">
+<p>A <em>Device Tree</em> is a tree of nodes that describes the network of devices
+in a system. It can describe devices inside the processor as well as
+devices on the board. Each node has different properties which can be
+attached to the device such as addresses, interrupts, clocks, gpios, etc..</p>
+</div>
+<div class="paragraph">
+<p>The device tree is compiled into a binary file which is recognised
+by the kernel. During boot up the <em>device tree blob</em> is passed to the
+kernel which describes the platform devices in the system. This allows
+the same kernel image to work with different systems.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="an-example-of-device-tree"><a class="anchor" href="#an-example-of-device-tree"></a>36.6. An Example Of Device Tree</h3>
+<div class="paragraph">
+<p>The device tree source files are stored in the architecture specific
+path of the Linux kernel source code. For example for ARM devices
+the files are located at <em>arch/arm/boot/dts/</em>. We can take a look at
+<em>arch/arm/boot/dts/omap3.dtsi</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+                uart1: serial<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4806</span>a000 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap3-uart</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x4806a000</span> <span style="color:#02b">0x2000</span>&gt;;
+                        interrupts = &lt;<span style="color:#00D">72</span>&gt;;
+                        dmas = &lt;&amp;sdma <span style="color:#00D">49</span> &amp;sdma <span style="color:#00D">50</span>&gt;;
+                        dma-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">tx</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">rx</span><span style="color:#710">&quot;</span></span>;
+                        ti,hwmods = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">uart1</span><span style="color:#710">&quot;</span></span>;
+                        clock-frequency = &lt;<span style="color:#00D">48000000</span>&gt;;
+                };
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the node above <em>serial@4806a000</em> is the name of the node. The notation
+<em>uart1</em> is the alias which can be refer to the node as <em>&amp;uart1</em> in other
+sections of the device tree source. The remaining lines are properties
+of the node which are used by the platform driver.</p>
+</div>
+<div class="paragraph">
+<p>The file <em>arch/arm/boot/dts/omap3.dtsi</em> is a common file which can be included
+by other hardware platforms. Thus device trees support inheritance whereby
+common similarities between different platforms can be defined in a common
+file.</p>
+</div>
+<div class="paragraph">
+<p>The file which includes the common file overrides the properties as well as
+defining its own properties. The <em>compatible</em> property associated with the
+uart1 node defines the driver mapping for the device. The platform driver
+will also have the same string in the <em>of_match_table</em> of the <em>struct device_driver</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ egrep -ri &quot;ti,omap3-uart&quot; drivers/tty/
+Binary file drivers/tty/serial/built-in.o matches
+Binary file drivers/tty/serial/omap-serial.o matches
+drivers/tty/serial/omap-serial.c:        { .compatible = &quot;ti,omap3-uart&quot; },        <i class="conum" data-value="1"></i><b>(1)</b>
+Binary file drivers/tty/built-in.o matches</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Location of the platform driver</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When we open the platform driver source code we see the mapping:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+
+<span style="color:#579">#if</span> defined(CONFIG_OF)
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> of_device_id omap_serial_of_match[] = {
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap2-uart</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap3-uart</span><span style="color:#710">&quot;</span></span> },        <i class="conum" data-value="1"></i><b>(1)</b>
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap4-uart</span><span style="color:#710">&quot;</span></span> },
+        {},
+};
+MODULE_DEVICE_TABLE(of, omap_serial_of_match);
+<span style="color:#579">#endif</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> platform_driver serial_omap_driver = {
+        .probe          = serial_omap_probe,
+        .remove         = serial_omap_remove,
+        .driver         = {
+                .name   = DRIVER_NAME,
+                .pm     = &amp;serial_omap_dev_pm_ops,
+                .of_match_table = of_match_ptr(omap_serial_of_match),        <i class="conum" data-value="2"></i><b>(2)</b>
+        },
+};
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>compatible</em> property presetn in the <em>struct of_device_id</em> table <em>omap_serial_of_match</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <em>of_match_table</em> of the <em>struct device_driver</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <em>CONFIG_OF</em> macro stands for configuration of open firmware. This is associated
+with the device tree implementation in the kernel. With the device tree method
+the resources such as interrupt numbers, physical addresses, etc.. are picked up from
+the properties of the device node.</p>
+</div>
+<div class="paragraph">
+<p>The resources list is built up at boot time by
+the kernel when it reads the <em>Device Tree Blob</em>. The driver will not have to make
+any lookups to the DT but will get access to the node through the struct platform_device
+structure. Any other properties are specific to the class of the device or the driver it belongs
+to.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="device-tree-bindings"><a class="anchor" href="#device-tree-bindings"></a>36.7. Device Tree Bindings</h3>
+<div class="paragraph">
+<p>The <em>compatible</em> string and the associated properties define the device tree binding.
+These are documented in the <em>Documentation/devicetree/bindings/</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ ls -l Documentation/devicetree/bindings/
+total 284
+drwxrwxr-x  2 conrad conrad  4096 Nov 20  2013 arc
+drwxrwxr-x 15 conrad conrad  4096 Nov 12  2014 arm
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 ata
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 bus
+.
+.
+.
+drwxrwxr-x  3 conrad conrad  4096 Nov 12  2014 video
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 virtio
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 w1
+drwxrwxr-x  2 conrad conrad  4096 Nov 12  2014 watchdog
+drwxrwxr-x  2 conrad conrad  4096 Oct 19  2013 x86
+-rw-rw-r--  1 conrad conrad 10748 Oct 19  2013 xilinx.txt
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>Device Tree</em> is part of the ABI and a new kernel should work with an older Device Tree.
+The design of the bindings is carefully reviewed on the <em>devicetree@vger.kernel.org</em>
+mailing list. The device tree should only describe the properties of the hardware. Anything
+related to the configuration of the device should be avoided for instance
+whether DMA should be used or not.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sysfs"><a class="anchor" href="#sysfs"></a>37. sysfs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>sysfs</em> offers a mechanism to access the information related to
+the bus, drivers, devices, etc to the userspace. This information
+can be used to support features such as :
+. dynamic loading of drivers
+. dynamic loading of firmware
+. automatic creation of device file</p>
+</div>
+<div class="paragraph">
+<p>The <em>sysfs</em> is usually mounted in <em>/sys/</em>. It is organised into different sections
+of information. For instance:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>/sys/block</em> contains information of different block devices</p>
+</li>
+<li>
+<p><em>/sys/class</em> contains information about devices by class e.g. net, graphics, block, input, etc..</p>
+</li>
+<li>
+<p><em>/sys/devices</em> contains the list of devices</p>
+</li>
+<li>
+<p><em>/sys/bus</em> contains the list of buses</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>While writing a kernel module or driver we can export properties to userspace
+through the <em>sysfs</em> interface.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-i2c-subsystem"><a class="anchor" href="#the-i2c-subsystem"></a>38. The I2C Subsystem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The I2C bus is a low speed bus which is found on many SOCs today.
+It is a simple bus with two wires, SDA for the data and SCL for the
+clock. The SOC normally has the I2C controller and therefore is
+the master on the bus controlling the slave devices.</p>
+</div>
+<div class="paragraph">
+<p>Each slave has a unique address on the bus and each transaction
+on the bus includes the address of the device with which communication
+is required from the controller.</p>
+</div>
+<div class="paragraph">
+<p>Only the master can initiate transactions on the bus with the addressed
+slave device responding. In some systems it may be possible for one
+bus to have two masters but there would be some level of arbitration
+mechanism implemented in order to have only one master controlling
+the bus at any time.</p>
+</div>
+<div class="paragraph">
+<p>Since I2C is a very common protocol we find many devices have it
+as an interface. I2C is found in a wide variety of chips which
+can be used in the overall system design of the platform. Some
+use cases are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Touchscreen controller</p>
+</li>
+<li>
+<p>GPIO expander</p>
+</li>
+<li>
+<p>Audio codec</p>
+</li>
+<li>
+<p>Real Time clock</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The I2C subsystem is a platform bus system. It provides API to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Implement I2C controller drivers</p>
+</li>
+<li>
+<p>Implement I2C device drivers, in kernel space</p>
+</li>
+<li>
+<p>Implement I2C device drivers, in user space</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The core of the I2C subsystem resides in <em>drivers/i2c</em>. The
+I2C controller drivers are present in <em>drivers/i2c/busses/</em>.
+And the device drivers are present in <em>drivers</em> based on the
+classification of the device e.g. <em>drivers/gpio</em> for gpio expanders.</p>
+</div>
+<div class="sect2">
+<h3 id="registering-an-i2c-driver"><a class="anchor" href="#registering-an-i2c-driver"></a>38.1. Registering An I2C Driver</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The I2C subsystem defines a <em>struct i2c_driver</em> which inherits the
+<em>struct device_driver</em>. This is instantiated and registered by each
+I2C device driver.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Similarly this structure will have a <em>probe()</em> and a <em>remove()</em>
+function.</p>
+</li>
+<li>
+<p>It also contains an <em>id_table</em> which enumerates the list of devices
+that can be used with the driver. This table is normally used for
+non-DT based drivers.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The <em>i2c_add_driver()</em> and <em>i2c_del_driver()</em> functions are used
+to add the device driver and remove it from the I2C subsystem.</p>
+</li>
+<li>
+<p>If the driver doesn&#8217;t require anything else to be done in the
+initialisation and exit sequence then the <em>module_i2c_driver</em>
+macro can be used.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>We can take a look at an I2C device driver in <em>drivers/gpio/gpio-pcf857x.c</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id pcf857x_id[] = {        <i class="conum" data-value="1"></i><b>(1)</b>
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf8574</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf8574a</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca8574</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9670</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9672</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9674</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf8575</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">16</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca8575</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">16</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9671</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">16</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9673</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">16</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pca9675</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">16</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">max7328</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">max7329</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">tca9554</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">8</span> },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, pcf857x_id);        <i class="conum" data-value="2"></i><b>(2)</b>
+
+<span style="color:#579">#ifdef</span> CONFIG_OF
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> of_device_id pcf857x_of_table[] = {
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pcf8574</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pcf8574a</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca8574</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9670</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9672</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9674</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pcf8575</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca8575</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9671</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9673</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nxp,pca9675</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">maxim,max7328</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">maxim,max7329</span><span style="color:#710">&quot;</span></span> },
+        { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tca9554</span><span style="color:#710">&quot;</span></span> },
+        { }
+};
+MODULE_DEVICE_TABLE(of, pcf857x_of_table);
+<span style="color:#579">#endif</span>
+.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> i2c_driver pcf857x_driver = {        <i class="conum" data-value="3"></i><b>(3)</b>
+        .driver = {
+                .name   = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf857x</span><span style="color:#710">&quot;</span></span>,
+                .owner  = THIS_MODULE,
+                .of_match_table = of_match_ptr(pcf857x_of_table),
+        },
+        .probe  = pcf857x_probe,
+        .remove = pcf857x_remove,
+        .id_table = pcf857x_id,
+};
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init pcf857x_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#080;font-weight:bold">return</span> i2c_add_driver(&amp;pcf857x_driver);        <i class="conum" data-value="4"></i><b>(4)</b>
+}
+<span style="color:#777">/* register after i2c postcore initcall and before
+ * subsys initcalls that may rely on these GPIOs
+ */</span>
+subsys_initcall(pcf857x_init);
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit pcf857x_exit(<span style="color:#088;font-weight:bold">void</span>)
+{
+        i2c_del_driver(&amp;pcf857x_driver);        <i class="conum" data-value="5"></i><b>(5)</b>
+}
+module_exit(pcf857x_exit);
+
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>pcf857x_id</em> is the device id table</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The device id table is registered with the I2C subsystem</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><em>pcf857x_driver</em> is the <em>struct i2c_driver</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><em>i2c_add_driver</em> registers the device driver</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><em>i2c_del_driver</em> deletes the device driver</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="registering-an-i2c-device-non-dt-approach"><a class="anchor" href="#registering-an-i2c-device-non-dt-approach"></a>38.2. Registering An I2C Device, non-DT Approach</h3>
+<div class="paragraph">
+<p>On non-DT platforms the <em>struct i2c_board_info</em> structure describes
+how the I2C device is connected on the board. The <em>I2C_BOARD_INFO</em>
+macro takes the device name and slave address of the device on the
+bus. If we take a look at
+the <em>arch/arm/mach-imx/mach-mx1ads.c</em> file we can see its usage.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> pcf857x_platform_data pcf857x_data[] = {
+        {
+                .gpio_base = <span style="color:#00D">4</span> * <span style="color:#00D">32</span>,
+        }, {
+                .gpio_base = <span style="color:#00D">4</span> * <span style="color:#00D">32</span> + <span style="color:#00D">16</span>,
+        }
+};
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> imxi2c_platform_data mx1ads_i2c_data __initconst = {
+        .bitrate = <span style="color:#00D">100000</span>,
+};
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> i2c_board_info mx1ads_i2c_devices[] = {        <i class="conum" data-value="1"></i><b>(1)</b>
+        {
+                I2C_BOARD_INFO(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf8575</span><span style="color:#710">&quot;</span></span>, <span style="color:#02b">0x22</span>),        <i class="conum" data-value="2"></i><b>(2)</b>
+                .platform_data = &amp;pcf857x_data[<span style="color:#00D">0</span>],
+        }, {
+                I2C_BOARD_INFO(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pcf8575</span><span style="color:#710">&quot;</span></span>, <span style="color:#02b">0x24</span>),
+                .platform_data = &amp;pcf857x_data[<span style="color:#00D">1</span>],
+        },
+};
+
+<span style="color:#777">/*
+ * Board init
+ */</span>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __init mx1ads_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+.
+.
+.
+        <span style="color:#777">/* I2C */</span>
+        i2c_register_board_info(<span style="color:#00D">0</span>, mx1ads_i2c_devices,                        <i class="conum" data-value="3"></i><b>(3)</b>
+                                ARRAY_SIZE(mx1ads_i2c_devices));
+
+        imx1_add_imx_i2c(&amp;mx1ads_i2c_data);
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The array of devices is defined as <em>mx1ads_i2c_devices</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <em>I2C_BOARD_INFO</em> macro defines an I2C device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <em>i2c_register_board_info</em> API registers the devices</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="registering-an-i2c-device-dt-approach"><a class="anchor" href="#registering-an-i2c-device-dt-approach"></a>38.3. Registering An I2C Device, DT Approach</h3>
+<div class="paragraph">
+<p>In the Device Tree approach the I2C controller is specified in the
+<em>.dtsi</em> file that describes the processor. The controller is
+normally defined with <em>status = "disabled"</em>.</p>
+</div>
+<div class="paragraph">
+<p>At the board/platform level, in the <em>.dts</em> file:
+. the I2C controller device is enabled i.e. <em>status = "ok"</em>
+. the I2C bus controller frequency is defined i.e. <em>clock-frequency = &lt;100000&gt;"
+. the I2C devices on the bus are described as children nodes and the
+_reg</em> property gives their address.</p>
+</div>
+<div class="paragraph">
+<p>As an example take a look at the <em>arch/arm/boot/dts/tegra30.dtsi</em> file.
+Here we see the I2C controller defined and disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+        i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">7000</span>d000 {
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nvidia,tegra30-i2c</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nvidia,tegra20-i2c</span><span style="color:#710">&quot;</span></span>;
+                reg = &lt;<span style="color:#02b">0x7000d000</span> <span style="color:#02b">0x100</span>&gt;;
+                interrupts = &lt;GIC_SPI <span style="color:#00D">53</span> IRQ_TYPE_LEVEL_HIGH&gt;;
+                <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                clocks = &lt;&amp;tegra_car TEGRA30_CLK_I2C5&gt;,
+                         &lt;&amp;tegra_car TEGRA30_CLK_PLL_P_OUT3&gt;;
+                clock-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">div-clk</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fast-clk</span><span style="color:#710">&quot;</span></span>;
+                status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;
+        };
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Controller <em>i2c@7000c000</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The controller is disabled</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Controller <em>i2c@7000c400</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The controller is disabled</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If we take a look at a board file which includes the <em>.dtsi</em> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+        i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">7000</span>d000 {
+                status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;        <i class="conum" data-value="1"></i><b>(1)</b>
+                clock-frequency = &lt;<span style="color:#00D">100000</span>&gt;;        <i class="conum" data-value="2"></i><b>(2)</b>
+
+                <span style="color:#970;font-weight:bold">rt5640:</span> rt5640 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">realtek,rt5640</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x1c</span>&gt;;        <i class="conum" data-value="3"></i><b>(3)</b>
+                        interrupt-parent = &lt;&amp;gpio&gt;;
+                        interrupts = &lt;TEGRA_GPIO(X, <span style="color:#00D">3</span>) GPIO_ACTIVE_HIGH&gt;;
+                        realtek,ldo1-en-gpios =
+                                &lt;&amp;gpio TEGRA_GPIO(X, <span style="color:#00D">2</span>) GPIO_ACTIVE_HIGH&gt;;
+                };
+
+                tps62361 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tps62361</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x60</span>&gt;;        <i class="conum" data-value="4"></i><b>(4)</b>
+
+                        regulator-name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">tps62361-vout</span><span style="color:#710">&quot;</span></span>;
+                        regulator-min-microvolt = &lt;<span style="color:#00D">500000</span>&gt;;
+                        regulator-max-microvolt = &lt;<span style="color:#00D">1500000</span>&gt;;
+                        regulator-boot-on;
+                        regulator-always-on;
+                        ti,vsel0-state-high;
+                        ti,vsel1-state-high;
+                };
+.
+.
+        };
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>status</em> is set to "okay"</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>clock-frequency</em> is set to 100KHz</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><em>rt5640</em> is an I2C device on the bus with address 0x1C</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><em>tps62361</em> is an I2C device on the bus with address 0x60</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="i2c-device-driver-un-registration"><a class="anchor" href="#i2c-device-driver-un-registration"></a>38.4. I2C Device Driver (Un)Registration</h3>
+<div class="paragraph">
+<p>From the above example of I2C device approach using a device tree we can
+identify a device driver for the device using the <em>compatible</em> string.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ grep -ri &quot;tps62361&quot; drivers/*        <i class="conum" data-value="1"></i><b>(1)</b>
+drivers/regulator/tps62360-regulator.c: * Driver for processor core supply tps62360, tps62361B, tps62362 and tps62363.
+drivers/regulator/tps62360-regulator.c:enum chips {TPS62360, TPS62361, TPS62362, TPS62363};
+drivers/regulator/tps62360-regulator.c:#define TPS62361_BASE_VOLTAGE        500000
+drivers/regulator/tps62360-regulator.c:#define TPS62361_N_VOLTAGES        128
+drivers/regulator/tps62360-regulator.c:         { .compatible = &quot;ti,tps62361&quot;, .data = (void *)TPS62361},
+drivers/regulator/tps62360-regulator.c:        case TPS62361:
+drivers/regulator/tps62360-regulator.c:                tps-&gt;desc.min_uV = TPS62361_BASE_VOLTAGE;
+drivers/regulator/tps62360-regulator.c:                tps-&gt;desc.n_voltages = TPS62361_N_VOLTAGES;
+drivers/regulator/tps62360-regulator.c:        {.name = &quot;tps62361&quot;, .driver_data = TPS62361},</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Searching for the string "tps62361" we find it mentioned in the <em>tps62360-regulator.c</em> file</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If we open up the <em>drivers/regulator/tps62360-regulator.c</em> file we can see the
+<em>struct of_device_id</em> table <em>tps62360_of_match</em> defined.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#579">#if</span> defined(CONFIG_OF)
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> of_device_id tps62360_of_match[] = {
+         { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tps62360</span><span style="color:#710">&quot;</span></span>, .data = (<span style="color:#088;font-weight:bold">void</span> *)TPS62360},        <i class="conum" data-value="1"></i><b>(1)</b>
+         { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tps62361</span><span style="color:#710">&quot;</span></span>, .data = (<span style="color:#088;font-weight:bold">void</span> *)TPS62361},
+         { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tps62362</span><span style="color:#710">&quot;</span></span>, .data = (<span style="color:#088;font-weight:bold">void</span> *)TPS62362},
+         { .compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tps62363</span><span style="color:#710">&quot;</span></span>, .data = (<span style="color:#088;font-weight:bold">void</span> *)TPS62363},
+        {},
+};
+MODULE_DEVICE_TABLE(of, tps62360_of_match);
+<span style="color:#579">#endif</span>
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The string "ti,tps62360" as part of the <em>struct of_device_id</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <em>struct i2c_driver</em> is defined as <em>tps62360_i2c_driver</em>. The <em>tps62360_probe</em>
+and <em>tps62360_shutdown</em> functions define the entry and exit points for the
+driver.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> i2c_driver tps62360_i2c_driver = {
+        .driver = {
+                .name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">tps62360</span><span style="color:#710">&quot;</span></span>,
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(tps62360_of_match),
+        },
+        .probe = tps62360_probe,
+        .shutdown = tps62360_shutdown,
+        .id_table = tps62360_id,
+};
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> __init tps62360_init(<span style="color:#088;font-weight:bold">void</span>)
+{
+        <span style="color:#080;font-weight:bold">return</span> i2c_add_driver(&amp;tps62360_i2c_driver);
+}
+subsys_initcall(tps62360_init);
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> __exit tps62360_cleanup(<span style="color:#088;font-weight:bold">void</span>)
+{
+        i2c_del_driver(&amp;tps62360_i2c_driver);
+}
+module_exit(tps62360_cleanup);
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>tps62360_probe</em> function initializes the device and registers it with
+the appropriate kernel framework which happens to be the <em>regulator</em> framework.
+It receives the <em>struct i2c_client</em> pointer which represents the I2C device.
+This device inherits from <em>struct device</em>. The probe function also receives
+the <em>struct i2c_device_id</em> pointer which points to the device ID entry
+that matched the device.</p>
+</div>
+<div class="paragraph">
+<p>The tps62360 driver does not have a <em>remove</em> function but if present it receives
+the <em>struct i2c_client</em> pointer that was passed to it in the probe function.
+The <em>remove</em> function should unregister the device from the kernel framework
+and shut it down.</p>
 </div>
 </div>
 </div>
