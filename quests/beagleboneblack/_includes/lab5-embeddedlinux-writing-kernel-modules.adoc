@@ -1,0 +1,12 @@
+== LAB 5 : Linux Device Model For An I2C Device
+
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Add an I2C device to a device tree.
+. Develop a basic driver with a _probe_/_remove_ function that gets invoked by the device model of the Linux kernel.
+. Explore _sysfs_ for the I2C device and driver.
+====
+
+===
+
