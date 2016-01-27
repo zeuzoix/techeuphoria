@@ -53,6 +53,7 @@
 :link-free-electrons-yocto-labs: link:../free_electrons_linux_kernel/yocto-labs.pdf
 :link-free-electrons-yocto-slides: link:../free_electrons_linux_kernel/yocto-slides.pdf
 :link-free-electrons-yocto-lab-data: link:../free_electrons_linux_kernel/yocto-labs.tar.xz
+:link-nunchuck-device: link:../free_electrons_linux_kernel/nunchuck.pdf
 
 // Captured Logs
 :link-lab3-kernel-boot: link:../logs/lab3-kernel-boot.txt
