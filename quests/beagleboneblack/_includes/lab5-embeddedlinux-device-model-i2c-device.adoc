@@ -8,5 +8,429 @@
 . Explore _sysfs_ for the I2C device and driver.
 ====
 
-===
+=== Creating A New Branch
 
+We first check out the 3.13.y branch which will be the base source code used
+for our lab5 experiments. We then checkout a new branch called _nunchuck_
+which will hold our changes.
+
+[source,bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+  3.13.y
+  fix_unioxx5
+* hello_version
+  master
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout 3.13.y <1>
+Switched to branch '3.13.y'
+Your branch is up-to-date with 'stable/linux-3.13.y'.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout -b nunchuck <2>
+Switched to a new branch 'nunchuck'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+  3.13.y
+  fix_unioxx5
+  hello_version
+  master
+* nunchuck
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
+----
+<1> Checkout branch _3.13.y_
+<2> Checkout new branch _nunchuck_
+
+=== Update The Board Device Tree
+
+We will need to specify the device as part of the platform. We do this using the
+device tree approach and modify the board device tree. We will have to define
+a second I2C bus _i2c1_ and then add a child node to this bus which will correspond
+to the Nunchuck device.
+
+==== Declaring A Second I2C Bus
+
+First we try to locate the DTS file with the first I2C bus _i2c0_ is defined. Using
+fubd we can search in the _arch/arm/boot/dts/_ directory for files which have
+references to "bone".
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find arch/arm/boot/dts/ -name '*bone*.dts'
+arch/arm/boot/dts/am335x-boneblack.dts
+arch/arm/boot/dts/am335x-bone.dts
+----
+
+If we open the file we can see that it includes two files which may have the
+_i2c0_ bus definition.
+
+[source, dts]
+----
+.
+.
+#include "am33xx.dtsi"	<1>
+#include "am335x-bone-common.dtsi"	<2>
+
+&ldo3_reg {
+        regulator-min-microvolt = <1800000>;
+        regulator-max-microvolt = <1800000>;
+        regulator-always-on;
+};
+
+.
+.
+----
+<1> Include of _am33xx.dtsi_ which is the SOC base file
+<1> Include of _am335x-bone-common.dtsi_ which is the bone platform base file
+
+We take a look at the _am33xx.dtsi_ 
+
+[source, c]
+----
+.
+.
+                i2c0: i2c@44e0b000 {
+                        compatible = "ti,omap4-i2c";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        ti,hwmods = "i2c1";
+                        reg = <0x44e0b000 0x1000>;	<1>
+                        interrupts = <70>;
+                        status = "disabled";	<2>
+                };
+
+                i2c1: i2c@4802a000 {
+                        compatible = "ti,omap4-i2c";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        ti,hwmods = "i2c2";
+                        reg = <0x4802a000 0x1000>;
+                        interrupts = <71>;
+                        status = "disabled";
+                };
+
+                i2c2: i2c@4819c000 {
+                        compatible = "ti,omap4-i2c";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        ti,hwmods = "i2c3";
+                        reg = <0x4819c000 0x1000>;
+                        interrupts = <30>;
+                        status = "disabled";
+                };
+.
+.
+----
+<1> The base address of the registers for _i2c0_
+<2> The status of the bus is disabled
+
+We take a look at the _am335x-bone-common.dtsi_ file and search for the _i2c0_
+bus. A node is defined but it is not complete.
+
+[source, c]
+----
+.
+.
+&i2c0 {	<1>	
+        pinctrl-names = "default";
+        pinctrl-0 = <&i2c0_pins>;
+
+        status = "okay";
+        clock-frequency = <400000>;
+
+        tps: tps@24 {	<2>	
+                reg = <0x24>;
+        };
+
+};
+.
+.
+----
+<1> The _i2c0_ bus is defined in the _am335x-bone-common.dtsi_ file
+<2> There is one device defined as part of the _i2c0_ bus i.e. _tps_
+
+We locate the address of the _i2c1_ bus i.e. 0x4802a000 in the processor
+{link-am3358-technical-reference-manual-pdf}[data sheet^]. To search for
+the address we have to search for the string as 4802_a000. It is located
+in the Table 2-3. L4_PER Peripheral Memory Map.
+
+We simply copy the _i2c0_ node defined in the _am335x-bone-common.dtsi_ file
+and modify the _am335x-boneblack.dts_ file to enable the _i2c1_ bus.
+The pinctrl- properties are left out for now and the frequency is set to 100KHz.
+
+[source, c]
+----
+.
+.
+/ {
+        hdmi {
+                compatible = "ti,tilcdc,slave";
+                i2c = <&i2c0>;
+                pinctrl-names = "default", "off";
+                pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+                pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+                status = "okay";
+        };
+};
+
+&i2c1 {	<1>
+        status = "okay";
+        clock-frequency = <100000>;
+
+};
+.
+.
+----
+<1> _i2c1_ bus is defined
+
+==== Declaring The Nunchuck Device
+
+If we go through the nunchuck {link-nunchuck-device}[pdf^] we see that the I2C address
+of the nunchuck is 0x52. We add this device to the _i2c1_ bus in the device tree.
+
+[source, c]
+----
+.
+.
+&i2c1 {
+        status = "okay";
+        clock-frequency = <100000>;
+
+        nunchuck: { <1>
+                compatible = "nintendo,nunchuck" <2>
+                reg = <0x52> <3>
+        };
+
+};
+.
+.
+----
+<1> New nunchuck device added to _i2c1_ bus
+<2> The driver compatible with this device
+<3> The address of the I2C device is 0x52
+
+After making the modifications we recompile the device tree blob and copy it
+to _/var/lib/tftpboot/_ in order to download it to the Beagle Bone Black board
+during boot.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make dtbs
+  DTC     arch/arm/boot/dts/am335x-boneblack.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp -a arch/arm/boot/dts/am335x-boneblack.dtb /var/lib/tftpboot/
+----
+
+Once the kernel and device tree blob is loaded on the board we can inspect
+the _/proc/device-tree_ folder to see if our changes are present
+
+[source, bash]
+----
+# find /proc/device-tree/ -name "*nunchuck*"	<1>
+/proc/device-tree/ocp/i2c@4802a000/nunchuck@52
+# 
+# ls /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/
+compatible  name        reg
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/compatible 
+nintendo,nunchuck# <2>
+# 
+# 
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/name 
+nunchuck# <3>
+# 
+# 
+# 
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/reg 
+R# <4>
+
+----
+<1> Search for any file with _nunchuck_ in its name
+<2> Display the value of the _compatible_ property
+<3> Display the value of the _name_ property
+<4> Display the value of the _reg_ property
+
+
+To see the device tree blob we use the _dtc_ utility.
+[source, bash]
+----
+# dtc -I fs /proc/device-tree/
+/dts-v1/;
+
+/ {
+        model = "TI AM335x BeagleBone";
+        interrupt-parent = <0x1>;
+        compatible = "ti,am335x-bone", "ti,am33xx";
+        #size-cells = <0x1>;
+        #address-cells = <0x1>;
+
+        hdmi {
+                status = "okay";
+                pinctrl-1 = <0x18>;
+                pinctrl-0 = <0x17>;
+                pinctrl-names = "default", "off";
+                i2c = <0x16>;
+                compatible = "ti,tilcdc,slave";
+        };
+
+        fixedregulator@0 {
+                phandle = <0x9>;
+                linux,phandle = <0x9>;
+                regulator-max-microvolt = <0x325aa0>;
+                regulator-min-microvolt = <0x325aa0>;
+                regulator-name = "vmmcsd_fixed";
+                compatible = "regulator-fixed";
+        };
+.
+.
+.
+
+                i2c@4802a000 { <1>
+                        clock-frequency = <0x186a0>;
+                        status = "okay";
+                        interrupts = <0x47>;
+                        reg = <0x4802a000 0x1000>;
+                        ti,hwmods = "i2c2";
+                        #size-cells = <0x0>;
+                        #address-cells = <0x1>;
+                        compatible = "ti,omap4-i2c";
+
+                        nunchuck@52 { <r21>
+                                reg = <0x52>;
+                                compatible = "nintendo,nunchuck";
+                        };
+                };
+.
+.
+.
+        aliases {
+                ethernet1 = "/ocp/ethernet@4a100000/slave@4a100300";
+                ethernet0 = "/ocp/ethernet@4a100000/slave@4a100200";
+                phy1 = "/ocp/usb@47400000/usb-phy@47401b00";
+                phy0 = "/ocp/usb@47400000/usb-phy@47401300";
+                usb1 = "/ocp/usb@47400000/usb@47401800";
+                usb0 = "/ocp/usb@47400000/usb@47401000";
+                d_can1 = "/ocp/d_can@481d0000";
+                d_can0 = "/ocp/d_can@481cc000";
+                serial5 = "/ocp/serial@481aa000";
+                serial4 = "/ocp/serial@481a8000";
+                serial3 = "/ocp/serial@481a6000";
+                serial2 = "/ocp/serial@48024000";
+                serial1 = "/ocp/serial@48022000";
+                serial0 = "/ocp/serial@44e09000";
+                i2c2 = "/ocp/i2c@4819c000";
+                i2c1 = "/ocp/i2c@4802a000";
+                i2c0 = "/ocp/i2c@44e0b000";
+        };
+
+        chosen {
+                bootargs = "root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot";
+        };
+};
+----
+<1> The I2C1 device
+<2> The nunchuck devuce in the device tree blob
+
+==== Implement A Basic I2C Driver For The Nunchuck
+
+We now take the basic _nunchuck.c_ file present in the
+~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/_
+directory and modify it to implement our basic I2C driver. The
+file present in the Free Electrons lab data NFS root folder looks
+like this before modification:
+
+[source, c]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/i2c.h>
+
+/* Add your code here */
+
+MODULE_LICENSE("GPL");
+
+
+----
+
+We make the following changes to the driver code:
+. Instantiate an object of type _struct i2c_device_id_
+. Instantiate an object of type _struct of_device_id_
+. Define the probe and remove functions
+. Instantiate an object of type _struct i2c_driver_
+. Instantiate the I2C driver using _module_i2c_driver_
+
+[source, c]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/i2c.h>
+
+/* Add your code here */
+static const struct i2c_device_id nunchuck_id[] = {	<1>
+        { "nunchuck", 0 },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, nunchuck_id);
+
+#ifdef CONFIG_OF
+static const struct of_device_id nunchuck_dt_ids[] = {	<2>
+        {.compatible = "nintendo,nunchuck",},
+        { }
+};
+MODULE_DEVICE_TABLE(of, nunchuck_dt_ids);
+#endif
+
+static int nunchuck_probe(struct i2c_client *client,
+                        const struct i2c_device_id *id)	<3>
+{
+        /* initialize device */
+        /* register to a kernel framework */
+
+        return 0;
+}
+
+static int nunchuck_remove(struct i2c_client *client)	<4>
+{
+        return 0;
+}
+
+static struct i2c_driver nunchuck_driver = {	<5>
+        .probe = nunchuck_probe,
+        .remove = nunchuck_remove,
+        .id_table = nunchuck_id,
+        .driver = {
+                .name = "nunchuck",
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(nunchuck_dt_ids),
+        },
+};
+
+module_i2c_driver(nunchuck_driver);	<6>
+
+MODULE_LICENSE("GPL");
+----
+<1> Instantiate an object of type _struct i2c_device_id_ nunchuck_id
+<2> Instantiate an object of type _struct of_device_id_ nunchuck_dt_ids
+<3> The probe function
+<4> The remove function
+<5> Instantiate an object of type _struct i2c_driver_
+<6> Instantiate the I2C driver using _module_i2c_driver_
+
+
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KDIR=/home/conrad/Git/linux/
+make -C /home/conrad/Git/linux/ M=$PWD
+make[1]: Entering directory `/home/conrad/Git/linux'
+  CC [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.mod.o
+  LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.ko
+make[1]: Leaving directory `/home/conrad/Git/linux'
+----
