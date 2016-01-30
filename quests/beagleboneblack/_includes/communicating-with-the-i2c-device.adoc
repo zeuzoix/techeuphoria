@@ -1,0 +1,216 @@
+== Communicating With The I2C Device
+
+There are several ways present through which we can communicate with
+the I2C device. We'll go through each of the methods available.
+
+=== Raw API
+
+We have the basic API available which allow us
+to either send or receive data from the I2C device. These are defined
+in the _drivers/i2c/i2c-core.c_. The APIs are _i2c_master_send_ to send
+data to the client and _i2c_master_recv_ to receive data from the client.
+
+[source, c]
+----
+.
+.
+/**
+ * i2c_master_send - issue a single I2C message in master transmit mode
+ * @client: Handle to slave device
+ * @buf: Data that will be written to the slave
+ * @count: How many bytes to write, must be less than 64k since msg.len is u16
+ *
+ * Returns negative errno, or else the number of bytes written.
+ */
+int i2c_master_send(const struct i2c_client *client, const char *buf, int count) <1>
+{
+        int ret;
+        struct i2c_adapter *adap = client->adapter;
+        struct i2c_msg msg;
+
+        msg.addr = client->addr;
+        msg.flags = client->flags & I2C_M_TEN;
+        msg.len = count;
+        msg.buf = (char *)buf;
+
+        ret = i2c_transfer(adap, &msg, 1);
+
+        /*
+         * If everything went ok (i.e. 1 msg transmitted), return #bytes
+         * transmitted, else error code.
+         */
+        return (ret == 1) ? count : ret;
+}
+EXPORT_SYMBOL(i2c_master_send);
+
+/**
+ * i2c_master_recv - issue a single I2C message in master receive mode
+ * @client: Handle to slave device
+ * @buf: Where to store data read from slave
+ * @count: How many bytes to read, must be less than 64k since msg.len is u16
+ *
+ * Returns negative errno, or else the number of bytes read.
+ */
+int i2c_master_recv(const struct i2c_client *client, char *buf, int count) <2>
+{
+        struct i2c_adapter *adap = client->adapter;
+        struct i2c_msg msg;
+        int ret;
+
+        msg.addr = client->addr;
+        msg.flags = client->flags & I2C_M_TEN;
+        msg.flags |= I2C_M_RD;
+        msg.len = count;
+        msg.buf = buf;
+
+        ret = i2c_transfer(adap, &msg, 1);
+
+        /*
+         * If everything went ok (i.e. 1 msg received), return #bytes received,
+         * else error code.
+         */
+        return (ret == 1) ? count : ret;
+}
+EXPORT_SYMBOL(i2c_master_recv);
+.
+.
+----
+<1> Sends the content of _buf_ and of size _count_ to the _client_
+<2> Receives _count_ bytes in _buf_ from the _client_
+
+=== Message Transfer API
+
+The raw api make use of another API which is used to describe a transfer
+of several messages. A collection of messages can be sent at one time
+using the _i2c_transfer_ API which is also defined in the _drivers/i2c/i2c-core.c_
+file.
+
+[source, c]
+----
+.
+.
+/**
+ * i2c_transfer - execute a single or combined I2C message
+ * @adap: Handle to I2C bus
+ * @msgs: One or more messages to execute before STOP is issued to
+ *      terminate the operation; each message begins with a START.
+ * @num: Number of messages to be executed.
+ *
+ * Returns negative errno, else the number of messages executed.
+ *
+ * Note that there is no requirement that each message be sent to
+ * the same slave address, although that is the most common model.
+ */
+int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+{
+.
+.
+.
+}
+EXPORT_SYMBOL(i2c_transfer);
+.
+.
+----
+
+=== SMBus Calls
+
+The SMBus is a subset of the I2C protocol. SMBus defines a standard set
+of transactions for example to read or write a register of a device. If
+possible the SMBus API should be used instead of the raw API to simplify
+the implementation with standard transaction APIs. One such API is
+_i2c_smbus_read_byte_data()_ function which allows a read of one byte
+of data from a device register. 
+
+* The following sequence of operations are carried out:
+_S Addr Wr [A] Comm [A] S Addr Rd [A] [Data] NA P)
+* The above sequence means write one byte data command i.e. _Comm_ 
+and then read back the data i.e. _[Data]_
+* Further details are elaborated in _Documentation/i2c/smbus-protocol_
+
+==== List Of SMBus API
+
+. Read/write one byte
+.. s32 i2c_smbus_read_byte(const struct i2c_client *client);
+.. s32 i2c_smbus_write_byte(const struct i2c_client *client, u8 value);
+
+. Write a command byte, and read or write one byte
+.. s32 i2c_smbus_read_byte_data(const struct i2c_client *client, u8 command);
+.. s32 i2c_smbus_write_byte_data(const struct i2c_client *client, u8 command, u8
+value);
+
+. Write a command byte, and read or write one word
+.. s32 i2c_smbus_read_word_data(const struct i2c_client *client, u8 command);
+.. s32 i2c_smbus_write_word_data(const struct i2c_client *client, u8 command, u16
+value);
+. Write a command byte, and read or write a block of data
+(max 32 bytes)
+.. s32 i2c_smbus_read_block_data(const struct i2c_client *client, u8 command, u8
+*values);
+.. s32 i2c_smbus_write_block_data(const struct i2c_client *client, u8 command, u8
+length, const u8 *values);
+
+. Write a command byte, and read or write a block of data (no
+limit)
+.. s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command, u8
+length, u8 *values);
+.. s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client, u8 command, u8
+length, const u8 *values);
+
+=== I2C Functionality
+
+I2C controllers may not support all functionalities. A device driver
+must check to see which functionalities are supported by the controller. The
+controller tells the core which functionalities it supports. The API
+_i2c_check_functionality()_ is to be used to find out the functionalities.
+For example _I2C_FUNC_I2C_ is required in order to use the raw API functions
+discussed above whereas _I2C_FUNC_SMBUS_BYTE_DATA_ is required for SMBus commands.
+
+. Additional details can be seen in _include/uapi/linux/i2c.h_
+
+[source, c]
+----
+.
+.
+.
+#define I2C_FUNC_I2C                    0x00000001
+#define I2C_FUNC_10BIT_ADDR             0x00000002
+#define I2C_FUNC_PROTOCOL_MANGLING      0x00000004 /* I2C_M_IGNORE_NAK etc. */
+#define I2C_FUNC_SMBUS_PEC              0x00000008
+#define I2C_FUNC_NOSTART                0x00000010 /* I2C_M_NOSTART */
+#define I2C_FUNC_SMBUS_BLOCK_PROC_CALL  0x00008000 /* SMBus 2.0 */
+#define I2C_FUNC_SMBUS_QUICK            0x00010000
+#define I2C_FUNC_SMBUS_READ_BYTE        0x00020000
+#define I2C_FUNC_SMBUS_WRITE_BYTE       0x00040000
+#define I2C_FUNC_SMBUS_READ_BYTE_DATA   0x00080000
+#define I2C_FUNC_SMBUS_WRITE_BYTE_DATA  0x00100000
+#define I2C_FUNC_SMBUS_READ_WORD_DATA   0x00200000
+#define I2C_FUNC_SMBUS_WRITE_WORD_DATA  0x00400000
+#define I2C_FUNC_SMBUS_PROC_CALL        0x00800000
+#define I2C_FUNC_SMBUS_READ_BLOCK_DATA  0x01000000
+#define I2C_FUNC_SMBUS_WRITE_BLOCK_DATA 0x02000000
+#define I2C_FUNC_SMBUS_READ_I2C_BLOCK   0x04000000 /* I2C-like block xfer  */
+#define I2C_FUNC_SMBUS_WRITE_I2C_BLOCK  0x08000000 /* w/ 1-byte reg. addr. */
+
+#define I2C_FUNC_SMBUS_BYTE             (I2C_FUNC_SMBUS_READ_BYTE | \
+                                         I2C_FUNC_SMBUS_WRITE_BYTE)
+#define I2C_FUNC_SMBUS_BYTE_DATA        (I2C_FUNC_SMBUS_READ_BYTE_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_BYTE_DATA)
+#define I2C_FUNC_SMBUS_WORD_DATA        (I2C_FUNC_SMBUS_READ_WORD_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_WORD_DATA)
+#define I2C_FUNC_SMBUS_BLOCK_DATA       (I2C_FUNC_SMBUS_READ_BLOCK_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_BLOCK_DATA)
+#define I2C_FUNC_SMBUS_I2C_BLOCK        (I2C_FUNC_SMBUS_READ_I2C_BLOCK | \
+                                         I2C_FUNC_SMBUS_WRITE_I2C_BLOCK)
+
+#define I2C_FUNC_SMBUS_EMUL             (I2C_FUNC_SMBUS_QUICK | \
+                                         I2C_FUNC_SMBUS_BYTE | \
+                                         I2C_FUNC_SMBUS_BYTE_DATA | \
+                                         I2C_FUNC_SMBUS_WORD_DATA | \
+                                         I2C_FUNC_SMBUS_PROC_CALL | \
+                                         I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | \
+                                         I2C_FUNC_SMBUS_I2C_BLOCK | \
+                                         I2C_FUNC_SMBUS_PEC)
+.
+.
+.
+----

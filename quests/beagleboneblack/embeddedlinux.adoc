@@ -177,3 +177,6 @@ include::{includedir}/sysfs.adoc[]
 include::{includedir}/i2c.adoc[]
 
 include::{includedir}/lab5-embeddedlinux-device-model-i2c-device.adoc[]
+
+include::{includedir}/communicating-with-the-i2c-device.adoc[]
+
