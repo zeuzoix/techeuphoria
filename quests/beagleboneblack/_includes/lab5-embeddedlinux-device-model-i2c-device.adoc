@@ -47,6 +47,51 @@ conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
 <1> Checkout branch _3.13.y_
 <2> Checkout new branch _nunchuck_
 
+=== About The Nunchuck
+
+We're going to connect a Nunchuck device to our Beagle Bone Black board.
+The Wii Nunchuck is an attachment for Nintendo's Wii Remote. It comes with
+an analog stick, trigger buttons and an inbuilt accelerometer for motion-sensing
+and tilting.
+
+====
+[[nintendo-wii-remote-nunchuck]]
+.The Nintendo Wii Remote Nunchuck
+image::nintendo-wii-remote-nunchuck.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nintendo-wii-remote-nunchuck.jpg]
+====
+
+The device can be purchased online. I personally got mine from PayTM using Google
+to search for the cheapest available option.
+
+Apart from the nunchuck we will also need some sort of breakout board to expose
+the connetions on the nunchuck so that we can interface it to our _i2c1_ bus on
+our board. For this I'm using an arduino type of breakout board for the
+Wii Nunchuck as shown below.
+
+====
+[[nunchuck-breakout-board]]
+.The Nunchuck Breakout Board
+image::nunchuck-breakout-board.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nunchuck-breakout-board.jpg]
+====
+
+The breakout board has three contacts on one side and two contacts on the other.
+If we look at the Nunchuck connector it becomes clear as to how to pair the two.
+
+====
+[[nunchuck-breakout-board-pairing]]
+.The Nunchuck and Breakout Board Pairing
+image::nunchuck-breakout-board-pairing.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nunchuck-breakout-board-pairing.jpg]
+====
+
+Finally we connect the breakout board to a breadboard to make it easier to
+make the connections to our Beagle Bone Black board. 
+
+====
+[[nunchuck-breakout-breadboard-connection]]
+.The Nunchuck, Breakout Board And Breadboard Connections
+image::nunchuck-breakout-breadboard-connection.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nunchuck-breakout-breadboard-connection.jpg]
+====
+
 === Update The Board Device Tree
 
 We will need to specify the device as part of the platform. We do this using the
@@ -335,7 +380,7 @@ To see the device tree blob we use the _dtc_ utility.
 <1> The I2C1 device
 <2> The nunchuck devuce in the device tree blob
 
-==== Implement A Basic I2C Driver For The Nunchuck
+=== Implement A Basic I2C Driver For The Nunchuck
 
 We now take the basic _nunchuck.c_ file present in the
 ~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/_
@@ -420,6 +465,11 @@ MODULE_LICENSE("GPL");
 <5> Instantiate an object of type _struct i2c_driver_
 <6> Instantiate the I2C driver using _module_i2c_driver_
 
+==== Compiling The _nunchuck_ Driver
+
+We've gone through the compilation of a kernel module in the previous lab session.
+So passing the _ARCH_, _CROSS_COMPILE_ and _KDIR_ we are able to build the kernel
+module driver _nunchuck.ko_.
 
 
 [source, bash]
@@ -434,3 +484,66 @@ make[1]: Entering directory `/home/conrad/Git/linux'
   LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.ko
 make[1]: Leaving directory `/home/conrad/Git/linux'
 ----
+
+==== Testing The _nunchuck_ Driver
+
+So now that we have our kernel driver _nunchuck.ko_ we can easily load it on
+the board as we're using a _NFS_ root filesystem.
+
+[source, bash]
+----
+# cd /root/nunchuk/	<1>
+# ls
+Makefile        built-in.o      modules.order   nunchuk.ko      nunchuk.mod.o
+Module.symvers  dtc.txt         nunchuk.c       nunchuk.mod.c   nunchuk.o
+# insmod nunchuk.ko 	<2>
+#
+#
+#
+# lsmod	<3>
+Module                  Size  Used by    Tainted: G  
+nunchuk                 1569  0 
+# 
+----
+<1> Change the directory to _/root/nunchuck/_
+<2> Insert the _nunchuck.ko_ kernel module driver
+<3> List the loaded kernel modules
+
+We explore the _sysfs_ and see what files get created.
+
+[source, bash]
+----
+# find /sys/ -name '*nunchuck*'	<1>
+/sys/bus/i2c/drivers/nunchuck
+/sys/module/nunchuk/drivers/i2c:nunchuck
+# 
+# ls -l /sys/bus/i2c/drivers/nunchuck/	<2>
+total 0
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 1-0052 -> ../../../../devices/ocp.3/4802a000.i2c/i2c-1/1-0052
+--w-------    1 root     root          4096 Jan  1 00:05 bind
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 module -> ../../../../module/nunchuk
+--w-------    1 root     root          4096 Jan  1 00:05 uevent
+--w-------    1 root     root          4096 Jan  1 00:05 unbind
+# cat /sys/bus/i2c/drivers/nunchuck/1-0052/name <3>
+nunchuck
+# ls -l /sys/module/nunchuk/drivers/i2c\:nunchuck/ <4>
+total 0
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 1-0052 -> ../../../../devices/ocp.3/4802a000.i2c/i2c-1/1-0052
+--w-------    1 root     root          4096 Jan  1 00:05 bind
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 module -> ../../../../module/nunchuk
+--w-------    1 root     root          4096 Jan  1 00:05 uevent
+--w-------    1 root     root          4096 Jan  1 00:05 unbind
+# cat /sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/name <5>
+nunchuck
+# cat /sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/modalias <6> 
+i2c:nunchuck
+----
+<1> Search for files with name _nunchuck_ in _sysfs_
+<2> List contents of _/sys/bus/i2c/drivers/nunchuck/_
+<3> Display contents in _/sys/bus/i2c/drivers/nunchuck/1-0052/name_
+<4> List contents of _/sys/module/nunchuk/drivers/i2c:nunchuck/_
+<5> Display contents in _/sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/name_
+<6> Display contents in _/sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/modalias_
+
+
+
