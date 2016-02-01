@@ -180,3 +180,5 @@ include::{includedir}/lab5-embeddedlinux-device-model-i2c-device.adoc[]
 
 include::{includedir}/communicating-with-the-i2c-device.adoc[]
 
+include::{includedir}/pin-muxing.adoc[]
+
