@@ -1,0 +1,77 @@
+== Pin Muxing
+
+Modern SOCs include a large number of hardware blocks but only a certain
+combination of blocks can be enabled at any point in time as there are
+a limited number of pins present on the SOC. In order to fascilitate the
+access of hardware blocks on the SOC there needs to be some sort of
+mechanism by which the system designer can select which blocks have to be
+activated for the application. This is done through a software mechanism
+known as _pin muxing_.
+
+Since version 3.2 of the Linux kernel there has been a new subsystem
+called _pinctrl_ which is added to handle the pinmuxing. This is
+present in the _drivers/pinctrl_ section of the source code. This subsystem
+provides:
+
+. A pin muxing consumer interface for device drivers
+. A pin muxing driver interface to implement the system on chip specific drivers
+that configure the muxing.
+
+Most _pinctrl_ drivers provide a Device Tree binding which must be described
+in the Device Tree. The binding will differ from driver to driver but it
+should be documented in _Documentation/devicetree/bindings/pinctrl_.
+
+
+====
+[[pinctrl-subsystem-diagram]]
+.Pinctrl Subsystem Diagram
+image::pinctrl-subsystem-diagram.png[width="640", height="480", align="center", link={awestruct-imagesdir}/pinctrl-subsystem-diagram.png]
+====
+
+////
+[ditaa, pinctrl-subsystem-diagram]
+----
+
+	/----------------\
+	|   Device Driver+--+				/--------------------------------\
+	|   	     	 |  |				|SOC-specific pinctrl driver     |
+	\-------+--------/  |	/----------------\	|				 |
+			    |	|		 |	|			   	 |
+	/----------------\  |	| 	Pinctrl	 |	|  /--------------------------\	 |
+	|   Device Driver+--+-->|	Subsystem|<-----+  |	pinctrl_desc	      |  |
+	|   	     	 |  |	|	Core	 |  	|  |			      |  |
+	\-------+--------/  |	|		 |  	|  |pinctrl_ops		      |  |	 /---------------\
+			    |	|		 |   	|  |List pins and pin groups  |  |	 |SOC .dtsi file |
+	/----------------\  |	\----------------/   	|  |			      |  |   +---+		 |
+	|   Device Driver+--+	        ^	     	|  |pinmux_ops		      |  |   |	 \---------------/		
+	|   	     	 |		|	     	|  |Control muxing of pins    |  |<--+
+	\-------+--------/		|	     	|  |			      |  |   |	 /---------------\
+					|	     	|  |pinconf_ops		      |  |   |	 |Board .dts file|
+					|	     	|  |Controlling configuration |  |   +---+		 |
+					|	     	|  |of pins		      |	 |	 \---------------/
+					|	     	|  \--------------------------/  |
+					|	     	|                                |
+					|	     	|                                |
+					|	     	\--------------------------------/
+					|	     	
+			/---------------+----------------\
+			| GPIO driver			 |
+			|		 		 |
+			|				 |
+			| /-----------\	/----------\	 |
+			| |           | |	   |	 |
+			| | gpio_chip | | irq_chip |	 |
+			| |	      | |	   |	 |
+			| \---+-------/ \---+------/     |
+			|     |		    |		 |
+			\-----|-------------|------------/
+			      |		    |	
+			      V		    V
+			 /---------\   /---------\
+			 |GPIO	   |   |IRQ	 |
+		         |Subsystem|   |Subsystem|
+		 	 |Core	   |   |Core	 |
+			 \---------/   \---------/
+
+----	
+////
