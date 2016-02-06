@@ -1,0 +1,188 @@
+== LAB 6 : Communicating With The Nunchuck
+ 
+[NOTE]
+.This is a hands on session taken from the Free Electrons labs with the following objectives
+====
+. Hooking up the nunchuck to the board.
+. Configuring the pinmuxing for the I2C bus used.
+. Validate I2C communication works with user space tools.
+. Extend the I2C driver from the previous lab to communicate with the Nunchuck.
+====
+
+=== Connecting The Nunchuck
+
+We will now hook up the nunchuck to the Beagle Bone Black board. The diagram below
+gives the names of the different pins on the connector.
+
+====
+[[nunchuck-connector-pins]]
+.The Nunchuck Connector Pins
+image::nunchuck-connector-pins.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nunchuck-connector-pins.jpg]
+====
+
+Now we open up the {link-beagleboneblack-srm-pdf}[BBB system reference manual^] and
+search for "connector P9". Under this section we see the "Expansion Header P9 Pinout"
+table which describes the signals for the different peripherals on the SOC. So we
+need to make sure our connections from the Nunchuck are:
+. The GND pin to P9 pins 1 or 2 (GND)
+. The PWR pin to P9 pins 3 or 4 (DC_3.3V)
+. The CLK pin to P9 pin 17 (I2C1_SCL)
+. The DATA pin to P9 pin 18 (I2C1_SDA)
+
+On hooking up the breakout board we need to understand which pins correspond to
+which signals. The + & - signs correspond to VCC(3.3V) and GND. The P & C
+correspond to SDA and SCL of I2C. We make the connections on the P9 connector
+using a breadboard and some wiring. Our hooked up connection is shown below.
+
+====
+[[nunchuck-bbb-hook-up]]
+.The Hook Up Of The Nunchuck To The BBB
+image::nunchuck-bbb-hook-up.jpg[width="640", height="480", align="center", link={awestruct-imagesdir}/nunchuck-bbb-hook-up.jpg]
+====
+
+=== Configuring Pin Muxing Configuration For I2C1
+
+Configuring the pin mux settings for our I2C1 bus on the SOC
+is going to involve going through several documents. If we go through the
+"Expansion Header P9 Pinout" table in the  
+{link-beagleboneblack-srm-pdf}[BBB system reference manual^] we can also
+see the pins of the AM335 SOC
+associated with the signals _I2C1_SCL_ and _I2C1_SDA_ which happen to be
+A16 and B16 respectively. We also see the different "MODES" that these
+pins can be muxed as and for I2C1 we need them to be in _MODE2_.
+
+Our next step is to inspect the CPU {link-am3359-datasheet-pdf}[datasheet^].
+We go through the Pin Assignment section. You will find that the processor is
+available through two types of packages: ZCE and ZCZ. Our CPU has ZCZ written
+on its lower right corner. In the ZCZ pin assignment section we can see
+hyperlinks associated with each pin of the SOC. If we click on the A16 pin which
+is named as _SPI_CS0_ we see that to set it as _I2C1_SCL_ we need to use _MODE2_.
+The pin is named as _SPI_CS0_ because that is the function of the pin in MODE0.
+We also see that B16 is named _SPI0_D1_ because of its association in _MODE0_
+and to get it to _I2C1_SDA_ we need to set it to _MODE2_. The default names
+of the pins will be useful going forward.
+
+Finally we need to change the pin mux settings somehow. We open the
+{link-am3358-technical-reference-manual-pdf}[AM3358 technical reference document^]
+and look for registers that can help us do this. Specifically look for the
+"Control Module" section.
+
+The control module includes status and control logic not addressed within the
+peripherals or the rest of the device infrastructure. This module provides
+interface to control the following areas of the device:
+. Functional I/O multiplexing
+. Emulation controls
+. Device control and status
+. DDR PHY control and IO control registers
+. EDMA event multiplexing control registers
+
+We search for the "Control Module Registers" and find its address in the _L4 WKUP Peripheral Memory Map_
+table with start address 0x44E1_0000 and end address 0x44E1_1FFF. If we click on the Control Module
+hyperlink in the _L4 WKUP Peripheral Memory Map_ table we can see the offsets of the registers
+controlling the _SPI0_CS0_ and _SPI0_D1_ pins as _conf_spi0_d1_ (0x958) and _conf_spi0_cs0_ (0x95C).
+Clicking on the hyperlinks associated with the offsets takes us to the register descriptions.
+
+=== Add _pinctrl_ Properties To The Device Tree
+
+Armed with the knowledge of register settings we shall try to add the pinctrl configuration
+for the I2C1 bus on the SOC. We can refer to another platforms file to get a sense
+of how to use the register. For this we take a look at the _arch/arm/boot/dts/am335x-evm.dts_
+file.
+
+[source, c]
+----
+.
+.
+
+        i2c1_pins: pinmux_i2c1_pins {
+                pinctrl-single,pins = <
+                        0x158 (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_d1.i2c1_sda */	<1>
+                        0x15c (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_cs0.i2c1_scl */	<2>
+                >;
+        };
+
+.
+.
+----
+<1> Configuring the _conf_spi0_d1_ 
+<2> Configuring the _conf_spi0_cs0_
+
+
+We have 0x158 instead of 0x958 and 0x15C instead of 0x95C. The difference
+is because of the offset present in the way the base address for the control module register
+is defined in the base _dtsi_ file. Let's take a look:
+
+[source, c]
+----
+.
+.
+        am33xx_pinmux: pinmux@44e10800 {
+                compatible = "pinctrl-single";
+                reg = <0x44e10800 0x0238>; <1>
+                #address-cells = <1>;
+                #size-cells = <0>;
+                pinctrl-single,register-width = <32>;
+                pinctrl-single,function-mask = <0x7f>;
+        };
+.
+.
+----
+<1> The base address is set as 0x44e10800 instead of 0x44e10000
+
+The base address is set to 0x44e10800 because the registers below 
+the 0x800 offset are not related to the pinctrl functionality.
+Therefore, starting at offset 0x800 is probably a way to make
+sure that using the pinctrl-single driver, users can only access
+real pin muxing registers and do not mess with lower registers by mistake.
+
+The values of the configuration registers are set to:
+. _MUX_MODE2_ corresponding to muxing mode 2, as explained in the datasheet
+. _PIN_INPUT_PULLUP_ puts the pin in the pull up mode. This is for I2C bus signalling.
+
+We make modifications to _arch/arm/boot/dts/am335x-boneblack.dts_ and add
+the pinctrl configuration for I2C1. Additionally we need to define the pinctrl
+settings in our i2c1 node from the previous lab.
+
+[source, c]
+----
+&am33xx_pinmux {
+.
+.
+.
+        nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+                pinctrl-single,pins = <
+                        0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+                >;
+        };
+        i2c1_pins: pinmux_i2c1_pins { <1>
+                pinctrl-single,pins = <
+                        0x158 (PIN_INPUT_PULLUP | MUX_MODE0)    /* spi0_d1.i2c1_sda */
+                        0x15c (PIN_INPUT_PULLUP | MUX_MODE0)    /* spi0_cs0.i2c1_scl */
+                >;
+        };
+};
+.
+.
+.
+i2c1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&i2c1_pins>; <2>
+
+        status = "okay";
+        clock-frequency = <100000>;
+
+        nunchuck: nunchuck@52 {
+                compatible = "nintendo,nunchuck";
+                reg = <0x52>;
+        };
+
+};
+----
+<1> Defined the pinctrl configuration for _i2c1_
+<2> Defined the named state for the _i2c1_ bus
+
+We now rebuild the _DTB_ and reboot the board.
+
+=== I2C Bus Tests
+
+
