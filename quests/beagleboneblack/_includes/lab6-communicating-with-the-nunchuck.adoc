@@ -156,8 +156,8 @@ settings in our i2c1 node from the previous lab.
         };
         i2c1_pins: pinmux_i2c1_pins { <1>
                 pinctrl-single,pins = <
-                        0x158 (PIN_INPUT_PULLUP | MUX_MODE0)    /* spi0_d1.i2c1_sda */
-                        0x15c (PIN_INPUT_PULLUP | MUX_MODE0)    /* spi0_cs0.i2c1_scl */
+                        0x158 (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_d1.i2c1_sda */
+                        0x15c (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_cs0.i2c1_scl */
                 >;
         };
 };
@@ -185,4 +185,300 @@ We now rebuild the _DTB_ and reboot the board.
 
 === I2C Bus Tests
 
+We can run the {uri-i2cdetect-manpage}[_i2cdetect_^] utility to check if we've configured the _i2c1_ bus correctly.
+
+[source, bash]
+----
+Welcome to Buildroot
+buildroot login: root
+# i2cdetect -l	<1>
+i2c-0	i2c       	OMAP I2C adapter                	I2C adapter
+i2c-1	i2c       	OMAP I2C adapter                	I2C adapter
+# i2cdetect -F 1 <2>
+Functionalities implemented by /dev/i2c-1:
+I2C                              yes
+SMBus Quick Command              no
+SMBus Send Byte                  yes
+SMBus Receive Byte               yes
+SMBus Write Byte                 yes
+SMBus Read Byte                  yes
+SMBus Write Word                 yes
+SMBus Read Word                  yes
+SMBus Process Call               yes
+SMBus Block Write                yes
+SMBus Block Read                 no
+SMBus Block Process Call         no
+SMBus PEC                        yes
+I2C Block Write                  yes
+I2C Block Read                   yes
+# 
+----
+<1> List the I2C adapters available
+<2> List the functionalities associated with the _i2c1_ bus
+
+To see if everything works fine we use the _i2cdetect -r 1_ command.
+
+[WARNING] 
+.Using _i2cdetect -r 1_
+==== 
+According to the {uri-i2cdetect-manpage}[man page^], this command uses the
+SMBus "read byte" commands for probing. It uses a command which will be
+safest for each address. Since we're following the Free Electrons lab
+we use it but otherwise it's better to read up before using it for an
+unknown I2C device.
+====
+
+[source, bash]
+----
+# i2cdetect -r 1
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-1 using read byte commands.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] 
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- 52 -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+# [  445.878808] random: nonblocking pool is initialized
+----
+
+Now we go ahead and commit our changes using git.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status <1>
+On branch nunchuck
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   arch/arm/boot/dts/am335x-boneblack.dts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	defconfig
+	drivers/Module.symvers
+	drivers/misc/Module.symvers
+	drivers/staging/Module.symvers
+	drivers/staging/comedi/Module.symvers
+	drivers/staging/comedi/drivers/Module.symvers
+
+no changes added to commit (use "git add" and/or "git commit -a")
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git diff arch/arm/boot/dts/am335x-boneblack.dts	<2>
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 049049a..fe7422d 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -60,6 +60,12 @@
+                        0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+                >;
+        };
++       i2c1_pins: pinmux_i2c1_pins {
++               pinctrl-single,pins = <
++                       0x158 (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_d1.i2c1_sda */
++                       0x15c (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_cs0.i2c1_scl */
++               >;
++       };
+ };
+ 
+ &lcdc {
+@@ -78,6 +84,9 @@
+ };
+ 
+ &i2c1 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&i2c1_pins>;
++
+        status = "okay";
+        clock-frequency = <100000>;
+ 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add arch/arm/boot/dts/am335x-boneblack.dts <3>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s -m "am335x-boneblack.dts: Enable pinmux settings for i2c1 bus" <4>
+[nunchuck de7b0fb] am335x-boneblack.dts: Enable pinmux settings for i2c1 bus
+ 1 file changed, 9 insertions(+)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ 
+
+----
+<1> Check the status of the repository
+<2> Check the differences in the _arch/arm/boot/dts/am335x-boneblack.dts_ file
+<3> Add The file to the index
+<4> Commit the change with an appropriate message using -m and signing off using -s
+
+=== Nunchuck Device Initialization
+
+We will need to read the registers of the Nunchuck to find out whether the buttons
+are pressed or not. But before that we will need to initiate the Nunchuck.
+To communicate with the Nunchuck, we must send a handshake signal. If you are
+using a black Wii Nunchuck, send 2 bytes 0xF0, 0x55 to initalize the first register
+and 0xFB, 0x00 to initialize the second register of the Nunchuck. On a white send
+0x40, 0x00 followed by 0x00. We get this information from the
+{link-nunchuck-device}[nunchuck pdf^].
+
+To initialize the device we will modify our probe routine in our platform driver
+and use the I2C raw API. The modifications to our driver code are shown below.
+We take extra care to check the return value of _i2c_master_send_ to check
+for communication issues.
+
+[source, c]
+----
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/i2c.h>
+#include <linux/delay.h> <1>
+
+/* Add your code here */
+static const struct i2c_device_id nunchuck_id[] = {
+        { "nunchuck", 0 },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, nunchuck_id);
+
+#ifdef CONFIG_OF
+static const struct of_device_id nunchuck_dt_ids[] = {
+        {.compatible = "nintendo,nunchuck",},
+        { }
+};
+MODULE_DEVICE_TABLE(of, nunchuck_dt_ids);
+#endif
+
+static int nunchuck_probe(struct i2c_client *client,
+                        const struct i2c_device_id *id)
+{
+        char init1[2] = {0xF0, 0x55};
+        char init2[2] = {0xFB, 0x00};
+        int count1 = sizeof(init1)/sizeof(init1[0]);
+        int count2 = sizeof(init2)/sizeof(init2[0]);
+        int ret;
+
+        dev_info(&client->dev, "%s invoked", __func__);
+
+        /* initialize device */
+        ret = i2c_master_send(client, init1, count1);	<2>
+        if (ret != count1) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+
+        udelay(1000);	<3>
+
+        ret = i2c_master_send(client, init2, count2);	<4>
+        if (ret != count2) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+        /* register to a kernel framework */
+
+        return 0;
+}
+
+static int nunchuck_remove(struct i2c_client *client)
+{
+        dev_info(&client->dev, "%s invoked", __func__);
+        return 0;
+}
+
+static struct i2c_driver nunchuck_driver = {
+        .probe = nunchuck_probe,
+        .remove = nunchuck_remove,
+        .id_table = nunchuck_id,
+        .driver = {
+                .name = "nunchuck",
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(nunchuck_dt_ids),
+        },
+};
+
+module_i2c_driver(nunchuck_driver);
+
+MODULE_LICENSE("GPL");
+----
+<1> We include the _linux/delay.h_ file to use _udelay_ in our code
+<2> Using _i2c_master_send_ we send the 0xF0 and 0x55 bytes to the client
+<3> A delay of 1ms is inserted between the two I2C transactions
+<4> Using _i2c_master_send_ we send the 0xFB and 0x00 bytes to the client
+
+Again we compile our kernel driver module with the new changes passing the
+_ARCH_, _CROSS_COMPILE_ and _KDIR_ options as before.
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KDIR=/home/conrad/Git/linux/
+make -C /home/conrad/Git/linux/ M=$PWD
+make[1]: Entering directory `/home/conrad/Git/linux'
+  CC [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.mod.o
+  LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.ko
+make[1]: Leaving directory `/home/conrad/Git/linux'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$ 
+----
+
+Finally we test the kernel module to check if there are any communication
+issues.
+
+[source, bash]
+----
+# lsmod	<1>
+Module                  Size  Used by    Tainted: G  
+#
+#
+#
+# insmod nunchuk.ko <2>
+[  840.223615] nunchuck 1-0052: nunchuck_probe invoked
+# 
+# 
+# 
+# 
+# rmmod nunchuk	<3>
+[  850.012196] nunchuck 1-0052: nunchuck_remove invoked
+# 
+# 
+# 
+# 
+# dmesg |tail <4>
+[    5.107285]      device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+[    5.118343]      host=192.168.0.100, domain=, nis-domain=(none)
+[    5.124525]      bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+[    5.772441] VFS: Mounted root (nfs filesystem) on device 0:13.
+[    5.780080] devtmpfs: mounted
+[    5.783776] Freeing unused kernel memory: 384K (c0771000 - c07d1000)
+[    7.029211] random: dd urandom read with 56 bits of entropy available
+[  303.383631] random: nonblocking pool is initialized
+[  840.223615] nunchuck 1-0052: nunchuck_probe invoked
+[  850.012196] nunchuck 1-0052: nunchuck_remove invoked
+# 
+# 
+----
+<1> Using _lsmod_ we see that there are not inserted kernel modules
+<2> Insert our _nunchuck.ko_ driver
+<3> Remove our _nunchuck_ driver
+<4> Print the last kernel logs and inspect for any errors
+
+At this point we assume the device is initialized in the probe routine.
+
+=== Read Nunchuck Registers
+
+The nunchuk has 6 registers with which it relays information as given in {link-nunchuck-device}[the pdf^].
+
+Byte 0x00:: X-axis data of the joystick
+Byte 0x01:: Y-axis data of the joystick
+Byte 0x02:: X-axis data of the accellerometer sensor
+Byte 0x03:: Y-axis data of the accellerometer sensor
+Byte 0x04:: Z-axis data of the accellerometer sensor
+Byte 0x05:: *bit 0* as Z button status - 0 = pressed and 1 = release;
+*bit 1* as C button status - 0 = pressed and 1 = release;
+*bit 2 and 3* as 2 lower bit of X-axis data of the accellerometer sensor;
+*bit 4 and 5* as 2 lower bit of Y-axis data of the accellerometer sensor;
+*bit 6 and 7* as 2 lower bit of Z-axis data of the accellerometer sensor;
+
+The nunchuck updates the registers only once they have been read so we
+have to read the registers twice. We create a function _nunchuck_read_registers_
+to simplify the impelementation.
 
