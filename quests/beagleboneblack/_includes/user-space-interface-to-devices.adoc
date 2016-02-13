@@ -1,0 +1,77 @@
+== User Space Inteface To Devices
+
+In Linux, there are three types of devices:
+
+Network devices:: They are the network interfaces which are visible using
+tools like ifconfig for ethernet interfaces, iwconfig for wlan interfaces, etc...
+
+Block devices:: They are the devices which represent physical storage in the
+system. The easiest example is the hard disk drive. Access to such type of
+devices is through blocks of data. They are visible through files present in
+_/dev_.
+
+Character devices:: All other types of devices are represented as character
+devices. They include devices such as input devices like the mouse, keyboard
+to devices such as the graphics card and sound card. They are also visible
+through files present in _/dev_. Bulk of the devices that are present
+are represented as character devices.
+
+=== Major & Minor Numbers
+
+The kernel denotes devices with a major and minor number where the major
+number represents the class that the device falls into and the minor
+number is just an identifier for the device in that class.
+
+Userspace applications need to access devices across different platforms
+and for this reason the major and minor numbers are statically allocated
+and identical across different systems. Checkout _Documentation/devices.txt_
+
+=== Devices Are Files
+
+One of the highlights of Unix design is that devices are also treated
+as files. In this way a userspace application can manipulate all
+devices in the same way it accesses a file on the system using the API
+_open_, _close_, _write_, _read_, etc..
+
+This is possible because of a special type of file called the device file.
+This file associates the type, major and minor of a device with a specific
+file name. Typically all device files are stored in _/dev_.
+
+[source, bash]
+----
+# ls -l /dev/
+total 0
+crw-------    1 root     root        5,   1 Jan  1  1970 console
+crw-------    1 root     root       10,  63 Jan  1  1970 cpu_dma_latency
+crw-rw-rw-    1 root     root        1,   7 Jan  1  1970 full
+crw-------    1 root     root       10, 183 Jan  1  1970 hwrng
+crw-------    1 root     root       89,   0 Jan  1  1970 i2c-0
+crw-------    1 root     root       89,   1 Jan  1  1970 i2c-1
+drwxr-xr-x    2 root     root            60 Jan  1  1970 input
+.
+.
+.
+crw-------    1 root     root        7, 129 Jan  1  1970 vcsa1
+crw-------    1 root     root       10, 130 Jan  1  1970 watchdog
+crw-------    1 root     root      253,   0 Jan  1  1970 watchdog0
+crw-rw-rw-    1 root     root        1,   5 Jan  1  1970 zero
+# 
+# 
+----
+
+=== Creating Device Files
+
+Since device files are special they have to be created using a special
+command _mknod_.
+
+. _mknod /dev/<device_file_name> [c/b] major minor_
+. _mknod_ requires special root access
+. The association between type, major and minor of the file and the device
+needs to be respected in the system and is the responsibility of the system designer.
+
+Some systems automate the creation of these device files by the use
+of daemons which run and monitor the _/sys/_ filesystem.
+
+. _devtmpfs_ virtual filesystem
+. _udev_ daemon popular on desktops and server systems
+. _mdev_ lightweight solution popular on embedded devices

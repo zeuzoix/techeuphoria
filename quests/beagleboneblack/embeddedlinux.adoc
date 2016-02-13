@@ -183,3 +183,18 @@ include::{includedir}/communicating-with-the-i2c-device.adoc[]
 include::{includedir}/pin-muxing.adoc[]
 
 include::{includedir}/lab6-communicating-with-the-nunchuck.adoc[]
+
+= Kernel Frameworks
+
+[partintro]
+--
+The Linux kernel is designed so that a kernel driver can interface with a framework
+which exposes services to the userspace. The driver interfaces with the bus infrastructure
+of the device depending on how it is connected in the platform and also interfaces
+with a specific framework which classifies the functionality of the device. This
+allows different devices to support the same userspace interface.
+This section will focus on the kernel frameworks.
+--
+
+include::{includedir}/user-space-interface-to-devices.adoc[]
+
