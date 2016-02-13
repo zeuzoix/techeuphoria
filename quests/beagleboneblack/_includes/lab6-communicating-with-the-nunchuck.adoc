@@ -482,3 +482,199 @@ The nunchuck updates the registers only once they have been read so we
 have to read the registers twice. We create a function _nunchuck_read_registers_
 to simplify the impelementation.
 
+[source, c]
+----
+.
+.
+static int nunchuck_read_registers(struct i2c_client *client,
+                        char *reg_data, int count)
+{
+        char addr = 0x00;
+        int ret = -1;
+
+        if ((NULL == client) || (NULL== reg_data) || (0 == count))
+                return -EFAULT;
+
+        dev_info(&client->dev, "%s invoked", __func__);
+
+        /* Add 10ms delay before next read of registers */
+        mdelay(10);	<1>
+
+        /* Write 0x00 to nunchuck which is the base address for registers */
+        ret = i2c_master_send(client, &addr, sizeof(addr));	<2>
+        if (ret != sizeof(addr)) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                ret = -EIO;
+                goto END;
+        }
+
+        /* Add 10ms delay before i2c_master_read */
+        mdelay(10);	<3>
+
+        ret = i2c_master_recv(client, reg_data, count);	<4>
+        if (ret != count) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                ret = -EIO;
+                goto END;
+        }
+
+        ret = 0;
+
+END:
+        return ret;
+}
+.
+.
+----
+<1> Start by putting a 10 ms delay by calling the mdelay() routine. That’s needed to add
+time between the previous i2c operation and the next one.
+<2> Write 0x00 to the bus. That will allow us to read the device registers.
+<3> Add another 10 ms delay.
+<4> Read 6 bytes from the device, still using the I2C raw API. Check the return value as usua
+
+We use the _nunchuck_read_registers_ function in our probe routine invoking it twice.
+The first read value is discarded and the latest value is used in order to determine the status
+of the Z and C buttons. Our implementation looks like this:
+
+[source, c]
+----
+.
+.
+.
+static int nunchuck_probe(struct i2c_client *client,
+                        const struct i2c_device_id *id)
+{
+        char init1[2] = {0xF0, 0x55};
+        char init2[2] = {0xFB, 0x00};
+        char data[6] = {0};	<1>
+        int count1 = sizeof(init1)/sizeof(init1[0]);
+        int count2 = sizeof(init2)/sizeof(init2[0]);
+        int ret;
+        int zpressed = 0;	<2>
+        int cpressed = 0;
+
+        dev_info(&client->dev, "%s invoked", __func__);
+
+        /* initialize device */
+        ret = i2c_master_send(client, init1, count1);
+        if (ret != count1) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+
+        udelay(1000);
+
+        ret = i2c_master_send(client, init2, count2);
+        if (ret != count2) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+        /* register to a kernel framework */
+
+        /* read nunchuck registers */
+        ret = nunchuck_read_registers(client, data, sizeof(data));	<3>
+        if (ret) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+
+        /* read nunchuck registers */
+        ret = nunchuck_read_registers(client, data, sizeof(data));	<4>
+        if (ret) {
+                dev_err(&client->dev, "%s: err=%d", __func__, ret);
+                return -EIO;
+        }
+
+        /* Bit 0 indicates if Z button is pressed */
+        zpressed = (data[5] & BIT(0)? 0 : 1);		<5>
+        /* Bit 1 indicates if Z button is pressed */
+        cpressed = (data[5] & BIT(1)? 0 : 1);
+
+        dev_info(&client->dev, "%s:zpressed : %d cpressed : %d",
+                        __func__, zpressed, cpressed);
+
+        return 0;
+}
+.
+.
+.
+----
+<1> Data array to read the 6 registers
+<2> zpressed, cpressed variables to store the status of the Z and C buttons
+<3> First read of the nunchuck registers
+<4> Second read of the nunchuck registers
+<5> We use _BIT_ macro to extract the bit status of the 6th element(index 5)
+
+After cross-compiling the kernel module driver again we test it out with the nunchuck.
+Each time we load the module using _insmod_ and unload it using _rmmod_. We see
+that we're successfully able to read the status of the buttons through I2C.
+
+[source, bash]
+----
+#
+#
+# insmod nunchuk.ko 
+[  791.810820] nunchuck 1-0052: nunchuck_probe invoked
+[  791.817778] nunchuck 1-0052: nunchuck_read_registers invoked
+[  791.846620] nunchuck 1-0052: nunchuck_read_registers invoked
+[  791.873956] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0	<1>
+# rmmod nunchuk
+#
+#
+[  796.906688] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko 
+[  801.625983] nunchuck 1-0052: nunchuck_probe invoked
+[  801.633607] nunchuck 1-0052: nunchuck_read_registers invoked
+[  801.660876] nunchuck 1-0052: nunchuck_read_registers invoked
+[  801.687922] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 1	<2>
+# rmmod nunchuk
+#
+#
+[  804.590286] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko 
+[  807.392982] nunchuck 1-0052: nunchuck_probe invoked
+[  807.400573] nunchuck 1-0052: nunchuck_read_registers invoked
+[  807.427810] nunchuck 1-0052: nunchuck_read_registers invoked
+[  807.454934] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0	<3>
+# rmmod nunchuk
+#
+#
+[  809.332638] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko 
+[  812.202315] nunchuck 1-0052: nunchuck_probe invoked
+[  812.209840] nunchuck 1-0052: nunchuck_read_registers invoked
+[  812.237097] nunchuck 1-0052: nunchuck_read_registers invoked
+[  812.264222] nunchuck 1-0052: nunchuck_probe:zpressed : 1 cpressed : 0	<4>
+# rmmod nunchuk
+#
+#
+[  815.116691] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko 
+[  819.487739] nunchuck 1-0052: nunchuck_probe invoked
+[  819.495379] nunchuck 1-0052: nunchuck_read_registers invoked
+[  819.522628] nunchuck 1-0052: nunchuck_read_registers invoked
+[  819.549747] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0	<5>
+# 
+#
+# rmmod nunchuk
+[ 1746.370837] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko 
+[ 1751.173512] nunchuck 1-0052: nunchuck_probe invoked
+[ 1751.181127] nunchuck 1-0052: nunchuck_read_registers invoked
+[ 1751.208413] nunchuck 1-0052: nunchuck_read_registers invoked
+[ 1751.235496] nunchuck 1-0052: nunchuck_probe:zpressed : 1 cpressed : 1	<6>
+#
+#
+----
+<1> No buttons pressed
+<2> C button is pressed
+<3> No buttons pressed
+<4> Z button is pressed
+<5> No buttons pressed
+<6> Both C and Z are pressed
+
+In this lab we were able to successfully communicate with the Wii Nintendo nunchuck
+over the I2C bus. This is a basic platform driver which gives us an understanding
+of how to initialise the device and access its registers. To be really useful
+we'll have to plug it into some sort of framework such as _input_ so as to make
+it available to the user.
