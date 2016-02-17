@@ -1,0 +1,32 @@
+= Understanding Bluetooth Low Energy And Beacons
+Conrad Gomes
+2016-01-28
+:awestruct-tags: [android, bluetooth, beacons]
+:excerpt: Apple announced the iBeacon format which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon as well as data associated with the beacon. Google followed defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.
+:awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+// URL Addresses
+:uri-kernel-documentation-spidev: https://www.kernel.org/doc/Documentation/spi/spidev
+:uri-aislelabs-hardware-report: http://www.aislelabs.com/reports/beacon-guide/
+:uri-argenox-intro-ble: http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/introduction-to-bluetooth-low-energy-v4-0/
+// E-Mail Addresses
+// Documents
+// Captured Logs
+
+{excerpt}
+
+== Beacon Hardware
+
+There are several vendors and solution providers for beacons. All of them support
+the iBeacon format. If you're researching the hardware required to deploy a beacon
+solution then this {uri-aislelabs-hardware-report}[report^] from Aislelabs might be useful.
+
+== About Bluetooth LE
+
+We can't leave out understanding the basic technology that is used to deploy
+the beacon solution. A good introduction to BLE can be obtained from this
+{uri-argenox-intro-ble}[introduction^] given by Argenox.
