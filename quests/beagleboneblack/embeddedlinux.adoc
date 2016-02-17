@@ -198,3 +198,5 @@ This section will focus on the kernel frameworks.
 
 include::{includedir}/user-space-interface-to-devices.adoc[]
 
+include::{includedir}/character-drivers.adoc[]
+

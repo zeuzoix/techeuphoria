@@ -1,0 +1,51 @@
+== Character Drivers
+
+As mentioned in the previous section character devices are treated
+as files so the device driver for character devices must implement
+the routines _open, close, read, write, etc_.
+
+The character driver does this through the callback functions
+defined in the _struct file_operations_ structure.
+
+====
+[[user-kernel-interface-char-devices]]
+.USB Kernel Interface Character Devices
+image::user-kernel-interface-char-devices.png[width="640", height="480", align="center", link={awestruct-imagesdir}/user-kernel-interface-char-devices.png]
+====
+////
+[ditaa, user-kernel-interface-char-devices]
+----
+                          /----------------------------------------\
+                          |              User Space                |
+                          |                                        |
+                          | +---------------+    +---------------+ |
+               +----------->|    Read       |    |    Write      + -----------+
+               |          | |   Buffer      |    |    Buffer     | |          |
+               |          | +---------------+    +---------------+ |          |
+               |          \----------------------------------------/          |
+               |                   |                      |                   |
+               |                   V                      V                   |
+               |            /------------------------------------\            |
+               |            |                                    |            |
+               |            |             /deV/foo               |            |
+               |            \-------+--------------------+-------/            |
+   copy_to_user|                    |                    |                    |copy_from_user
+               |      +-------------|--------------------|-------------+      |
+               |                    |                    |                    |
+               |                    V                    V                    |
+               |            /------------------------------------\            |
+               |            |            Major/Minor             |            |
+               |            |                                    |            |
+               |            \-----+------------------------+-----/            |
+               |                  |                        |                  |
+               |          /-------|------------------------|-------\          |
+               |          |     V                          V       |          |
+               |          | +---------------+    +---------------+ |          |
+               |          | |    Read       |    |    Write      | |          |
+               +----------- +    Handler    |    |    Handler    +<-----------+
+                          | +---------------+    +---------------+ |
+                          |                                        |
+                          |                Kernel                  |
+                          \----------------------------------------/
+----
+////
