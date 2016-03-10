@@ -132,7 +132,7 @@ module_exit(pcf857x_exit);
 <2> The device id table is registered with the I2C subsystem
 <3> _pcf857x_driver_ is the _struct i2c_driver_
 <4> _i2c_add_driver_ registers the device driver
-<4> _i2c_del_driver_ deletes the device driver
+<5> _i2c_del_driver_ deletes the device driver
 
 
 === Registering An I2C Device, non-DT Approach
@@ -209,7 +209,7 @@ Here we see the I2C controller defined and disabled.
 ----
 .
 .
-        i2c@7000d000 {
+        i2c@7000d000 { <1>
                 compatible = "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
                 reg = <0x7000d000 0x100>;
                 interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
@@ -218,15 +218,13 @@ Here we see the I2C controller defined and disabled.
                 clocks = <&tegra_car TEGRA30_CLK_I2C5>,
                          <&tegra_car TEGRA30_CLK_PLL_P_OUT3>;
                 clock-names = "div-clk", "fast-clk";
-                status = "disabled";
+                status = "disabled";	<2>
         };
 .
 .
 ----
-<1> Controller _i2c@7000c000_
+<1> Controller _i2c@7000d000_
 <2> The controller is disabled
-<3> Controller _i2c@7000c400_
-<4> The controller is disabled
 
 If we take a look at a board file which includes the _.dtsi_ file.
 [source, c]
