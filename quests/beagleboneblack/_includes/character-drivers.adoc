@@ -19,7 +19,7 @@ image::user-kernel-interface-char-devices.png[width="640", height="480", align="
                           |              User Space                |
                           |                                        |
                           | +---------------+    +---------------+ |
-               +----------->|    Read       |    |    Write      + -----------+
+               +----------->|    Read       |    |    Write      +------------+
                |          | |   Buffer      |    |    Buffer     | |          |
                |          | +---------------+    +---------------+ |          |
                |          \----------------------------------------/          |
@@ -39,13 +39,97 @@ image::user-kernel-interface-char-devices.png[width="640", height="480", align="
                |            \-----+------------------------+-----/            |
                |                  |                        |                  |
                |          /-------|------------------------|-------\          |
-               |          |     V                          V       |          |
+               |          |       V                        V       |          |
                |          | +---------------+    +---------------+ |          |
                |          | |    Read       |    |    Write      | |          |
-               +----------- +    Handler    |    |    Handler    +<-----------+
+               +------------+    Handler    |    |    Handler    +<-----------+
                           | +---------------+    +---------------+ |
                           |                                        |
                           |                Kernel                  |
                           \----------------------------------------/
 ----
 ////
+
+=== File Operations
+
+We will take a look at the file operations for a character driver. It is not necessary
+to implement either of them. These are found in _include/linux/fs.h_. The structure
+below shows all operations for a file but we've enumerated the ones which are relevant
+to character drivers.
+
+[source, c]
+----
+struct file_operations {
+        struct module *owner;
+        loff_t (*llseek) (struct file *, loff_t, int);
+        ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);	<1>
+        ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);	<2>
+        ssize_t (*aio_read) (struct kiocb *, const struct iovec *, unsigned long, loff_t);
+        ssize_t (*aio_write) (struct kiocb *, const struct iovec *, unsigned long, loff_t);
+        int (*iterate) (struct file *, struct dir_context *);
+        unsigned int (*poll) (struct file *, struct poll_table_struct *);
+        long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);	<3>
+        long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+        int (*mmap) (struct file *, struct vm_area_struct *);	<4>
+        int (*open) (struct inode *, struct file *);	<5>
+        int (*flush) (struct file *, fl_owner_t id);
+        int (*release) (struct inode *, struct file *);	<6>
+        int (*fsync) (struct file *, loff_t, loff_t, int datasync);
+        int (*aio_fsync) (struct kiocb *, int datasync);
+        int (*fasync) (int, struct file *, int);
+        int (*lock) (struct file *, int, struct file_lock *);
+        ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
+        unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+        int (*check_flags)(int);
+        int (*flock) (struct file *, int, struct file_lock *);
+        ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
+        ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
+        int (*setlease)(struct file *, long, struct file_lock **);
+        long (*fallocate)(struct file *file, int mode, loff_t offset,
+                          loff_t len);
+        int (*show_fdinfo)(struct seq_file *m, struct file *f);
+};
+
+----
+
+Therefore in a character driver named _foo_ we would have the following operations
+defined.
+
+int foo_open(struct inode *i, struct file *f)::
+The _open_ operation is defined so that when user space opens the device file
+it gets access to the character driver. Here _struct inode_ pointer is a structure
+that uniquely represents a file in the Linux system (be it a regular file,
+a directory, a symbolic link, a character or block device). And _struct file_
+is a structure created every time a file is opened. Going forward we see that
+the _struct file_ object is used in the other operations. As the same file
+can be accessed by multiple applications there needs to be a way of differentiating
+each process's access. Several file structures can point to the same inode structure.
+The object contains information like the current position, the opening mode, etc.
+which is relevant to a particular process. The _struct file_ object also has a
+_void *private_data_ pointer that one can freely use.
+
+int foo_release(struct inode *i, struct file *f)::
+The _release_ operation is called when user space closes the file.
+
+ssize_t foo_read(struct file *f, char __user *buf, size_t sz, loff_t *off)::
+The _read_ operation is defined to allow the user space application to 
+read the device. So the driver has to read data from the device, write in the user
+space buffer pointed _buf_ argument, and update the current position in _off_.
+The pointer to the same file structure that was used in the _open_ call is used.
+The amount of data should be capped to that of _sz_. The number of bytes
+actually read is returned. On UNIX systems the _read_ operation blocks
+if there is not enough data to read.
+
+ssize_t foo_write(struct file *f, const char __user *buf, size_t sz, loff_t *off)::
+Called when user space uses the _write()_ system call on the device
+The opposite of read, must read at most _sz_ bytes from buf, write it to the device,
+update _off_ and return the number of bytes written.
+
+long foo_unlocked_ioctl(struct file *f, unsigned int cmd, unsigned long arg)::
+Associated to the ioctl() system call. Called unlocked because it didn’t hold the Big Kernel Lock
+(gone now). Allows to extend the driver capabilities beyond the limited
+read/write API. For example: changing the speed of a serial port, setting video
+output format, querying a device serial number. In this _cmd_ is a number
+identifying the operation to perform _arg_ is the optional argument passed as
+third argument of the _ioctl()_ system call. Can be an integer, an address, etc.
+The semantic of cmd and arg is driver-specific
