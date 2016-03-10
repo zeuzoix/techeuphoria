@@ -121,13 +121,13 @@ struct platform_device *__init imx_add_imx_uart_3irq(
                 },
         };
 
-        return imx_add_platform_device("imx1-uart", data->id, res,
+        return imx_add_platform_device("imx1-uart", data->id, res,	<1>
                         ARRAY_SIZE(res), pdata, sizeof(*pdata));
 }
 .
 .
 ----
-<1> The device is created by thise _imx_add_platform_device_.
+<1> The device is created by this _imx_add_platform_device_.
 
 If we search for the definition of _imx_add_platform_device_ we can locate it
 in _arch/arm/mach-imx/devices/devices-common.h_
