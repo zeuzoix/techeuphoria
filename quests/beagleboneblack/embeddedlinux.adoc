@@ -200,3 +200,4 @@ include::{includedir}/user-space-interface-to-devices.adoc[]
 
 include::{includedir}/character-drivers.adoc[]
 
+include::{includedir}/exchanging-data-with-user-space.adoc[]
