@@ -1,0 +1,60 @@
+== Character Drivers To Kernel Frameworks
+
+We've seen character drivers but most likely if we're developing a driver
+it will not be a pure character driver. In most cases we would identify the
+class to which the device belongs and find a framework for that class.
+Some of the frameworks are framebuffer, V4L, serial, etc. The framework allows
+to factorize the common parts of drivers for the same type of devices. From user
+space, they are still seen as character devices by the applications. The framework
+allows to provide a coherent user space interface (ioctl, etc.) for every type of
+device, regardless of the driver.
+
+
+====
+[[kernel-frameworks-for-device-drivers]]
+.Kernel Frameworks For Device Drivers
+image::kernel-frameworks-for-device-drivers.png[width="640", height="480", align="center", link={awestruct-imagesdir}/kernel-frameworks-for-device-drivers.png]
+====
+////
+[ditaa, kernel-frameworks-for-device-drivers]
+----
+
+        +-------------------+            +-------------------+           +-------------------+
+        |                   |            |                   |           |                   |
+        |    Application    |            |    Application    |           |    Application    |
+        |                   |            |                   |           |                   |
+        +-------------------+------------+---------+---------+-----------+-------------------+
+                                                   |
+                                                   |
+                                                   v
++-----------------------------------------------------------------------------------------------------+
+|                                                                                                     |
+|                                        System Call Interface                                        |
+|                                                                                                     |
++---------+------------------+-------------------+-----------------+------------------+---------------+
+          |                  |                   |                 |                  |
+          |                  |                   |                 |                  |
+          v                  v                   v                 v                  v
+   /--------------\   +--------------+   +--------------+   +--------------+   +--------------+
+   |              |   |              |   |              |   |              |   |              |
+   |  Character   |   |  Framebuffer |   |   V4L        |   |    TTY       |   |    Block     |
+   |    Driver    |   |    Core      |   |   Core       |   |    Core      |   |    Core      |
+   \--------------/   +------+-------+   +-------+------+   +--+--------+--+   +--+---------+-+
+                             |                   |             |        |         |         |
+                             |                   |             |        |         |         |
+                             v                   v             v        v         v         v
+                      /--------------\   /--------------\  /------\ +--------+ +------+ +--------+
+                      |              |   |              |  |      | |        | |      | |        |
+                      |  Framebuffer |   |   V4L        |  | TTY  | | Serial | | IDE  | | SCSI   |
+                      |   Driver     |   |  Driver      |  |Driver| | Core   | | Core | | Core   |
+                      \--------------/   \--------------/  \------/ +---+----+ +--+---+ +---+----+
+                                                                        |         |         |
+                                                                        v         v         v
+                                                                    /--------\ /------\ /--------\
+                                                                    |        | |      | | USB    |
+                                                                    | Serial | | IDE  | |Storage |
+                                                                    | Driver | |Driver| |Driver  |
+                                                                    \--------/ \------/ \--------/
+
+----
+////
