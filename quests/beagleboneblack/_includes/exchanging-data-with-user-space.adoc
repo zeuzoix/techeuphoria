@@ -1,0 +1,89 @@
+== Exchanging Data With User Space
+
+Since user space memory is different from kernel space memory we can't use
+a simple _memcpy_ to copy data from user space to kernel space. Additionally
+dereferencing a user space pointer in kernel space will not work on all platforms.
+Moreover if the pointer being dereferenced is invalid it will lead to a segfault
+in the application.
+
+Linux defines a set of functions to keep the kernel code portable when it comes
+to copying data from user space to kernel space and vice versa. The first two
+functions copy single values and the last two copy buffers:
+
+get_user(v, p);::
+The kernel variable _v_ gets the value pointed by the user space pointer _p_
+
+put_user(v, p);::
+The value of the variable refered by the pointer _p_ is set to the value
+of the kernel variable _v_
+
+unsigned long copy_to_user(void __user *to, const void *from, unsigned long n);::
+Copy the contents of the kernel buffer _from_ to the user space buffer _to_ upto
+_n_ bytes. Return 0 on success and -EFAULT on failure.
+
+unsigned long copy_from_user(void *to, const void __user *from, unsigned long n);::
+Copy the contents of the user space buffer _from_ to the kernel buffer _to_ upto
+_n_ bytes. Return 0 on success and -EFAULT on failure.
+
+
+====
+[[user-kernel-data-exchange]]
+.User Kernel Data Exchange
+image::user-kernel-data-exchange.png[width="640", height="480", align="center", link={awestruct-imagesdir}/user-kernel-data-exchange.png]
+====
+////
+[ditaa, user-kernel-data-exchange]
+----
+                                   0xFFFFFFFF
+                           +-----------------------+
+                           |                       |
+                           |                       |
+                           |--=--------------------|
+                           |                       |
+              to +--------->                       +---------+ from
+                 |         |                       |         |
+                 |         |--=--------------------|         |
+                 |         |                       |         |
+                 |         |                       |         |
+                 |     +---|-----------------------|---+     |
+                 |         |       0xC0000000      |         |
+                 |         |                       |         |
+   copy_from_user|         |                       |         |copy_to_user
+                 |         |                       |         |
+                 |         |                       |         |
+                 |         |                       |         |
+                 |         |                       |         |
+                 |         |                       |         |
+                 |         |                       |         |
+                 |         |--=--------------------|         |
+                 |         |                       |         |
+            from +---------+                       <---------+ to
+                           |                       |
+                           |--=--------------------|
+                           |                       |
+                           |                       |
+                           |                       |
+                           |                       |
+                           |                       |
+                           |                       |
+                           |                       |
+                           +-----------------------+
+				   0x00000000
+----
+////
+
+=== Zero Copy Access To User Space
+
+We looked at the functions that allow us to copy data between user space and kernel
+space. If the amount of data we're dealing with is huge we need a more efficient
+mechanism. We'd like to keep our system as efficient as possible and free up
+our processor to do other activities besides copying.
+
+The Linux kernel offers _zero copy_ options:
+
+mmap::
+This system call allows user space to directly access memory mapped I/O space.
+
+get_user_pages_fast::
+This allows a kernel module to get access to user pages without copying them.
+The API is more complex to use though.
