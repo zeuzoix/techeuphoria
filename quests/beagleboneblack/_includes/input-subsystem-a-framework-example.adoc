@@ -1,0 +1,340 @@
+== Input Subsystem, A Framework Example
+
+The input subsystem takes care of all the input events coming
+from the user. It was initially written to support the USB HID (Human
+Interface Device) devices, it expanded to handle all types of input
+devices irrespective of the interface. Some examples of input devices
+supported are: keyboards, mice, joysticks, touchscreens, etc..
+
+The input subsystem is split into two parts:
+
+Device drivers:: This part communicates with the hardware of the input
+device through the interface bus e.g. USB and provides events such as
+keystrokes, mouse movements, touchscreen coordinates, etc.. to the input
+core.
+
+Event handlers:: This part gets the events from the drivers and passes
+them where needed mostly through interfaces such as _evdev_.
+
+In user space we have different graphic stacks which will use the events
+such as X.Org, Wayland or Android's InputManager.
+
+
+////
+====
+[[input-subsystem-diagram]]
+.Input Subsystem Diagram
+image::input-subsystem-diagram.png[width="640", height="480", align="center", link={awestruct-imagesdir}/input-subsystem-diagram.png]
+====
+////
+
+=== Input Subsystem Overview
+
+In order to configure the kernel with the input subsystem enabled
+we have to enable the configuration option _CONFIG_INPUT_. We see
+information in _menuconfig INPUT_
+
+* tristate "Generic input layer (needed for keyboard, mouse, ...)"
+
+====
+[[menuconfig-input]]
+.menuconfig INPUT
+image::menuconfig-input.png[width="640", height="480", align="center", link={awestruct-imagesdir}/menuconfig-input.png]
+====
+ 
+The framework is implemented in _drivers/input/_
+
+* _input.c_
+* _input-polldev.c_
+* _evbug.c_
+
+The input subsystem implements a single character driver and defines
+the user/kernel API in _include/uapi/linux/input.h_. The set of operations
+that a input driver must implement and the helper functions for the driver
+are alse defined by the input subsystem. The important structures are defined in
+_include/linux/input.h_
+
+. _struct input_dev_ for the device driver part
+. _struct input_handler_ for the event handler part
+
+==== Input Subsystem API For Allocation And Deallocation
+
+The _input device_ is described by a very long _struct input_dev_ structure. Along
+with the definition we have the prototype of the functions used to allocate and free
+an object of the structure type i.e
+
+* _struct input_dev *input_allocate_device(void);_
+* _void input_free_device(struct input_dev *dev);_
+
+[source, c]
+----
+struct input_dev {	<1>
+        const char *name;
+        const char *phys;
+        const char *uniq;
+        struct input_id id;
+
+        unsigned long propbit[BITS_TO_LONGS(INPUT_PROP_CNT)];
+
+        unsigned long evbit[BITS_TO_LONGS(EV_CNT)];
+        unsigned long keybit[BITS_TO_LONGS(KEY_CNT)];
+        unsigned long relbit[BITS_TO_LONGS(REL_CNT)];
+        unsigned long absbit[BITS_TO_LONGS(ABS_CNT)];
+        unsigned long mscbit[BITS_TO_LONGS(MSC_CNT)];
+        unsigned long ledbit[BITS_TO_LONGS(LED_CNT)];
+        unsigned long sndbit[BITS_TO_LONGS(SND_CNT)];
+        unsigned long ffbit[BITS_TO_LONGS(FF_CNT)];
+        unsigned long swbit[BITS_TO_LONGS(SW_CNT)];
+
+        unsigned int hint_events_per_packet;
+
+        unsigned int keycodemax;
+        unsigned int keycodesize;
+        void *keycode;
+
+        int (*setkeycode)(struct input_dev *dev,
+                          const struct input_keymap_entry *ke,
+                          unsigned int *old_keycode);
+        int (*getkeycode)(struct input_dev *dev,
+                          struct input_keymap_entry *ke);
+
+        struct ff_device *ff;
+
+        unsigned int repeat_key;
+        struct timer_list timer;
+
+        int rep[REP_CNT];
+
+        struct input_mt *mt;
+
+        struct input_absinfo *absinfo;
+
+        unsigned long key[BITS_TO_LONGS(KEY_CNT)];
+        unsigned long led[BITS_TO_LONGS(LED_CNT)];
+        unsigned long snd[BITS_TO_LONGS(SND_CNT)];
+        unsigned long sw[BITS_TO_LONGS(SW_CNT)];
+
+        int (*open)(struct input_dev *dev);
+        void (*close)(struct input_dev *dev);
+        int (*flush)(struct input_dev *dev, struct file *file);
+        int (*event)(struct input_dev *dev, unsigned int type, unsigned int code, int value);
+
+        struct input_handle __rcu *grab;
+
+        spinlock_t event_lock;
+        struct mutex mutex;
+
+        unsigned int users;
+        bool going_away;
+
+        struct device dev;
+
+        struct list_head        h_list;
+        struct list_head        node;
+
+        unsigned int num_vals;
+        unsigned int max_vals;
+        struct input_value *vals;
+
+        bool devres_managed;
+};
+.
+.
+.
+struct input_dev __must_check *input_allocate_device(void);	<2>
+struct input_dev __must_check *devm_input_allocate_device(struct device *);
+void input_free_device(struct input_dev *dev);	<3>
+----
+<1> _struct input_dev_ is defined
+<2> _input_allocate_device_ is used to allocate the structure
+<3> _input_free_device_ is used to free the structure
+
+==== Input Subsystem API For Registration And Deregistration
+
+Depending on the type of event that will be generated, the input bit fields evbit and keybit
+of the _struct input_dev_ must be configured. Let's take a look at the input driver for the
+Apple USB touchpad. This is located at _drivers/input/mouse/appletouch.c_.
+
+[source, c]
+----
+.
+.
+.
+static int atp_probe(struct usb_interface *iface,
+                     const struct usb_device_id *id)
+{
+        struct atp *dev;
+        struct input_dev *input_dev;
+
+.
+.
+        set_bit(EV_KEY, input_dev->evbit);	<1>
+        set_bit(BTN_TOUCH, input_dev->keybit);	<2>
+        set_bit(BTN_TOOL_FINGER, input_dev->keybit);
+        set_bit(BTN_TOOL_DOUBLETAP, input_dev->keybit);
+        set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
+        set_bit(BTN_LEFT, input_dev->keybit);
+.
+.
+.
+        return error;
+}
+.
+.
+.
+----
+<1> _EV_KEY_ type of events are generated by this input device
+<2> _BTN_TOUCH_ events code are generated
+
+In the example above _set_bit()_ is an atomic operation allowing to set a particular
+bit to 1. Once the input device is allocated and filled, we have to register
+the allocated _struct input_dev_ object with the input subsystem. This is done
+with the _input_register_device_ function. In the same example we see the registration
+process just after initialising the allocated device structure.
+
+[source, c]
+----
+.
+.
+.
+static int atp_probe(struct usb_interface *iface,
+                     const struct usb_device_id *id)
+{
+        struct atp *dev;
+        struct input_dev *input_dev;
+
+.
+.
+        set_bit(EV_KEY, input_dev->evbit);
+        set_bit(BTN_TOUCH, input_dev->keybit);
+        set_bit(BTN_TOOL_FINGER, input_dev->keybit);
+        set_bit(BTN_TOOL_DOUBLETAP, input_dev->keybit);
+        set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
+        set_bit(BTN_LEFT, input_dev->keybit);
+
+        error = input_register_device(dev->input);	<1>
+        if (error)
+                goto err_free_buffer;
+.
+.
+.
+
+        return error;
+}
+
+----
+<1> _input_register_device_ is used to register the input device object
+
+
+When the driver is unloaded, the input device will be unregistered using
+_input_unregister_device_. We see this being called in the driver code.
+
+[source,c]
+----
+.
+.
+static void atp_disconnect(struct usb_interface *iface)
+{
+        struct atp *dev = usb_get_intfdata(iface);
+
+        usb_set_intfdata(iface, NULL);
+        if (dev) {
+                usb_kill_urb(dev->urb);
+                input_unregister_device(dev->input); 	<1>
+                usb_free_coherent(dev->udev, dev->info->datalen,
+                                  dev->data, dev->urb->transfer_dma);
+                usb_free_urb(dev->urb);
+                kfree(dev);
+        }
+        dev_info(&iface->dev, "input: appletouch disconnected\n");
+}
+.
+.
+----
+<1> _input_unregister_device_ is used to unregister the input device object
+
+
+==== Input Subsystem API For Injecting Events
+
+The input driver now has the task of sending events to the event handler based
+on the status of the input device. The events are sent by the driver to the event
+handler using _input_event_. This function is defined in _drivers/input/input.c_.
+
+[source, c]
+----
+/**     
+ * input_event() - report new input event
+ * @dev: device that generated the event
+ * @type: type of the event
+ * @code: event code
+ * @value: value of the event
+ *
+ * This function should be used by drivers implementing various input
+ * devices to report input events. See also input_inject_event().
+ *
+ * NOTE: input_event() may be safely used right after input device was
+ * allocated with input_allocate_device(), even before it is registered
+ * with input_register_device(), but the event will not reach any of the
+ * input handlers. Such early invocation of input_event() may be used
+ * to 'seed' initial state of a switch or initial position of absolute
+ * axis, etc.
+ */
+void input_event(struct input_dev *dev,
+                 unsigned int type, unsigned int code, int value)
+{
+        unsigned long flags;
+
+        if (is_event_supported(type, dev->evbit, EV_MAX)) {
+
+                spin_lock_irqsave(&dev->event_lock, flags);
+                input_handle_event(dev, type, code, value);
+                spin_unlock_irqrestore(&dev->event_lock, flags);
+        }
+}
+EXPORT_SYMBOL(input_event);
+----
+
+
+The event types are documented in _Documentation/input/event-codes.txt_.
+An event is composed by one or several input data changes (packet of input data changes)
+such as the button state, the relative or absolute position along an axis, etc..
+After submitting potentially multiple events, the input core must be notified by calling
+_input_sync_ whic is defined in _include/linux/input.h_.
+
+
+[source, c]
+----
+.
+.
+static inline void input_sync(struct input_dev *dev)
+{                
+        input_event(dev, EV_SYN, SYN_REPORT, 0);
+}
+.
+.
+----
+The input subsystem provides other wrappers such as
+input_report_key(), input_report_abs(), input_report_rel(), etc.. which are also defined
+in _include/linux/input.h_
+
+[source, c]
+----
+.
+.
+tatic inline void input_report_key(struct input_dev *dev, unsigned int code, int value)
+{                
+        input_event(dev, EV_KEY, code, !!value);
+}
+
+static inline void input_report_rel(struct input_dev *dev, unsigned int code, int value)
+{
+        input_event(dev, EV_REL, code, value);
+}               
+                
+static inline void input_report_abs(struct input_dev *dev, unsigned int code, int value)
+{
+        input_event(dev, EV_ABS, code, value);
+}
+.
+.
+----
