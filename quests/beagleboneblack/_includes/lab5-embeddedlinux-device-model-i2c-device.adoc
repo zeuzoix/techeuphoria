@@ -132,7 +132,7 @@ _i2c0_ bus definition.
 .
 ----
 <1> Include of _am33xx.dtsi_ which is the SOC base file
-<1> Include of _am335x-bone-common.dtsi_ which is the bone platform base file
+<2> Include of _am335x-bone-common.dtsi_ which is the bone platform base file
 
 We take a look at the _am33xx.dtsi_ 
 
@@ -344,7 +344,7 @@ To see the device tree blob we use the _dtc_ utility.
                         #address-cells = <0x1>;
                         compatible = "ti,omap4-i2c";
 
-                        nunchuck@52 { <r21>
+                        nunchuck@52 { <2>
                                 reg = <0x52>;
                                 compatible = "nintendo,nunchuck";
                         };
@@ -378,7 +378,7 @@ To see the device tree blob we use the _dtc_ utility.
 };
 ----
 <1> The I2C1 device
-<2> The nunchuck devuce in the device tree blob
+<2> The nunchuck device in the device tree blob
 
 === Implement A Basic I2C Driver For The Nunchuck
 
