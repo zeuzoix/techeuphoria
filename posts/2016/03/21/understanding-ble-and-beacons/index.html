@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Technical Odyssey</title>
+<link href="http://zeuzoix.github.io/techeuphoria/stylesheets/app.css" rel="stylesheet">
+<link href="/techeuphoria/feed.xml" rel="alternate" type="application/atom+xml">
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/vendor/custom.modernizr.js"></script>
+<link href="http://zeuzoix.github.io/techeuphoria/humans.txt" rel="author" type="text/plain">
+</head>
+<body class="antialiased">
+<div class="fixed-width">
+<nav class="top-bar">
+<ul class="title-area">
+<li class="name">
+<h1>
+<a href="/techeuphoria/">
+TechEuphoria
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon">
+<a href="#"><span></span></a>
+</li>
+</ul>
+<section class="top-bar-section">
+<ul class="left">
+<li class="divider">
+<li>
+<a href="/techeuphoria/quests/index.html">/quests</a>
+</li>
+</li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+</div>
+<div class="row">
+<div class="large-12 columns">
+<h1></h1>
+</div>
+</div>
+<div class="row" id="content">
+<div class="large-12 columns">
+<article class="post">
+<header class="post-head">
+<h1 class="title">
+<a href="/techeuphoria/posts/2016/03/21/understanding-ble-and-beacons/">Understanding Bluetooth Low Energy And Beacons</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2016-03-21T00:00:00+00:00">
+March 21, 2016
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apple announced the iBeacon format, which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon. Google followed, defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beacon-hardware"><a class="anchor" href="#beacon-hardware"></a>Beacon Hardware</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are several vendors and solution providers for beacons. All of them support
+the iBeacon format. If you&#8217;re researching the hardware required to deploy a beacon
+solution then this <a href="http://www.aislelabs.com/reports/beacon-guide/" target="_blank">report</a> from Aislelabs might be useful.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-bluetooth-le"><a class="anchor" href="#about-bluetooth-le"></a>About Bluetooth LE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can&#8217;t leave out understanding the basics of the technology used in
+the beacon solution. A good introduction to BLE can be obtained from this
+<a href="http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/introduction-to-bluetooth-low-energy-v4-0/" target="_blank">introduction</a> given by Argenox.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="understanding-ble-advertising"><a class="anchor" href="#understanding-ble-advertising"></a>Understanding BLE Advertising</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The foundation of beacons is based on its advertising mechanism. Beacons are effective
+because they allow devices to discover them without having to establish a connection with the
+beacon. This <a href="http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/a-ble-advertising-primer/" target="_blank">write-up</a> from Argenox is a good description of
+the BLE advertising mechanism and how it applies to beacons.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-an-android-app-to-discover-beacons"><a class="anchor" href="#implementing-an-android-app-to-discover-beacons"></a>Implementing An Android App To Discover Beacons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally these links provide a useful overview of beacons and also provides source code
+that can be used to develop a beacon detector and a beacon emitter. The beacon detector
+should work on most Android phones but the beacon emitter may only be supported on a limited
+set of phones. Going forward more manufacturers may design their phones to support beacon
+emitters. Again adding the emitter functionallity is added complexity in the bluetooth hardware
+module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/" target="_blank">Building an Android Beacon Overview</a></p>
+</li>
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/" target="_blank">How to build an Android beacon detector</a></p>
+</li>
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/" target="_blank">How to build an Android beacon emitter</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/android/">android</a>
+, <a href="/techeuphoria/posts/tag/bluetooth/">bluetooth</a>
+, <a href="/techeuphoria/posts/tag/beacons/">beacons</a></div>
+</footer>
+<hr>
+<div id="comments">
+
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            var disqus_shortname = 'zeuzoix-techblog';
+            var disqus_url = "http://zeuzoix.github.io/techeuphoria/posts/2016/03/21/understanding-ble-and-beacons/";
+            var disqus_developer = null;
+            var disqus_identifier = "4a57fda4afa95c7c5d84c7132118e90ea7b5949e";
+            (function() {
+              var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=zeuzoix-techblog">comments powered by Disqus.</a></noscript>
+          
+</div>
+<hr>
+</article>
+
+
+</div>
+</div>
+<footer class="row" style="max-width: 100%">
+<hr>
+<div class="large-6 columns">
+<p style="margin-bottom: .75em">
+&copy; conrad.s.j.gomes@gmail.com 2016
+<br>
+Built on Foundation. Baked by Awestruct. Composed with Asciidoc
+</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+<li>
+<a href="http://zeuzoix.github.io/techeuphoria/">Home</a>
+</li>
+</ul>
+</div>
+</footer>
+<script>
+document.write('<script src=' + ('__proto__' in {} ? 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/zepto' : 'http://zeuzoix.github.io/techeuphoria/javascripts/vendor/jquery') + '.js><\/script>')
+</script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.js"></script>
+<script src="http://zeuzoix.github.io/techeuphoria/javascripts/foundation/foundation.topbar.js"></script>
+<script>
+$(document).foundation()
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-61553633-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</body>
+</html>

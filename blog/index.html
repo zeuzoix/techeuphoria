@@ -49,6 +49,97 @@ TechEuphoria
 <article class="post">
 <header class="post-head">
 <h1 class="title">
+<a href="/techeuphoria/posts/2016/03/21/understanding-ble-and-beacons/">Understanding Bluetooth Low Energy And Beacons</a>
+</h1>
+<h4>
+<em>by</em>
+<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
+Conrad Gomes
+</a>
+on
+<time class="pubdate" datetime="2016-03-21T00:00:00+00:00">
+March 21, 2016
+</time>
+</h4>
+</header>
+<div class="post-body">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apple announced the iBeacon format, which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon. Google followed, defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beacon-hardware"><a class="anchor" href="#beacon-hardware"></a>Beacon Hardware</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are several vendors and solution providers for beacons. All of them support
+the iBeacon format. If you&#8217;re researching the hardware required to deploy a beacon
+solution then this <a href="http://www.aislelabs.com/reports/beacon-guide/" target="_blank">report</a> from Aislelabs might be useful.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-bluetooth-le"><a class="anchor" href="#about-bluetooth-le"></a>About Bluetooth LE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can&#8217;t leave out understanding the basics of the technology used in
+the beacon solution. A good introduction to BLE can be obtained from this
+<a href="http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/introduction-to-bluetooth-low-energy-v4-0/" target="_blank">introduction</a> given by Argenox.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="understanding-ble-advertising"><a class="anchor" href="#understanding-ble-advertising"></a>Understanding BLE Advertising</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The foundation of beacons is based on its advertising mechanism. Beacons are effective
+because they allow devices to discover them without having to establish a connection with the
+beacon. This <a href="http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/a-ble-advertising-primer/" target="_blank">write-up</a> from Argenox is a good description of
+the BLE advertising mechanism and how it applies to beacons.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-an-android-app-to-discover-beacons"><a class="anchor" href="#implementing-an-android-app-to-discover-beacons"></a>Implementing An Android App To Discover Beacons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally these links provide a useful overview of beacons and also provides source code
+that can be used to develop a beacon detector and a beacon emitter. The beacon detector
+should work on most Android phones but the beacon emitter may only be supported on a limited
+set of phones. Going forward more manufacturers may design their phones to support beacon
+emitters. Again adding the emitter functionallity is added complexity in the bluetooth hardware
+module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/" target="_blank">Building an Android Beacon Overview</a></p>
+</li>
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/" target="_blank">How to build an Android beacon detector</a></p>
+</li>
+<li>
+<p><a href="https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/" target="_blank">How to build an Android beacon emitter</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<footer class="post-footer">
+<div class="tags"><i class="label icon-tags"></i>
+<a href="/techeuphoria/posts/tag/android/">android</a>
+, <a href="/techeuphoria/posts/tag/bluetooth/">bluetooth</a>
+, <a href="/techeuphoria/posts/tag/beacons/">beacons</a></div>
+</footer>
+<hr>
+</article>
+
+<article class="post">
+<header class="post-head">
+<h1 class="title">
 <a href="/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/">Testing The SPI Driver In Linux</a>
 </h1>
 <h4>
@@ -5060,157 +5151,6 @@ to any package name listed in your <em>apt-get install</em> command.</p>
 <a href="/techeuphoria/posts/tag/linux/">linux</a>
 , <a href="/techeuphoria/posts/tag/packages/">packages</a>
 , <a href="/techeuphoria/posts/tag/apt/">apt</a></div>
-</footer>
-<hr>
-</article>
-
-<article class="post">
-<header class="post-head">
-<h1 class="title">
-<a href="/techeuphoria/posts/2014/06/30/a-new-website/">A New Beginning</a>
-</h1>
-<h4>
-<em>by</em>
-<a class="author" href="http://in.linkedin.com/in/conradsjgomes">
-Conrad Gomes
-</a>
-on
-<time class="pubdate" datetime="2014-06-30T00:00:00+00:00">
-June 30, 2014
-</time>
-</h4>
-</header>
-<div class="post-body">
-<div class="sect1">
-<h2 id="epoch"><a class="anchor" href="#epoch"></a>Epoch</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>TechEuphoria was developed during the second quarter of 2014 with the
-help of a wonderful <a href="http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html">slide deck</a> from an open source
-advocate Dan Allen(<a href="http://www.mojavelinux.com">mojavelinux</a>).</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="objectives"><a class="anchor" href="#objectives"></a>Objectives</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>I had an overall understanding of what I wanted to achieve. It is to build a lean
-and clean website, have the ability to be agile and publish with ease and at will.
-My objectives took form over the course of my search for a solution as I
-became familiar with the different concepts and paradigms of web design and
-development. My objectives can now be summarized as follows:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Use a decentrallized tool with which TechEuphoria can be built locally before
-publishing it to the world wide web.</p>
-</li>
-<li>
-<p>The tools chosen should have a mechanism with which the presentation of the
-website could be separated from the content.</p>
-</li>
-<li>
-<p>Use responsive website design(<a href="http://en.wikipedia.org/wiki/Responsive_web_design">RWD</a>) to
-allow users with devices of different displays to consume the content.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="a-journey-of-errors"><a class="anchor" href="#a-journey-of-errors"></a>A Journey of Errors</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>My objectives were more or less clear. I needed a way to work on my website,
-whenever and wherever I wanted to. I knew Git was a good way to achieve
-it but I did not know about <a href="https://pages.github.com">Github Pages</a> and started
-off with the first choice that came to mind and that was <a href="http://wordpress.com">Wordpress</a>.</p>
-</div>
-<div class="paragraph">
-<p>So begain my pursuit to build TechEuphoria with the objectives given. I initially
-figured a way to deploy and manage this website with the help of the following
-links:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><a href="http://davidwinter.me/articles/2012/04/09/install-and-manage-wordpress-with-git/">Install and manage Wordpress with Git</a></p>
-</li>
-<li>
-<p><a href="http://culttt.com/2013/04/08/how-to-deploy-wordpress-themes-with-git">How to deploy WordPress themes with Git</a></p>
-</li>
-<li>
-<p><a href="http://mattbanks.me/wordpress-deployments-with-git">Managing WordPress Deployments With Git</a></p>
-</li>
-<li>
-<p><a href="http://blog.g-design.net/post/60019471157/managing-and-deploying-wordpress-with-git">Managing and deploying WordPress with Git</a></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>After days of playing around and understanding the details of Wordpress I
-realized that it was still difficult to publish and the fact of dumping the
-SQL database to a file to sync different copies of the website was a hack
-rather than a solution. Despite getting the solution working I abandoned
-it completely on the 30th of May. My exploits are stored in the logs of
-the following repositories:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><a href="https://github.com/zeuzoix/techeuphoria_wordpress">GitHub repository</a></p>
-</li>
-<li>
-<p><a href="https://bitbucket.org/zeuzoix/techeuphoria_wordpress">Bitbucket repository</a></p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="tools"><a class="anchor" href="#tools"></a>Tools</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The following represents the tools that I use to compile and publish this website:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>TechEuphoria content is written in <a href="http://asciidoc.org">AsciiDoc</a>.</p>
-</li>
-<li>
-<p>It is transformed by <a href="http://awestruct.org">Awestruct</a> and
-<a href="http://asciidoctor.org">Asciidoctor</a> into a static website.</p>
-</li>
-<li>
-<p>It uses <a href="https://pages.github.com">Github Pages</a> as its publishing engine.</p>
-</li>
-<li>
-<p>I use <a href="http://www.vim.org">Vim</a> as my text editor to edit everything.</p>
-</li>
-<li>
-<p>My development machine is an <a href="http://www.ubuntu.com">Ubuntu</a> guest on an
-<a href="https://www.virtualbox.org">Oracle Virtual Box</a></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Happy Blogging!</p>
-</div>
-</div>
-</div>
-</div>
-<footer class="post-footer">
-<div class="tags"><i class="label icon-tags"></i>
-<a href="/techeuphoria/posts/tag/github pages/">github pages</a>
-, <a href="/techeuphoria/posts/tag/asciidoctor/">asciidoctor</a>
-, <a href="/techeuphoria/posts/tag/asciidoc/">asciidoc</a>
-, <a href="/techeuphoria/posts/tag/awestruct/">awestruct</a>
-, <a href="/techeuphoria/posts/tag/blog/">blog</a>
-, <a href="/techeuphoria/posts/tag/website/">website</a>
-, <a href="/techeuphoria/posts/tag/www/">www</a></div>
 </footer>
 <hr>
 </article>

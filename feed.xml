@@ -5,13 +5,114 @@
 <author>
 <name>Conrad Gomes</name>
 </author>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-03-21T21:01:10+05:30</updated>
 <link href="http://zeuzoix.github.io/techeuphoria/feed.xml" rel="self" type="application/atom+xml" />
 <link href="http://zeuzoix.github.io/techeuphoria/" rel="alternate" type="text/html" />
 <entry>
+<id>http://zeuzoix.github.io/techeuphoria/posts/2016/03/21/understanding-ble-and-beacons/</id>
+<title>Understanding Bluetooth Low Energy And Beacons</title>
+<updated>2016-03-21T21:01:10+05:30</updated>
+<published>2016-03-21T00:00:00+00:00</published>
+<link href="http://zeuzoix.github.io/techeuphoria/posts/2016/03/21/understanding-ble-and-beacons/" rel="alternate" type="text/html" />
+<author>
+<name>Conrad Gomes</name>
+</author>
+<category term="android"></category>
+<category term="bluetooth"></category>
+<category term="beacons"></category>
+<summary>
+Apple announced the iBeacon format, which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon. Google followed, defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.
+
+
+
+
+Beacon Hardware
+
+
+There are several vendors and solution providers for beacons. All of them support
+the iBeacon format. If you&#8217;re researching the hardware required to deploy a beacon
+solution then this report from Aislelabs might be useful.
+
+
+
+
+About Bluetooth LE
+
+
+We can&#8217;t leave out understanding the basics of the technology used in
+the beacon solution. A good introduction to BLE can be obtained...
+</summary>
+<content type="html">
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apple announced the iBeacon format, which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon. Google followed, defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;beacon-hardware&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#beacon-hardware&quot;&gt;&lt;/a&gt;Beacon Hardware&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are several vendors and solution providers for beacons. All of them support
+the iBeacon format. If you’re researching the hardware required to deploy a beacon
+solution then this &lt;a href=&quot;http://www.aislelabs.com/reports/beacon-guide/&quot; target=&quot;_blank&quot;&gt;report&lt;/a&gt; from Aislelabs might be useful.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;about-bluetooth-le&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#about-bluetooth-le&quot;&gt;&lt;/a&gt;About Bluetooth LE&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We can’t leave out understanding the basics of the technology used in
+the beacon solution. A good introduction to BLE can be obtained from this
+&lt;a href=&quot;http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/introduction-to-bluetooth-low-energy-v4-0/&quot; target=&quot;_blank&quot;&gt;introduction&lt;/a&gt; given by Argenox.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;understanding-ble-advertising&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#understanding-ble-advertising&quot;&gt;&lt;/a&gt;Understanding BLE Advertising&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The foundation of beacons is based on its advertising mechanism. Beacons are effective
+because they allow devices to discover them without having to establish a connection with the
+beacon. This &lt;a href=&quot;http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/a-ble-advertising-primer/&quot; target=&quot;_blank&quot;&gt;write-up&lt;/a&gt; from Argenox is a good description of
+the BLE advertising mechanism and how it applies to beacons.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;implementing-an-android-app-to-discover-beacons&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#implementing-an-android-app-to-discover-beacons&quot;&gt;&lt;/a&gt;Implementing An Android App To Discover Beacons&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally these links provide a useful overview of beacons and also provides source code
+that can be used to develop a beacon detector and a beacon emitter. The beacon detector
+should work on most Android phones but the beacon emitter may only be supported on a limited
+set of phones. Going forward more manufacturers may design their phones to support beacon
+emitters. Again adding the emitter functionallity is added complexity in the bluetooth hardware
+module.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/&quot; target=&quot;_blank&quot;&gt;Building an Android Beacon Overview&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/&quot; target=&quot;_blank&quot;&gt;How to build an Android beacon detector&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/&quot; target=&quot;_blank&quot;&gt;How to build an Android beacon emitter&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content>
+</entry>
+<entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/</id>
 <title>Testing The SPI Driver In Linux</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-11-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/11/20/testing-the-spi-driver-in-linux/" rel="alternate" type="text/html" />
 <author>
@@ -393,7 +494,7 @@ Read JEDEC&lt;/code&gt;&lt;/pre&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/</id>
 <title>Benchmarking RT Preempt Kernel 3.18 On BeagleBone Black</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-04-21T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/21/benchmarking-rt-preempt-kernel-on-beaglebone-black/" rel="alternate" type="text/html" />
 <author>
@@ -932,7 +1033,7 @@ and firmware are available &lt;a href=&quot;https://github.com/zeuzoix/compiled-
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 2</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-04-16T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/16/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part2/" rel="alternate" type="text/html" />
 <author>
@@ -1673,7 +1774,7 @@ this kernel and benchmark its performance.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/</id>
 <title>Porting RT Preempt To Kernel 3.18 For BeagleBone Black - Part 1</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-04-14T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/04/14/port-rt-preempt-to-kernel-3point18-for-beaglebone-black-part1/" rel="alternate" type="text/html" />
 <author>
@@ -2529,7 +2630,7 @@ applying the rt-preempt patches.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 2</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-02-06T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/02/06/imx28-ltib-bsp-build-part2/" rel="alternate" type="text/html" />
 <author>
@@ -2897,7 +2998,7 @@ drwxrwxr-x  2 ubuntu ubuntu    4096 Feb  4 04:38 ubuntu-ltib-patch&lt;/code&gt;&
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/</id>
 <title>Building The i.MX28 Board Support Package (BSP) With LTIB - Part 1</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-01-28T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/28/imx28-ltib-bsp-build-part1/" rel="alternate" type="text/html" />
 <author>
@@ -4349,7 +4450,7 @@ next step which is configuration of the BSP.&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/</id>
 <title>Understanding The i.MX28 sdimage Utility Code</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2015-01-20T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2015/01/20/imx28-sdimage-tool-code-walkthrough/" rel="alternate" type="text/html" />
 <author>
@@ -4724,7 +4825,7 @@ ubuntu@ubuntu-VirtualBox:~/beta/projectX/ltib/rpm/BUILD/uuc-10.12.01$&lt;/code&g
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/</id>
 <title>SD Card Access on an Ubuntu virtual machine running on a Windows host through VirtualBox</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2014-12-09T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/12/09/sdcard-access-on-ubuntu-guest-on-a-windows-host-with-virtualbox/" rel="alternate" type="text/html" />
 <author>
@@ -5029,7 +5130,7 @@ as explained here and then compared to see the new hard disk device:&lt;/p&gt;
 <entry>
 <id>http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/</id>
 <title>Getting information about packages using APT</title>
-<updated>2016-01-11T22:41:08+05:30</updated>
+<updated>2016-01-19T23:18:13+05:30</updated>
 <published>2014-11-05T00:00:00+00:00</published>
 <link href="http://zeuzoix.github.io/techeuphoria/posts/2014/11/05/apt-cache-show/" rel="alternate" type="text/html" />
 <author>
@@ -5136,171 +5237,6 @@ with dependencies and a description. We check the information for
 &lt;em&gt;build-essential&lt;/em&gt; which is not a single package but a list of packages
 which are tagged as &lt;em&gt;&amp;quot;Build-Essential: yes&amp;quot;&lt;/em&gt;. The same command can be applied
 to any package name listed in your &lt;em&gt;apt-get install&lt;/em&gt; command.&lt;/p&gt;
-&lt;/div&gt;
-</content>
-</entry>
-<entry>
-<id>http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/</id>
-<title>A New Beginning</title>
-<updated>2014-11-05T08:40:50+05:30</updated>
-<published>2014-06-30T00:00:00+00:00</published>
-<link href="http://zeuzoix.github.io/techeuphoria/posts/2014/06/30/a-new-website/" rel="alternate" type="text/html" />
-<author>
-<name>Conrad Gomes</name>
-</author>
-<category term="github pages"></category>
-<category term="asciidoctor"></category>
-<category term="asciidoc"></category>
-<category term="awestruct"></category>
-<category term="blog"></category>
-<category term="website"></category>
-<category term="www"></category>
-<summary>
-Epoch
-
-
-TechEuphoria was developed during the second quarter of 2014 with the
-help of a wonderful slide deck from an open source
-advocate Dan Allen(mojavelinux).
-
-
-
-
-Objectives
-
-
-I had an overall understanding of what I wanted to achieve. It is to build a lean
-and clean website, have the ability to be agile and publish with ease and at will.
-My objectives took form over the course of my search for a solution as I
-became familiar with the different concepts and paradigms of web design and
-development. My objectives can now be summarized as follows:
-
-
-
-
-Use a decentrallized tool with which TechEuphoria can be built locally before
-publishing it to the...
-</summary>
-<content type="html">
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;epoch&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#epoch&quot;&gt;&lt;/a&gt;Epoch&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;TechEuphoria was developed during the second quarter of 2014 with the
-help of a wonderful &lt;a href=&quot;http://mojavelinux.github.io/decks/docs-workshop/oscon2013/index.html&quot;&gt;slide deck&lt;/a&gt; from an open source
-advocate Dan Allen(&lt;a href=&quot;http://www.mojavelinux.com&quot;&gt;mojavelinux&lt;/a&gt;).&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;objectives&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#objectives&quot;&gt;&lt;/a&gt;Objectives&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I had an overall understanding of what I wanted to achieve. It is to build a lean
-and clean website, have the ability to be agile and publish with ease and at will.
-My objectives took form over the course of my search for a solution as I
-became familiar with the different concepts and paradigms of web design and
-development. My objectives can now be summarized as follows:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;Use a decentrallized tool with which TechEuphoria can be built locally before
-publishing it to the world wide web.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;The tools chosen should have a mechanism with which the presentation of the
-website could be separated from the content.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Use responsive website design(&lt;a href=&quot;http://en.wikipedia.org/wiki/Responsive_web_design&quot;&gt;RWD&lt;/a&gt;) to
-allow users with devices of different displays to consume the content.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;a-journey-of-errors&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#a-journey-of-errors&quot;&gt;&lt;/a&gt;A Journey of Errors&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;My objectives were more or less clear. I needed a way to work on my website,
-whenever and wherever I wanted to. I knew Git was a good way to achieve
-it but I did not know about &lt;a href=&quot;https://pages.github.com&quot;&gt;Github Pages&lt;/a&gt; and started
-off with the first choice that came to mind and that was &lt;a href=&quot;http://wordpress.com&quot;&gt;Wordpress&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;So begain my pursuit to build TechEuphoria with the objectives given. I initially
-figured a way to deploy and manage this website with the help of the following
-links:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://davidwinter.me/articles/2012/04/09/install-and-manage-wordpress-with-git/&quot;&gt;Install and manage Wordpress with Git&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://culttt.com/2013/04/08/how-to-deploy-wordpress-themes-with-git&quot;&gt;How to deploy WordPress themes with Git&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://mattbanks.me/wordpress-deployments-with-git&quot;&gt;Managing WordPress Deployments With Git&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;http://blog.g-design.net/post/60019471157/managing-and-deploying-wordpress-with-git&quot;&gt;Managing and deploying WordPress with Git&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;After days of playing around and understanding the details of Wordpress I
-realized that it was still difficult to publish and the fact of dumping the
-SQL database to a file to sync different copies of the website was a hack
-rather than a solution. Despite getting the solution working I abandoned
-it completely on the 30th of May. My exploits are stored in the logs of
-the following repositories:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/zeuzoix/techeuphoria_wordpress&quot;&gt;GitHub repository&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://bitbucket.org/zeuzoix/techeuphoria_wordpress&quot;&gt;Bitbucket repository&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;tools&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#tools&quot;&gt;&lt;/a&gt;Tools&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The following represents the tools that I use to compile and publish this website:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;TechEuphoria content is written in &lt;a href=&quot;http://asciidoc.org&quot;&gt;AsciiDoc&lt;/a&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;It is transformed by &lt;a href=&quot;http://awestruct.org&quot;&gt;Awestruct&lt;/a&gt; and
-&lt;a href=&quot;http://asciidoctor.org&quot;&gt;Asciidoctor&lt;/a&gt; into a static website.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;It uses &lt;a href=&quot;https://pages.github.com&quot;&gt;Github Pages&lt;/a&gt; as its publishing engine.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;I use &lt;a href=&quot;http://www.vim.org&quot;&gt;Vim&lt;/a&gt; as my text editor to edit everything.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;My development machine is an &lt;a href=&quot;http://www.ubuntu.com&quot;&gt;Ubuntu&lt;/a&gt; guest on an
-&lt;a href=&quot;https://www.virtualbox.org&quot;&gt;Oracle Virtual Box&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Happy Blogging!&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 </content>
 </entry>

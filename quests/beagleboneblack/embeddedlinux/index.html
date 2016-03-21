@@ -288,6 +288,89 @@ TechEuphoria
 <li><a href="#i2c-device-driver-un-registration">38.4. I2C Device Driver (Un)Registration</a></li>
 </ul>
 </li>
+<li><a href="#lab-5-linux-device-model-for-an-i2c-device">39. LAB 5 : Linux Device Model For An I2C Device</a>
+<ul class="sectlevel2">
+<li><a href="#creating-a-new-branch">39.1. Creating A New Branch</a></li>
+<li><a href="#about-the-nunchuck">39.2. About The Nunchuck</a></li>
+<li><a href="#update-the-board-device-tree">39.3. Update The Board Device Tree</a>
+<ul class="sectlevel3">
+<li><a href="#declaring-a-second-i2c-bus">39.3.1. Declaring A Second I2C Bus</a></li>
+<li><a href="#declaring-the-nunchuck-device">39.3.2. Declaring The Nunchuck Device</a></li>
+</ul>
+</li>
+<li><a href="#implement-a-basic-i2c-driver-for-the-nunchuck">39.4. Implement A Basic I2C Driver For The Nunchuck</a>
+<ul class="sectlevel3">
+<li><a href="#compiling-the-em-nunchuck-em-driver">39.4.1. Compiling The <em>nunchuck</em> Driver</a></li>
+<li><a href="#testing-the-em-nunchuck-em-driver">39.4.2. Testing The <em>nunchuck</em> Driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#communicating-with-the-i2c-device">40. Communicating With The I2C Device</a>
+<ul class="sectlevel2">
+<li><a href="#raw-api">40.1. Raw API</a></li>
+<li><a href="#message-transfer-api">40.2. Message Transfer API</a></li>
+<li><a href="#smbus-calls">40.3. SMBus Calls</a>
+<ul class="sectlevel3">
+<li><a href="#list-of-smbus-api">40.3.1. List Of SMBus API</a></li>
+</ul>
+</li>
+<li><a href="#i2c-functionality">40.4. I2C Functionality</a></li>
+</ul>
+</li>
+<li><a href="#pin-muxing">41. Pin Muxing</a>
+<ul class="sectlevel2">
+<li><a href="#device-tree-binding-for-consumer-devices">41.1. Device Tree Binding For Consumer Devices</a>
+<ul class="sectlevel3">
+<li><a href="#pinctrl-client-devices">41.1.1. Pinctrl Client Devices</a></li>
+<li><a href="#pin-controller-devices">41.1.2. Pin Controller Devices</a></li>
+</ul>
+</li>
+<li><a href="#example-on-omap-am33xx">41.2. Example On OMAP / AM33xx</a></li>
+</ul>
+</li>
+<li><a href="#lab-6-communicating-with-the-nunchuck">42. LAB 6 : Communicating With The Nunchuck</a>
+<ul class="sectlevel2">
+<li><a href="#connecting-the-nunchuck">42.1. Connecting The Nunchuck</a></li>
+<li><a href="#configuring-pin-muxing-configuration-for-i2c1">42.2. Configuring Pin Muxing Configuration For I2C1</a></li>
+<li><a href="#add-em-pinctrl-em-properties-to-the-device-tree">42.3. Add <em>pinctrl</em> Properties To The Device Tree</a></li>
+<li><a href="#i2c-bus-tests">42.4. I2C Bus Tests</a></li>
+<li><a href="#nunchuck-device-initialization">42.5. Nunchuck Device Initialization</a></li>
+<li><a href="#read-nunchuck-registers">42.6. Read Nunchuck Registers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#kernel-frameworks">Kernel Frameworks</a>
+<ul class="sectlevel1">
+<li><a href="#user-space-inteface-to-devices">43. User Space Inteface To Devices</a>
+<ul class="sectlevel2">
+<li><a href="#major-minor-numbers">43.1. Major &amp; Minor Numbers</a></li>
+<li><a href="#devices-are-files">43.2. Devices Are Files</a></li>
+<li><a href="#creating-device-files">43.3. Creating Device Files</a></li>
+</ul>
+</li>
+<li><a href="#character-drivers">44. Character Drivers</a>
+<ul class="sectlevel2">
+<li><a href="#file-operations">44.1. File Operations</a></li>
+</ul>
+</li>
+<li><a href="#exchanging-data-with-user-space">45. Exchanging Data With User Space</a>
+<ul class="sectlevel2">
+<li><a href="#zero-copy-access-to-user-space">45.1. Zero Copy Access To User Space</a></li>
+</ul>
+</li>
+<li><a href="#input-subsystem-a-framework-example">46. Input Subsystem, A Framework Example</a>
+<ul class="sectlevel2">
+<li><a href="#input-subsystem-overview">46.1. Input Subsystem Overview</a>
+<ul class="sectlevel3">
+<li><a href="#input-subsystem-api-for-allocation-and-deallocation">46.1.1. Input Subsystem API For Allocation And Deallocation</a></li>
+<li><a href="#input-subsystem-api-for-registration-and-deregistration">46.1.2. Input Subsystem API For Registration And Deregistration</a></li>
+<li><a href="#input-subsystem-api-for-injecting-events">46.1.3. Input Subsystem API For Injecting Events</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -6856,7 +6939,7 @@ _</p>
                 },
         };
 
-        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx1-uart</span><span style="color:#710">&quot;</span></span>, data-&gt;id, res,
+        <span style="color:#080;font-weight:bold">return</span> imx_add_platform_device(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">imx1-uart</span><span style="color:#710">&quot;</span></span>, data-&gt;id, res,        <i class="conum" data-value="1"></i><b>(1)</b>
                         ARRAY_SIZE(res), pdata, <span style="color:#080;font-weight:bold">sizeof</span>(*pdata));
 }
 .
@@ -6867,7 +6950,7 @@ _</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The device is created by thise <em>imx_add_platform_device</em>.</td>
+<td>The device is created by this <em>imx_add_platform_device</em>.</td>
 </tr>
 </table>
 </div>
@@ -7709,7 +7792,7 @@ Here we see the I2C controller defined and disabled.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="c">.
 .
-        i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">7000</span>d000 {
+        i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">7000</span>d000 { <i class="conum" data-value="1"></i><b>(1)</b>
                 compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nvidia,tegra30-i2c</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nvidia,tegra20-i2c</span><span style="color:#710">&quot;</span></span>;
                 reg = &lt;<span style="color:#02b">0x7000d000</span> <span style="color:#02b">0x100</span>&gt;;
                 interrupts = &lt;GIC_SPI <span style="color:#00D">53</span> IRQ_TYPE_LEVEL_HIGH&gt;;
@@ -7718,7 +7801,7 @@ Here we see the I2C controller defined and disabled.</p>
                 clocks = &lt;&amp;tegra_car TEGRA30_CLK_I2C5&gt;,
                          &lt;&amp;tegra_car TEGRA30_CLK_PLL_P_OUT3&gt;;
                 clock-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">div-clk</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fast-clk</span><span style="color:#710">&quot;</span></span>;
-                status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;
+                status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;        <i class="conum" data-value="2"></i><b>(2)</b>
         };
 .
 .</code></pre>
@@ -7728,18 +7811,10 @@ Here we see the I2C controller defined and disabled.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Controller <em>i2c@7000c000</em></td>
+<td>Controller <em>i2c@7000d000</em></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The controller is disabled</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Controller <em>i2c@7000c400</em></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>The controller is disabled</td>
 </tr>
 </table>
@@ -7910,6 +7985,2999 @@ that matched the device.</p>
 the <em>struct i2c_client</em> pointer that was passed to it in the probe function.
 The <em>remove</em> function should unregister the device from the kernel framework
 and shut it down.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-5-linux-device-model-for-an-i2c-device"><a class="anchor" href="#lab-5-linux-device-model-for-an-i2c-device"></a>39. LAB 5 : Linux Device Model For An I2C Device</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session taken from the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add an I2C device to a device tree.</p>
+</li>
+<li>
+<p>Develop a basic driver with a <em>probe</em>/<em>remove</em> function that gets invoked by the device model of the Linux kernel.</p>
+</li>
+<li>
+<p>Explore <em>sysfs</em> for the I2C device and driver.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="creating-a-new-branch"><a class="anchor" href="#creating-a-new-branch"></a>39.1. Creating A New Branch</h3>
+<div class="paragraph">
+<p>We first check out the 3.13.y branch which will be the base source code used
+for our lab5 experiments. We then checkout a new branch called <em>nunchuck</em>
+which will hold our changes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+  3.13.y
+  fix_unioxx5
+* hello_version
+  master
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout 3.13.y <i class="conum" data-value="1"></i><b>(1)</b>
+Switched to branch '3.13.y'
+Your branch is up-to-date with 'stable/linux-3.13.y'.
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git checkout -b nunchuck <i class="conum" data-value="2"></i><b>(2)</b>
+Switched to a new branch 'nunchuck'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git branch
+  3.13.y
+  fix_unioxx5
+  hello_version
+  master
+* nunchuck
+  tutorialv2
+  tutorialv3
+  tutorialv4
+  tutorialv5
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Checkout branch <em>3.13.y</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Checkout new branch <em>nunchuck</em></td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="about-the-nunchuck"><a class="anchor" href="#about-the-nunchuck"></a>39.2. About The Nunchuck</h3>
+<div class="paragraph">
+<p>We&#8217;re going to connect a Nunchuck device to our Beagle Bone Black board.
+The Wii Nunchuck is an attachment for Nintendo&#8217;s Wii Remote. It comes with
+an analog stick, trigger buttons and an inbuilt accelerometer for motion-sensing
+and tilting.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nintendo-wii-remote-nunchuck" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nintendo-wii-remote-nunchuck.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nintendo-wii-remote-nunchuck.jpg" alt="nintendo wii remote nunchuck" width="640" height="480"></a>
+</div>
+<div class="title">The Nintendo Wii Remote Nunchuck</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The device can be purchased online. I personally got mine from PayTM using Google
+to search for the cheapest available option.</p>
+</div>
+<div class="paragraph">
+<p>Apart from the nunchuck we will also need some sort of breakout board to expose
+the connetions on the nunchuck so that we can interface it to our <em>i2c1</em> bus on
+our board. For this I&#8217;m using an arduino type of breakout board for the
+Wii Nunchuck as shown below.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nunchuck-breakout-board" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nunchuck-breakout-board.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nunchuck-breakout-board.jpg" alt="nunchuck breakout board" width="640" height="480"></a>
+</div>
+<div class="title">The Nunchuck Breakout Board</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The breakout board has three contacts on one side and two contacts on the other.
+If we look at the Nunchuck connector it becomes clear as to how to pair the two.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nunchuck-breakout-board-pairing" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nunchuck-breakout-board-pairing.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nunchuck-breakout-board-pairing.jpg" alt="nunchuck breakout board pairing" width="640" height="480"></a>
+</div>
+<div class="title">The Nunchuck and Breakout Board Pairing</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally we connect the breakout board to a breadboard to make it easier to
+make the connections to our Beagle Bone Black board.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nunchuck-breakout-breadboard-connection" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nunchuck-breakout-breadboard-connection.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nunchuck-breakout-breadboard-connection.jpg" alt="nunchuck breakout breadboard connection" width="640" height="480"></a>
+</div>
+<div class="title">The Nunchuck, Breakout Board And Breadboard Connections</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="update-the-board-device-tree"><a class="anchor" href="#update-the-board-device-tree"></a>39.3. Update The Board Device Tree</h3>
+<div class="paragraph">
+<p>We will need to specify the device as part of the platform. We do this using the
+device tree approach and modify the board device tree. We will have to define
+a second I2C bus <em>i2c1</em> and then add a child node to this bus which will correspond
+to the Nunchuck device.</p>
+</div>
+<div class="sect3">
+<h4 id="declaring-a-second-i2c-bus"><a class="anchor" href="#declaring-a-second-i2c-bus"></a>39.3.1. Declaring A Second I2C Bus</h4>
+<div class="paragraph">
+<p>First we try to locate the DTS file with the first I2C bus <em>i2c0</em> is defined. Using
+fubd we can search in the <em>arch/arm/boot/dts/</em> directory for files which have
+references to "bone".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ find arch/arm/boot/dts/ -name '*bone*.dts'
+arch/arm/boot/dts/am335x-boneblack.dts
+arch/arm/boot/dts/am335x-bone.dts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we open the file we can see that it includes two files which may have the
+<em>i2c0</em> bus definition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="dts">.
+.
+#include &quot;am33xx.dtsi&quot;        <i class="conum" data-value="1"></i><b>(1)</b>
+#include &quot;am335x-bone-common.dtsi&quot;        <i class="conum" data-value="2"></i><b>(2)</b>
+
+&amp;ldo3_reg {
+        regulator-min-microvolt = &lt;1800000&gt;;
+        regulator-max-microvolt = &lt;1800000&gt;;
+        regulator-always-on;
+};
+
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Include of <em>am33xx.dtsi</em> which is the SOC base file</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Include of <em>am335x-bone-common.dtsi</em> which is the bone platform base file</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We take a look at the <em>am33xx.dtsi</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+                i2c0: i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4</span><span style="color:#60E">4</span>e0b000 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap4-i2c</span><span style="color:#710">&quot;</span></span>;
+                        <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                        <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                        ti,hwmods = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">i2c1</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x44e0b000</span> <span style="color:#02b">0x1000</span>&gt;;        <i class="conum" data-value="1"></i><b>(1)</b>
+                        interrupts = &lt;<span style="color:#00D">70</span>&gt;;
+                        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;        <i class="conum" data-value="2"></i><b>(2)</b>
+                };
+
+                <span style="color:#970;font-weight:bold">i2c1:</span> i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4802</span>a000 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap4-i2c</span><span style="color:#710">&quot;</span></span>;
+                        <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                        <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                        ti,hwmods = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">i2c2</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x4802a000</span> <span style="color:#02b">0x1000</span>&gt;;
+                        interrupts = &lt;<span style="color:#00D">71</span>&gt;;
+                        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;
+                };
+
+                <span style="color:#970;font-weight:bold">i2c2:</span> i2c<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4819</span>c000 {
+                        compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,omap4-i2c</span><span style="color:#710">&quot;</span></span>;
+                        <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                        <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                        ti,hwmods = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">i2c3</span><span style="color:#710">&quot;</span></span>;
+                        reg = &lt;<span style="color:#02b">0x4819c000</span> <span style="color:#02b">0x1000</span>&gt;;
+                        interrupts = &lt;<span style="color:#00D">30</span>&gt;;
+                        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">disabled</span><span style="color:#710">&quot;</span></span>;
+                };
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The base address of the registers for <em>i2c0</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The status of the bus is disabled</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We take a look at the <em>am335x-bone-common.dtsi</em> file and search for the <em>i2c0</em>
+bus. A node is defined but it is not complete.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+&amp;i2c0 {        <i class="conum" data-value="1"></i><b>(1)</b>
+        pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">default</span><span style="color:#710">&quot;</span></span>;
+        pinctrl-<span style="color:#00D">0</span> = &lt;&amp;i2c0_pins&gt;;
+
+        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;
+        clock-frequency = &lt;<span style="color:#00D">400000</span>&gt;;
+
+        <span style="color:#970;font-weight:bold">tps:</span> tps<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">24</span> {        <i class="conum" data-value="2"></i><b>(2)</b>
+                reg = &lt;<span style="color:#02b">0x24</span>&gt;;
+        };
+
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <em>i2c0</em> bus is defined in the <em>am335x-bone-common.dtsi</em> file</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>There is one device defined as part of the <em>i2c0</em> bus i.e. <em>tps</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We locate the address of the <em>i2c1</em> bus i.e. 0x4802a000 in the processor
+<a href="../docs/spruh73i.pdf" target="_blank">data sheet</a>. To search for
+the address we have to search for the string as 4802_a000. It is located
+in the Table 2-3. L4_PER Peripheral Memory Map.</p>
+</div>
+<div class="paragraph">
+<p>We simply copy the <em>i2c0</em> node defined in the <em>am335x-bone-common.dtsi</em> file
+and modify the <em>am335x-boneblack.dts</em> file to enable the <em>i2c1</em> bus.
+The pinctrl- properties are left out for now and the frequency is set to 100KHz.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+/ {
+        hdmi {
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ti,tilcdc,slave</span><span style="color:#710">&quot;</span></span>;
+                i2c = &lt;&amp;i2c0&gt;;
+                pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">default</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">off</span><span style="color:#710">&quot;</span></span>;
+                pinctrl-<span style="color:#00D">0</span> = &lt;&amp;nxp_hdmi_bonelt_pins&gt;;
+                pinctrl-<span style="color:#00D">1</span> = &lt;&amp;nxp_hdmi_bonelt_off_pins&gt;;
+                status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;
+        };
+};
+
+&amp;i2c1 {        <i class="conum" data-value="1"></i><b>(1)</b>
+        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;
+        clock-frequency = &lt;<span style="color:#00D">100000</span>&gt;;
+
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>i2c1</em> bus is defined</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="declaring-the-nunchuck-device"><a class="anchor" href="#declaring-the-nunchuck-device"></a>39.3.2. Declaring The Nunchuck Device</h4>
+<div class="paragraph">
+<p>If we go through the nunchuck <a href="../free_electrons_linux_kernel/nunchuck.pdf" target="_blank">pdf</a> we see that the I2C address
+of the nunchuck is 0x52. We add this device to the <em>i2c1</em> bus in the device tree.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+&amp;i2c1 {
+        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;
+        clock-frequency = &lt;<span style="color:#00D">100000</span>&gt;;
+
+        <span style="color:#970;font-weight:bold">nunchuck:</span> { <i class="conum" data-value="1"></i><b>(1)</b>
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nintendo,nunchuck</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="2"></i><b>(2)</b>
+                reg = &lt;<span style="color:#02b">0x52</span>&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+        };
+
+};
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>New nunchuck device added to <em>i2c1</em> bus</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The driver compatible with this device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The address of the I2C device is 0x52</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After making the modifications we recompile the device tree blob and copy it
+to <em>/var/lib/tftpboot/</em> in order to download it to the Beagle Bone Black board
+during boot.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ make dtbs
+  DTC     arch/arm/boot/dts/am335x-boneblack.dtb
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ cp -a arch/arm/boot/dts/am335x-boneblack.dtb /var/lib/tftpboot/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the kernel and device tree blob is loaded on the board we can inspect
+the <em>/proc/device-tree</em> folder to see if our changes are present</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># find /proc/device-tree/ -name &quot;*nunchuck*&quot;        <i class="conum" data-value="1"></i><b>(1)</b>
+/proc/device-tree/ocp/i2c@4802a000/nunchuck@52
+#
+# ls /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/
+compatible  name        reg
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/compatible
+nintendo,nunchuck<i class="conum" data-value="2"></i><b>(2)</b>
+#
+#
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/name
+nunchuck<i class="conum" data-value="3"></i><b>(3)</b>
+#
+#
+#
+# cat /proc/device-tree/ocp/i2c@4802a000/nunchuck@52/reg
+R <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Search for any file with <em>nunchuck</em> in its name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Display the value of the <em>compatible</em> property</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Display the value of the <em>name</em> property</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Display the value of the <em>reg</em> property</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To see the device tree blob we use the <em>dtc</em> utility.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># dtc -I fs /proc/device-tree/
+/dts-v1/;
+
+/ {
+        model = &quot;TI AM335x BeagleBone&quot;;
+        interrupt-parent = &lt;0x1&gt;;
+        compatible = &quot;ti,am335x-bone&quot;, &quot;ti,am33xx&quot;;
+        #size-cells = &lt;0x1&gt;;
+        #address-cells = &lt;0x1&gt;;
+
+        hdmi {
+                status = &quot;okay&quot;;
+                pinctrl-1 = &lt;0x18&gt;;
+                pinctrl-0 = &lt;0x17&gt;;
+                pinctrl-names = &quot;default&quot;, &quot;off&quot;;
+                i2c = &lt;0x16&gt;;
+                compatible = &quot;ti,tilcdc,slave&quot;;
+        };
+
+        fixedregulator@0 {
+                phandle = &lt;0x9&gt;;
+                linux,phandle = &lt;0x9&gt;;
+                regulator-max-microvolt = &lt;0x325aa0&gt;;
+                regulator-min-microvolt = &lt;0x325aa0&gt;;
+                regulator-name = &quot;vmmcsd_fixed&quot;;
+                compatible = &quot;regulator-fixed&quot;;
+        };
+.
+.
+.
+
+                i2c@4802a000 { <i class="conum" data-value="1"></i><b>(1)</b>
+                        clock-frequency = &lt;0x186a0&gt;;
+                        status = &quot;okay&quot;;
+                        interrupts = &lt;0x47&gt;;
+                        reg = &lt;0x4802a000 0x1000&gt;;
+                        ti,hwmods = &quot;i2c2&quot;;
+                        #size-cells = &lt;0x0&gt;;
+                        #address-cells = &lt;0x1&gt;;
+                        compatible = &quot;ti,omap4-i2c&quot;;
+
+                        nunchuck@52 { &lt;r21&gt;
+                                reg = &lt;0x52&gt;;
+                                compatible = &quot;nintendo,nunchuck&quot;;
+                        };
+                };
+.
+.
+.
+        aliases {
+                ethernet1 = &quot;/ocp/ethernet@4a100000/slave@4a100300&quot;;
+                ethernet0 = &quot;/ocp/ethernet@4a100000/slave@4a100200&quot;;
+                phy1 = &quot;/ocp/usb@47400000/usb-phy@47401b00&quot;;
+                phy0 = &quot;/ocp/usb@47400000/usb-phy@47401300&quot;;
+                usb1 = &quot;/ocp/usb@47400000/usb@47401800&quot;;
+                usb0 = &quot;/ocp/usb@47400000/usb@47401000&quot;;
+                d_can1 = &quot;/ocp/d_can@481d0000&quot;;
+                d_can0 = &quot;/ocp/d_can@481cc000&quot;;
+                serial5 = &quot;/ocp/serial@481aa000&quot;;
+                serial4 = &quot;/ocp/serial@481a8000&quot;;
+                serial3 = &quot;/ocp/serial@481a6000&quot;;
+                serial2 = &quot;/ocp/serial@48024000&quot;;
+                serial1 = &quot;/ocp/serial@48022000&quot;;
+                serial0 = &quot;/ocp/serial@44e09000&quot;;
+                i2c2 = &quot;/ocp/i2c@4819c000&quot;;
+                i2c1 = &quot;/ocp/i2c@4802a000&quot;;
+                i2c0 = &quot;/ocp/i2c@44e0b000&quot;;
+        };
+
+        chosen {
+                bootargs = &quot;root=/dev/nfs rw ip=192.168.0.100 console=ttyO0 nfsroot=192.168.0.1:/home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot&quot;;
+        };
+};</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The I2C1 device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The nunchuck devuce in the device tree blob</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="implement-a-basic-i2c-driver-for-the-nunchuck"><a class="anchor" href="#implement-a-basic-i2c-driver-for-the-nunchuck"></a>39.4. Implement A Basic I2C Driver For The Nunchuck</h3>
+<div class="paragraph">
+<p>We now take the basic <em>nunchuck.c</em> file present in the
+~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/_
+directory and modify it to implement our basic I2C driver. The
+file present in the Free Electrons lab data NFS root folder looks
+like this before modification:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/i2c.h&gt;</span>
+
+<span style="color:#777">/* Add your code here */</span>
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We make the following changes to the driver code:
+. Instantiate an object of type <em>struct i2c_device_id</em>
+. Instantiate an object of type <em>struct of_device_id</em>
+. Define the probe and remove functions
+. Instantiate an object of type <em>struct i2c_driver</em>
+. Instantiate the I2C driver using <em>module_i2c_driver</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/i2c.h&gt;</span>
+
+<span style="color:#777">/* Add your code here */</span>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id nunchuck_id[] = {        <i class="conum" data-value="1"></i><b>(1)</b>
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nunchuck</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">0</span> },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, nunchuck_id);
+
+<span style="color:#579">#ifdef</span> CONFIG_OF
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> of_device_id nunchuck_dt_ids[] = {        <i class="conum" data-value="2"></i><b>(2)</b>
+        {.compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nintendo,nunchuck</span><span style="color:#710">&quot;</span></span>,},
+        { }
+};
+MODULE_DEVICE_TABLE(of, nunchuck_dt_ids);
+<span style="color:#579">#endif</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_probe(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client,
+                        <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id *id)        <i class="conum" data-value="3"></i><b>(3)</b>
+{
+        <span style="color:#777">/* initialize device */</span>
+        <span style="color:#777">/* register to a kernel framework */</span>
+
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_remove(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client)        <i class="conum" data-value="4"></i><b>(4)</b>
+{
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> i2c_driver nunchuck_driver = {        <i class="conum" data-value="5"></i><b>(5)</b>
+        .probe = nunchuck_probe,
+        .remove = nunchuck_remove,
+        .id_table = nunchuck_id,
+        .driver = {
+                .name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nunchuck</span><span style="color:#710">&quot;</span></span>,
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(nunchuck_dt_ids),
+        },
+};
+
+module_i2c_driver(nunchuck_driver);        <i class="conum" data-value="6"></i><b>(6)</b>
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Instantiate an object of type <em>struct i2c_device_id</em> nunchuck_id</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Instantiate an object of type <em>struct of_device_id</em> nunchuck_dt_ids</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The probe function</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The remove function</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Instantiate an object of type <em>struct i2c_driver</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Instantiate the I2C driver using <em>module_i2c_driver</em></td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="compiling-the-em-nunchuck-em-driver"><a class="anchor" href="#compiling-the-em-nunchuck-em-driver"></a>39.4.1. Compiling The <em>nunchuck</em> Driver</h4>
+<div class="paragraph">
+<p>We&#8217;ve gone through the compilation of a kernel module in the previous lab session.
+So passing the <em>ARCH</em>, <em>CROSS_COMPILE</em> and <em>KDIR</em> we are able to build the kernel
+module driver <em>nunchuck.ko</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KDIR=/home/conrad/Git/linux/
+make -C /home/conrad/Git/linux/ M=$PWD
+make[1]: Entering directory `/home/conrad/Git/linux'
+  CC [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.mod.o
+  LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.ko
+make[1]: Leaving directory `/home/conrad/Git/linux'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="testing-the-em-nunchuck-em-driver"><a class="anchor" href="#testing-the-em-nunchuck-em-driver"></a>39.4.2. Testing The <em>nunchuck</em> Driver</h4>
+<div class="paragraph">
+<p>So now that we have our kernel driver <em>nunchuck.ko</em> we can easily load it on
+the board as we&#8217;re using a <em>NFS</em> root filesystem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># cd /root/nunchuk/        <i class="conum" data-value="1"></i><b>(1)</b>
+# ls
+Makefile        built-in.o      modules.order   nunchuk.ko      nunchuk.mod.o
+Module.symvers  dtc.txt         nunchuk.c       nunchuk.mod.c   nunchuk.o
+# insmod nunchuk.ko         <i class="conum" data-value="2"></i><b>(2)</b>
+#
+#
+#
+# lsmod        <i class="conum" data-value="3"></i><b>(3)</b>
+Module                  Size  Used by    Tainted: G
+nunchuk                 1569  0
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Change the directory to <em>/root/nunchuck/</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Insert the <em>nunchuck.ko</em> kernel module driver</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>List the loaded kernel modules</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We explore the <em>sysfs</em> and see what files get created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># find /sys/ -name '*nunchuck*'        <i class="conum" data-value="1"></i><b>(1)</b>
+/sys/bus/i2c/drivers/nunchuck
+/sys/module/nunchuk/drivers/i2c:nunchuck
+#
+# ls -l /sys/bus/i2c/drivers/nunchuck/        <i class="conum" data-value="2"></i><b>(2)</b>
+total 0
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 1-0052 -&gt; ../../../../devices/ocp.3/4802a000.i2c/i2c-1/1-0052
+--w-------    1 root     root          4096 Jan  1 00:05 bind
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 module -&gt; ../../../../module/nunchuk
+--w-------    1 root     root          4096 Jan  1 00:05 uevent
+--w-------    1 root     root          4096 Jan  1 00:05 unbind
+# cat /sys/bus/i2c/drivers/nunchuck/1-0052/name <i class="conum" data-value="3"></i><b>(3)</b>
+nunchuck
+# ls -l /sys/module/nunchuk/drivers/i2c\:nunchuck/ <i class="conum" data-value="4"></i><b>(4)</b>
+total 0
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 1-0052 -&gt; ../../../../devices/ocp.3/4802a000.i2c/i2c-1/1-0052
+--w-------    1 root     root          4096 Jan  1 00:05 bind
+lrwxrwxrwx    1 root     root             0 Jan  1 00:05 module -&gt; ../../../../module/nunchuk
+--w-------    1 root     root          4096 Jan  1 00:05 uevent
+--w-------    1 root     root          4096 Jan  1 00:05 unbind
+# cat /sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/name <i class="conum" data-value="5"></i><b>(5)</b>
+nunchuck
+# cat /sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/modalias <i class="conum" data-value="6"></i><b>(6)</b>
+i2c:nunchuck</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Search for files with name <em>nunchuck</em> in <em>sysfs</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>List contents of <em>/sys/bus/i2c/drivers/nunchuck/</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Display contents in <em>/sys/bus/i2c/drivers/nunchuck/1-0052/name</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>List contents of <em>/sys/module/nunchuk/drivers/i2c:nunchuck/</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Display contents in <em>/sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/name</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Display contents in <em>/sys/module/nunchuk/drivers/i2c:nunchuck/1-0052/modalias</em></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="communicating-with-the-i2c-device"><a class="anchor" href="#communicating-with-the-i2c-device"></a>40. Communicating With The I2C Device</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are several ways present through which we can communicate with
+the I2C device. We&#8217;ll go through each of the methods available.</p>
+</div>
+<div class="sect2">
+<h3 id="raw-api"><a class="anchor" href="#raw-api"></a>40.1. Raw API</h3>
+<div class="paragraph">
+<p>We have the basic API available which allow us
+to either send or receive data from the I2C device. These are defined
+in the <em>drivers/i2c/i2c-core.c</em>. The APIs are <em>i2c_master_send</em> to send
+data to the client and <em>i2c_master_recv</em> to receive data from the client.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#777">/**
+ * i2c_master_send - issue a single I2C message in master transmit mode
+ * @client: Handle to slave device
+ * @buf: Data that will be written to the slave
+ * @count: How many bytes to write, must be less than 64k since msg.len is u16
+ *
+ * Returns negative errno, or else the number of bytes written.
+ */</span>
+<span style="color:#0a8;font-weight:bold">int</span> i2c_master_send(<span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_client *client, <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *buf, <span style="color:#0a8;font-weight:bold">int</span> count) <i class="conum" data-value="1"></i><b>(1)</b>
+{
+        <span style="color:#0a8;font-weight:bold">int</span> ret;
+        <span style="color:#080;font-weight:bold">struct</span> i2c_adapter *adap = client-&gt;adapter;
+        <span style="color:#080;font-weight:bold">struct</span> i2c_msg msg;
+
+        msg.addr = client-&gt;addr;
+        msg.flags = client-&gt;flags &amp; I2C_M_TEN;
+        msg.len = count;
+        msg.buf = (<span style="color:#0a8;font-weight:bold">char</span> *)buf;
+
+        ret = i2c_transfer(adap, &amp;msg, <span style="color:#00D">1</span>);
+
+        <span style="color:#777">/*
+         * If everything went ok (i.e. 1 msg transmitted), return #bytes
+         * transmitted, else error code.
+         */</span>
+        <span style="color:#080;font-weight:bold">return</span> (ret == <span style="color:#00D">1</span>) ? count : ret;
+}
+EXPORT_SYMBOL(i2c_master_send);
+
+<span style="color:#777">/**
+ * i2c_master_recv - issue a single I2C message in master receive mode
+ * @client: Handle to slave device
+ * @buf: Where to store data read from slave
+ * @count: How many bytes to read, must be less than 64k since msg.len is u16
+ *
+ * Returns negative errno, or else the number of bytes read.
+ */</span>
+<span style="color:#0a8;font-weight:bold">int</span> i2c_master_recv(<span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_client *client, <span style="color:#0a8;font-weight:bold">char</span> *buf, <span style="color:#0a8;font-weight:bold">int</span> count) <i class="conum" data-value="2"></i><b>(2)</b>
+{
+        <span style="color:#080;font-weight:bold">struct</span> i2c_adapter *adap = client-&gt;adapter;
+        <span style="color:#080;font-weight:bold">struct</span> i2c_msg msg;
+        <span style="color:#0a8;font-weight:bold">int</span> ret;
+
+        msg.addr = client-&gt;addr;
+        msg.flags = client-&gt;flags &amp; I2C_M_TEN;
+        msg.flags |= I2C_M_RD;
+        msg.len = count;
+        msg.buf = buf;
+
+        ret = i2c_transfer(adap, &amp;msg, <span style="color:#00D">1</span>);
+
+        <span style="color:#777">/*
+         * If everything went ok (i.e. 1 msg received), return #bytes received,
+         * else error code.
+         */</span>
+        <span style="color:#080;font-weight:bold">return</span> (ret == <span style="color:#00D">1</span>) ? count : ret;
+}
+EXPORT_SYMBOL(i2c_master_recv);
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Sends the content of <em>buf</em> and of size <em>count</em> to the <em>client</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Receives <em>count</em> bytes in <em>buf</em> from the <em>client</em></td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="message-transfer-api"><a class="anchor" href="#message-transfer-api"></a>40.2. Message Transfer API</h3>
+<div class="paragraph">
+<p>The raw api make use of another API which is used to describe a transfer
+of several messages. A collection of messages can be sent at one time
+using the <em>i2c_transfer</em> API which is also defined in the <em>drivers/i2c/i2c-core.c</em>
+file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#777">/**
+ * i2c_transfer - execute a single or combined I2C message
+ * @adap: Handle to I2C bus
+ * @msgs: One or more messages to execute before STOP is issued to
+ *      terminate the operation; each message begins with a START.
+ * @num: Number of messages to be executed.
+ *
+ * Returns negative errno, else the number of messages executed.
+ *
+ * Note that there is no requirement that each message be sent to
+ * the same slave address, although that is the most common model.
+ */</span>
+<span style="color:#0a8;font-weight:bold">int</span> i2c_transfer(<span style="color:#080;font-weight:bold">struct</span> i2c_adapter *adap, <span style="color:#080;font-weight:bold">struct</span> i2c_msg *msgs, <span style="color:#0a8;font-weight:bold">int</span> num)
+{
+.
+.
+.
+}
+EXPORT_SYMBOL(i2c_transfer);
+.
+.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="smbus-calls"><a class="anchor" href="#smbus-calls"></a>40.3. SMBus Calls</h3>
+<div class="paragraph">
+<p>The SMBus is a subset of the I2C protocol. SMBus defines a standard set
+of transactions for example to read or write a register of a device. If
+possible the SMBus API should be used instead of the raw API to simplify
+the implementation with standard transaction APIs. One such API is
+<em>i2c_smbus_read_byte_data()</em> function which allows a read of one byte
+of data from a device register.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The following sequence of operations are carried out:
+_S Addr Wr [A] Comm [A] S Addr Rd [A] [Data] NA P)</p>
+</li>
+<li>
+<p>The above sequence means write one byte data command i.e. <em>Comm</em>
+and then read back the data i.e. <em>[Data]</em></p>
+</li>
+<li>
+<p>Further details are elaborated in <em>Documentation/i2c/smbus-protocol</em></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="list-of-smbus-api"><a class="anchor" href="#list-of-smbus-api"></a>40.3.1. List Of SMBus API</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Read/write one byte</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>s32 i2c_smbus_read_byte(const struct i2c_client *client);</p>
+</li>
+<li>
+<p>s32 i2c_smbus_write_byte(const struct i2c_client *client, u8 value);</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write a command byte, and read or write one byte</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>s32 i2c_smbus_read_byte_data(const struct i2c_client *client, u8 command);</p>
+</li>
+<li>
+<p>s32 i2c_smbus_write_byte_data(const struct i2c_client *client, u8 command, u8
+value);</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write a command byte, and read or write one word</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>s32 i2c_smbus_read_word_data(const struct i2c_client *client, u8 command);</p>
+</li>
+<li>
+<p>s32 i2c_smbus_write_word_data(const struct i2c_client *client, u8 command, u16
+value);</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write a command byte, and read or write a block of data
+(max 32 bytes)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>s32 i2c_smbus_read_block_data(const struct i2c_client *client, u8 command, u8
+*values);</p>
+</li>
+<li>
+<p>s32 i2c_smbus_write_block_data(const struct i2c_client *client, u8 command, u8
+length, const u8 *values);</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Write a command byte, and read or write a block of data (no
+limit)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>s32 i2c_smbus_read_i2c_block_data(const struct i2c_client *client, u8 command, u8
+length, u8 *values);</p>
+</li>
+<li>
+<p>s32 i2c_smbus_write_i2c_block_data(const struct i2c_client *client, u8 command, u8
+length, const u8 *values);</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="i2c-functionality"><a class="anchor" href="#i2c-functionality"></a>40.4. I2C Functionality</h3>
+<div class="paragraph">
+<p>I2C controllers may not support all functionalities. A device driver
+must check to see which functionalities are supported by the controller. The
+controller tells the core which functionalities it supports. The API
+<em>i2c_check_functionality()</em> is to be used to find out the functionalities.
+For example <em>I2C_FUNC_I2C</em> is required in order to use the raw API functions
+discussed above whereas <em>I2C_FUNC_SMBUS_BYTE_DATA</em> is required for SMBus commands.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Additional details can be seen in <em>include/uapi/linux/i2c.h</em></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+.
+<span style="color:#579">#define</span> I2C_FUNC_I2C                    <span style="color:#02b">0x00000001</span>
+<span style="color:#579">#define</span> I2C_FUNC_10BIT_ADDR             <span style="color:#02b">0x00000002</span>
+<span style="color:#579">#define</span> I2C_FUNC_PROTOCOL_MANGLING      <span style="color:#02b">0x00000004</span> <span style="color:#777">/* I2C_M_IGNORE_NAK etc. */</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_PEC              <span style="color:#02b">0x00000008</span>
+<span style="color:#579">#define</span> I2C_FUNC_NOSTART                <span style="color:#02b">0x00000010</span> <span style="color:#777">/* I2C_M_NOSTART */</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_BLOCK_PROC_CALL  <span style="color:#02b">0x00008000</span> <span style="color:#777">/* SMBus 2.0 */</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_QUICK            <span style="color:#02b">0x00010000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_READ_BYTE        <span style="color:#02b">0x00020000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WRITE_BYTE       <span style="color:#02b">0x00040000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_READ_BYTE_DATA   <span style="color:#02b">0x00080000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WRITE_BYTE_DATA  <span style="color:#02b">0x00100000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_READ_WORD_DATA   <span style="color:#02b">0x00200000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WRITE_WORD_DATA  <span style="color:#02b">0x00400000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_PROC_CALL        <span style="color:#02b">0x00800000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_READ_BLOCK_DATA  <span style="color:#02b">0x01000000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WRITE_BLOCK_DATA <span style="color:#02b">0x02000000</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_READ_I2C_BLOCK   <span style="color:#02b">0x04000000</span> <span style="color:#777">/* I2C-like block xfer  */</span>
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WRITE_I2C_BLOCK  <span style="color:#02b">0x08000000</span> <span style="color:#777">/* w/ 1-byte reg. addr. */</span>
+
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_BYTE             (I2C_FUNC_SMBUS_READ_BYTE | \
+                                         I2C_FUNC_SMBUS_WRITE_BYTE)
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_BYTE_DATA        (I2C_FUNC_SMBUS_READ_BYTE_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_BYTE_DATA)
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_WORD_DATA        (I2C_FUNC_SMBUS_READ_WORD_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_WORD_DATA)
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_BLOCK_DATA       (I2C_FUNC_SMBUS_READ_BLOCK_DATA | \
+                                         I2C_FUNC_SMBUS_WRITE_BLOCK_DATA)
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_I2C_BLOCK        (I2C_FUNC_SMBUS_READ_I2C_BLOCK | \
+                                         I2C_FUNC_SMBUS_WRITE_I2C_BLOCK)
+
+<span style="color:#579">#define</span> I2C_FUNC_SMBUS_EMUL             (I2C_FUNC_SMBUS_QUICK | \
+                                         I2C_FUNC_SMBUS_BYTE | \
+                                         I2C_FUNC_SMBUS_BYTE_DATA | \
+                                         I2C_FUNC_SMBUS_WORD_DATA | \
+                                         I2C_FUNC_SMBUS_PROC_CALL | \
+                                         I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | \
+                                         I2C_FUNC_SMBUS_I2C_BLOCK | \
+                                         I2C_FUNC_SMBUS_PEC)
+.
+.
+.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="pin-muxing"><a class="anchor" href="#pin-muxing"></a>41. Pin Muxing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Modern SOCs include a large number of hardware blocks but only a certain
+combination of blocks can be enabled at any point in time as there are
+a limited number of pins present on the SOC. In order to fascilitate the
+access of hardware blocks on the SOC there needs to be some sort of
+mechanism by which the system designer can select which blocks have to be
+activated for the application. This is done through a software mechanism
+known as <em>pin muxing</em>.</p>
+</div>
+<div class="paragraph">
+<p>Since version 3.2 of the Linux kernel there has been a new subsystem
+called <em>pinctrl</em> which is added to handle the pinmuxing. This is
+present in the <em>drivers/pinctrl</em> section of the source code. This subsystem
+provides:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A pin muxing consumer interface for device drivers</p>
+</li>
+<li>
+<p>A pin muxing driver interface to implement the system on chip specific drivers
+that configure the muxing.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Most <em>pinctrl</em> drivers provide a Device Tree binding which must be described
+in the Device Tree. The binding will differ from driver to driver but it
+should be documented in <em>Documentation/devicetree/bindings/pinctrl</em>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="pinctrl-subsystem-diagram" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/pinctrl-subsystem-diagram.png"><img src="http://zeuzoix.github.io/techeuphoria/images/pinctrl-subsystem-diagram.png" alt="pinctrl subsystem diagram" width="640" height="480"></a>
+</div>
+<div class="title">Pinctrl Subsystem Diagram</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="device-tree-binding-for-consumer-devices"><a class="anchor" href="#device-tree-binding-for-consumer-devices"></a>41.1. Device Tree Binding For Consumer Devices</h3>
+<div class="paragraph">
+<p>The devices that require certains pins to be muxed will use the <em>pinctrl-&lt;x&gt;</em> and
+<em>pinctrl-names</em> Device Tree properties. The <em>pinctrl-0</em>, <em>pinctrl-1</em>, pinctrl-&lt;x&gt;_
+properties link to a pin configuration for a given state of the device.</p>
+</div>
+<div class="sect3">
+<h4 id="pinctrl-client-devices"><a class="anchor" href="#pinctrl-client-devices"></a>41.1.1. Pinctrl Client Devices</h4>
+<div class="paragraph">
+<p>Out of the following only the first is required whereas the remaining are optional:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">pinctrl-0</dt>
+<dd>
+<p>List of phandles, each pointing at a pin configuration
+node. These referenced pin configuration nodes must be child
+nodes of the pin controller that they configure. Multiple
+entries may exist in this list so that multiple pin
+controllers may be configured, or so that a state may be built
+from multiple nodes for a single pin controller, each
+contributing part of the overall configuration. See the next
+section of this document for details of the format of these
+pin configuration nodes.</p>
+</dd>
+<dt class="hdlist1">pinctrl-1</dt>
+<dd>
+<p>List of phandles, each pointing at a pin configuration
+node within a pin controller.</p>
+</dd>
+<dt class="hdlist1">pinctrl-n</dt>
+<dd>
+<p>List of phandles, each pointing at a pin configuration
+node within a pin controller.</p>
+</dd>
+<dt class="hdlist1">pinctrl-names</dt>
+<dd>
+<p>The list of names to assign states. List entry 0 defines the
+name for integer state ID 0, list entry 1 for state ID 1, and
+so on.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Taking the example given in <em>Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt</em>
+under the section "Pinctrl client devices".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">        <span style="color:#777">/* For a client device requiring named states */</span>
+        device {
+                pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">active</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">idle</span><span style="color:#710">&quot;</span></span>;
+                pinctrl-<span style="color:#00D">0</span> = &lt;&amp;state_0_node_a&gt;;
+                pinctrl-<span style="color:#00D">1</span> = &lt;&amp;state_1_node_a &amp;state_1_node_b&gt;;
+        };
+
+        <span style="color:#777">/* For the same device if using state IDs */</span>
+        device {
+                pinctrl-<span style="color:#00D">0</span> = &lt;&amp;state_0_node_a&gt;;
+                pinctrl-<span style="color:#00D">1</span> = &lt;&amp;state_1_node_a &amp;state_1_node_b&gt;;
+        };
+
+        <span style="color:#777">/*
+         * For an IP block whose binding supports pin configuration,
+         * but in use on an SoC that doesn't have any pin control hardware
+         */</span>
+        device {
+                pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">active</span><span style="color:#710">&quot;</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">idle</span><span style="color:#710">&quot;</span></span>;
+                pinctrl-<span style="color:#00D">0</span> = &lt;&gt;;
+                pinctrl-<span style="color:#00D">1</span> = &lt;&gt;;
+        };</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="pin-controller-devices"><a class="anchor" href="#pin-controller-devices"></a>41.1.2. Pin Controller Devices</h4>
+<div class="paragraph">
+<p>Pin controller devices should contain the pin configuration nodes that client
+devices reference.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">For example:
+
+        pincontroller {
+                ... <span style="color:#777">/* Standard DT properties for the device itself elided */</span>
+
+                state_0_node_a {
+                        ...
+                };
+                state_1_node_a {
+                        ...
+                };
+                state_1_node_b {
+                        ...
+                };
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The contents of each of those pin configuration child nodes is defined
+entirely by the binding for the individual pin controller device. There
+exists no common standard for this content.</p>
+</div>
+<div class="paragraph">
+<p>The pin configuration nodes need not be direct children of the pin controller
+device; they may be grandchildren, for example. Whether this is legal, and
+whether there is any interaction between the child and intermediate parent
+nodes, is again defined entirely by the binding for the individual pin
+controller device.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-on-omap-am33xx"><a class="anchor" href="#example-on-omap-am33xx"></a>41.2. Example On OMAP / AM33xx</h3>
+<div class="paragraph">
+<p>The base <em>dtsi</em> file for our Beagle Bone Black is in the <em>arch/arm/boot/dts/am33xx.dtsi</em>
+file. If we look at <em>pinctrl</em> device we see that it is compatible with the <em>pinctrl-single</em>
+driver. This is common between related SOCs and allows to configure pins by
+writing a value to a register.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+        am33xx_pinmux: pinmux<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4</span><span style="color:#60E">4</span>e10800 {
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pinctrl-single</span><span style="color:#710">&quot;</span></span>;         <i class="conum" data-value="1"></i><b>(1)</b>
+                reg = &lt;<span style="color:#02b">0x44e10800</span> <span style="color:#02b">0x0238</span>&gt;;
+                <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                pinctrl-single,<span style="color:#088;font-weight:bold">register</span>-width = &lt;<span style="color:#00D">32</span>&gt;;
+                pinctrl-single,function-mask = &lt;<span style="color:#02b">0x7f</span>&gt;;
+        };
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The compatible <em>pinctrl-single</em> driver</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The base <em>dtsi</em> doesn&#8217;t mention any <em>pinctrl</em> configurations. We can find these <em>pinctrl configurations</em>
+defined as child nodes of the main <em>pinctrl</em> device in the board specific <em>dts</em> file. If we search
+for board files that include the base <em>dtsi</em> file we get the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ egrep -ri &quot;am33xx.dtsi&quot; arch/arm/boot/dts/*
+arch/arm/boot/dts/am335x-boneblack.dts:#include &quot;am33xx.dtsi&quot;
+arch/arm/boot/dts/am335x-bone.dts:#include &quot;am33xx.dtsi&quot;
+arch/arm/boot/dts/am335x-evm.dts:#include &quot;am33xx.dtsi&quot;
+arch/arm/boot/dts/am335x-evmsk.dts:#include &quot;am33xx.dtsi&quot;
+arch/arm/boot/dts/am335x-igep0033.dtsi:#include &quot;am33xx.dtsi&quot;
+arch/arm/boot/dts/am335x-nano.dts:#include &quot;am33xx.dtsi&quot;
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Opening <em>arch/arm/boot/dts/am335x-evmsk.dts</em> we see several configurations defined:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">&amp;am33xx_pinmux {
+        pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">default</span><span style="color:#710">&quot;</span></span>;
+        pinctrl-<span style="color:#00D">0</span> = &lt;&amp;gpio_keys_s0 &amp;clkout2_pin&gt;;
+
+        <span style="color:#970;font-weight:bold">user_leds_s0:</span> user_leds_s0 {
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x10</span> (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  <span style="color:#777">/* gpmc_ad4.gpio1_4 */</span>
+                        <span style="color:#02b">0x14</span> (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  <span style="color:#777">/* gpmc_ad5.gpio1_5 */</span>
+                        <span style="color:#02b">0x18</span> (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  <span style="color:#777">/* gpmc_ad6.gpio1_6 */</span>
+                        <span style="color:#02b">0x1c</span> (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  <span style="color:#777">/* gpmc_ad7.gpio1_7 */</span>
+                &gt;;
+        };
+
+        <span style="color:#970;font-weight:bold">gpio_keys_s0:</span> gpio_keys_s0 {
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x94</span> (PIN_INPUT_PULLDOWN | MUX_MODE7)   <span style="color:#777">/* gpmc_oen_ren.gpio2_3 */</span>
+                        <span style="color:#02b">0x90</span> (PIN_INPUT_PULLDOWN | MUX_MODE7)   <span style="color:#777">/* gpmc_advn_ale.gpio2_2 */</span>
+                        <span style="color:#02b">0x70</span> (PIN_INPUT_PULLDOWN | MUX_MODE7)   <span style="color:#777">/* gpmc_wait0.gpio0_30 */</span>
+                        <span style="color:#02b">0x9c</span> (PIN_INPUT_PULLDOWN | MUX_MODE7)   <span style="color:#777">/* gpmc_ben0_cle.gpio2_5 */</span>
+                &gt;;
+        };
+
+        <span style="color:#970;font-weight:bold">i2c0_pins:</span> pinmux_i2c0_pins { <i class="conum" data-value="1"></i><b>(1)</b>
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x188</span> (PIN_INPUT_PULLUP | MUX_MODE0)    <span style="color:#777">/* i2c0_sda.i2c0_sda */</span>
+                        <span style="color:#02b">0x18c</span> (PIN_INPUT_PULLUP | MUX_MODE0)    <span style="color:#777">/* i2c0_scl.i2c0_scl */</span>
+                &gt;;
+        };
+.
+.
+.
+};
+
+.
+.
+.
+&amp;i2c0 {
+        pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">default</span><span style="color:#710">&quot;</span></span>;
+        pinctrl-<span style="color:#00D">0</span> = &lt;&amp;i2c0_pins&gt;; <i class="conum" data-value="2"></i><b>(2)</b>
+.
+.
+
+};</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>i2c0_pins</em> defined pinctrl configuration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>pinctrl-0 references <em>i2c0_pins</em></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-6-communicating-with-the-nunchuck"><a class="anchor" href="#lab-6-communicating-with-the-nunchuck"></a>42. LAB 6 : Communicating With The Nunchuck</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">This is a hands on session taken from the Free Electrons labs with the following objectives</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Hooking up the nunchuck to the board.</p>
+</li>
+<li>
+<p>Configuring the pinmuxing for the I2C bus used.</p>
+</li>
+<li>
+<p>Validate I2C communication works with user space tools.</p>
+</li>
+<li>
+<p>Extend the I2C driver from the previous lab to communicate with the Nunchuck.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="connecting-the-nunchuck"><a class="anchor" href="#connecting-the-nunchuck"></a>42.1. Connecting The Nunchuck</h3>
+<div class="paragraph">
+<p>We will now hook up the nunchuck to the Beagle Bone Black board. The diagram below
+gives the names of the different pins on the connector.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nunchuck-connector-pins" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nunchuck-connector-pins.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nunchuck-connector-pins.jpg" alt="nunchuck connector pins" width="640" height="480"></a>
+</div>
+<div class="title">The Nunchuck Connector Pins</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we open up the <a href="../docs/BBB_SRM.pdf" target="_blank">BBB system reference manual</a> and
+search for "connector P9". Under this section we see the "Expansion Header P9 Pinout"
+table which describes the signals for the different peripherals on the SOC. So we
+need to make sure our connections from the Nunchuck are:
+. The GND pin to P9 pins 1 or 2 (GND)
+. The PWR pin to P9 pins 3 or 4 (DC_3.3V)
+. The CLK pin to P9 pin 17 (I2C1_SCL)
+. The DATA pin to P9 pin 18 (I2C1_SDA)</p>
+</div>
+<div class="paragraph">
+<p>On hooking up the breakout board we need to understand which pins correspond to
+which signals. The + &amp; - signs correspond to VCC(3.3V) and GND. The P &amp; C
+correspond to SDA and SCL of I2C. We make the connections on the P9 connector
+using a breadboard and some wiring. Our hooked up connection is shown below.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="nunchuck-bbb-hook-up" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/nunchuck-bbb-hook-up.jpg"><img src="http://zeuzoix.github.io/techeuphoria/images/nunchuck-bbb-hook-up.jpg" alt="nunchuck bbb hook up" width="640" height="480"></a>
+</div>
+<div class="title">The Hook Up Of The Nunchuck To The BBB</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-pin-muxing-configuration-for-i2c1"><a class="anchor" href="#configuring-pin-muxing-configuration-for-i2c1"></a>42.2. Configuring Pin Muxing Configuration For I2C1</h3>
+<div class="paragraph">
+<p>Configuring the pin mux settings for our I2C1 bus on the SOC
+is going to involve going through several documents. If we go through the
+"Expansion Header P9 Pinout" table in the
+<a href="../docs/BBB_SRM.pdf" target="_blank">BBB system reference manual</a> we can also
+see the pins of the AM335 SOC
+associated with the signals <em>I2C1_SCL</em> and <em>I2C1_SDA</em> which happen to be
+A16 and B16 respectively. We also see the different "MODES" that these
+pins can be muxed as and for I2C1 we need them to be in <em>MODE2</em>.</p>
+</div>
+<div class="paragraph">
+<p>Our next step is to inspect the CPU <a href="../docs/am3359.pdf" target="_blank">datasheet</a>.
+We go through the Pin Assignment section. You will find that the processor is
+available through two types of packages: ZCE and ZCZ. Our CPU has ZCZ written
+on its lower right corner. In the ZCZ pin assignment section we can see
+hyperlinks associated with each pin of the SOC. If we click on the A16 pin which
+is named as <em>SPI_CS0</em> we see that to set it as <em>I2C1_SCL</em> we need to use <em>MODE2</em>.
+The pin is named as <em>SPI_CS0</em> because that is the function of the pin in MODE0.
+We also see that B16 is named <em>SPI0_D1</em> because of its association in <em>MODE0</em>
+and to get it to <em>I2C1_SDA</em> we need to set it to <em>MODE2</em>. The default names
+of the pins will be useful going forward.</p>
+</div>
+<div class="paragraph">
+<p>Finally we need to change the pin mux settings somehow. We open the
+<a href="../docs/spruh73i.pdf" target="_blank">AM3358 technical reference document</a>
+and look for registers that can help us do this. Specifically look for the
+"Control Module" section.</p>
+</div>
+<div class="paragraph">
+<p>The control module includes status and control logic not addressed within the
+peripherals or the rest of the device infrastructure. This module provides
+interface to control the following areas of the device:
+. Functional I/O multiplexing
+. Emulation controls
+. Device control and status
+. DDR PHY control and IO control registers
+. EDMA event multiplexing control registers</p>
+</div>
+<div class="paragraph">
+<p>We search for the "Control Module Registers" and find its address in the <em>L4 WKUP Peripheral Memory Map</em>
+table with start address 0x44E1_0000 and end address 0x44E1_1FFF. If we click on the Control Module
+hyperlink in the <em>L4 WKUP Peripheral Memory Map</em> table we can see the offsets of the registers
+controlling the <em>SPI0_CS0</em> and <em>SPI0_D1</em> pins as <em>conf_spi0_d1</em> (0x958) and <em>conf_spi0_cs0</em> (0x95C).
+Clicking on the hyperlinks associated with the offsets takes us to the register descriptions.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-em-pinctrl-em-properties-to-the-device-tree"><a class="anchor" href="#add-em-pinctrl-em-properties-to-the-device-tree"></a>42.3. Add <em>pinctrl</em> Properties To The Device Tree</h3>
+<div class="paragraph">
+<p>Armed with the knowledge of register settings we shall try to add the pinctrl configuration
+for the I2C1 bus on the SOC. We can refer to another platforms file to get a sense
+of how to use the register. For this we take a look at the <em>arch/arm/boot/dts/am335x-evm.dts</em>
+file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+
+        i2c1_pins: pinmux_i2c1_pins {
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x158</span> (PIN_INPUT_PULLUP | MUX_MODE2)    <span style="color:#777">/* spi0_d1.i2c1_sda */</span>        <i class="conum" data-value="1"></i><b>(1)</b>
+                        <span style="color:#02b">0x15c</span> (PIN_INPUT_PULLUP | MUX_MODE2)    <span style="color:#777">/* spi0_cs0.i2c1_scl */</span>        <i class="conum" data-value="2"></i><b>(2)</b>
+                &gt;;
+        };
+
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Configuring the <em>conf_spi0_d1</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Configuring the <em>conf_spi0_cs0</em></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We have 0x158 instead of 0x958 and 0x15C instead of 0x95C. The difference
+is because of the offset present in the way the base address for the control module register
+is defined in the base <em>dtsi</em> file. Let&#8217;s take a look:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+        am33xx_pinmux: pinmux<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">4</span><span style="color:#60E">4</span>e10800 {
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">pinctrl-single</span><span style="color:#710">&quot;</span></span>;
+                reg = &lt;<span style="color:#02b">0x44e10800</span> <span style="color:#02b">0x0238</span>&gt;; <i class="conum" data-value="1"></i><b>(1)</b>
+                <span style="color:#579">#address</span>-cells = &lt;<span style="color:#00D">1</span>&gt;;
+                <span style="color:#579">#size</span>-cells = &lt;<span style="color:#00D">0</span>&gt;;
+                pinctrl-single,<span style="color:#088;font-weight:bold">register</span>-width = &lt;<span style="color:#00D">32</span>&gt;;
+                pinctrl-single,function-mask = &lt;<span style="color:#02b">0x7f</span>&gt;;
+        };
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The base address is set as 0x44e10800 instead of 0x44e10000</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The base address is set to 0x44e10800 because the registers below
+the 0x800 offset are not related to the pinctrl functionality.
+Therefore, starting at offset 0x800 is probably a way to make
+sure that using the pinctrl-single driver, users can only access
+real pin muxing registers and do not mess with lower registers by mistake.</p>
+</div>
+<div class="paragraph">
+<p>The values of the configuration registers are set to:
+. <em>MUX_MODE2</em> corresponding to muxing mode 2, as explained in the datasheet
+. <em>PIN_INPUT_PULLUP</em> puts the pin in the pull up mode. This is for I2C bus signalling.</p>
+</div>
+<div class="paragraph">
+<p>We make modifications to <em>arch/arm/boot/dts/am335x-boneblack.dts</em> and add
+the pinctrl configuration for I2C1. Additionally we need to define the pinctrl
+settings in our i2c1 node from the previous lab.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">&amp;am33xx_pinmux {
+.
+.
+.
+        nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x1b0</span> <span style="color:#02b">0x03</span>      <span style="color:#777">/* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */</span>
+                &gt;;
+        };
+        <span style="color:#970;font-weight:bold">i2c1_pins:</span> pinmux_i2c1_pins { <i class="conum" data-value="1"></i><b>(1)</b>
+                pinctrl-single,pins = &lt;
+                        <span style="color:#02b">0x158</span> (PIN_INPUT_PULLUP | MUX_MODE2)    <span style="color:#777">/* spi0_d1.i2c1_sda */</span>
+                        <span style="color:#02b">0x15c</span> (PIN_INPUT_PULLUP | MUX_MODE2)    <span style="color:#777">/* spi0_cs0.i2c1_scl */</span>
+                &gt;;
+        };
+};
+.
+.
+.
+i2c1 {
+        pinctrl-names = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">default</span><span style="color:#710">&quot;</span></span>;
+        pinctrl-<span style="color:#00D">0</span> = &lt;&amp;i2c1_pins&gt;; <i class="conum" data-value="2"></i><b>(2)</b>
+
+        status = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">okay</span><span style="color:#710">&quot;</span></span>;
+        clock-frequency = &lt;<span style="color:#00D">100000</span>&gt;;
+
+        <span style="color:#970;font-weight:bold">nunchuck:</span> nunchuck<span style="color:#F00;background-color:#FAA">@</span><span style="color:#00D">52</span> {
+                compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nintendo,nunchuck</span><span style="color:#710">&quot;</span></span>;
+                reg = &lt;<span style="color:#02b">0x52</span>&gt;;
+        };
+
+};</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Defined the pinctrl configuration for <em>i2c1</em></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Defined the named state for the <em>i2c1</em> bus</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We now rebuild the <em>DTB</em> and reboot the board.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="i2c-bus-tests"><a class="anchor" href="#i2c-bus-tests"></a>42.4. I2C Bus Tests</h3>
+<div class="paragraph">
+<p>We can run the <a href="http://linux.die.net/man/8/i2cdetect" target="_blank"><em>i2cdetect</em></a> utility to check if we&#8217;ve configured the <em>i2c1</em> bus correctly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">Welcome to Buildroot
+buildroot login: root
+# i2cdetect -l        <i class="conum" data-value="1"></i><b>(1)</b>
+i2c-0        i2c               OMAP I2C adapter                        I2C adapter
+i2c-1        i2c               OMAP I2C adapter                        I2C adapter
+# i2cdetect -F 1 <i class="conum" data-value="2"></i><b>(2)</b>
+Functionalities implemented by /dev/i2c-1:
+I2C                              yes
+SMBus Quick Command              no
+SMBus Send Byte                  yes
+SMBus Receive Byte               yes
+SMBus Write Byte                 yes
+SMBus Read Byte                  yes
+SMBus Write Word                 yes
+SMBus Read Word                  yes
+SMBus Process Call               yes
+SMBus Block Write                yes
+SMBus Block Read                 no
+SMBus Block Process Call         no
+SMBus PEC                        yes
+I2C Block Write                  yes
+I2C Block Read                   yes
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>List the I2C adapters available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>List the functionalities associated with the <em>i2c1</em> bus</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To see if everything works fine we use the <em>i2cdetect -r 1</em> command.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Using <em>i2cdetect -r 1</em></div>
+<div class="paragraph">
+<p>According to the <a href="http://linux.die.net/man/8/i2cdetect" target="_blank">man page</a>, this command uses the
+SMBus "read byte" commands for probing. It uses a command which will be
+safest for each address. Since we&#8217;re following the Free Electrons lab
+we use it but otherwise it&#8217;s better to read up before using it for an
+unknown I2C device.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># i2cdetect -r 1
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-1 using read byte commands.
+I will probe address range 0x03-0x77.
+Continue? [Y/n]
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+# [  445.878808] random: nonblocking pool is initialized</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we go ahead and commit our changes using git.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git status <i class="conum" data-value="1"></i><b>(1)</b>
+On branch nunchuck
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+        modified:   arch/arm/boot/dts/am335x-boneblack.dts
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+
+        defconfig
+        drivers/Module.symvers
+        drivers/misc/Module.symvers
+        drivers/staging/Module.symvers
+        drivers/staging/comedi/Module.symvers
+        drivers/staging/comedi/drivers/Module.symvers
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git diff arch/arm/boot/dts/am335x-boneblack.dts        <i class="conum" data-value="2"></i><b>(2)</b>
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 049049a..fe7422d 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -60,6 +60,12 @@
+                        0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+                &gt;;
+        };
++       i2c1_pins: pinmux_i2c1_pins {
++               pinctrl-single,pins = &lt;
++                       0x158 (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_d1.i2c1_sda */
++                       0x15c (PIN_INPUT_PULLUP | MUX_MODE2)    /* spi0_cs0.i2c1_scl */
++               &gt;;
++       };
+ };
+
+ &amp;lcdc {
+@@ -78,6 +84,9 @@
+ };
+
+ &amp;i2c1 {
++       pinctrl-names = &quot;default&quot;;
++       pinctrl-0 = &lt;&amp;i2c1_pins&gt;;
++
+        status = &quot;okay&quot;;
+        clock-frequency = &lt;100000&gt;;
+
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git add arch/arm/boot/dts/am335x-boneblack.dts <i class="conum" data-value="3"></i><b>(3)</b>
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$ git commit -s -m &quot;am335x-boneblack.dts: Enable pinmux settings for i2c1 bus&quot; <i class="conum" data-value="4"></i><b>(4)</b>
+[nunchuck de7b0fb] am335x-boneblack.dts: Enable pinmux settings for i2c1 bus
+ 1 file changed, 9 insertions(+)
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/Git/linux$</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Check the status of the repository</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Check the differences in the <em>arch/arm/boot/dts/am335x-boneblack.dts</em> file</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Add The file to the index</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Commit the change with an appropriate message using -m and signing off using -s</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="nunchuck-device-initialization"><a class="anchor" href="#nunchuck-device-initialization"></a>42.5. Nunchuck Device Initialization</h3>
+<div class="paragraph">
+<p>We will need to read the registers of the Nunchuck to find out whether the buttons
+are pressed or not. But before that we will need to initiate the Nunchuck.
+To communicate with the Nunchuck, we must send a handshake signal. If you are
+using a black Wii Nunchuck, send 2 bytes 0xF0, 0x55 to initalize the first register
+and 0xFB, 0x00 to initialize the second register of the Nunchuck. On a white send
+0x40, 0x00 followed by 0x00. We get this information from the
+<a href="../free_electrons_linux_kernel/nunchuck.pdf" target="_blank">nunchuck pdf</a>.</p>
+</div>
+<div class="paragraph">
+<p>To initialize the device we will modify our probe routine in our platform driver
+and use the I2C raw API. The modifications to our driver code are shown below.
+We take extra care to check the return value of <em>i2c_master_send</em> to check
+for communication issues.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/init.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/module.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/i2c.h&gt;</span>
+<span style="color:#579">#include</span> <span style="color:#B44;font-weight:bold">&lt;linux/delay.h&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+<span style="color:#777">/* Add your code here */</span>
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id nunchuck_id[] = {
+        { <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nunchuck</span><span style="color:#710">&quot;</span></span>, <span style="color:#00D">0</span> },
+        { }
+};
+MODULE_DEVICE_TABLE(i2c, nunchuck_id);
+
+<span style="color:#579">#ifdef</span> CONFIG_OF
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> of_device_id nunchuck_dt_ids[] = {
+        {.compatible = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nintendo,nunchuck</span><span style="color:#710">&quot;</span></span>,},
+        { }
+};
+MODULE_DEVICE_TABLE(of, nunchuck_dt_ids);
+<span style="color:#579">#endif</span>
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_probe(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client,
+                        <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id *id)
+{
+        <span style="color:#0a8;font-weight:bold">char</span> init1[<span style="color:#00D">2</span>] = {<span style="color:#02b">0xF0</span>, <span style="color:#02b">0x55</span>};
+        <span style="color:#0a8;font-weight:bold">char</span> init2[<span style="color:#00D">2</span>] = {<span style="color:#02b">0xFB</span>, <span style="color:#02b">0x00</span>};
+        <span style="color:#0a8;font-weight:bold">int</span> count1 = <span style="color:#080;font-weight:bold">sizeof</span>(init1)/<span style="color:#080;font-weight:bold">sizeof</span>(init1[<span style="color:#00D">0</span>]);
+        <span style="color:#0a8;font-weight:bold">int</span> count2 = <span style="color:#080;font-weight:bold">sizeof</span>(init2)/<span style="color:#080;font-weight:bold">sizeof</span>(init2[<span style="color:#00D">0</span>]);
+        <span style="color:#0a8;font-weight:bold">int</span> ret;
+
+        dev_info(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s invoked</span><span style="color:#710">&quot;</span></span>, __func__);
+
+        <span style="color:#777">/* initialize device */</span>
+        ret = i2c_master_send(client, init1, count1);        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret != count1) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+
+        udelay(<span style="color:#00D">1000</span>);        <i class="conum" data-value="3"></i><b>(3)</b>
+
+        ret = i2c_master_send(client, init2, count2);        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret != count2) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+        <span style="color:#777">/* register to a kernel framework */</span>
+
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_remove(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client)
+{
+        dev_info(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s invoked</span><span style="color:#710">&quot;</span></span>, __func__);
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">struct</span> i2c_driver nunchuck_driver = {
+        .probe = nunchuck_probe,
+        .remove = nunchuck_remove,
+        .id_table = nunchuck_id,
+        .driver = {
+                .name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nunchuck</span><span style="color:#710">&quot;</span></span>,
+                .owner = THIS_MODULE,
+                .of_match_table = of_match_ptr(nunchuck_dt_ids),
+        },
+};
+
+module_i2c_driver(nunchuck_driver);
+
+MODULE_LICENSE(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GPL</span><span style="color:#710">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We include the <em>linux/delay.h</em> file to use <em>udelay</em> in our code</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Using <em>i2c_master_send</em> we send the 0xF0 and 0x55 bytes to the client</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A delay of 1ms is inserted between the two I2C transactions</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Using <em>i2c_master_send</em> we send the 0xFB and 0x00 bytes to the client</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Again we compile our kernel driver module with the new changes passing the
+<em>ARCH</em>, <em>CROSS_COMPILE</em> and <em>KDIR</em> options as before.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KDIR=/home/conrad/Git/linux/
+make -C /home/conrad/Git/linux/ M=$PWD
+make[1]: Entering directory `/home/conrad/Git/linux'
+  CC [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.mod.o
+  LD [M]  /home/conrad/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk/nunchuk.ko
+make[1]: Leaving directory `/home/conrad/Git/linux'
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/fe-kernel-training/linux-kernel-labs/modules/nfsroot/root/nunchuk$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally we test the kernel module to check if there are any communication
+issues.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># lsmod        <i class="conum" data-value="1"></i><b>(1)</b>
+Module                  Size  Used by    Tainted: G
+#
+#
+#
+# insmod nunchuk.ko <i class="conum" data-value="2"></i><b>(2)</b>
+[  840.223615] nunchuck 1-0052: nunchuck_probe invoked
+#
+#
+#
+#
+# rmmod nunchuk        <i class="conum" data-value="3"></i><b>(3)</b>
+[  850.012196] nunchuck 1-0052: nunchuck_remove invoked
+#
+#
+#
+#
+# dmesg |tail <i class="conum" data-value="4"></i><b>(4)</b>
+[    5.107285]      device=eth0, hwaddr=90:59:af:49:c8:ef, ipaddr=192.168.0.100, mask=255.255.255.0, gw=255.255.255.255
+[    5.118343]      host=192.168.0.100, domain=, nis-domain=(none)
+[    5.124525]      bootserver=255.255.255.255, rootserver=192.168.0.1, rootpath=
+[    5.772441] VFS: Mounted root (nfs filesystem) on device 0:13.
+[    5.780080] devtmpfs: mounted
+[    5.783776] Freeing unused kernel memory: 384K (c0771000 - c07d1000)
+[    7.029211] random: dd urandom read with 56 bits of entropy available
+[  303.383631] random: nonblocking pool is initialized
+[  840.223615] nunchuck 1-0052: nunchuck_probe invoked
+[  850.012196] nunchuck 1-0052: nunchuck_remove invoked
+#
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Using <em>lsmod</em> we see that there are not inserted kernel modules</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Insert our <em>nunchuck.ko</em> driver</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Remove our <em>nunchuck</em> driver</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Print the last kernel logs and inspect for any errors</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>At this point we assume the device is initialized in the probe routine.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="read-nunchuck-registers"><a class="anchor" href="#read-nunchuck-registers"></a>42.6. Read Nunchuck Registers</h3>
+<div class="paragraph">
+<p>The nunchuk has 6 registers with which it relays information as given in <a href="../free_electrons_linux_kernel/nunchuck.pdf" target="_blank">the pdf</a>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Byte 0x00</dt>
+<dd>
+<p>X-axis data of the joystick</p>
+</dd>
+<dt class="hdlist1">Byte 0x01</dt>
+<dd>
+<p>Y-axis data of the joystick</p>
+</dd>
+<dt class="hdlist1">Byte 0x02</dt>
+<dd>
+<p>X-axis data of the accellerometer sensor</p>
+</dd>
+<dt class="hdlist1">Byte 0x03</dt>
+<dd>
+<p>Y-axis data of the accellerometer sensor</p>
+</dd>
+<dt class="hdlist1">Byte 0x04</dt>
+<dd>
+<p>Z-axis data of the accellerometer sensor</p>
+</dd>
+<dt class="hdlist1">Byte 0x05</dt>
+<dd>
+<p><strong>bit 0</strong> as Z button status - 0 = pressed and 1 = release;
+<strong>bit 1</strong> as C button status - 0 = pressed and 1 = release;
+<strong>bit 2 and 3</strong> as 2 lower bit of X-axis data of the accellerometer sensor;
+<strong>bit 4 and 5</strong> as 2 lower bit of Y-axis data of the accellerometer sensor;
+<strong>bit 6 and 7</strong> as 2 lower bit of Z-axis data of the accellerometer sensor;</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The nunchuck updates the registers only once they have been read so we
+have to read the registers twice. We create a function <em>nunchuck_read_registers</em>
+to simplify the impelementation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_read_registers(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client,
+                        <span style="color:#0a8;font-weight:bold">char</span> *reg_data, <span style="color:#0a8;font-weight:bold">int</span> count)
+{
+        <span style="color:#0a8;font-weight:bold">char</span> addr = <span style="color:#02b">0x00</span>;
+        <span style="color:#0a8;font-weight:bold">int</span> ret = -<span style="color:#00D">1</span>;
+
+        <span style="color:#080;font-weight:bold">if</span> ((<span style="color:#069">NULL</span> == client) || (<span style="color:#069">NULL</span>== reg_data) || (<span style="color:#00D">0</span> == count))
+                <span style="color:#080;font-weight:bold">return</span> -EFAULT;
+
+        dev_info(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s invoked</span><span style="color:#710">&quot;</span></span>, __func__);
+
+        <span style="color:#777">/* Add 10ms delay before next read of registers */</span>
+        mdelay(<span style="color:#00D">10</span>);        <i class="conum" data-value="1"></i><b>(1)</b>
+
+        <span style="color:#777">/* Write 0x00 to nunchuck which is the base address for registers */</span>
+        ret = i2c_master_send(client, &amp;addr, <span style="color:#080;font-weight:bold">sizeof</span>(addr));        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret != <span style="color:#080;font-weight:bold">sizeof</span>(addr)) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                ret = -EIO;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        <span style="color:#777">/* Add 10ms delay before i2c_master_read */</span>
+        mdelay(<span style="color:#00D">10</span>);        <i class="conum" data-value="3"></i><b>(3)</b>
+
+        ret = i2c_master_recv(client, reg_data, count);        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret != count) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                ret = -EIO;
+                <span style="color:#080;font-weight:bold">goto</span> END;
+        }
+
+        ret = <span style="color:#00D">0</span>;
+
+<span style="color:#970;font-weight:bold">END:</span>
+        <span style="color:#080;font-weight:bold">return</span> ret;
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start by putting a 10 ms delay by calling the mdelay() routine. That’s needed to add
+time between the previous i2c operation and the next one.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Write 0x00 to the bus. That will allow us to read the device registers.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Add another 10 ms delay.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Read 6 bytes from the device, still using the I2C raw API. Check the return value as usua</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We use the <em>nunchuck_read_registers</em> function in our probe routine invoking it twice.
+The first read value is discarded and the latest value is used in order to determine the status
+of the Z and C buttons. Our implementation looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> nunchuck_probe(<span style="color:#080;font-weight:bold">struct</span> i2c_client *client,
+                        <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> i2c_device_id *id)
+{
+        <span style="color:#0a8;font-weight:bold">char</span> init1[<span style="color:#00D">2</span>] = {<span style="color:#02b">0xF0</span>, <span style="color:#02b">0x55</span>};
+        <span style="color:#0a8;font-weight:bold">char</span> init2[<span style="color:#00D">2</span>] = {<span style="color:#02b">0xFB</span>, <span style="color:#02b">0x00</span>};
+        <span style="color:#0a8;font-weight:bold">char</span> data[<span style="color:#00D">6</span>] = {<span style="color:#00D">0</span>};        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#0a8;font-weight:bold">int</span> count1 = <span style="color:#080;font-weight:bold">sizeof</span>(init1)/<span style="color:#080;font-weight:bold">sizeof</span>(init1[<span style="color:#00D">0</span>]);
+        <span style="color:#0a8;font-weight:bold">int</span> count2 = <span style="color:#080;font-weight:bold">sizeof</span>(init2)/<span style="color:#080;font-weight:bold">sizeof</span>(init2[<span style="color:#00D">0</span>]);
+        <span style="color:#0a8;font-weight:bold">int</span> ret;
+        <span style="color:#0a8;font-weight:bold">int</span> zpressed = <span style="color:#00D">0</span>;        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span style="color:#0a8;font-weight:bold">int</span> cpressed = <span style="color:#00D">0</span>;
+
+        dev_info(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s invoked</span><span style="color:#710">&quot;</span></span>, __func__);
+
+        <span style="color:#777">/* initialize device */</span>
+        ret = i2c_master_send(client, init1, count1);
+        <span style="color:#080;font-weight:bold">if</span> (ret != count1) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+
+        udelay(<span style="color:#00D">1000</span>);
+
+        ret = i2c_master_send(client, init2, count2);
+        <span style="color:#080;font-weight:bold">if</span> (ret != count2) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+        <span style="color:#777">/* register to a kernel framework */</span>
+
+        <span style="color:#777">/* read nunchuck registers */</span>
+        ret = nunchuck_read_registers(client, data, <span style="color:#080;font-weight:bold">sizeof</span>(data));        <i class="conum" data-value="3"></i><b>(3)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+
+        <span style="color:#777">/* read nunchuck registers */</span>
+        ret = nunchuck_read_registers(client, data, <span style="color:#080;font-weight:bold">sizeof</span>(data));        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span style="color:#080;font-weight:bold">if</span> (ret) {
+                dev_err(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s: err=%d</span><span style="color:#710">&quot;</span></span>, __func__, ret);
+                <span style="color:#080;font-weight:bold">return</span> -EIO;
+        }
+
+        <span style="color:#777">/* Bit 0 indicates if Z button is pressed */</span>
+        zpressed = (data[<span style="color:#00D">5</span>] &amp; BIT(<span style="color:#00D">0</span>)? <span style="color:#00D">0</span> : <span style="color:#00D">1</span>);                <i class="conum" data-value="5"></i><b>(5)</b>
+        <span style="color:#777">/* Bit 1 indicates if Z button is pressed */</span>
+        cpressed = (data[<span style="color:#00D">5</span>] &amp; BIT(<span style="color:#00D">1</span>)? <span style="color:#00D">0</span> : <span style="color:#00D">1</span>);
+
+        dev_info(&amp;client-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">%s:zpressed : %d cpressed : %d</span><span style="color:#710">&quot;</span></span>,
+                        __func__, zpressed, cpressed);
+
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00D">0</span>;
+}
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Data array to read the 6 registers</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>zpressed, cpressed variables to store the status of the Z and C buttons</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>First read of the nunchuck registers</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Second read of the nunchuck registers</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>We use <em>BIT</em> macro to extract the bit status of the 6th element(index 5)</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After cross-compiling the kernel module driver again we test it out with the nunchuck.
+Each time we load the module using <em>insmod</em> and unload it using <em>rmmod</em>. We see
+that we&#8217;re successfully able to read the status of the buttons through I2C.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">#
+#
+# insmod nunchuk.ko
+[  791.810820] nunchuck 1-0052: nunchuck_probe invoked
+[  791.817778] nunchuck 1-0052: nunchuck_read_registers invoked
+[  791.846620] nunchuck 1-0052: nunchuck_read_registers invoked
+[  791.873956] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0        <i class="conum" data-value="1"></i><b>(1)</b>
+# rmmod nunchuk
+#
+#
+[  796.906688] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko
+[  801.625983] nunchuck 1-0052: nunchuck_probe invoked
+[  801.633607] nunchuck 1-0052: nunchuck_read_registers invoked
+[  801.660876] nunchuck 1-0052: nunchuck_read_registers invoked
+[  801.687922] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 1        <i class="conum" data-value="2"></i><b>(2)</b>
+# rmmod nunchuk
+#
+#
+[  804.590286] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko
+[  807.392982] nunchuck 1-0052: nunchuck_probe invoked
+[  807.400573] nunchuck 1-0052: nunchuck_read_registers invoked
+[  807.427810] nunchuck 1-0052: nunchuck_read_registers invoked
+[  807.454934] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0        <i class="conum" data-value="3"></i><b>(3)</b>
+# rmmod nunchuk
+#
+#
+[  809.332638] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko
+[  812.202315] nunchuck 1-0052: nunchuck_probe invoked
+[  812.209840] nunchuck 1-0052: nunchuck_read_registers invoked
+[  812.237097] nunchuck 1-0052: nunchuck_read_registers invoked
+[  812.264222] nunchuck 1-0052: nunchuck_probe:zpressed : 1 cpressed : 0        <i class="conum" data-value="4"></i><b>(4)</b>
+# rmmod nunchuk
+#
+#
+[  815.116691] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko
+[  819.487739] nunchuck 1-0052: nunchuck_probe invoked
+[  819.495379] nunchuck 1-0052: nunchuck_read_registers invoked
+[  819.522628] nunchuck 1-0052: nunchuck_read_registers invoked
+[  819.549747] nunchuck 1-0052: nunchuck_probe:zpressed : 0 cpressed : 0        <i class="conum" data-value="5"></i><b>(5)</b>
+#
+#
+# rmmod nunchuk
+[ 1746.370837] nunchuck 1-0052: nunchuck_remove invoked
+# insmod nunchuk.ko
+[ 1751.173512] nunchuck 1-0052: nunchuck_probe invoked
+[ 1751.181127] nunchuck 1-0052: nunchuck_read_registers invoked
+[ 1751.208413] nunchuck 1-0052: nunchuck_read_registers invoked
+[ 1751.235496] nunchuck 1-0052: nunchuck_probe:zpressed : 1 cpressed : 1        <i class="conum" data-value="6"></i><b>(6)</b>
+#
+#</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>No buttons pressed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>C button is pressed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>No buttons pressed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Z button is pressed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>No buttons pressed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Both C and Z are pressed</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In this lab we were able to successfully communicate with the Wii Nintendo nunchuck
+over the I2C bus. This is a basic platform driver which gives us an understanding
+of how to initialise the device and access its registers. To be really useful
+we&#8217;ll have to plug it into some sort of framework such as <em>input</em> so as to make
+it available to the user.</p>
+</div>
+</div>
+</div>
+</div>
+<h1 id="kernel-frameworks" class="sect0"><a class="anchor" href="#kernel-frameworks"></a>Kernel Frameworks</h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<p>The Linux kernel is designed so that a kernel driver can interface with a framework
+which exposes services to the userspace. The driver interfaces with the bus infrastructure
+of the device depending on how it is connected in the platform and also interfaces
+with a specific framework which classifies the functionality of the device. This
+allows different devices to support the same userspace interface.
+This section will focus on the kernel frameworks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="user-space-inteface-to-devices"><a class="anchor" href="#user-space-inteface-to-devices"></a>43. User Space Inteface To Devices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Linux, there are three types of devices:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Network devices</dt>
+<dd>
+<p>They are the network interfaces which are visible using
+tools like ifconfig for ethernet interfaces, iwconfig for wlan interfaces, etc&#8230;&#8203;</p>
+</dd>
+<dt class="hdlist1">Block devices</dt>
+<dd>
+<p>They are the devices which represent physical storage in the
+system. The easiest example is the hard disk drive. Access to such type of
+devices is through blocks of data. They are visible through files present in
+<em>/dev</em>.</p>
+</dd>
+<dt class="hdlist1">Character devices</dt>
+<dd>
+<p>All other types of devices are represented as character
+devices. They include devices such as input devices like the mouse, keyboard
+to devices such as the graphics card and sound card. They are also visible
+through files present in <em>/dev</em>. Bulk of the devices that are present
+are represented as character devices.</p>
+</dd>
+</dl>
+</div>
+<div class="sect2">
+<h3 id="major-minor-numbers"><a class="anchor" href="#major-minor-numbers"></a>43.1. Major &amp; Minor Numbers</h3>
+<div class="paragraph">
+<p>The kernel denotes devices with a major and minor number where the major
+number represents the class that the device falls into and the minor
+number is just an identifier for the device in that class.</p>
+</div>
+<div class="paragraph">
+<p>Userspace applications need to access devices across different platforms
+and for this reason the major and minor numbers are statically allocated
+and identical across different systems. Checkout <em>Documentation/devices.txt</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="devices-are-files"><a class="anchor" href="#devices-are-files"></a>43.2. Devices Are Files</h3>
+<div class="paragraph">
+<p>One of the highlights of Unix design is that devices are also treated
+as files. In this way a userspace application can manipulate all
+devices in the same way it accesses a file on the system using the API
+<em>open</em>, <em>close</em>, <em>write</em>, <em>read</em>, etc..</p>
+</div>
+<div class="paragraph">
+<p>This is possible because of a special type of file called the device file.
+This file associates the type, major and minor of a device with a specific
+file name. Typically all device files are stored in <em>/dev</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># ls -l /dev/
+total 0
+crw-------    1 root     root        5,   1 Jan  1  1970 console
+crw-------    1 root     root       10,  63 Jan  1  1970 cpu_dma_latency
+crw-rw-rw-    1 root     root        1,   7 Jan  1  1970 full
+crw-------    1 root     root       10, 183 Jan  1  1970 hwrng
+crw-------    1 root     root       89,   0 Jan  1  1970 i2c-0
+crw-------    1 root     root       89,   1 Jan  1  1970 i2c-1
+drwxr-xr-x    2 root     root            60 Jan  1  1970 input
+.
+.
+.
+crw-------    1 root     root        7, 129 Jan  1  1970 vcsa1
+crw-------    1 root     root       10, 130 Jan  1  1970 watchdog
+crw-------    1 root     root      253,   0 Jan  1  1970 watchdog0
+crw-rw-rw-    1 root     root        1,   5 Jan  1  1970 zero
+#
+#</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-device-files"><a class="anchor" href="#creating-device-files"></a>43.3. Creating Device Files</h3>
+<div class="paragraph">
+<p>Since device files are special they have to be created using a special
+command <em>mknod</em>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>mknod /dev/&lt;device_file_name&gt; [c/b] major minor</em></p>
+</li>
+<li>
+<p><em>mknod</em> requires special root access</p>
+</li>
+<li>
+<p>The association between type, major and minor of the file and the device
+needs to be respected in the system and is the responsibility of the system designer.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Some systems automate the creation of these device files by the use
+of daemons which run and monitor the <em>/sys/</em> filesystem.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>devtmpfs</em> virtual filesystem</p>
+</li>
+<li>
+<p><em>udev</em> daemon popular on desktops and server systems</p>
+</li>
+<li>
+<p><em>mdev</em> lightweight solution popular on embedded devices</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="character-drivers"><a class="anchor" href="#character-drivers"></a>44. Character Drivers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As mentioned in the previous section character devices are treated
+as files so the device driver for character devices must implement
+the routines <em>open, close, read, write, etc</em>.</p>
+</div>
+<div class="paragraph">
+<p>The character driver does this through the callback functions
+defined in the <em>struct file_operations</em> structure.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="user-kernel-interface-char-devices" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/user-kernel-interface-char-devices.png"><img src="http://zeuzoix.github.io/techeuphoria/images/user-kernel-interface-char-devices.png" alt="user kernel interface char devices" width="640" height="480"></a>
+</div>
+<div class="title">USB Kernel Interface Character Devices</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="file-operations"><a class="anchor" href="#file-operations"></a>44.1. File Operations</h3>
+<div class="paragraph">
+<p>We will take a look at the file operations for a character driver. It is not necessary
+to implement either of them. These are found in <em>include/linux/fs.h</em>. The structure
+below shows all operations for a file but we&#8217;ve enumerated the ones which are relevant
+to character drivers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">struct</span> file_operations {
+        <span style="color:#080;font-weight:bold">struct</span> module *owner;
+        loff_t (*llseek) (<span style="color:#080;font-weight:bold">struct</span> file *, loff_t, <span style="color:#0a8;font-weight:bold">int</span>);
+        ssize_t (*read) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">char</span> __user *, size_t, loff_t *);        <i class="conum" data-value="1"></i><b>(1)</b>
+        ssize_t (*write) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> __user *, size_t, loff_t *);        <i class="conum" data-value="2"></i><b>(2)</b>
+        ssize_t (*aio_read) (<span style="color:#080;font-weight:bold">struct</span> kiocb *, <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> iovec *, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>, loff_t);
+        ssize_t (*aio_write) (<span style="color:#080;font-weight:bold">struct</span> kiocb *, <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> iovec *, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>, loff_t);
+        <span style="color:#0a8;font-weight:bold">int</span> (*iterate) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#080;font-weight:bold">struct</span> dir_context *);
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> (*poll) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#080;font-weight:bold">struct</span> poll_table_struct *);
+        <span style="color:#0a8;font-weight:bold">long</span> (*unlocked_ioctl) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>);        <i class="conum" data-value="3"></i><b>(3)</b>
+        <span style="color:#0a8;font-weight:bold">long</span> (*compat_ioctl) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>);
+        <span style="color:#0a8;font-weight:bold">int</span> (*mmap) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#080;font-weight:bold">struct</span> vm_area_struct *);        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span style="color:#0a8;font-weight:bold">int</span> (*open) (<span style="color:#080;font-weight:bold">struct</span> inode *, <span style="color:#080;font-weight:bold">struct</span> file *);        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span style="color:#0a8;font-weight:bold">int</span> (*flush) (<span style="color:#080;font-weight:bold">struct</span> file *, fl_owner_t id);
+        <span style="color:#0a8;font-weight:bold">int</span> (*release) (<span style="color:#080;font-weight:bold">struct</span> inode *, <span style="color:#080;font-weight:bold">struct</span> file *);        <i class="conum" data-value="6"></i><b>(6)</b>
+        <span style="color:#0a8;font-weight:bold">int</span> (*fsync) (<span style="color:#080;font-weight:bold">struct</span> file *, loff_t, loff_t, <span style="color:#0a8;font-weight:bold">int</span> datasync);
+        <span style="color:#0a8;font-weight:bold">int</span> (*aio_fsync) (<span style="color:#080;font-weight:bold">struct</span> kiocb *, <span style="color:#0a8;font-weight:bold">int</span> datasync);
+        <span style="color:#0a8;font-weight:bold">int</span> (*fasync) (<span style="color:#0a8;font-weight:bold">int</span>, <span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">int</span>);
+        <span style="color:#0a8;font-weight:bold">int</span> (*lock) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">int</span>, <span style="color:#080;font-weight:bold">struct</span> file_lock *);
+        ssize_t (*sendpage) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#080;font-weight:bold">struct</span> page *, <span style="color:#0a8;font-weight:bold">int</span>, size_t, loff_t *, <span style="color:#0a8;font-weight:bold">int</span>);
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> (*get_unmapped_area)(<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span>);
+        <span style="color:#0a8;font-weight:bold">int</span> (*check_flags)(<span style="color:#0a8;font-weight:bold">int</span>);
+        <span style="color:#0a8;font-weight:bold">int</span> (*flock) (<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">int</span>, <span style="color:#080;font-weight:bold">struct</span> file_lock *);
+        ssize_t (*splice_write)(<span style="color:#080;font-weight:bold">struct</span> pipe_inode_info *, <span style="color:#080;font-weight:bold">struct</span> file *, loff_t *, size_t, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>);
+        ssize_t (*splice_read)(<span style="color:#080;font-weight:bold">struct</span> file *, loff_t *, <span style="color:#080;font-weight:bold">struct</span> pipe_inode_info *, size_t, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span>);
+        <span style="color:#0a8;font-weight:bold">int</span> (*setlease)(<span style="color:#080;font-weight:bold">struct</span> file *, <span style="color:#0a8;font-weight:bold">long</span>, <span style="color:#080;font-weight:bold">struct</span> file_lock **);
+        <span style="color:#0a8;font-weight:bold">long</span> (*fallocate)(<span style="color:#080;font-weight:bold">struct</span> file *file, <span style="color:#0a8;font-weight:bold">int</span> mode, loff_t offset,
+                          loff_t len);
+        <span style="color:#0a8;font-weight:bold">int</span> (*show_fdinfo)(<span style="color:#080;font-weight:bold">struct</span> seq_file *m, <span style="color:#080;font-weight:bold">struct</span> file *f);
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore in a character driver named <em>foo</em> we would have the following operations
+defined.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">int foo_open(struct inode *i, struct file *f)</dt>
+<dd>
+<p>The <em>open</em> operation is defined so that when user space opens the device file
+it gets access to the character driver. Here <em>struct inode</em> pointer is a structure
+that uniquely represents a file in the Linux system (be it a regular file,
+a directory, a symbolic link, a character or block device). And <em>struct file</em>
+is a structure created every time a file is opened. Going forward we see that
+the <em>struct file</em> object is used in the other operations. As the same file
+can be accessed by multiple applications there needs to be a way of differentiating
+each process&#8217;s access. Several file structures can point to the same inode structure.
+The object contains information like the current position, the opening mode, etc.
+which is relevant to a particular process. The <em>struct file</em> object also has a
+<em>void *private_data</em> pointer that one can freely use.</p>
+</dd>
+<dt class="hdlist1">int foo_release(struct inode *i, struct file *f)</dt>
+<dd>
+<p>The <em>release</em> operation is called when user space closes the file.</p>
+</dd>
+<dt class="hdlist1">ssize_t foo_read(struct file *f, char __user *buf, size_t sz, loff_t *off)</dt>
+<dd>
+<p>The <em>read</em> operation is defined to allow the user space application to
+read the device. So the driver has to read data from the device, write in the user
+space buffer pointed <em>buf</em> argument, and update the current position in <em>off</em>.
+The pointer to the same file structure that was used in the <em>open</em> call is used.
+The amount of data should be capped to that of <em>sz</em>. The number of bytes
+actually read is returned. On UNIX systems the <em>read</em> operation blocks
+if there is not enough data to read.</p>
+</dd>
+<dt class="hdlist1">ssize_t foo_write(struct file *f, const char __user *buf, size_t sz, loff_t *off)</dt>
+<dd>
+<p>Called when user space uses the <em>write()</em> system call on the device
+The opposite of read, must read at most <em>sz</em> bytes from buf, write it to the device,
+update <em>off</em> and return the number of bytes written.</p>
+</dd>
+<dt class="hdlist1">long foo_unlocked_ioctl(struct file *f, unsigned int cmd, unsigned long arg)</dt>
+<dd>
+<p>Associated to the ioctl() system call. Called unlocked because it didn’t hold the Big Kernel Lock
+(gone now). Allows to extend the driver capabilities beyond the limited
+read/write API. For example: changing the speed of a serial port, setting video
+output format, querying a device serial number. In this <em>cmd</em> is a number
+identifying the operation to perform <em>arg</em> is the optional argument passed as
+third argument of the <em>ioctl()</em> system call. Can be an integer, an address, etc.
+The semantic of cmd and arg is driver-specific</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exchanging-data-with-user-space"><a class="anchor" href="#exchanging-data-with-user-space"></a>45. Exchanging Data With User Space</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since user space memory is different from kernel space memory we can&#8217;t use
+a simple <em>memcpy</em> to copy data from user space to kernel space. Additionally
+dereferencing a user space pointer in kernel space will not work on all platforms.
+Moreover if the pointer being dereferenced is invalid it will lead to a segfault
+in the application.</p>
+</div>
+<div class="paragraph">
+<p>Linux defines a set of functions to keep the kernel code portable when it comes
+to copying data from user space to kernel space and vice versa. The first two
+functions copy single values and the last two copy buffers:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">get_user(v, p);</dt>
+<dd>
+<p>The kernel variable <em>v</em> gets the value pointed by the user space pointer <em>p</em></p>
+</dd>
+<dt class="hdlist1">put_user(v, p);</dt>
+<dd>
+<p>The value of the variable refered by the pointer <em>p</em> is set to the value
+of the kernel variable <em>v</em></p>
+</dd>
+<dt class="hdlist1">unsigned long copy_to_user(void __user *to, const void *from, unsigned long n);</dt>
+<dd>
+<p>Copy the contents of the kernel buffer <em>from</em> to the user space buffer <em>to</em> upto
+<em>n</em> bytes. Return 0 on success and -EFAULT on failure.</p>
+</dd>
+<dt class="hdlist1">unsigned long copy_from_user(void *to, const void __user *from, unsigned long n);</dt>
+<dd>
+<p>Copy the contents of the user space buffer <em>from</em> to the kernel buffer <em>to</em> upto
+<em>n</em> bytes. Return 0 on success and -EFAULT on failure.</p>
+</dd>
+</dl>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="user-kernel-data-exchange" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/user-kernel-data-exchange.png"><img src="http://zeuzoix.github.io/techeuphoria/images/user-kernel-data-exchange.png" alt="user kernel data exchange" width="640" height="480"></a>
+</div>
+<div class="title">User Kernel Data Exchange</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="zero-copy-access-to-user-space"><a class="anchor" href="#zero-copy-access-to-user-space"></a>45.1. Zero Copy Access To User Space</h3>
+<div class="paragraph">
+<p>We looked at the functions that allow us to copy data between user space and kernel
+space. If the amount of data we&#8217;re dealing with is huge we need a more efficient
+mechanism. We&#8217;d like to keep our system as efficient as possible and free up
+our processor to do other activities besides copying.</p>
+</div>
+<div class="paragraph">
+<p>The Linux kernel offers <em>zero copy</em> options:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">mmap</dt>
+<dd>
+<p>This system call allows user space to directly access memory mapped I/O space.</p>
+</dd>
+<dt class="hdlist1">get_user_pages_fast</dt>
+<dd>
+<p>This allows a kernel module to get access to user pages without copying them.
+The API is more complex to use though.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="input-subsystem-a-framework-example"><a class="anchor" href="#input-subsystem-a-framework-example"></a>46. Input Subsystem, A Framework Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The input subsystem takes care of all the input events coming
+from the user. It was initially written to support the USB HID (Human
+Interface Device) devices, it expanded to handle all types of input
+devices irrespective of the interface. Some examples of input devices
+supported are: keyboards, mice, joysticks, touchscreens, etc..</p>
+</div>
+<div class="paragraph">
+<p>The input subsystem is split into two parts:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Device drivers</dt>
+<dd>
+<p>This part communicates with the hardware of the input
+device through the interface bus e.g. USB and provides events such as
+keystrokes, mouse movements, touchscreen coordinates, etc.. to the input
+core.</p>
+</dd>
+<dt class="hdlist1">Event handlers</dt>
+<dd>
+<p>This part gets the events from the drivers and passes
+them where needed mostly through interfaces such as <em>evdev</em>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In user space we have different graphic stacks which will use the events
+such as X.Org, Wayland or Android&#8217;s InputManager.</p>
+</div>
+<div class="sect2">
+<h3 id="input-subsystem-overview"><a class="anchor" href="#input-subsystem-overview"></a>46.1. Input Subsystem Overview</h3>
+<div class="paragraph">
+<p>In order to configure the kernel with the input subsystem enabled
+we have to enable the configuration option <em>CONFIG_INPUT</em>. We see
+information in <em>menuconfig INPUT</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>tristate "Generic input layer (needed for keyboard, mouse, &#8230;&#8203;)"</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="menuconfig-input" class="imageblock" style="text-align: center">
+<div class="content">
+<a class="image" href="../images/menuconfig-input.png"><img src="http://zeuzoix.github.io/techeuphoria/images/menuconfig-input.png" alt="menuconfig input" width="640" height="480"></a>
+</div>
+<div class="title">menuconfig INPUT</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The framework is implemented in <em>drivers/input/</em></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>input.c</em></p>
+</li>
+<li>
+<p><em>input-polldev.c</em></p>
+</li>
+<li>
+<p><em>evbug.c</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The input subsystem implements a single character driver and defines
+the user/kernel API in <em>include/uapi/linux/input.h</em>. The set of operations
+that a input driver must implement and the helper functions for the driver
+are alse defined by the input subsystem. The important structures are defined in
+<em>include/linux/input.h</em></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>struct input_dev</em> for the device driver part</p>
+</li>
+<li>
+<p><em>struct input_handler</em> for the event handler part</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="input-subsystem-api-for-allocation-and-deallocation"><a class="anchor" href="#input-subsystem-api-for-allocation-and-deallocation"></a>46.1.1. Input Subsystem API For Allocation And Deallocation</h4>
+<div class="paragraph">
+<p>The <em>input device</em> is described by a very long <em>struct input_dev</em> structure. Along
+with the definition we have the prototype of the functions used to allocate and free
+an object of the structure type i.e</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>struct input_dev *input_allocate_device(void);</em></p>
+</li>
+<li>
+<p><em>void input_free_device(struct input_dev *dev);</em></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#080;font-weight:bold">struct</span> input_dev {        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *name;
+        <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *phys;
+        <span style="color:#088;font-weight:bold">const</span> <span style="color:#0a8;font-weight:bold">char</span> *uniq;
+        <span style="color:#080;font-weight:bold">struct</span> input_id id;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> propbit[BITS_TO_LONGS(INPUT_PROP_CNT)];
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> evbit[BITS_TO_LONGS(EV_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> keybit[BITS_TO_LONGS(KEY_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> relbit[BITS_TO_LONGS(REL_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> absbit[BITS_TO_LONGS(ABS_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> mscbit[BITS_TO_LONGS(MSC_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> ledbit[BITS_TO_LONGS(LED_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> sndbit[BITS_TO_LONGS(SND_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> ffbit[BITS_TO_LONGS(FF_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> swbit[BITS_TO_LONGS(SW_CNT)];
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> hint_events_per_packet;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> keycodemax;
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> keycodesize;
+        <span style="color:#088;font-weight:bold">void</span> *keycode;
+
+        <span style="color:#0a8;font-weight:bold">int</span> (*setkeycode)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev,
+                          <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> input_keymap_entry *ke,
+                          <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> *old_keycode);
+        <span style="color:#0a8;font-weight:bold">int</span> (*getkeycode)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev,
+                          <span style="color:#080;font-weight:bold">struct</span> input_keymap_entry *ke);
+
+        <span style="color:#080;font-weight:bold">struct</span> ff_device *ff;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> repeat_key;
+        <span style="color:#080;font-weight:bold">struct</span> timer_list timer;
+
+        <span style="color:#0a8;font-weight:bold">int</span> rep[REP_CNT];
+
+        <span style="color:#080;font-weight:bold">struct</span> input_mt *mt;
+
+        <span style="color:#080;font-weight:bold">struct</span> input_absinfo *absinfo;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> key[BITS_TO_LONGS(KEY_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> led[BITS_TO_LONGS(LED_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> snd[BITS_TO_LONGS(SND_CNT)];
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> sw[BITS_TO_LONGS(SW_CNT)];
+
+        <span style="color:#0a8;font-weight:bold">int</span> (*open)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev);
+        <span style="color:#088;font-weight:bold">void</span> (*close)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev);
+        <span style="color:#0a8;font-weight:bold">int</span> (*flush)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev, <span style="color:#080;font-weight:bold">struct</span> file *file);
+        <span style="color:#0a8;font-weight:bold">int</span> (*event)(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> type, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> code, <span style="color:#0a8;font-weight:bold">int</span> value);
+
+        <span style="color:#080;font-weight:bold">struct</span> input_handle __rcu *grab;
+
+        spinlock_t event_lock;
+        <span style="color:#080;font-weight:bold">struct</span> mutex mutex;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> users;
+        <span style="color:#0a8;font-weight:bold">bool</span> going_away;
+
+        <span style="color:#080;font-weight:bold">struct</span> device dev;
+
+        <span style="color:#080;font-weight:bold">struct</span> list_head        h_list;
+        <span style="color:#080;font-weight:bold">struct</span> list_head        node;
+
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> num_vals;
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> max_vals;
+        <span style="color:#080;font-weight:bold">struct</span> input_value *vals;
+
+        <span style="color:#0a8;font-weight:bold">bool</span> devres_managed;
+};
+.
+.
+.
+<span style="color:#080;font-weight:bold">struct</span> input_dev __must_check *input_allocate_device(<span style="color:#088;font-weight:bold">void</span>);        <i class="conum" data-value="2"></i><b>(2)</b>
+<span style="color:#080;font-weight:bold">struct</span> input_dev __must_check *devm_input_allocate_device(<span style="color:#080;font-weight:bold">struct</span> device *);
+<span style="color:#088;font-weight:bold">void</span> input_free_device(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev);        <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>struct input_dev</em> is defined</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>input_allocate_device</em> is used to allocate the structure</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><em>input_free_device</em> is used to free the structure</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="input-subsystem-api-for-registration-and-deregistration"><a class="anchor" href="#input-subsystem-api-for-registration-and-deregistration"></a>46.1.2. Input Subsystem API For Registration And Deregistration</h4>
+<div class="paragraph">
+<p>Depending on the type of event that will be generated, the input bit fields evbit and keybit
+of the <em>struct input_dev</em> must be configured. Let&#8217;s take a look at the input driver for the
+Apple USB touchpad. This is located at <em>drivers/input/mouse/appletouch.c</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> atp_probe(<span style="color:#080;font-weight:bold">struct</span> usb_interface *iface,
+                     <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> usb_device_id *id)
+{
+        <span style="color:#080;font-weight:bold">struct</span> atp *dev;
+        <span style="color:#080;font-weight:bold">struct</span> input_dev *input_dev;
+
+.
+.
+        set_bit(EV_KEY, input_dev-&gt;evbit);        <i class="conum" data-value="1"></i><b>(1)</b>
+        set_bit(BTN_TOUCH, input_dev-&gt;keybit);        <i class="conum" data-value="2"></i><b>(2)</b>
+        set_bit(BTN_TOOL_FINGER, input_dev-&gt;keybit);
+        set_bit(BTN_TOOL_DOUBLETAP, input_dev-&gt;keybit);
+        set_bit(BTN_TOOL_TRIPLETAP, input_dev-&gt;keybit);
+        set_bit(BTN_LEFT, input_dev-&gt;keybit);
+.
+.
+.
+        <span style="color:#080;font-weight:bold">return</span> error;
+}
+.
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>EV_KEY</em> type of events are generated by this input device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><em>BTN_TOUCH</em> events code are generated</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the example above <em>set_bit()</em> is an atomic operation allowing to set a particular
+bit to 1. Once the input device is allocated and filled, we have to register
+the allocated <em>struct input_dev</em> object with the input subsystem. This is done
+with the <em>input_register_device</em> function. In the same example we see the registration
+process just after initialising the allocated device structure.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#0a8;font-weight:bold">int</span> atp_probe(<span style="color:#080;font-weight:bold">struct</span> usb_interface *iface,
+                     <span style="color:#088;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">struct</span> usb_device_id *id)
+{
+        <span style="color:#080;font-weight:bold">struct</span> atp *dev;
+        <span style="color:#080;font-weight:bold">struct</span> input_dev *input_dev;
+
+.
+.
+        set_bit(EV_KEY, input_dev-&gt;evbit);
+        set_bit(BTN_TOUCH, input_dev-&gt;keybit);
+        set_bit(BTN_TOOL_FINGER, input_dev-&gt;keybit);
+        set_bit(BTN_TOOL_DOUBLETAP, input_dev-&gt;keybit);
+        set_bit(BTN_TOOL_TRIPLETAP, input_dev-&gt;keybit);
+        set_bit(BTN_LEFT, input_dev-&gt;keybit);
+
+        error = input_register_device(dev-&gt;input);        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span style="color:#080;font-weight:bold">if</span> (error)
+                <span style="color:#080;font-weight:bold">goto</span> err_free_buffer;
+.
+.
+.
+
+        <span style="color:#080;font-weight:bold">return</span> error;
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>input_register_device</em> is used to register the input device object</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the driver is unloaded, the input device will be unregistered using
+<em>input_unregister_device</em>. We see this being called in the driver code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">void</span> atp_disconnect(<span style="color:#080;font-weight:bold">struct</span> usb_interface *iface)
+{
+        <span style="color:#080;font-weight:bold">struct</span> atp *dev = usb_get_intfdata(iface);
+
+        usb_set_intfdata(iface, <span style="color:#069">NULL</span>);
+        <span style="color:#080;font-weight:bold">if</span> (dev) {
+                usb_kill_urb(dev-&gt;urb);
+                input_unregister_device(dev-&gt;input);         <i class="conum" data-value="1"></i><b>(1)</b>
+                usb_free_coherent(dev-&gt;udev, dev-&gt;info-&gt;datalen,
+                                  dev-&gt;data, dev-&gt;urb-&gt;transfer_dma);
+                usb_free_urb(dev-&gt;urb);
+                kfree(dev);
+        }
+        dev_info(&amp;iface-&gt;dev, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">input: appletouch disconnected</span><span style="color:#b0b">\n</span><span style="color:#710">&quot;</span></span>);
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><em>input_unregister_device</em> is used to unregister the input device object</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="input-subsystem-api-for-injecting-events"><a class="anchor" href="#input-subsystem-api-for-injecting-events"></a>46.1.3. Input Subsystem API For Injecting Events</h4>
+<div class="paragraph">
+<p>The input driver now has the task of sending events to the event handler based
+on the status of the input device. The events are sent by the driver to the event
+handler using <em>input_event</em>. This function is defined in <em>drivers/input/input.c</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c"><span style="color:#777">/**
+ * input_event() - report new input event
+ * @dev: device that generated the event
+ * @type: type of the event
+ * @code: event code
+ * @value: value of the event
+ *
+ * This function should be used by drivers implementing various input
+ * devices to report input events. See also input_inject_event().
+ *
+ * NOTE: input_event() may be safely used right after input device was
+ * allocated with input_allocate_device(), even before it is registered
+ * with input_register_device(), but the event will not reach any of the
+ * input handlers. Such early invocation of input_event() may be used
+ * to 'seed' initial state of a switch or initial position of absolute
+ * axis, etc.
+ */</span>
+<span style="color:#088;font-weight:bold">void</span> input_event(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev,
+                 <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> type, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> code, <span style="color:#0a8;font-weight:bold">int</span> value)
+{
+        <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">long</span> flags;
+
+        <span style="color:#080;font-weight:bold">if</span> (is_event_supported(type, dev-&gt;evbit, EV_MAX)) {
+
+                spin_lock_irqsave(&amp;dev-&gt;event_lock, flags);
+                input_handle_event(dev, type, code, value);
+                spin_unlock_irqrestore(&amp;dev-&gt;event_lock, flags);
+        }
+}
+EXPORT_SYMBOL(input_event);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The event types are documented in <em>Documentation/input/event-codes.txt</em>.
+An event is composed by one or several input data changes (packet of input data changes)
+such as the button state, the relative or absolute position along an axis, etc..
+After submitting potentially multiple events, the input core must be notified by calling
+<em>input_sync</em> whic is defined in <em>include/linux/input.h</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#088;font-weight:bold">void</span> input_sync(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev)
+{
+        input_event(dev, EV_SYN, SYN_REPORT, <span style="color:#00D">0</span>);
+}
+.
+.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The input subsystem provides other wrappers such as
+input_report_key(), input_report_abs(), input_report_rel(), etc.. which are also defined
+in <em>include/linux/input.h</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="c">.
+.
+tatic <span style="color:#088;font-weight:bold">inline</span> <span style="color:#088;font-weight:bold">void</span> input_report_key(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> code, <span style="color:#0a8;font-weight:bold">int</span> value)
+{
+        input_event(dev, EV_KEY, code, !!value);
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#088;font-weight:bold">void</span> input_report_rel(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> code, <span style="color:#0a8;font-weight:bold">int</span> value)
+{
+        input_event(dev, EV_REL, code, value);
+}
+
+<span style="color:#088;font-weight:bold">static</span> <span style="color:#088;font-weight:bold">inline</span> <span style="color:#088;font-weight:bold">void</span> input_report_abs(<span style="color:#080;font-weight:bold">struct</span> input_dev *dev, <span style="color:#0a8;font-weight:bold">unsigned</span> <span style="color:#0a8;font-weight:bold">int</span> code, <span style="color:#0a8;font-weight:bold">int</span> value)
+{
+        input_event(dev, EV_ABS, code, value);
+}
+.
+.</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
