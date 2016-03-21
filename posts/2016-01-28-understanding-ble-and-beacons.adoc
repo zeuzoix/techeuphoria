@@ -1,8 +1,8 @@
 = Understanding Bluetooth Low Energy And Beacons
 Conrad Gomes
-2016-01-28
+2016-03-21
 :awestruct-tags: [android, bluetooth, beacons]
-:excerpt: Apple announced the iBeacon format which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon as well as data associated with the beacon. Google followed defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.
+:excerpt: Apple announced the iBeacon format, which basically makes use of the advertisement channels available in the Bluetooth LE spectrum to broadcast information about the beacon. Google followed, defining a backward compatible standard called Eddystone. Here are some useful links about the space in general.
 :awestruct-excerpt: {excerpt}
 ifndef::awestruct[]
 :imagesdir: ../images
@@ -10,9 +10,12 @@ endif::[]
 :awestruct-imagesdir: ../../../../../images
 :icons: font
 // URL Addresses
-:uri-kernel-documentation-spidev: https://www.kernel.org/doc/Documentation/spi/spidev
 :uri-aislelabs-hardware-report: http://www.aislelabs.com/reports/beacon-guide/
 :uri-argenox-intro-ble: http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/introduction-to-bluetooth-low-energy-v4-0/
+:uri-argenox-advertising-primer: http://www.argenox.com/bluetooth-low-energy-ble-v4-0-development/library/a-ble-advertising-primer/
+:uri-building-android-beacon-android-ibeacon-tutorial-overview: https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/
+:uri-build-android-beacon-ibeacon-detector: https://www.pubnub.com/blog/2015-04-15-build-android-beacon-ibeacon-detector/
+:uri-build-android-ibeacon-beacon-emitter: https://www.pubnub.com/blog/2015-04-16-build-android-ibeacon-beacon-emitter/
 // E-Mail Addresses
 // Documents
 // Captured Logs
@@ -27,6 +30,27 @@ solution then this {uri-aislelabs-hardware-report}[report^] from Aislelabs might
 
 == About Bluetooth LE
 
-We can't leave out understanding the basic technology that is used to deploy
+We can't leave out understanding the basics of the technology used in
 the beacon solution. A good introduction to BLE can be obtained from this
 {uri-argenox-intro-ble}[introduction^] given by Argenox.
+
+== Understanding BLE Advertising
+
+The foundation of beacons is based on its advertising mechanism. Beacons are effective
+because they allow devices to discover them without having to establish a connection with the
+beacon. This {uri-argenox-advertising-primer}[write-up^] from Argenox is a good description of
+the BLE advertising mechanism and how it applies to beacons.
+
+== Implementing An Android App To Discover Beacons
+
+Finally these links provide a useful overview of beacons and also provides source code
+that can be used to develop a beacon detector and a beacon emitter. The beacon detector
+should work on most Android phones but the beacon emitter may only be supported on a limited
+set of phones. Going forward more manufacturers may design their phones to support beacon
+emitters. Again adding the emitter functionallity is added complexity in the bluetooth hardware
+module.
+
+. {uri-building-android-beacon-android-ibeacon-tutorial-overview}[Building an Android Beacon Overview^]
+. {uri-build-android-beacon-ibeacon-detector}[How to build an Android beacon detector^]
+. {uri-build-android-ibeacon-beacon-emitter}[How to build an Android beacon emitter^]
+
