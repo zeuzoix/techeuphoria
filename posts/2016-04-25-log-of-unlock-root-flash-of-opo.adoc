@@ -1,0 +1,37 @@
+= Prequisites
+
+[source, bash]
+----
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux/tools$ cd ..
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ ls
+add-ons  platforms  SDK Readme.txt  tools
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ cd platforms/
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux/platforms$ ls
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux/platforms$ cd ..
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ vi SDK\ Readme.txt 
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ ls
+add-ons  platforms  SDK Readme.txt  tools
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ ./tools/an
+android  ant/     
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ ./tools/an
+android  ant/     
+conrad@conrad-HP-Pavilion-dm3-Notebook-PC:~/android/android-sdk-linux$ ./tools/android 
+
+(Android SDK Manager:3852): GLib-GObject-CRITICAL **: g_type_add_interface_static: assertion 'g_type_parent (interface_type) == G_TYPE_INTERFACE' failed
+
+(Android SDK Manager:3852): GLib-GObject-CRITICAL **: g_type_add_interface_static: assertion 'g_type_parent (interface_type) == G_TYPE_INTERFACE' failed
+
+(Android SDK Manager:3852): GLib-CRITICAL **: Source ID 416 was not found when attempting to remove it
+
+(Android SDK Manager:3852): GLib-CRITICAL **: Source ID 615 was not found when attempting to remove it
+
+(Android SDK Manager:3852): GLib-CRITICAL **: Source ID 664 was not found when attempting to remove it
+
+(Android SDK Manager:3852): GLib-GObject-CRITICAL **: g_type_add_interface_static: assertion 'g_type_parent (interface_type) == G_TYPE_INTERFACE' failed
+
+(Android SDK Manager:3852): GLib-GObject-CRITICAL **: g_type_add_interface_static: assertion 'g_type_parent (interface_type) == G_TYPE_INTERFACE' failed
+
+(Android SDK Manager:3852): GLib-CRITICAL **: Source ID 18284 was not found when attempting to remove it
+
+----
+
