@@ -321,7 +321,7 @@ in _include/linux/input.h_
 ----
 .
 .
-tatic inline void input_report_key(struct input_dev *dev, unsigned int code, int value)
+static inline void input_report_key(struct input_dev *dev, unsigned int code, int value)
 {                
         input_event(dev, EV_KEY, code, !!value);
 }
@@ -338,3 +338,94 @@ static inline void input_report_abs(struct input_dev *dev, unsigned int code, in
 .
 .
 ----
+
+=== Polled Input Subclass
+
+Suppose the input device you're dealing with does not support an interrupt mechanism.
+In such a case the input subsystem provides a _subclass_ for devices which have to be
+periodically scanned to detect changes in the input. The device is defined by
+_struct input_polled_dev_ structure defined in _include/linux/input-polldev.h_.
+
+[source, c]
+----
+/**
+ * struct input_polled_dev - simple polled input device
+ * @private: private driver data.
+ * @open: driver-supplied method that prepares device for polling
+ *      (enabled the device and maybe flushes device state).
+ * @close: driver-supplied method that is called when device is no
+ *      longer being polled. Used to put device into low power mode.
+ * @poll: driver-supplied method that polls the device and posts
+ *      input events (mandatory).
+ * @poll_interval: specifies how often the poll() method should be called.
+ *      Defaults to 500 msec unless overridden when registering the device.
+ * @poll_interval_max: specifies upper bound for the poll interval.
+ *      Defaults to the initial value of @poll_interval.
+ * @poll_interval_min: specifies lower bound for the poll interval.
+ *      Defaults to 0.
+ * @input: input device structure associated with the polled device.
+ *      Must be properly initialized by the driver (id, name, phys, bits).
+ *
+ * Polled input device provides a skeleton for supporting simple input
+ * devices that do not raise interrupts but have to be periodically
+ * scanned or polled to detect changes in their state.
+ */
+struct input_polled_dev {
+        void *private;
+
+        void (*open)(struct input_polled_dev *dev);
+        void (*close)(struct input_polled_dev *dev);
+        void (*poll)(struct input_polled_dev *dev);
+        unsigned int poll_interval; /* msec */
+        unsigned int poll_interval_max; /* msec */
+        unsigned int poll_interval_min; /* msec */
+
+        struct input_dev *input;
+
+/* private: */
+        struct delayed_work work;
+};
+
+struct input_polled_dev *input_allocate_polled_device(void);		<1>
+void input_free_polled_device(struct input_polled_dev *dev);		<2>
+int input_register_polled_device(struct input_polled_dev *dev);		<3>
+void input_unregister_polled_device(struct input_polled_dev *dev);	<4>
+
+----
+<1> To allocate the polled device structure
+<2> To free the polled device structure
+<3> To register the polled device
+<4> To unregister the polled device
+
+The _poll()_ method is mandatory in the definition of the _struct input_polled_dev_.
+This function polls the device and posts input events.
+
+The fields _id, name, phys, bits_ of the _input_ field must be initialized too.
+If none of the _poll_interval_ fields are filled then the default poll interval
+is 500ms.
+
+The registration/unregistration is done with _input_register_polled_device/input_unregister_polled_device_.
+
+=== User space inteface _evdev_
+
+The main user space interface to input devces is the *event interface*. From an
+application point of view the input device is represented as _/dev/input/event<X>_
+character device. The application can use either blocking or non-blocking reads after
+opening the device.
+
+Each read will return _struct input_event_ structures as defined in _include/uapi/linux/input.h_
+
+[source, c]
+----
+/*
+ * The event structure itself
+ */
+ 
+struct input_event {
+        struct timeval time;
+        __u16 type;
+        __u16 code;
+        __s32 value; 
+};
+----
+
