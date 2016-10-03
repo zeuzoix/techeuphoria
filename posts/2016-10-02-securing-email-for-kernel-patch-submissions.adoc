@@ -1,0 +1,24 @@
+= Configuring Mutt Securely With Application Specific Passwords
+Conrad Gomes
+2016-10-02
+:awestruct-tags: [linux, patch, mutt]
+:excerpt: If you have two factor authentication enabled with your gmail account the process of configuring an email client like mutt might be more involved. This post goes through the steps I took to protect my password on configuring mutt.
+:awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+// URL Addresses
+:uri-first-kernel-patch: https://kernelnewbies.org/FirstKernelPatch
+// E-Mail Addresses
+// Documents
+// Captured Logs
+
+{excerpt}
+
+= 
+
+If you're  trying to submit some kernel patches the {uri-firstkernelpatch}[FirstKernelPatch^] article is a
+good place to start. The article however recommends turning off two factor authentication. So let's see
+if we can work around that.
