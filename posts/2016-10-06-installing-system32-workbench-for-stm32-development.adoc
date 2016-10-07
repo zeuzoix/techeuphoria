@@ -1,0 +1,252 @@
+= Installing System32 Workbench For STM32 Development On Linux
+Conrad Gomes
+2016-10-07
+:awestruct-tags: [stm32, ide, linux]
+:excerpt: There are alot of IDEs for STM32 microcontroller development. I've been using Keil. Well there's a new IDE which has support for both Windows as well as Linux so let's explore the installation process for System32 Workbench
+:awestruct-excerpt: {excerpt}
+ifndef::awestruct[]
+:imagesdir: ../images
+endif::[]
+:awestruct-imagesdir: ../../../../../images
+:icons: font
+// URL Addresses
+:uri-openstm32-org: http://www.openstm32.org
+:uri-installing-system-workbench-with-installer: http://www.openstm32.org/Installing+System+Workbench+for+STM32+with+installer
+:uri-installing-system-workbench-from-eclipse: http://www.openstm32.org/Installing+System+Workbench+for+STM32+from+Eclipse
+// E-Mail Addresses
+// Documents
+// Captured Logs
+
+{excerpt}
+
+= Registration On www.openstm32.org
+
+To download the IDE we have to first register with {uri-openstm32-org}[www.openstm32.org^]. This is a community site which encourages people with an interest in STM32 application development to collaborate and participate together.
+
+====
+[[Registering_openstm32]]
+.Registering With www.openstm32.org
+image::openstm32.org-registration.png[width="640", height="480", align="center", link={awestruct-imagesdir}/openstm32.org-registration.png]
+====
+
+You will receive an email with the information needed to log into this site the first time. 
+
+= About System Workbench For STM32
+
+As taken from the website:
+
+"System Workbench for STM32 – Bare Metal Edition is an Eclipse integrated IDE.
+It provides a software development platform for your STM32 board.
+The IDE helps you to quickly create a C embedded project for your target.
+It also integrates a complete code editor, compilation
+(compiler, assembler, linker…) tools and remote-debugging tools."
+-- www.openstm32.org
+
+== Features 
+
+The following features are included in System Workbench for STM32 – Bare Metal Edition :
+
+. STM32 Devices database and libraries
+. Source code editor
+. Linker script generator
+. Building tools (GCC-based cross compiler, assembler, linker)
+. Debugging tools (OpenOCD, GDB)
+. Flash programing tools 
+
+= Installation of System Workbench
+
+There are two approaches:
+
+. {uri-installing-system-workbench-with-installer}[Installing System Workbench for STM32 from Eclipse^]
+. {uri-installing-system-workbench-from-eclipse}[Installing System Workbench for STM32 with installer^] 
+
+I've used the installer approach since I don't have Eclipse.
+
+== Installation On Linux
+
+I choose the second approach as I don't have eclipse on my system.
+
+====
+[[Downloading_Systm32_Workbench_For_STM32_Installer]]
+.Downloading System32 Workbench STM32 Installer
+image::downloading-system32-workbench-for-stm32-installer.png[width="640", height="480", align="center", link={awestruct-imagesdir}/downloading-system32-workbench-for-stm32-installer.png]
+====
+
+The download page has instructions for Windows, Mac OS/X and Linux. Download the linux installer.
+( It takes about 5 - 10 minutes)
+
+====
+[[Downloading_Systm32_Workbench_For_STM32_Installer_Linux]]
+.Downloading System32 Workbench STM32 Installer For Linux
+image::downloading-system32-workbench-for-stm32-installer-for-linux.png[width="640", height="480", align="center", link={awestruct-imagesdir}/downloading-system32-workbench-for-stm32-installer-for-linux.png]
+====
+
+Go through the *Warnings* and make sure dependencies are installed in the system.
+We'll go through the warnings to make sure our system is ready.
+
+=== Changing Permissions Of Installer After Download
+
+We first change the permissions of the installer
+[source, bash]
+----
+branch:openstm32$ ls -l
+total 340000
+-rw-rw-r-- 1 branch branch 348154468 Oct  6 12:16 install_sw4stm32_linux_64bits-latest.run
+branch:openstm32$ chmod a+x install_sw4stm32_linux_64bits-latest.run 
+branch:openstm32$ ls -l
+total 340000
+-rwxrwxr-x 1 branch branch 348154468 Oct  6 12:16 install_sw4stm32_linux_64bits-latest.run
+branch:openstm32$ 
+
+----
+
+
+== Checking For JavaRE and gksudo
+
+Check if you have JavaRE and gksudo on your system
+
+[source, bash]
+----
+branch:openstm32$ javac -version
+javac 1.8.0_91
+branch:openstm32$ 
+----
+
+[source, bash]
+----
+branch:openstm32$ sudo apt-cache search gksudo
+gksu - graphical front-end to su and sudo
+branch:openstm32$ sudo apt-get install gksu
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following additional packages will be installed:
+  libgksu2-0
+The following NEW packages will be installed:
+  gksu libgksu2-0
+0 upgraded, 2 newly installed, 0 to remove and 12 not upgraded.
+Need to get 123 kB of archives.
+After this operation, 877 kB of additional disk space will be used.
+Do you want to continue? [Y/n] 
+Get:1 http://in.archive.ubuntu.com/ubuntu xenial/universe amd64 libgksu2-0 amd64 2.0.13~pre1-6ubuntu8 [71.8 kB]
+Get:2 http://in.archive.ubuntu.com/ubuntu xenial/universe amd64 gksu amd64 2.0.2-9ubuntu1 [51.5 kB]
+Fetched 123 kB in 0s (143 kB/s)
+Selecting previously unselected package libgksu2-0.
+(Reading database ... 1040946 files and directories currently installed.)
+Preparing to unpack .../libgksu2-0_2.0.13~pre1-6ubuntu8_amd64.deb ...
+Unpacking libgksu2-0 (2.0.13~pre1-6ubuntu8) ...
+Selecting previously unselected package gksu.
+Preparing to unpack .../gksu_2.0.2-9ubuntu1_amd64.deb ...
+Unpacking gksu (2.0.2-9ubuntu1) ...
+Processing triggers for libc-bin (2.23-0ubuntu3) ...
+Processing triggers for gconf2 (3.2.6-3ubuntu6) ...
+Processing triggers for man-db (2.7.5-1) ...
+Processing triggers for bamfdaemon (0.5.3~bzr0+16.04.20160824-0ubuntu1) ...
+Rebuilding /usr/share/applications/bamf-2.index...
+Processing triggers for gnome-menus (3.13.3-6ubuntu3.1) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu5) ...
+Processing triggers for mime-support (3.59ubuntu1) ...
+Setting up libgksu2-0 (2.0.13~pre1-6ubuntu8) ...
+update-alternatives: using /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo to provide /usr/share/gconf/defaults/10_libgksu (libgksu-gconf-defaults) in auto mode
+Processing triggers for gconf2 (3.2.6-3ubuntu6) ...
+Setting up gksu (2.0.2-9ubuntu1) ...
+Processing triggers for libc-bin (2.23-0ubuntu3) ...
+branch:openstm32$ 
+----
+
+
+=== Installing 32bit Version Of C Shared Libraries
+
+Since I have a 64bit system of Ubuntu this step is important. Some of the tools are only
+available as 32bit versions. So we need to support them.
+
+[source,bash]
+----
+branch:openstm32$ sudo apt-get install  libc6:i386 lib32ncurses5
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+lib32ncurses5 is already the newest version (6.0+20160213-1ubuntu1).
+lib32ncurses5 set to manually installed.
+libc6:i386 is already the newest version (2.23-0ubuntu3).
+libc6:i386 set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 12 not upgraded.
+branch:openstm32$ 
+----
+
+== Run the installer
+[source,bash]
+----
+branch:openstm32$ ls
+install_sw4stm32_linux_64bits-latest.run
+branch:openstm32$ ./install_sw4stm32_linux_64bits-latest.run 
+6 Oct, 2016 12:32:05 PM INFO: Logging initialized at level 'INFO'
+6 Oct, 2016 12:32:05 PM INFO: Commandline arguments: 
+6 Oct, 2016 12:32:05 PM INFO: Detected platform: ubuntu_linux,version=4.4.0-38-generic,arch=x64,symbolicName=null,javaVersion=1.8.0_91
+branch:openstm32$ ./install_sw4stm32_linux_64bits-latest.run 
+6 Oct, 2016 12:33:39 PM INFO: Logging initialized at level 'INFO'
+6 Oct, 2016 12:33:39 PM INFO: Commandline arguments: 
+6 Oct, 2016 12:33:39 PM INFO: Detected platform: ubuntu_linux,version=4.4.0-38-generic,arch=x64,symbolicName=null,javaVersion=1.8.0_91
+[ Writing the uninstaller data ... ]
+branch:openstm32$ 
+----
+
+====
+[[System32_Installer_1]]
+.System32 Installer Screenshot 1
+image::system32-installater-1.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-1.png]
+====
+
+====
+[[System32_Installer_2]]
+.System32 Installer Screenshot 2
+image::system32-installater-2.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-2.png]
+====
+
+====
+[[System32_Installer_3]]
+.System32 Installer Screenshot 3
+image::system32-installater-3.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-3.png]
+====
+
+====
+[[System32_Installer_4]]
+.System32 Installer Screenshot 4
+image::system32-installater-4.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-4.png]
+====
+
+====
+[[System32_Installer_5]]
+.System32 Installer Screenshot 5
+image::system32-installater-5.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-5.png]
+====
+
+====
+[[System32_Installer_6]]
+.System32 Installer Screenshot 6
+image::system32-installater-6.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-6.png]
+====
+
+====
+[[System32_Installer_7]]
+.System32 Installer Screenshot 7
+image::system32-installater-7.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-7.png]
+====
+
+====
+[[System32_Installer_8]]
+.System32 Installer Screenshot 8
+image::system32-installater-8.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-8.png]
+====
+
+====
+[[System32_Installer_9]]
+.System32 Installer Screenshot 9
+image::system32-installater-9.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-9.png]
+====
+
+====
+[[System32_Installer_10]]
+.System32 Installer Screenshot 10
+image::system32-installater-10.png[width="640", height="480", align="center", link={awestruct-imagesdir}/system32-installater-10.png]
+====
